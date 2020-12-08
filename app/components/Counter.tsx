@@ -1,14 +1,14 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import routes from "../../constants/routes.json";
+import routes from "../constants/routes.json";
 import {
     increment,
     decrement,
     incrementIfOdd,
     incrementAsync,
     selectCount,
-} from "./counterSlice";
+} from "../reducers/counter";
 
 export default function Counter(): JSX.Element {
     const dispatch = useDispatch();

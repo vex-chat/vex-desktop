@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AppThunk, RootState } from "../../store";
+import { AppThunk, RootState } from "../store";
 
 const counterSlice = createSlice({
     name: "counter",
@@ -34,4 +34,4 @@ export const incrementAsync = (delay = 1000): AppThunk => (dispatch) => {
 
 export default counterSlice.reducer;
 
-export const selectCount = (state: RootState) => state.counter.value;
+export const selectCount = (state: RootState): number => state.counter.value;

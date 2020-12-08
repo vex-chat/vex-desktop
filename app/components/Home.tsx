@@ -1,10 +1,9 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { useSelector, useDispatch } from "react-redux";
-import { selectUser, setUser } from "../features/counter/userSlice";
-import { client } from "..";
-import log from "electron-log";
+import { useSelector } from "react-redux";
+import { selectUser } from "../reducers/user";
+import { IUser } from "@vex-chat/vex-js";
 
 function strToIcon(s: string) {
     s.replace(/\s/g, "");
@@ -15,21 +14,19 @@ function strToIcon(s: string) {
 }
 
 export default function Home(): JSX.Element {
-    const dispatch = useDispatch();
-    const value = useSelector(selectUser);
-
-    useEffect(() => {
-        if (Object.keys(value).length === 0) {
-            dispatch(setUser({ username: "changed" }));
-        }
-    });
+    const user: IUser = useSelector(selectUser);
 
     return (
         <Fragment>
             <div className="sidebar">
                 <div className="field has-addons search-wrapper">
                     <figure className="user-icon image is-32x32">
-                        <img className="is-rounded" src={strToIcon("Ex")} />
+                        {user.userID !== "" && (
+                            <img
+                                className="is-rounded"
+                                src={strToIcon(user.username.slice(0, 2))}
+                            />
+                        )}
                     </figure>
                     <div className="field">
                         <p className="control has-icons-left">
@@ -50,7 +47,7 @@ export default function Home(): JSX.Element {
                 <aside className="menu">
                     <ul className="menu-list">
                         <li>
-                            <a>{JSON.stringify(value)}</a>
+                            <a></a>
                         </li>
                         {/* {conversations.map((conversation) => (
                             <li key={conversation}>
@@ -60,7 +57,15 @@ export default function Home(): JSX.Element {
                     </ul>
                 </aside>
             </div>
-            <div className="pane">test</div>
+            <div className="pane">
+                <div className="container">
+                    {user.userID !== "" && (
+                        <pre>
+                            <code>{JSON.stringify(user, null, 4)}</code>
+                        </pre>
+                    )}
+                </div>
+            </div>
         </Fragment>
     );
 }
