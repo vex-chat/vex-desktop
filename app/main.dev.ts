@@ -17,6 +17,8 @@ import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
 
+log.transports.file.level = "info";
+
 export default class AppUpdater {
     constructor() {
         log.transports.file.level = "info";

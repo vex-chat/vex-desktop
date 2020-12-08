@@ -175,7 +175,7 @@ export default class MenuBuilder {
                     click() {
                         shell.openExternal("https://vex.chat");
                     },
-                }
+                },
             ],
         };
 
@@ -263,7 +263,7 @@ export default class MenuBuilder {
                         click() {
                             shell.openExternal("https://vex.chat");
                         },
-                    }
+                    },
                 ],
             },
         ];

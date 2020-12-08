@@ -1,5 +1,29 @@
 @import "../node_modules/bulma/bulma.sass";
 
-.view {
-    padding-top: 2ch;
+
+.sidebar {
+    position: fixed;
+    width: 320px;
+    height: 100%;
+}
+
+.pane {
+    position: fixed;
+    width: calc(100% - 265px);
+    height: 100%;
+    right: 0;
+    background-color: $white-ter;
+}
+
+.user-icon {
+    margin-right: 15px;
+    margin-top: -1px;
+    padding: 1px;
+}
+
+.search-wrapper {
+    padding: 2ch;
+    width: 280px;
+    margin: 0px;
+    padding-bottom: 0;
 }

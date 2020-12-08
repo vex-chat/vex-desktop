@@ -34,5 +34,4 @@ export const incrementAsync = (delay = 1000): AppThunk => (dispatch) => {
 
 export default counterSlice.reducer;
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const selectCount = (state: RootState) => state.counter.value;
