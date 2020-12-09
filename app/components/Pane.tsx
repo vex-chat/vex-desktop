@@ -97,10 +97,7 @@ function MessageBox(message: ISzDisplayMessage): JSX.Element {
                         <span className="has-text-left">{message.message}</span>
                         <br />
                         <span className="help has-text-right">
-                            {formatDistance(
-                                new Date(message.timestamp),
-                                new Date(Date.now())
-                            )}
+                            {format(new Date(message.timestamp), "kk:mm:ss")}
                         </span>
                     </p>
                 </div>
