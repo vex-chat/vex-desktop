@@ -7,7 +7,7 @@ div {
 }
 
 .tag:not(body) {
-    padding: 0.5ch 1.5ch;
+    padding: 1.0ch 1.5ch 0.5ch 1.5ch;
     line-height: 1.25;
 }
 
@@ -29,15 +29,29 @@ div {
 }
 
 .pane {
-    position: fixed;
+    position: absolute;
     width: calc(100% - 265px);
-    height: 100%;
     right: 0;
     background-color: $white;
+    z-index: -1;
+}
+
+.conversation-wrapper {
+    position: relative;
+    top: 0;
+    bottom: 140px;
+    height: calc(100vh - 140px);
+    overflow-y:auto;
+    z-index: 0;
+
 }
 
 .pane-topbar {
     padding: 1ch;
+    position: sticky;
+    top: 0px;
+    z-index: 1;
+    background-color: #fff;
 }
 
 .pane-topbar-content {
@@ -45,11 +59,16 @@ div {
     margin: 0 auto;
 }
 
+::-webkit-scrollbar {
+    display: none;
+ }
+
 .chat-input-wrapper {
     position: fixed;
     bottom: 0;
     width: calc(100% - 265px);
-    padding: 1.2ch 0ch 1.2ch 1.2ch;
+    padding: 1.2ch 1.2ch 1.2ch 1.2ch;
+    height: 100px;
 }
 
 .user-icon {

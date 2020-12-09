@@ -18,7 +18,7 @@ export const client = new Client(localStorage.getItem("PK")!, {
     dbFolder: progFolder,
 });
 client.on("ready", async () => {
-    await client.register("yellnat");
+    await client.register("winrar");
     client.login();
 });
 client.init();
@@ -38,7 +38,6 @@ export default function Base(): JSX.Element {
         });
 
         client.on("message", async (message: IMessage) => {
-            const myInfo = client.users.me();
             const dispMsg: IDisplayMessage = {
                 message: message.message,
                 recipient: message.recipient,
@@ -48,9 +47,13 @@ export default function Base(): JSX.Element {
                 direction: message.direction,
             };
 
-            console.log(dispMsg);
-
-            dispatch(setMessages(dispMsg));
+            // ignore incoming messages from ourselves
+            if (
+                dispMsg.recipient !== dispMsg.sender ||
+                dispMsg.direction === "outgoing"
+            ) {
+                dispatch(setMessages(dispMsg));
+            }
         });
     });
 

@@ -1,5 +1,5 @@
 import { IUser } from "@vex-chat/vex-js";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { selectFamiliars } from "../reducers/familiars";
@@ -8,7 +8,7 @@ import { selectInputs, setInputState } from "../reducers/inputs";
 import { client } from "../Base";
 import { ISzDisplayMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
-import { formatDistance } from "date-fns";
+import { format } from "date-fns";
 
 export default function Pane(): JSX.Element {
     // state
@@ -25,6 +25,19 @@ export default function Pane(): JSX.Element {
     const allMessages = useSelector(selectMessages);
     const threadMessages = allMessages[userID];
 
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        if (messagesEndRef.current) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (messagesEndRef.current as any).scrollIntoView();
+        }
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    });
+
     if (!familiar) {
         return <div className="pane"></div>;
     }
@@ -35,8 +48,9 @@ export default function Pane(): JSX.Element {
             <div className="conversation-wrapper">
                 {threadMessages &&
                     Object.keys(threadMessages).map((key) => {
-                        return MessageBox(threadMessages[key], "incoming");
+                        return MessageBox(threadMessages[key]);
                     })}
+                <div ref={messagesEndRef} />
             </div>
             <div className="chat-input-wrapper">
                 <textarea
@@ -60,11 +74,8 @@ export default function Pane(): JSX.Element {
     );
 }
 
-function MessageBox(
-    message: ISzDisplayMessage,
-    direction: "incoming" | "outgoing"
-): JSX.Element {
-    if (direction === "incoming") {
+function MessageBox(message: ISzDisplayMessage): JSX.Element {
+    if (message.direction !== "incoming") {
         return (
             <div key={message.nonce} className="message-wrapper has-text-right">
                 <div className="tag is-large is-info message-box">
@@ -72,10 +83,7 @@ function MessageBox(
                         <span className="has-text-left">{message.message}</span>
                         <br />
                         <span className="help has-text-right">
-                            {formatDistance(
-                                new Date(message.timestamp),
-                                new Date(Date.now())
-                            )}
+                            {format(new Date(message.timestamp), "kk:mm:ss")}
                         </span>
                     </p>
                 </div>
