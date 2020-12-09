@@ -30,6 +30,8 @@ const capitalize = (s: string): string => {
     return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
+// localStorage.setItem("PK", Client.generateSecretKey());
+
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const client = new Client(localStorage.getItem("PK")!, {
     dbFolder: progFolder,
@@ -59,14 +61,18 @@ export default function Base(): JSX.Element {
 
             for (const user of familiars) {
                 const history = await client.messages.retrieve(user.userID);
-                for (const message of history) {
-                    console.log(message);
+                for (const message of history.map((row) => {
+                    row.timestamp = new Date(row.timestamp);
+                    return row;
+                })) {
                     dispatch(setMessages(message));
                 }
             }
         });
 
         client.on("message", async (message: IMessage) => {
+            console.log(message.direction, typeof message.timestamp);
+
             const dispMsg: IDisplayMessage = {
                 message: message.message,
                 recipient: message.recipient,
@@ -75,7 +81,6 @@ export default function Base(): JSX.Element {
                 sender: message.sender,
                 direction: message.direction,
             };
-
             dispatch(setMessages(dispMsg));
 
             if (
