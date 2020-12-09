@@ -38,13 +38,18 @@ export default function Base(): JSX.Element {
         });
 
         client.on("message", async (message: IMessage) => {
+            const myInfo = client.users.me();
             const dispMsg: IDisplayMessage = {
                 message: message.message,
+                recipient: message.recipient,
                 nonce: message.nonce,
                 timestamp: new Date(Date.now()),
                 sender: message.sender,
-                direction: "incoming",
+                direction: message.direction,
             };
+
+            console.log(dispMsg);
+
             dispatch(setMessages(dispMsg));
         });
     });

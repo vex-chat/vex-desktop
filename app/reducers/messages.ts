@@ -12,6 +12,8 @@ export interface ISzDisplayMessage {
     nonce: string;
     timestamp: string;
     sender: string;
+    recipient: string;
+    direction: "incoming" | "outgoing";
 }
 
 function serializeMessage(message: IDisplayMessage): ISzDisplayMessage {
@@ -20,6 +22,8 @@ function serializeMessage(message: IDisplayMessage): ISzDisplayMessage {
         nonce: message.nonce,
         timestamp: message.timestamp.toString(),
         sender: message.sender,
+        recipient: message.recipient,
+        direction: message.direction,
     };
     return serialized;
 }
@@ -32,10 +36,18 @@ const messageSlice = createSlice({
             state: Record<string, Record<string, ISzDisplayMessage>>,
             action
         ) => {
-            if (!state[action.payload.sender]) {
-                state[action.payload.sender] = {};
+            const thread =
+                action.payload.direction === "outgoing"
+                    ? action.payload.recipient
+                    : action.payload.sender;
+            const message = action.payload;
+
+            if (!state[thread]) {
+                state[thread] = {};
             }
-            state[action.payload.sender][action.payload.nonce] = action.payload;
+
+            state[thread][message.nonce] = message;
+
             return state;
         },
     },

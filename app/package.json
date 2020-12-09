@@ -15,6 +15,6 @@
     },
     "license": "MIT",
     "dependencies": {
-        "@vex-chat/vex-js": "^0.4.2"
+        "@vex-chat/vex-js": "^0.5.0"
     }
 }
