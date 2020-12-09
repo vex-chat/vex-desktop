@@ -1,10 +1,31 @@
+$tag-radius: 10px;
+
 @import "../node_modules/bulma/bulma.sass";
 
+div {
+    display: block;
+}
+
+.tag:not(body) {
+    padding: 0.5ch 1.5ch;
+    line-height: 1.25;
+}
+
+.message-box {
+    white-space: pre !important;
+    height: auto !important;
+    padding: 1ch
+}
+
+.message-box > p {
+    font-size: 16px;
+}
 
 .sidebar {
     position: fixed;
-    width: 320px;
+    width: 265px;
     height: 100%;
+    background-color: $light;
 }
 
 .pane {
@@ -12,7 +33,23 @@
     width: calc(100% - 265px);
     height: 100%;
     right: 0;
-    background-color: $white-ter;
+    background-color: $white;
+}
+
+.pane-topbar {
+    padding: 1ch;
+}
+
+.pane-topbar-content {
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.chat-input-wrapper {
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - 265px);
+    padding: 1.2ch 0ch 1.2ch 1.2ch;
 }
 
 .user-icon {
@@ -26,4 +63,57 @@
     width: 280px;
     margin: 0px;
     padding-bottom: 0;
+}
+
+.message-wrapper {
+    padding-bottom: 1ch;
+}
+
+.media + .media {
+    border-top: 0px solid;
+    margin-top: 0;
+}
+
+.familiar-button {
+    padding: 1ch 1ch 1ch 2ch;
+    cursor: pointer;
+}
+
+.username-text-48x48 {
+    padding-top: 1.25ch;
+}
+
+.username-text-32x32 {
+    padding-top: .6ch;
+}
+
+.familiar-button:hover {
+    background-color: darken($light, 5%);
+}
+
+.outgoing-message {
+    color: $black !important;
+}
+
+.conversation-wrapper {
+    padding: 1ch 2ch 1ch 2ch;
+}
+
+.menu-list a {
+    padding: 0;
+}
+
+body::-webkit-scrollbar {
+	width: 12px;
+	background-color: $light;
+}
+
+  body::-webkit-scrollbar-track {
+	border-radius: 10px;
+	background-color: $light;
+}
+
+  body::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: $dark;
 }
