@@ -22,7 +22,8 @@ div {
 }
 
 .sidebar {
-    position: fixed;
+    position: absolute;
+    overflow-y: auto;
     width: 265px;
     height: 100%;
     background-color: $light;
@@ -82,10 +83,13 @@ div.sidebar > aside > ul > li > a:hover {
 }
 
 .search-wrapper {
+    position: sticky;
+    top: 0;
     padding: 2ch;
     width: 280px;
     margin: 0px;
-    padding-bottom: 0;
+    background-color: $light;
+    z-index: 100;
 }
 
 .message-wrapper {

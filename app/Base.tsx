@@ -5,10 +5,10 @@ import { routes } from "./constants/routes";
 import App from "./views/App";
 import HomePage from "./views/HomePage";
 import { Client, IMessage } from "@vex-chat/vex-js";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "./reducers/user";
 import os from "os";
-import { selectFamiliars, setFamiliars } from "./reducers/familiars";
+import { setFamiliars } from "./reducers/familiars";
 import { setMessages } from "./reducers/messages";
 import { xMnemonic, XUtils } from "@vex-chat/crypto-js";
 import crypto from "crypto";
@@ -51,8 +51,19 @@ export default function Base(): JSX.Element {
 
     useEffect(() => {
         client.on("authed", async () => {
-            dispatch(setUser(client.users.me()));
-            dispatch(setFamiliars(await client.familiars.retrieve()));
+            const me = client.users.me();
+            dispatch(setUser(me));
+
+            const familiars = await client.familiars.retrieve();
+            dispatch(setFamiliars(familiars));
+
+            for (const user of familiars) {
+                const history = await client.messages.retrieve(user.userID);
+                for (const message of history) {
+                    console.log(message);
+                    dispatch(setMessages(message));
+                }
+            }
         });
 
         client.on("message", async (message: IMessage) => {
@@ -60,7 +71,7 @@ export default function Base(): JSX.Element {
                 message: message.message,
                 recipient: message.recipient,
                 nonce: message.nonce,
-                timestamp: new Date(Date.now()),
+                timestamp: message.timestamp,
                 sender: message.sender,
                 direction: message.direction,
             };

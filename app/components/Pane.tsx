@@ -83,7 +83,7 @@ function MessageBox(message: ISzDisplayMessage): JSX.Element {
                         <span className="has-text-left">{message.message}</span>
                         <br />
                         <span className="help has-text-right">
-                            {format(new Date(message.timestamp), "kk:mm:ss")}
+                            {format(new Date(Date.now()), "kk:mm:ss")}
                         </span>
                     </p>
                 </div>
@@ -97,7 +97,7 @@ function MessageBox(message: ISzDisplayMessage): JSX.Element {
                         <span className="has-text-left">{message.message}</span>
                         <br />
                         <span className="help has-text-right">
-                            {format(new Date(message.timestamp), "kk:mm:ss")}
+                            {format(new Date(Date.now()), "kk:mm:ss")}
                         </span>
                     </p>
                 </div>
