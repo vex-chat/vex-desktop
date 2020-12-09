@@ -5,10 +5,10 @@ import { routes } from "./constants/routes";
 import App from "./views/App";
 import HomePage from "./views/HomePage";
 import { Client, IMessage } from "@vex-chat/vex-js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "./reducers/user";
 import os from "os";
-import { setFamiliars } from "./reducers/familiars";
+import { selectFamiliars, setFamiliars } from "./reducers/familiars";
 import { setMessages } from "./reducers/messages";
 import { xMnemonic, XUtils } from "@vex-chat/crypto-js";
 import crypto from "crypto";
@@ -67,7 +67,10 @@ export default function Base(): JSX.Element {
 
             dispatch(setMessages(dispMsg));
 
-            if (dispMsg.direction === "incoming") {
+            if (
+                dispMsg.direction === "incoming" &&
+                message.recipient !== message.sender
+            ) {
                 const msgNotification = new Notification("Vex", {
                     body: "You've got a new message.",
                 });
