@@ -6,6 +6,9 @@ import { selectFamiliars } from "../reducers/familiars";
 import { IconUsername } from "../components/IconUsername";
 import { selectInputs, setInputState } from "../reducers/inputs";
 import { client } from "../Base";
+import { ISzDisplayMessage } from "../reducers/messages";
+import { selectMessages } from "../reducers/messages";
+import { formatDistance } from "date-fns";
 
 export default function Pane(): JSX.Element {
     // state
@@ -19,6 +22,9 @@ export default function Pane(): JSX.Element {
     const familiar: IUser | undefined = familiars[userID];
     const inputValue: string = inputValues[userID] || "";
 
+    const allMessages = useSelector(selectMessages);
+    const threadMessages = allMessages[userID];
+
     if (!familiar) {
         return <div className="pane"></div>;
     }
@@ -27,26 +33,10 @@ export default function Pane(): JSX.Element {
         <div className="pane">
             {TopBar(familiar)}
             <div className="conversation-wrapper">
-                <div className="message-wrapper has-text-right">
-                    <div className="tag is-large is-info message-box">
-                        <p className="has-text-white">
-                            <span className="has-text-left">
-                                Testing a longer message.
-                            </span>
-                            <br />
-                            <span className="help has-text-right">5m</span>
-                        </p>
-                    </div>
-                </div>
-                <div className="message-wrapper has-text-left">
-                    <div className="tag is-large is-light message-box">
-                        <p className="has-text-black">
-                            <span className="has-text-left">Test</span>
-                            <br />
-                            <span className="help has-text-left">4m</span>
-                        </p>
-                    </div>
-                </div>
+                {threadMessages &&
+                    Object.keys(threadMessages).map((key) => {
+                        return MessageBox(threadMessages[key], "incoming");
+                    })}
             </div>
             <div className="chat-input-wrapper">
                 <textarea
@@ -68,6 +58,47 @@ export default function Pane(): JSX.Element {
             </div>
         </div>
     );
+}
+
+function MessageBox(
+    message: ISzDisplayMessage,
+    direction: "incoming" | "outgoing"
+): JSX.Element {
+    if (direction === "incoming") {
+        return (
+            <div key={message.nonce} className="message-wrapper has-text-right">
+                <div className="tag is-large is-info message-box">
+                    <p className="has-text-white">
+                        <span className="has-text-left">{message.message}</span>
+                        <br />
+                        <span className="help has-text-right">
+                            {formatDistance(
+                                new Date(message.timestamp),
+                                new Date(Date.now())
+                            )}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        );
+    } else {
+        return (
+            <div key={message.nonce} className="message-wrapper has-text-left">
+                <div className="tag is-large is-light message-box">
+                    <p className="has-text-black">
+                        <span className="has-text-left">{message.message}</span>
+                        <br />
+                        <span className="help has-text-right">
+                            {formatDistance(
+                                new Date(message.timestamp),
+                                new Date(Date.now())
+                            )}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        );
+    }
 }
 
 function TopBar(user: IUser): JSX.Element {

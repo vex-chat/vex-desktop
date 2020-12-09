@@ -57,7 +57,7 @@ type buttonProps = {
 
 function FamiliarButton({ user }: buttonProps): JSX.Element {
     return (
-        <li key={user.userID}>
+        <li className="familiar-button" key={user.userID}>
             <Link to={"/" + user.userID}>{IconUsername(user, 48)}</Link>
         </li>
     );

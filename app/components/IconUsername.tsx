@@ -6,7 +6,7 @@ export function IconUsername(user: IUser, iconSize = 48 | 32): JSX.Element {
     const size = iconSize.toString() + "x" + iconSize.toString();
 
     return (
-        <span className="media familiar-button">
+        <span className="media sidebar-familiar">
             <div className="media-left">
                 <figure className={`image is-${size}`}>
                     <img

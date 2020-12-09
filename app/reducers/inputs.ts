@@ -5,20 +5,22 @@ const inputSlice = createSlice({
     name: "inputs",
     initialState: {},
     reducers: {
-        set: (_state, action) => {
-            return action.payload;
+        add: (state: Record<string, string>, action) => {
+            const userID = action.payload.userID;
+            const input = action.payload.input;
+            state[userID] = input;
+            return state;
         },
     },
 });
 
-export const { set } = inputSlice.actions;
+export const { add } = inputSlice.actions;
 
 export const setInputState = (userID: string, input: string): AppThunk => (
     dispatch
 ) => {
-    const obj: Record<string, string> = {};
-    obj[userID] = input;
-    dispatch(set(obj));
+    const details = { userID, input };
+    dispatch(add(details));
 };
 
 export const selectInputs = (state: RootState): Record<string, string> =>

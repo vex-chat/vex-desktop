@@ -87,6 +87,10 @@ div {
     padding-top: .6ch;
 }
 
+.sidebar-familiar:hover {
+    background-color: darken($light, 5%);
+}
+
 .familiar-button:hover {
     background-color: darken($light, 5%);
 }
