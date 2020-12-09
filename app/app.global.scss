@@ -46,6 +46,10 @@ div {
 
 }
 
+div.sidebar > aside > ul > li > a:hover {
+    background-color:darken($light, 5%);
+}
+
 .pane-topbar {
     padding: 1ch;
     position: sticky;

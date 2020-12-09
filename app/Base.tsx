@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { Switch, Route } from "react-router-dom";
+import { remote } from "electron";
+import { Switch, Route, useHistory } from "react-router-dom";
 import { routes } from "./constants/routes";
 import App from "./views/App";
 import HomePage from "./views/HomePage";
@@ -30,6 +31,7 @@ export interface IDisplayMessage extends IMessage {
 
 export default function Base(): JSX.Element {
     const dispatch = useDispatch();
+    const history = useHistory();
 
     useEffect(() => {
         client.on("authed", async () => {
@@ -53,6 +55,17 @@ export default function Base(): JSX.Element {
                 dispMsg.direction === "outgoing"
             ) {
                 dispatch(setMessages(dispMsg));
+            }
+
+            if (dispMsg.direction === "incoming") {
+                const msgNotification = new Notification("Vex", {
+                    body: "You've got a new message.",
+                });
+
+                msgNotification.onclick = () => {
+                    remote.getCurrentWindow().show();
+                    history.push("/" + message.recipient);
+                };
             }
         });
     });
