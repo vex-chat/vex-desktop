@@ -19,7 +19,7 @@ export const client = new Client(localStorage.getItem("PK")!, {
     dbFolder: progFolder,
 });
 client.on("ready", async () => {
-    await client.register("winrar");
+    await client.register("commander");
     client.login();
 });
 client.init();
@@ -49,13 +49,7 @@ export default function Base(): JSX.Element {
                 direction: message.direction,
             };
 
-            // ignore incoming messages from ourselves
-            if (
-                dispMsg.recipient !== dispMsg.sender ||
-                dispMsg.direction === "outgoing"
-            ) {
-                dispatch(setMessages(dispMsg));
-            }
+            dispatch(setMessages(dispMsg));
 
             if (dispMsg.direction === "incoming") {
                 const msgNotification = new Notification("Vex", {
@@ -64,7 +58,7 @@ export default function Base(): JSX.Element {
 
                 msgNotification.onclick = () => {
                     remote.getCurrentWindow().show();
-                    history.push("/" + message.recipient);
+                    history.push("/" + message.sender);
                 };
             }
         });

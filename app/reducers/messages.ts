@@ -1,11 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IDisplayMessage } from "../Base";
 import { AppThunk, RootState } from "../store";
-import { format, formatDistance, formatRelative, subMinutes } from "date-fns";
-
-function formatTime(timestamp: Date) {
-    formatDistance(timestamp, new Date(Date.now()));
-}
 
 export interface ISzDisplayMessage {
     message: string;
@@ -46,7 +41,9 @@ const messageSlice = createSlice({
                 state[thread] = {};
             }
 
-            state[thread][message.nonce] = message;
+            if (!state[thread][message.nonce]) {
+                state[thread][message.nonce] = message;
+            }
 
             return state;
         },
