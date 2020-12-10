@@ -4,6 +4,7 @@ import { IUser } from "@vex-chat/vex-js";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { selectConversations } from "../reducers/conversations";
 import { selectFamiliars } from "../reducers/familiars";
 import { selectUser } from "../reducers/user";
 import { strToIcon } from "../utils/strToIcon";
@@ -11,7 +12,11 @@ import { IconUsername } from "./IconUsername";
 
 export default function Sidebar(): JSX.Element {
     const user: IUser = useSelector(selectUser);
+
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
+    const conversations: Record<string, string[]> = useSelector(
+        selectConversations
+    );
 
     return (
         <div className="sidebar">
@@ -42,7 +47,7 @@ export default function Sidebar(): JSX.Element {
             </div>
             <aside className="menu">
                 <ul className="menu-list">
-                    {Object.keys(familiars).map((familiar) =>
+                    {Object.keys(conversations).map((familiar) =>
                         FamiliarButton({ user: familiars[familiar] })
                     )}
                 </ul>

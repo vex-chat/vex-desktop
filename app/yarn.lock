@@ -105,10 +105,10 @@
   dependencies:
     tweetnacl "^1.0.3"
 
-"@vex-chat/vex-js@^0.6.3":
-  version "0.6.3"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/vex-js/0.6.3/050a78be0eb68af97b098b9d05c23234e51428d1aec6741d7052b21161aeb40b#8ff6d64ff543656502b01e32b93e0952bee1c544"
-  integrity sha512-fa6i3+7Hh0wCER+wkyX2pbZvaXEBf1I8SDBPGtOSG8/r0+mxuL3F6jYnNY5fNDAVOF/Qh89Md03s4yAQ0/p4KQ==
+"@vex-chat/vex-js@^0.7.0":
+  version "0.7.0"
+  resolved "https://npm.pkg.github.com/download/@vex-chat/vex-js/0.7.0/d8325c6d0f50319843e5f37669c0507e8d5d3721cba0c92f87ca81d743272d3b#3c01f1c2943bead5d6c9604427fae71dbf8ceae4"
+  integrity sha512-r1+e8GeCT1hESkWPp1TiOmHHXBlCkmRkzR6dXADnHfuISl0HXOw1eLt11zhIN2G2ZOvwkdlFHeurIbg6S6uOpg==
   dependencies:
     "@extrahash/sleep" "^1.0.0"
     "@types/chalk" "^2.2.0"
