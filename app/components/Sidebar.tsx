@@ -2,16 +2,33 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IUser } from "@vex-chat/vex-js";
 import React from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { selectConversations } from "../reducers/conversations";
-import { selectFamiliars } from "../reducers/familiars";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
+import {
+    addConversation,
+    selectConversations,
+    setConversations,
+} from "../reducers/conversations";
+import {
+    addFamiliar,
+    selectFamiliars,
+    setFamiliars,
+} from "../reducers/familiars";
+import { selectInputs, setInputState } from "../reducers/inputs";
 import { selectUser } from "../reducers/user";
 import { strToIcon } from "../utils/strToIcon";
 import { IconUsername } from "./IconUsername";
+import { client } from "../Base";
+
+export const clickFX = new Audio("https://www.extrahash.org/move.wav");
+clickFX.load();
 
 export default function Sidebar(): JSX.Element {
     const user: IUser = useSelector(selectUser);
+    const history = useHistory();
+
+    const dispatch = useDispatch();
+    const inputs = useSelector(selectInputs);
 
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const conversations: Record<string, string[]> = useSelector(
@@ -35,6 +52,58 @@ export default function Sidebar(): JSX.Element {
                             className="input has-icons-left is-grey is-small is-rounded"
                             type="text"
                             placeholder="Search"
+                            value={inputs["search-bar"] || ""}
+                            onChange={async (event) => {
+                                dispatch(
+                                    setInputState(
+                                        "search-bar",
+                                        event.target.value
+                                    )
+                                );
+
+                                const results: Record<string, IUser> = {};
+
+                                try {
+                                    if (event.target.value.length > 2) {
+                                        for (const userID in familiars) {
+                                            if (
+                                                familiars[userID].username
+                                                    .trim()
+                                                    .toLowerCase()
+                                                    .includes(
+                                                        event.target.value.toLowerCase()
+                                                    )
+                                            ) {
+                                                results[userID] =
+                                                    familiars[userID];
+                                            }
+                                        }
+
+                                        const serverResults = await client.users.retrieve(
+                                            event.target.value
+                                        );
+                                        if (serverResults) {
+                                            dispatch(
+                                                addFamiliar(serverResults)
+                                            );
+                                            dispatch(
+                                                setInputState("search-bar", "")
+                                            );
+                                            dispatch(
+                                                addConversation(
+                                                    serverResults.userID
+                                                )
+                                            );
+                                            history.push(
+                                                "/" + serverResults.userID
+                                            );
+                                            clickFX.play();
+                                        }
+                                    }
+                                } catch (err) {
+                                    console.error(err);
+                                }
+                            }}
                         />
                         <span className="icon is-small is-left">
                             <FontAwesomeIcon

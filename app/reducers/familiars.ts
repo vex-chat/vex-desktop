@@ -32,13 +32,20 @@ const counterSlice = createSlice({
         set: (_state, action) => {
             return action.payload;
         },
+        add: (state: Record<string, ISerializableUser>, action) => {
+            state[action.payload.userID] = action.payload;
+            return state;
+        },
     },
 });
 
-export const { set } = counterSlice.actions;
+export const { set, add } = counterSlice.actions;
 
 export const setFamiliars = (users: IUser[]): AppThunk => (dispatch) =>
     dispatch(set(serializeUserList(users)));
+
+export const addFamiliar = (users: IUser): AppThunk => (dispatch) =>
+    dispatch(add(serializeUser(users)));
 
 export const selectFamiliars = (state: RootState): Record<string, IUser> =>
     deserializeUserList(state.familiars);
