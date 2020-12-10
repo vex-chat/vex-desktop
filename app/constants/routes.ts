@@ -1,3 +1,4 @@
 export const routes: Record<string, string> = {
-    HOME: "/:userID?",
+    MESSAGING: "/messaging/:userID",
+    REGISTER: "/register",
 };

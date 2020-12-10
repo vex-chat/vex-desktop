@@ -1,6 +1,6 @@
 import React from "react";
-import Home from "../components/Home";
+import Messaging from "../components/Messaging";
 
 export default function HomePage(): JSX.Element {
-    return <Home />;
+    return <Messaging />;
 }

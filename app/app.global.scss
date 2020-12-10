@@ -2,30 +2,42 @@ $tag-radius: 10px;
 
 @import "../node_modules/bulma/bulma.sass";
 
+.title-bar {
+    -ms-overflow-style: scrollbar;
+    -webkit-app-region:drag;
+}
+
 div {
     display: block;
 }
 
 .tag:not(body) {
-    padding: 1.0ch 1.5ch 0.5ch 1.5ch;
+    padding: 10px 15px 5px 15px;
     line-height: 1.25;
 }
 
 .message-box {
     white-space: pre !important;
     height: auto !important;
-    padding: 1ch
+    padding: 10px
 }
 
 .message-box > p {
     font-size: 16px;
 }
 
+.title-bar {
+    height: 22px;
+    width: 100vw;
+    border-bottom: 2px solid $light;
+}
+
 .sidebar {
     position: absolute;
     overflow-y: auto;
     width: 265px;
-    height: 100%;
+    height: calc(100% - 22px);
+    top: 22px;
     background-color: $light;
 }
 
@@ -33,6 +45,8 @@ div {
     position: absolute;
     width: calc(100% - 265px);
     right: 0;
+    height: calc(100% - 22px);
+    top: 22px;
     background-color: $white;
     z-index: -1;
 }
@@ -40,23 +54,47 @@ div {
 .conversation-wrapper {
     position: relative;
     top: 0;
-    bottom: 140px;
-    height: calc(100vh - 140px);
+    bottom: 160px;
+    height: calc(100vh - 160px);
     overflow-y:auto;
     z-index: 0;
-
+    padding: 10px 20px;
 }
 
 div.sidebar > aside > ul > li > a:hover {
     background-color:darken($light, 5%);
 }
 
+
+.Aligner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .Aligner-item {
+    max-width: 50%;
+  }
+
+  .Aligner-item--top {
+    align-self: flex-start;
+  }
+
+  .Aligner-item--bottom {
+    align-self: flex-end;
+  }
+
+
 .pane-topbar {
-    padding: 1ch;
+    padding: 10px 20px;
+    height: 55px;
     position: sticky;
     top: 0px;
     z-index: 1;
     background-color: #fff;
+    border-bottom: 2px solid $light;
 }
 
 .pane-topbar-content {
@@ -72,7 +110,7 @@ div.sidebar > aside > ul > li > a:hover {
     position: fixed;
     bottom: 0;
     width: calc(100% - 265px);
-    padding: 1.2ch 1.2ch 1.2ch 1.2ch;
+    padding: 10px 20px;
     height: 100px;
 }
 
@@ -85,8 +123,9 @@ div.sidebar > aside > ul > li > a:hover {
 .search-wrapper {
     position: sticky;
     top: 0;
-    padding: 2ch;
-    width: 280px;
+    padding: 10px 20px;
+    width: 100%;
+    height: 53px;
     margin: 0px;
     background-color: $light;
     z-index: 100;
@@ -101,17 +140,26 @@ div.sidebar > aside > ul > li > a:hover {
     margin-top: 0;
 }
 
+.field:not(:last-child) {
+    margin-bottom: 0;
+}
+
 .familiar-button {
-    padding: 1ch 1ch 1ch 2ch;
+    padding: 10px 10px 10px 20px;
     cursor: pointer;
 }
 
+
+.familiar-button.is-active {
+    background-color: darken($light, 5%);
+}
+
 .username-text-48x48 {
-    padding-top: 1.25ch;
+    padding-top: 15px;
 }
 
 .username-text-32x32 {
-    padding-top: .6ch;
+    padding-top: 5px;
 }
 
 .sidebar-familiar:hover {
@@ -126,9 +174,6 @@ div.sidebar > aside > ul > li > a:hover {
     color: $black !important;
 }
 
-.conversation-wrapper {
-    padding: 1ch 2ch 1ch 2ch;
-}
 
 .menu-list a {
     padding: 0;

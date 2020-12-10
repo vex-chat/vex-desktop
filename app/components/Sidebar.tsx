@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IUser } from "@vex-chat/vex-js";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import {
     addConversation,
     selectConversations,
@@ -24,6 +24,7 @@ alertFX.load();
 export default function Sidebar(): JSX.Element {
     const user: IUser = useSelector(selectUser);
     const history = useHistory();
+    const params: { userID: string } = useParams();
 
     const dispatch = useDispatch();
     const inputs = useSelector(selectInputs);
@@ -94,7 +95,7 @@ export default function Sidebar(): JSX.Element {
                                                 })
                                             );
                                             history.push(
-                                                "/" + serverResults.userID
+                                                "./" + serverResults.userID
                                             );
                                             clickFX.play();
                                         }
@@ -113,10 +114,12 @@ export default function Sidebar(): JSX.Element {
                     </p>
                 </div>
             </div>
+
             <aside className="menu">
                 <ul className="menu-list">
                     {FamiliarButton({
                         user: familiars[user.userID],
+                        params,
                         self: true,
                     })}
 
@@ -129,7 +132,10 @@ export default function Sidebar(): JSX.Element {
                             return;
                         }
 
-                        return FamiliarButton({ user: familiars[userID] });
+                        return FamiliarButton({
+                            user: familiars[userID],
+                            params,
+                        });
                     })}
                 </ul>
             </aside>
@@ -140,9 +146,15 @@ export default function Sidebar(): JSX.Element {
 type buttonProps = {
     user: IUser;
     self?: boolean;
+    active?: boolean;
+    params: { userID: string };
 };
 
-function FamiliarButton({ user, self = false }: buttonProps): JSX.Element {
+function FamiliarButton({
+    user,
+    params,
+    self = false,
+}: buttonProps): JSX.Element {
     if (!user) {
         return <div />;
     }
@@ -152,8 +164,13 @@ function FamiliarButton({ user, self = false }: buttonProps): JSX.Element {
     }
 
     return (
-        <li className="familiar-button" key={user.userID}>
-            <Link to={"/" + user.userID}>{IconUsername(user, 48)}</Link>
+        <li
+            className={`familiar-button${
+                user.userID === params.userID ? " is-active" : ""
+            }`}
+            key={user.userID}
+        >
+            <Link to={"./" + user.userID}>{IconUsername(user, 48)}</Link>
         </li>
     );
 }

@@ -3,7 +3,7 @@ import { remote } from "electron";
 import { Switch, Route, useHistory } from "react-router-dom";
 import { routes } from "./constants/routes";
 import App from "./views/App";
-import HomePage from "./views/HomePage";
+import MessagingPage from "./views/MessagingPage";
 import { Client, IMessage, IConversation } from "@vex-chat/vex-js";
 import { useDispatch } from "react-redux";
 import { setUser } from "./reducers/user";
@@ -11,6 +11,8 @@ import os from "os";
 import { addFamiliar, setFamiliars } from "./reducers/familiars";
 import { setMessages } from "./reducers/messages";
 import { addConversation, setConversations } from "./reducers/conversations";
+import Register from "./components/Register";
+import Loading from "./components/Loading";
 
 const homedir = os.homedir();
 export const progFolder = `${homedir}/.vex-desktop`;
@@ -22,9 +24,15 @@ export const client = new Client(localStorage.getItem("PK")!, {
     dbFolder: progFolder,
 });
 client.on("ready", async () => {
-    await client.register(Client.randomUsername());
-    client.login();
+    const registeredUser = await client.users.retrieve(client.getKeys().public);
+    if (registeredUser) {
+        await client.login();
+    } else {
+        // hacky
+        client.emit("needs-register");
+    }
 });
+
 client.init();
 
 export interface IDisplayMessage extends IMessage {
@@ -37,9 +45,15 @@ export default function Base(): JSX.Element {
     const history = useHistory();
 
     useEffect(() => {
+        client.on("needs-register", async () => {
+            history.push("/register");
+        });
+
         client.on("authed", async () => {
             const me = client.users.me();
             dispatch(setUser(me));
+
+            history.push("/messaging/" + me.userID);
 
             const conversations = await client.conversations.retrieve();
             dispatch(setConversations(conversations));
@@ -76,13 +90,13 @@ export default function Base(): JSX.Element {
                 message.recipient !== message.sender
             ) {
                 const msgNotification = new Notification("Vex", {
-                    body: "You've got a new message.",
+                    body: message.message,
                 });
 
                 msgNotification.onclick = () => {
                     remote.getCurrentWindow().show();
                     history.push(
-                        "/" +
+                        "/messages/" +
                             (dispMsg.direction === "incoming"
                                 ? dispMsg.sender
                                 : dispMsg.recipient)
@@ -95,7 +109,9 @@ export default function Base(): JSX.Element {
     return (
         <App>
             <Switch>
-                <Route path={routes.HOME} component={HomePage} />
+                <Route path={routes.MESSAGING} component={MessagingPage} />
+                <Route path={routes.REGISTER} component={Register} />
+                <Route exact path={"/"} component={() => Loading(256)} />
             </Switch>
         </App>
     );

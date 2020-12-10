@@ -9,12 +9,10 @@ import { client } from "../Base";
 import { ISzDisplayMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
-import { selectUser } from "../reducers/user";
 
 export default function Pane(): JSX.Element {
     // state
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
-    const user: IUser = useSelector(selectUser);
     const inputValues: Record<string, string> = useSelector(selectInputs);
     const dispatch = useDispatch();
 
@@ -46,7 +44,7 @@ export default function Pane(): JSX.Element {
 
     return (
         <div className="pane">
-            {TopBar(familiar, user.userID === userID)}
+            {TopBar(familiar)}
             <div className="conversation-wrapper">
                 {threadMessages &&
                     Object.keys(threadMessages).map((key) => {
@@ -57,7 +55,7 @@ export default function Pane(): JSX.Element {
             <div className="chat-input-wrapper">
                 <textarea
                     value={inputValue}
-                    className="textarea chat-input"
+                    className="textarea chat-input has-fixed-size"
                     rows={2}
                     onChange={(event) => {
                         dispatch(setInputState(userID, event.target.value));
