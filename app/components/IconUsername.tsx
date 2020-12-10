@@ -2,7 +2,11 @@ import { IUser } from "@vex-chat/vex-js";
 import React from "react";
 import { strToIcon } from "../utils/strToIcon";
 
-export function IconUsername(user: IUser, iconSize = 48 | 32): JSX.Element {
+export function IconUsername(
+    user: IUser,
+    iconSize = 48 | 32,
+    subtitle = ""
+): JSX.Element {
     const size = iconSize.toString() + "x" + iconSize.toString();
 
     return (
@@ -16,9 +20,14 @@ export function IconUsername(user: IUser, iconSize = 48 | 32): JSX.Element {
                 </figure>
             </span>
             <span className="media-content">
-                <span className={`title is-6 username-text-${size}`}>
+                <p
+                    className={`title is-6 username-text-${size} ${
+                        subtitle !== "" ? "has-subtitle" : ""
+                    }`}
+                >
                     {user.username}
-                </span>
+                </p>
+                <p className={"help subtitle is-7"}>{subtitle}</p>
             </span>
         </span>
     );

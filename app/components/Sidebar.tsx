@@ -120,7 +120,7 @@ export default function Sidebar(): JSX.Element {
                     {FamiliarButton({
                         user: familiars[user.userID],
                         params,
-                        self: true,
+                        subtitle: "Me",
                     })}
 
                     {Object.keys(conversations).map((userID) => {
@@ -135,6 +135,7 @@ export default function Sidebar(): JSX.Element {
                         return FamiliarButton({
                             user: familiars[userID],
                             params,
+                            subtitle: "",
                         });
                     })}
                 </ul>
@@ -145,23 +146,17 @@ export default function Sidebar(): JSX.Element {
 
 type buttonProps = {
     user: IUser;
-    self?: boolean;
     params: { userID: string };
-    appendUsername?: boolean;
+    subtitle: string;
 };
 
 function FamiliarButton({
     user,
     params,
-    self = false,
-    appendUsername = false,
+    subtitle = "",
 }: buttonProps): JSX.Element {
     if (!user) {
         return <div />;
-    }
-
-    if (self) {
-        user.username = appendUsername ? "Me: " + user.username : "Me";
     }
 
     return (
@@ -171,7 +166,9 @@ function FamiliarButton({
             }`}
             key={user.userID}
         >
-            <Link to={"./" + user.userID}>{IconUsername(user, 48)}</Link>
+            <Link to={"./" + user.userID}>
+                {IconUsername(user, 48, subtitle)}
+            </Link>
         </li>
     );
 }

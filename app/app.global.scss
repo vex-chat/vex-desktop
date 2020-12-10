@@ -158,9 +158,19 @@ div.sidebar > aside > ul > li > a:hover {
 .username-text-48x48 {
     padding-top: 15px;
 }
+.username-text-48x48.has-subtitle {
+    padding-top: 10px;
+    line-height: 0.7;
+}
+
 
 .username-text-32x32 {
     padding-top: 5px;
+}
+
+.username-text-32x32.has-subtitle {
+    padding-top: 2px;
+    line-height: 0.8;
 }
 
 .sidebar-familiar:hover {

@@ -46,11 +46,7 @@ export default function Pane(): JSX.Element {
 
     return (
         <div className="pane">
-            {TopBar(
-                familiar,
-                params.userID === user.userID,
-                params.userID === user.userID
-            )}
+            {TopBar(familiar, params.userID === user.userID ? "Me" : "")}
             <div className="conversation-wrapper">
                 {threadMessages &&
                     Object.keys(threadMessages).map((key) => {
@@ -114,13 +110,9 @@ function MessageBox(message: ISzDisplayMessage): JSX.Element {
     }
 }
 
-function TopBar(user: IUser, self = false): JSX.Element {
+function TopBar(user: IUser, subtitle = ""): JSX.Element {
     if (!user) {
         return <div />;
-    }
-
-    if (self) {
-        user.username = "Me";
     }
 
     return (
@@ -129,7 +121,7 @@ function TopBar(user: IUser, self = false): JSX.Element {
                 <div className="column is-narrow has-text-centered">
                     <div className="pane-topbar-content">
                         <div className="container">
-                            {IconUsername(user, 32)}
+                            {IconUsername(user, 32, subtitle)}
                         </div>
                     </div>
                 </div>
