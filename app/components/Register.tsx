@@ -1,7 +1,7 @@
 import { faCheck, faTimes, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Client } from "@vex-chat/vex-js";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { client } from "../Base";
 import { selectInputs, setInputState } from "../reducers/inputs";
@@ -19,23 +19,11 @@ export default function IRegister(): JSX.Element {
 
     const value = inputs[FORM_NAME + "-username"] || "";
 
-    useEffect(() => {
-        if (!inputs[FORM_NAME + "-username"]) {
-            dispatch(
-                setInputState(FORM_NAME + "-username", Client.randomUsername())
-            );
-        }
-    });
-
     return (
         <div className="Aligner full-size">
             <div className="Aligner-item Aligner-item--top"></div>
             <div className="Aligner-item">
-                <div className="box has-background-white">
-                    <h1 className="title">Register</h1>
-                    <p className="help subtitle">
-                        The easiest registration process ever. No, seriously.
-                    </p>
+                <div className="box has-background-white register-form">
                     <div className="field">
                         <label className="label is-small">
                             Just pick a username:{" "}
@@ -47,7 +35,7 @@ export default function IRegister(): JSX.Element {
                         </label>
                         <p className="control has-icons-left has-icons-right">
                             <input
-                                className="input"
+                                className="username-input input"
                                 type="username"
                                 value={value}
                                 onChange={async (event) => {
@@ -92,24 +80,8 @@ export default function IRegister(): JSX.Element {
                                 />
                             </span>
                         </p>
-                    </div>
-                    {/* <div className="field">
-                    <p className="control has-icons-left">
-                        <input
-                            className="input"
-                            type="password"
-                            placeholder="Password"
-                        />
-                        <span className="icon is-small is-left">
-                        <span className="icon is-small is-right">
-                            <FontAwesomeIcon icon={faLock} />
-                        </span>
-                        </span>
-                    </p>
-                </div> */}
-                    <div className="field">
-                        <span className="control">
-                            <div className="buttons is-right">
+                        <p className="control button-container">
+                            <div className="buttons register-form-buttons is-right">
                                 <button
                                     className={`button is-light${
                                         waiting ? " is-disabled" : ""
@@ -159,7 +131,7 @@ export default function IRegister(): JSX.Element {
                                     Chat
                                 </button>
                             </div>
-                        </span>
+                        </p>
                     </div>
                 </div>
             </div>

@@ -150,6 +150,15 @@ div.sidebar > aside > ul > li > a:hover {
     cursor: pointer;
 }
 
+.register-form p {
+    padding-bottom: 12px;
+}
+
+.register-form-buttons {
+    margin-left: 0px;
+    margin-right: -3px;
+}
+
 
 .familiar-button.is-active {
     background-color: darken($light, 5%);

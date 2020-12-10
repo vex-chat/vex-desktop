@@ -108,6 +108,7 @@ export default function Base(): JSX.Element {
 
     return (
         <App>
+            <div className="title-bar" />
             <Switch>
                 <Route path={routes.MESSAGING} component={MessagingPage} />
                 <Route path={routes.REGISTER} component={Register} />
