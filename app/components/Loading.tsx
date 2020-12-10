@@ -20,7 +20,7 @@ export default function Loading(
                 <div className="">
                     <ReactLoading
                         type={animation}
-                        color="#363636"
+                        color={`hsl(0, 0%, 96%)`}
                         height={size}
                         width={size}
                     />
