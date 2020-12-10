@@ -48,7 +48,7 @@ export default function Sidebar(): JSX.Element {
                 <div className="field">
                     <p className="control has-icons-left">
                         <input
-                            className="input has-icons-left is-grey is-small is-rounded"
+                            className="input has-icons-left is-grey is-small is-rounded search-bar"
                             type="text"
                             placeholder="Search"
                             value={inputs["search-bar"] || ""}

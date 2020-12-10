@@ -2,9 +2,38 @@ $tag-radius: 10px;
 
 @import "../node_modules/bulma/bulma.sass";
 
+textarea {
+    border: 1px solid darken($light, 10%) !important;
+    outline: none;
+    border-radius: 10px !important;
+}
+
+#root > div.pane > div.chat-input-wrapper > textarea {
+    box-shadow: inset 0 0 5px darken($light, 5%);
+    border: 1px solid darken($light, 5%) !important;
+    background-color: $light;
+}
+
+.search-bar {
+    border-radius: 10px !important;
+}
+
+input {
+    border-radius: 10px !important;
+}
+
+button {
+    border-radius: 10px! important;
+}
+
 .title-bar {
+    position: absolute;
+    height: 22px;
+    width: 100%;
+    top: 0px;
     -ms-overflow-style: scrollbar;
     -webkit-app-region:drag;
+    background-image: linear-gradient(to right, $light, $white);
 }
 
 div {
@@ -65,13 +94,16 @@ div.sidebar > aside > ul > li > a:hover {
     background-color:darken($light, 5%);
 }
 
+.full-size {
+    width: 100vw;
+    height: calc(100vh - 22px);
+    top: 22px;
+}
 
 .Aligner {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100vw;
-    height: 100vh;
   }
 
   .Aligner-item {

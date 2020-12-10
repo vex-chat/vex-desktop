@@ -57,7 +57,7 @@ export default function Pane(): JSX.Element {
             <div className="chat-input-wrapper">
                 <textarea
                     value={inputValue}
-                    className="textarea chat-input has-fixed-size"
+                    className="textarea chat-input has-fixed-size is-focused"
                     rows={2}
                     onChange={(event) => {
                         dispatch(
