@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { IConversation } from "@vex-chat/vex-js";
 import { AppThunk, RootState } from "../store";
 
 const conversationSlice = createSlice({
@@ -9,7 +10,21 @@ const conversationSlice = createSlice({
             return action.payload;
         },
         add: (state: Record<string, string[]>, action) => {
-            state[action.payload.userID] = action.payload;
+            const payload: Partial<IConversation> = action.payload;
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            if (state[payload.userID!] === undefined) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                state[payload.userID!] = [];
+            } else {
+                if (payload.fingerprint !== undefined) {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    state[payload.userID!] = [
+                        ...state[payload.userID!],
+                        payload.fingerprint,
+                    ];
+                }
+            }
+
             return state;
         },
     },
@@ -18,11 +33,9 @@ const conversationSlice = createSlice({
 export const { set, add } = conversationSlice.actions;
 
 export const addConversation = (
-    userID: string,
-    fingerprints: string[] = []
+    conversation: Partial<IConversation>
 ): AppThunk => (dispatch) => {
-    const payload = { userID, fingerprints };
-    dispatch(add(payload));
+    dispatch(add(conversation));
 };
 
 export const setConversations = (state: Record<string, string[]>): AppThunk => (

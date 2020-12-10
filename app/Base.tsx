@@ -4,13 +4,13 @@ import { Switch, Route, useHistory } from "react-router-dom";
 import { routes } from "./constants/routes";
 import App from "./views/App";
 import HomePage from "./views/HomePage";
-import { Client, IMessage } from "@vex-chat/vex-js";
+import { Client, IMessage, IConversation } from "@vex-chat/vex-js";
 import { useDispatch } from "react-redux";
 import { setUser } from "./reducers/user";
 import os from "os";
 import { setFamiliars } from "./reducers/familiars";
 import { setMessages } from "./reducers/messages";
-import { setConversations } from "./reducers/conversations";
+import { addConversation, setConversations } from "./reducers/conversations";
 
 const homedir = os.homedir();
 export const progFolder = `${homedir}/.vex-desktop`;
@@ -53,6 +53,10 @@ export default function Base(): JSX.Element {
                     dispatch(setMessages(message));
                 }
             }
+        });
+
+        client.on("conversation", async (conversation: IConversation) => {
+            dispatch(addConversation(conversation));
         });
 
         client.on("message", async (message: IMessage) => {

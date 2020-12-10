@@ -7,13 +7,8 @@ import { Link, useHistory } from "react-router-dom";
 import {
     addConversation,
     selectConversations,
-    setConversations,
 } from "../reducers/conversations";
-import {
-    addFamiliar,
-    selectFamiliars,
-    setFamiliars,
-} from "../reducers/familiars";
+import { addFamiliar, selectFamiliars } from "../reducers/familiars";
 import { selectInputs, setInputState } from "../reducers/inputs";
 import { selectUser } from "../reducers/user";
 import { strToIcon } from "../utils/strToIcon";
@@ -22,6 +17,9 @@ import { client } from "../Base";
 
 export const clickFX = new Audio("https://www.extrahash.org/move.wav");
 clickFX.load();
+
+export const alertFX = new Audio("https://www.extrahash.org/alert.wav");
+alertFX.load();
 
 export default function Sidebar(): JSX.Element {
     const user: IUser = useSelector(selectUser);
@@ -90,9 +88,10 @@ export default function Sidebar(): JSX.Element {
                                                 setInputState("search-bar", "")
                                             );
                                             dispatch(
-                                                addConversation(
-                                                    serverResults.userID
-                                                )
+                                                addConversation({
+                                                    userID:
+                                                        serverResults.userID,
+                                                })
                                             );
                                             history.push(
                                                 "/" + serverResults.userID
