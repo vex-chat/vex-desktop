@@ -9,21 +9,23 @@ import { client } from "../Base";
 import { ISzDisplayMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
+import { selectUser } from "../reducers/user";
 
 export default function Pane(): JSX.Element {
     // state
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
+    const user = useSelector(selectUser);
     const inputValues: Record<string, string> = useSelector(selectInputs);
     const dispatch = useDispatch();
 
     // url parameters
-    const { userID }: { userID: string } = useParams();
+    const params: { userID: string } = useParams();
 
-    const familiar: IUser | undefined = familiars[userID];
-    const inputValue: string = inputValues[userID] || "";
+    const familiar: IUser | undefined = familiars[params.userID];
+    const inputValue: string = inputValues[params.userID] || "";
 
     const allMessages = useSelector(selectMessages);
-    const threadMessages = allMessages[userID];
+    const threadMessages = allMessages[params.userID];
 
     const messagesEndRef = useRef(null);
 
@@ -44,7 +46,11 @@ export default function Pane(): JSX.Element {
 
     return (
         <div className="pane">
-            {TopBar(familiar)}
+            {TopBar(
+                familiar,
+                params.userID === user.userID,
+                params.userID === user.userID
+            )}
             <div className="conversation-wrapper">
                 {threadMessages &&
                     Object.keys(threadMessages).map((key) => {
@@ -58,14 +64,16 @@ export default function Pane(): JSX.Element {
                     className="textarea chat-input has-fixed-size"
                     rows={2}
                     onChange={(event) => {
-                        dispatch(setInputState(userID, event.target.value));
+                        dispatch(
+                            setInputState(params.userID, event.target.value)
+                        );
                     }}
                     onKeyDown={(event) => {
                         if (event.key === "Enter" && !event.shiftKey) {
                             event.preventDefault();
 
                             client.messages.send(familiar.userID, inputValue);
-                            dispatch(setInputState(userID, ""));
+                            dispatch(setInputState(params.userID, ""));
                         }
                     }}
                 />

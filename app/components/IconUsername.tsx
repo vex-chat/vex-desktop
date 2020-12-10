@@ -7,19 +7,19 @@ export function IconUsername(user: IUser, iconSize = 48 | 32): JSX.Element {
 
     return (
         <span className="media">
-            <div className="media-left">
+            <span className="media-left">
                 <figure className={`image is-${size}`}>
                     <img
                         className="is-rounded"
                         src={strToIcon(user.username)}
                     />
                 </figure>
-            </div>
-            <div className="media-content">
-                <p className={`title is-6 username-text-${size}`}>
+            </span>
+            <span className="media-content">
+                <span className={`title is-6 username-text-${size}`}>
                     {user.username}
-                </p>
-            </div>
+                </span>
+            </span>
         </span>
     );
 }

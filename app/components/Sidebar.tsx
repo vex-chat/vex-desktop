@@ -146,21 +146,22 @@ export default function Sidebar(): JSX.Element {
 type buttonProps = {
     user: IUser;
     self?: boolean;
-    active?: boolean;
     params: { userID: string };
+    appendUsername?: boolean;
 };
 
 function FamiliarButton({
     user,
     params,
     self = false,
+    appendUsername = false,
 }: buttonProps): JSX.Element {
     if (!user) {
         return <div />;
     }
 
     if (self) {
-        user.username = "Me";
+        user.username = appendUsername ? "Me: " + user.username : "Me";
     }
 
     return (

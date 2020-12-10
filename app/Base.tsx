@@ -96,7 +96,7 @@ export default function Base(): JSX.Element {
                 msgNotification.onclick = () => {
                     remote.getCurrentWindow().show();
                     history.push(
-                        "/messages/" +
+                        "/messaging/" +
                             (dispMsg.direction === "incoming"
                                 ? dispMsg.sender
                                 : dispMsg.recipient)
