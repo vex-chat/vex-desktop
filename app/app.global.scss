@@ -5,13 +5,11 @@ $tag-radius: 10px;
 textarea {
     border: 1px solid darken($light, 10%) !important;
     outline: none;
-    border-radius: 10px !important;
+    border-radius: 0px !important;
 }
 
 #root > div.pane > div.chat-input-wrapper > textarea {
-    box-shadow: inset 0 0 5px darken($light, 5%);
-    border: 1px solid darken($light, 5%) !important;
-    background-color: $light;
+    box-shadow: none;
 }
 
 .search-bar {
