@@ -47,10 +47,20 @@ export default function Sidebar(): JSX.Element {
             </div>
             <aside className="menu">
                 <ul className="menu-list">
+                    {FamiliarButton({
+                        user: familiars[user.userID],
+                        self: true,
+                    })}
+
                     {Object.keys(conversations).map((userID) => {
                         if (familiars[userID] === undefined) {
-                            return null;
+                            return;
                         }
+
+                        if (user.userID === userID) {
+                            return;
+                        }
+
                         return FamiliarButton({ user: familiars[userID] });
                     })}
                 </ul>
@@ -61,9 +71,18 @@ export default function Sidebar(): JSX.Element {
 
 type buttonProps = {
     user: IUser;
+    self?: boolean;
 };
 
-function FamiliarButton({ user }: buttonProps): JSX.Element {
+function FamiliarButton({ user, self = false }: buttonProps): JSX.Element {
+    if (!user) {
+        return <div />;
+    }
+
+    if (self) {
+        user.username = "Me";
+    }
+
     return (
         <li className="familiar-button" key={user.userID}>
             <Link to={"/" + user.userID}>{IconUsername(user, 48)}</Link>

@@ -9,10 +9,12 @@ import { client } from "../Base";
 import { ISzDisplayMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
+import { selectUser } from "../reducers/user";
 
 export default function Pane(): JSX.Element {
     // state
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
+    const user: IUser = useSelector(selectUser);
     const inputValues: Record<string, string> = useSelector(selectInputs);
     const dispatch = useDispatch();
 
@@ -44,7 +46,7 @@ export default function Pane(): JSX.Element {
 
     return (
         <div className="pane">
-            {TopBar(familiar)}
+            {TopBar(familiar, user.userID === userID)}
             <div className="conversation-wrapper">
                 {threadMessages &&
                     Object.keys(threadMessages).map((key) => {
@@ -106,7 +108,15 @@ function MessageBox(message: ISzDisplayMessage): JSX.Element {
     }
 }
 
-function TopBar(user: IUser): JSX.Element {
+function TopBar(user: IUser, self = false): JSX.Element {
+    if (!user) {
+        return <div />;
+    }
+
+    if (self) {
+        user.username = "Me";
+    }
+
     return (
         <div className="pane-topbar">
             <div className="columns is-centered">
