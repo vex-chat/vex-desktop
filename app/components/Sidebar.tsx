@@ -47,9 +47,12 @@ export default function Sidebar(): JSX.Element {
             </div>
             <aside className="menu">
                 <ul className="menu-list">
-                    {Object.keys(conversations).map((familiar) =>
-                        FamiliarButton({ user: familiars[familiar] })
-                    )}
+                    {Object.keys(conversations).map((userID) => {
+                        if (familiars[userID] === undefined) {
+                            return null;
+                        }
+                        return FamiliarButton({ user: familiars[userID] });
+                    })}
                 </ul>
             </aside>
         </div>
