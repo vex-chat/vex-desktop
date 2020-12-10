@@ -19,6 +19,7 @@ const conversationSlice = createSlice({
                 if (payload.fingerprint !== undefined) {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     state[payload.userID!] = [
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         ...state[payload.userID!],
                         payload.fingerprint,
                     ];

@@ -8,7 +8,7 @@ import { Client, IMessage, IConversation } from "@vex-chat/vex-js";
 import { useDispatch } from "react-redux";
 import { setUser } from "./reducers/user";
 import os from "os";
-import { setFamiliars } from "./reducers/familiars";
+import { addFamiliar, setFamiliars } from "./reducers/familiars";
 import { setMessages } from "./reducers/messages";
 import { addConversation, setConversations } from "./reducers/conversations";
 
@@ -57,6 +57,7 @@ export default function Base(): JSX.Element {
 
         client.on("conversation", async (conversation: IConversation) => {
             dispatch(addConversation(conversation));
+            dispatch(addFamiliar(conversation.user));
         });
 
         client.on("message", async (message: IMessage) => {
