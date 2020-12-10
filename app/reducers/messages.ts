@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IDisplayMessage } from "../Base";
+import { IDisplayMessage } from "../views/Base";
 import { AppThunk, RootState } from "../store";
 
 export interface ISzDisplayMessage {
@@ -27,6 +27,9 @@ const messageSlice = createSlice({
     name: "messages",
     initialState: {},
     reducers: {
+        reset: () => {
+            return {};
+        },
         add: (
             state: Record<string, Record<string, ISzDisplayMessage>>,
             action
@@ -50,9 +53,13 @@ const messageSlice = createSlice({
     },
 });
 
-export const { add } = messageSlice.actions;
+export const { add, reset } = messageSlice.actions;
 
-export const setMessages = (message: IDisplayMessage): AppThunk => (
+export const resetMessages = (): AppThunk => (dispatch) => {
+    dispatch(reset());
+};
+
+export const addMessage = (message: IDisplayMessage): AppThunk => (
     dispatch
 ) => {
     const szMsg = serializeMessage(message);

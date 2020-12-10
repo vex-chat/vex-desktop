@@ -11,19 +11,26 @@ const inputSlice = createSlice({
             state[userID] = input;
             return state;
         },
+        reset: () => {
+            return {};
+        },
     },
 });
 
-export const { add } = inputSlice.actions;
+export const { add, reset } = inputSlice.actions;
 
-export const setInputState = (userID: string, input: string): AppThunk => (
+export const addInputState = (userID: string, input: string): AppThunk => (
     dispatch
 ) => {
     const details = { userID, input };
     dispatch(add(details));
 };
 
-export const selectInputs = (state: RootState): Record<string, string> =>
+export const resetInputStates = (): AppThunk => (dispatch) => {
+    dispatch(reset());
+};
+
+export const selectInputStates = (state: RootState): Record<string, string> =>
     state.inputs;
 
 export default inputSlice.reducer;

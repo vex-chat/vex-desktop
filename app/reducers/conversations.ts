@@ -9,6 +9,9 @@ const conversationSlice = createSlice({
         set: (_state: Record<string, string[]>, action) => {
             return action.payload;
         },
+        reset: () => {
+            return {};
+        },
         add: (state: Record<string, string[]>, action) => {
             const payload: Partial<IConversation> = action.payload;
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -31,7 +34,7 @@ const conversationSlice = createSlice({
     },
 });
 
-export const { set, add } = conversationSlice.actions;
+export const { set, add, reset } = conversationSlice.actions;
 
 export const addConversation = (
     conversation: Partial<IConversation>
@@ -43,6 +46,10 @@ export const setConversations = (state: Record<string, string[]>): AppThunk => (
     dispatch
 ) => {
     dispatch(set(state));
+};
+
+export const resetConversations = (): AppThunk => (dispatch) => {
+    dispatch(reset());
 };
 
 export const selectConversations = (

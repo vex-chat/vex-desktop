@@ -1,4 +1,8 @@
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+    faCog,
+    faFingerprint,
+    faSearch,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IUser } from "@vex-chat/vex-js";
 import React from "react";
@@ -6,14 +10,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useParams } from "react-router-dom";
 import {
     addConversation,
+    resetConversations,
     selectConversations,
 } from "../reducers/conversations";
-import { addFamiliar, selectFamiliars } from "../reducers/familiars";
-import { selectInputs, setInputState } from "../reducers/inputs";
-import { selectUser } from "../reducers/user";
+import {
+    addFamiliar,
+    resetFamiliars,
+    selectFamiliars,
+} from "../reducers/familiars";
+import {
+    selectInputStates,
+    addInputState,
+    resetInputStates,
+} from "../reducers/inputs";
+import { resetUser, selectUser } from "../reducers/user";
 import { strToIcon } from "../utils/strToIcon";
 import { IconUsername } from "./IconUsername";
-import { client } from "../Base";
+import { client } from "../views/Base";
+import { routes } from "../constants/routes";
+import { resetMessages } from "../reducers/messages";
 
 export const clickFX = new Audio("https://www.extrahash.org/move.wav");
 clickFX.load();
@@ -27,7 +42,7 @@ export default function Sidebar(): JSX.Element {
     const params: { userID: string } = useParams();
 
     const dispatch = useDispatch();
-    const inputs = useSelector(selectInputs);
+    const inputs = useSelector(selectInputStates);
 
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const conversations: Record<string, string[]> = useSelector(
@@ -39,12 +54,94 @@ export default function Sidebar(): JSX.Element {
             <div className="field has-addons search-wrapper">
                 <figure className="user-icon image is-32x32">
                     {user.userID !== "" && (
-                        <img
-                            className="is-rounded"
-                            src={strToIcon(user.username.slice(0, 2))}
-                        />
+                        <div
+                            className={`dropdown ${
+                                inputs["own-user-icon-dropdown"] || ""
+                            }`}
+                        >
+                            <div
+                                className="dropdown-trigger pointer"
+                                onClick={() => {
+                                    if (
+                                        inputs["own-user-icon-dropdown"] ==
+                                            "" ||
+                                        inputs["own-user-icon-dropdown"] ==
+                                            undefined
+                                    ) {
+                                        dispatch(
+                                            addInputState(
+                                                "own-user-icon-dropdown",
+                                                "is-active"
+                                            )
+                                        );
+                                    } else {
+                                        dispatch(
+                                            addInputState(
+                                                "own-user-icon-dropdown",
+                                                ""
+                                            )
+                                        );
+                                    }
+                                }}
+                            >
+                                <img
+                                    className="is-rounded"
+                                    src={strToIcon(user.username.slice(0, 2))}
+                                />
+                            </div>
+                            <div
+                                className="dropdown-menu"
+                                id="dropdown-menu2"
+                                role="menu"
+                            >
+                                <div className="dropdown-content">
+                                    <div className="dropdown-item">
+                                        {IconUsername(user, 48, "")}
+                                    </div>
+                                    <Link
+                                        to={routes.SETTINGS}
+                                        className="dropdown-item"
+                                        onClick={() => {
+                                            dispatch(
+                                                addInputState(
+                                                    "own-user-icon-dropdown",
+                                                    ""
+                                                )
+                                            );
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faCog} />
+                                        &nbsp; Preferences
+                                    </Link>
+                                    <Link
+                                        to={routes.REGISTER}
+                                        className="dropdown-item has-text-danger"
+                                        onClick={async () => {
+                                            await client.close();
+                                            dispatch(
+                                                addInputState(
+                                                    "own-user-icon-dropdown",
+                                                    ""
+                                                )
+                                            );
+
+                                            // reset state
+                                            dispatch(resetConversations());
+                                            dispatch(resetFamiliars());
+                                            dispatch(resetInputStates());
+                                            dispatch(resetMessages());
+                                            dispatch(resetUser());
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faFingerprint} />
+                                        &nbsp; New Identity
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
                     )}
                 </figure>
+
                 <div className="field">
                     <p className="control has-icons-left">
                         <input
@@ -54,7 +151,7 @@ export default function Sidebar(): JSX.Element {
                             value={inputs["search-bar"] || ""}
                             onChange={async (event) => {
                                 dispatch(
-                                    setInputState(
+                                    addInputState(
                                         "search-bar",
                                         event.target.value
                                     )
@@ -86,7 +183,7 @@ export default function Sidebar(): JSX.Element {
                                                 addFamiliar(serverResults)
                                             );
                                             dispatch(
-                                                setInputState("search-bar", "")
+                                                addInputState("search-bar", "")
                                             );
                                             dispatch(
                                                 addConversation({

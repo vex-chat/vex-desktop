@@ -105,10 +105,10 @@
   dependencies:
     tweetnacl "^1.0.3"
 
-"@vex-chat/vex-js@^0.9.3":
-  version "0.9.3"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/vex-js/0.9.3/369e575d09773a85b4b990c605caaa7c577447859e5df841fd893262b8c99d09#8dd4119ae07ff83e493fae43716c7373fd66ba2e"
-  integrity sha512-+FfPso8ci+Me/oH8126VNu+Vyv+xskl54XpvepOBl/BJs4/wl6tBaAKOjFZ+kc/96PhtXknKLwpSpDBIXa1M/g==
+"@vex-chat/vex-js@^0.9.88":
+  version "0.9.88"
+  resolved "https://npm.pkg.github.com/download/@vex-chat/vex-js/0.9.88/295437d98c2132dcffda3000be01bae7269625f2ecc4b1d236e73fae7c6c0a50#4797451be28852df91c0f2c8ffd4819934dd957b"
+  integrity sha512-YNYlZ0QZEaDNN6J0QyBZsgNGTDinv5XHzT9K5QpVDYN7EQrI5ctET0uf33o6pwYCxIpK8daLqK95JlBJ6HdM2Q==
   dependencies:
     "@extrahash/sleep" "^1.0.0"
     "@types/chalk" "^2.2.0"
@@ -1620,6 +1620,11 @@ rc@^1.2.7:
     ini "~1.3.0"
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
+
+react-loading@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-loading/-/react-loading-2.0.3.tgz#e8138fb0c3e4674e481b320802ac7048ae14ffb9"
+  integrity sha512-Vdqy79zq+bpeWJqC+xjltUjuGApyoItPgL0vgVfcJHhqwU7bAMKzysfGW/ADu6i0z0JiOCRJjo+IkFNkRNbA3A==
 
 readable-stream@^2.0.6:
   version "2.3.7"

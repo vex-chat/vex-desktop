@@ -4,7 +4,7 @@ import { ConnectedRouter } from "connected-react-router";
 import { hot } from "react-hot-loader/root";
 import { History } from "history";
 import { Store } from "./store";
-import Base from "./Base";
+import Base from "./views/Base";
 
 type Props = {
     store: Store;

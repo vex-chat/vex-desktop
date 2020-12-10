@@ -12,6 +12,10 @@ textarea {
     box-shadow: none;
 }
 
+.input-wrapper {
+    padding-bottom: 12px;
+}
+
 .search-bar {
     border-radius: 10px !important;
 }
@@ -31,7 +35,7 @@ button {
     top: 0px;
     -ms-overflow-style: scrollbar;
     -webkit-app-region:drag;
-    background-image: linear-gradient(to right, $light, $white);
+    background-image: linear-gradient(to left, $light, $white);
 }
 
 div {
@@ -180,13 +184,29 @@ div.sidebar > aside > ul > li > a:hover {
     cursor: pointer;
 }
 
-.register-form p {
-    padding-bottom: 12px;
+.pointer {
+    cursor: pointer;
+
+}
+
+.dropdown-content {
+    margin-top: 3px;
+     min-width: 230px;
+}
+
+.settings-delete {
+    position: absolute;
+    right: 10px;
+    top: 32px;
 }
 
 .register-form-buttons {
     margin-left: 0px;
     margin-right: -3px;
+}
+
+.input-wrapper {
+    padding-bottom: 12px;
 }
 
 

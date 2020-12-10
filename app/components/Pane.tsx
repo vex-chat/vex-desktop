@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { selectFamiliars } from "../reducers/familiars";
 import { IconUsername } from "../components/IconUsername";
-import { selectInputs, setInputState } from "../reducers/inputs";
-import { client } from "../Base";
+import { selectInputStates, addInputState } from "../reducers/inputs";
+import { client } from "../views/Base";
 import { ISzDisplayMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
@@ -15,7 +15,7 @@ export default function Pane(): JSX.Element {
     // state
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const user = useSelector(selectUser);
-    const inputValues: Record<string, string> = useSelector(selectInputs);
+    const inputValues: Record<string, string> = useSelector(selectInputStates);
     const dispatch = useDispatch();
 
     // url parameters
@@ -61,7 +61,7 @@ export default function Pane(): JSX.Element {
                     rows={2}
                     onChange={(event) => {
                         dispatch(
-                            setInputState(params.userID, event.target.value)
+                            addInputState(params.userID, event.target.value)
                         );
                     }}
                     onKeyDown={(event) => {
@@ -69,7 +69,7 @@ export default function Pane(): JSX.Element {
                             event.preventDefault();
 
                             client.messages.send(familiar.userID, inputValue);
-                            dispatch(setInputState(params.userID, ""));
+                            dispatch(addInputState(params.userID, ""));
                         }
                     }}
                 />

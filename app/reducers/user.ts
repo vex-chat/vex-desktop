@@ -38,16 +38,23 @@ const userSlice = createSlice({
     name: "user",
     initialState: emptyUser,
     reducers: {
+        reset: () => {
+            return emptyUser;
+        },
         set: (_state, action) => {
             return action.payload;
         },
     },
 });
 
-export const { set } = userSlice.actions;
+export const { set, reset } = userSlice.actions;
 
 export const setUser = (user: IUser): AppThunk => (dispatch) => {
     dispatch(set(serializeUser(user)));
+};
+
+export const resetUser = (): AppThunk => (dispatch) => {
+    dispatch(reset());
 };
 
 export const selectUser = (state: RootState): IUser =>
