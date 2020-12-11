@@ -48,6 +48,19 @@ const conversationSlice = createSlice({
     name: "conversations",
     initialState: {},
     reducers: {
+        mark: (
+            state: Record<string, Record<string, ISerializedSession>>,
+            action
+        ) => {
+            const { userID, conversationID, status } = action.payload;
+
+            if (!state[userID] || !state[userID][conversationID]) {
+                return state;
+            }
+
+            state[userID][conversationID].verified = status;
+            return state;
+        },
         set: (
             _state: Record<string, Record<string, ISerializedSession>>,
             action
@@ -84,7 +97,7 @@ const conversationSlice = createSlice({
     },
 });
 
-export const { set, add, stub, reset } = conversationSlice.actions;
+export const { set, add, stub, reset, mark } = conversationSlice.actions;
 
 export const addConversation = (
     conversation: XTypes.SQL.ISession
@@ -94,6 +107,15 @@ export const addConversation = (
 
 export const stubConversation = (userID: string): AppThunk => (dispatch) => {
     dispatch(stub(userID));
+};
+
+export const markConversation = (
+    userID: string,
+    conversationID: string,
+    status: boolean
+): AppThunk => (dispatch) => {
+    const payload = { userID, conversationID, status };
+    dispatch(mark(payload));
 };
 
 export const setConversations = (

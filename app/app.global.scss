@@ -80,6 +80,14 @@ div {
     background-color: $light;
 }
 
+.verify-mnemonic {
+    background-color: unset;
+}
+
+.verify-mnemonic-wrapper {
+    padding: 0ch 4ch;
+}
+
 .pane {
     position: absolute;
     width: calc(100% - 265px);

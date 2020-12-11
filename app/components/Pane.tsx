@@ -1,7 +1,7 @@
 import { IUser } from "@vex-chat/vex-js";
 import React, { Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Switch, useParams } from "react-router";
+import { Route, Switch, useHistory, useParams } from "react-router";
 import { selectFamiliars } from "../reducers/familiars";
 import { IconUsername } from "../components/IconUsername";
 import { selectInputStates, addInputState } from "../reducers/inputs";
@@ -9,7 +9,10 @@ import { client } from "../views/Base";
 import { ISzDisplayMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
-import { selectConversations } from "../reducers/conversations";
+import {
+    markConversation,
+    selectConversations,
+} from "../reducers/conversations";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { routes } from "../constants/routes";
@@ -21,6 +24,8 @@ export default function Pane(): JSX.Element {
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const inputValues: Record<string, string> = useSelector(selectInputStates);
     const conversations = useSelector(selectConversations);
+
+    const history = useHistory();
 
     // url parameters
     const params: { userID: string } = useParams();
@@ -92,25 +97,71 @@ export default function Pane(): JSX.Element {
                     path={routes.MESSAGING + "/:userID/verify"}
                     component={() => (
                         <div className="verify-wrapper">
-                            <h1 className="title">Verify</h1>
+                            <div className="verify-mnemonic-wrapper">
+                                {fingerprints.map((fingerprint) => {
+                                    const session =
+                                        conversations[params.userID][
+                                            fingerprint
+                                        ];
 
-                            {fingerprints.map((fingerprint) => {
-                                const session =
-                                    conversations[params.userID][fingerprint];
+                                    const mnemonic = client.sessions.verify(
+                                        session
+                                    );
 
-                                const mnemonic = client.sessions.verify(
-                                    session
-                                );
+                                    return (
+                                        <div key={session.sessionID}>
+                                            <code
+                                                key={session.sessionID}
+                                                className="verify-mnemonic"
+                                            >
+                                                <p className="is-family-monospace">
+                                                    {mnemonic}
+                                                </p>
+                                            </code>
 
-                                return (
-                                    <p
-                                        className="is-family-monospace"
-                                        key={session.sessionID}
-                                    >
-                                        {mnemonic}
-                                    </p>
-                                );
-                            })}
+                                            <p>
+                                                Verify with the other user
+                                                through a secure method of
+                                                communication that these words
+                                                match.
+                                            </p>
+                                            <br />
+                                            <p>
+                                                If they don&apos;t match, you
+                                                could be getting pwned.
+                                            </p>
+                                            <br />
+                                            <div className="buttons">
+                                                <button
+                                                    className="button"
+                                                    onClick={() => {
+                                                        history.goBack();
+                                                    }}
+                                                >
+                                                    Go Back
+                                                </button>
+                                                <button
+                                                    className="button is-success"
+                                                    onClick={async () => {
+                                                        await client.sessions.markVerified(
+                                                            fingerprint
+                                                        );
+                                                        dispatch(
+                                                            markConversation(
+                                                                params.userID,
+                                                                fingerprint,
+                                                                true
+                                                            )
+                                                        );
+                                                    }}
+                                                >
+                                                    They Match
+                                                </button>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         </div>
                     )}
                 />
