@@ -1,4 +1,4 @@
-import { IUser } from "@vex-chat/vex-js";
+import { Client, IUser } from "@vex-chat/vex-js";
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -10,16 +10,28 @@ import { ISzDisplayMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
 import { selectUser } from "../reducers/user";
+import { selectConversations } from "../reducers/conversations";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
 export default function Pane(): JSX.Element {
     // state
+    const dispatch = useDispatch();
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const user = useSelector(selectUser);
     const inputValues: Record<string, string> = useSelector(selectInputStates);
-    const dispatch = useDispatch();
+    const conversations = useSelector(selectConversations);
 
     // url parameters
     const params: { userID: string } = useParams();
+
+    const fingerprints = Object.keys(conversations[params.userID] || {});
+    let hasUnverifiedSession = false;
+    for (const fingerprint of fingerprints) {
+        if (!conversations[params.userID][fingerprint].verified) {
+            hasUnverifiedSession = true;
+        }
+    }
 
     const familiar: IUser | undefined = familiars[params.userID];
     const inputValue: string = inputValues[params.userID] || "";
@@ -46,7 +58,37 @@ export default function Pane(): JSX.Element {
 
     return (
         <div className="pane">
-            {TopBar(familiar, params.userID === user.userID ? "Me" : "")}
+            <div className="pane-topbar">
+                <div className="columns is-centered">
+                    <div className="column is-narrow has-text-centered">
+                        <div className="pane-topbar-content">
+                            <div className="container">
+                                {IconUsername(user, 32, "")}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="column is-narrow">
+                        {hasUnverifiedSession && (
+                            <span
+                                onClick={() => {
+                                    for (const fingerprint of fingerprints) {
+                                        const mnemonic = client.sessions.verify(
+                                            conversations[params.userID][
+                                                fingerprint
+                                            ]
+                                        );
+                                        console.log(mnemonic);
+                                    }
+                                }}
+                                className="has-text-danger pointer help"
+                            >
+                                <FontAwesomeIcon icon={faExclamationTriangle} />{" "}
+                                Unverified{" "}
+                            </span>
+                        )}
+                    </div>
+                </div>
+            </div>{" "}
             <div className="conversation-wrapper">
                 {threadMessages &&
                     Object.keys(threadMessages).map((key) => {
@@ -108,24 +150,4 @@ function MessageBox(message: ISzDisplayMessage): JSX.Element {
             </div>
         );
     }
-}
-
-function TopBar(user: IUser, subtitle = ""): JSX.Element {
-    if (!user) {
-        return <div />;
-    }
-
-    return (
-        <div className="pane-topbar">
-            <div className="columns is-centered">
-                <div className="column is-narrow has-text-centered">
-                    <div className="pane-topbar-content">
-                        <div className="container">
-                            {IconUsername(user, 32, subtitle)}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
 }

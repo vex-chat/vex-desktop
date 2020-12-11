@@ -12,6 +12,7 @@ import {
     addConversation,
     resetConversations,
     selectConversations,
+    stubConversation,
 } from "../reducers/conversations";
 import {
     addFamiliar,
@@ -45,9 +46,7 @@ export default function Sidebar(): JSX.Element {
     const inputs = useSelector(selectInputStates);
 
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
-    const conversations: Record<string, string[]> = useSelector(
-        selectConversations
-    );
+    const conversations: Record<string, any> = useSelector(selectConversations);
 
     return (
         <div className="sidebar">
@@ -188,11 +187,11 @@ export default function Sidebar(): JSX.Element {
                                                 addInputState("search-bar", "")
                                             );
                                             dispatch(
-                                                addConversation({
-                                                    userID:
-                                                        serverResults.userID,
-                                                })
+                                                stubConversation(
+                                                    serverResults.userID
+                                                )
                                             );
+
                                             history.push(
                                                 "./" + serverResults.userID
                                             );
@@ -219,7 +218,7 @@ export default function Sidebar(): JSX.Element {
                     {FamiliarButton({
                         user: familiars[user.userID],
                         params,
-                        subtitle: "Me",
+                        subtitle: "",
                     })}
 
                     {Object.keys(conversations).map((userID) => {
