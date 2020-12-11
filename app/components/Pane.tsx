@@ -14,10 +14,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCheckCircle,
     faExclamationTriangle,
+    faLock,
+    faLockOpen,
     faSkull,
+    faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { routes } from "../constants/routes";
 import { Link } from "react-router-dom";
+import { getUserTag } from "../utils/getUserTag";
 
 export default function Pane(): JSX.Element {
     // state
@@ -96,6 +100,87 @@ export default function Pane(): JSX.Element {
                 <Route
                     exact
                     path={routes.MESSAGING + "/:userID/verify"}
+                    component={() => (
+                        <div className="verify-wrapper">
+                            <div className="verify-mnemonic-wrapper">
+                                <div className="panel">
+                                    <p className="panel-heading">
+                                        Active Sessions
+                                    </p>
+                                    {sessionIDs.map((sessionID) => {
+                                        const session =
+                                            sessions[params.userID][sessionID];
+                                        return (
+                                            <div
+                                                key={sessionID}
+                                                className="panel-block"
+                                            >
+                                                <div className="table is-fullwidth">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>
+                                                                <FontAwesomeIcon
+                                                                    className={
+                                                                        session.verified
+                                                                            ? ""
+                                                                            : "has-text-danger"
+                                                                    }
+                                                                    icon={
+                                                                        session.verified
+                                                                            ? faLock
+                                                                            : faTimes
+                                                                    }
+                                                                />
+                                                            </th>
+                                                            <th>
+                                                                {" "}
+                                                                <code>
+                                                                    #
+                                                                    {getUserTag(
+                                                                        sessionID
+                                                                    )}
+                                                                </code>
+                                                            </th>
+                                                            <th>
+                                                                {!session.verified && (
+                                                                    <button
+                                                                        className="button is-danger is-small"
+                                                                        onClick={() => {
+                                                                            history.push(
+                                                                                routes.MESSAGING +
+                                                                                    "/" +
+                                                                                    familiar.userID +
+                                                                                    "/verify/" +
+                                                                                    session.sessionID
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        Verify
+                                                                    </button>
+                                                                )}
+                                                            </th>
+                                                        </tr>
+                                                    </tbody>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                    <div className="panel-block">
+                                        <button
+                                            className="button"
+                                            onClick={() => history.goBack()}
+                                        >
+                                            Go Back
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                />
+                <Route
+                    exact
+                    path={routes.MESSAGING + "/:userID/verify/:sessionID"}
                     component={() => (
                         <div className="verify-wrapper">
                             <div className="verify-mnemonic-wrapper">

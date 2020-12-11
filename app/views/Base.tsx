@@ -136,7 +136,7 @@ export default function Base(): JSX.Element {
             <div className="title-bar" />
             <Switch>
                 <Route
-                    path={routes.MESSAGING + "/:userID/:page?"}
+                    path={routes.MESSAGING + "/:userID/:page?/:sessionID?"}
                     component={Messaging}
                 />
                 <Route path={routes.REGISTER} component={Register} />

@@ -171,7 +171,9 @@ export default function IRegister(): JSX.Element {
                                             dispatch(setUser(me));
 
                                             history.push(
-                                                "/messaging/" + me.userID
+                                                routes.MESSAGING +
+                                                    "/" +
+                                                    me.userID
                                             );
 
                                             const conversations = await client.conversations.retrieve();
@@ -278,7 +280,8 @@ export default function IRegister(): JSX.Element {
                                             const err = await client.login();
                                             if (!err) {
                                                 history.push(
-                                                    "/messaging/" +
+                                                    routes.MESSAGING +
+                                                        "/" +
                                                         client.users.me().userID
                                                 );
                                             }
