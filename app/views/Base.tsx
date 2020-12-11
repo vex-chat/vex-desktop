@@ -21,6 +21,12 @@ export const progFolder = `${homedir}/.vex-desktop`;
 
 export let client: Client;
 
+export const switchFX = new Audio("./sounds/switch_005.ogg");
+switchFX.load();
+
+export const errorFX = new Audio("./sounds/error_008.ogg");
+errorFX.load();
+
 export function initClient(): void {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     client = new Client(localStorage.getItem("PK")!, {

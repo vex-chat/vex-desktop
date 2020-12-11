@@ -189,6 +189,7 @@ export default function Pane(): JSX.Element {
                                                                     true
                                                                 )
                                                             );
+                                                            history.goBack();
                                                         }}
                                                     >
                                                         They Match

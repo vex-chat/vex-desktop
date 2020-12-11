@@ -4,8 +4,13 @@ import { Client, IMessage, ISession, IUser } from "@vex-chat/vex-js";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectInputStates, addInputState } from "../reducers/inputs";
-import { alertFX } from "../components/Sidebar";
-import { client, IDisplayMessage, initClient } from "../views/Base";
+import {
+    client,
+    errorFX,
+    IDisplayMessage,
+    initClient,
+    switchFX,
+} from "../views/Base";
 import { useHistory } from "react-router";
 import { setUser } from "../reducers/user";
 import { addSession, setSessions } from "../reducers/sessions";
@@ -58,6 +63,10 @@ export default function IRegister(): JSX.Element {
                                 type="username"
                                 value={value}
                                 onChange={async (event) => {
+                                    setErrorText("");
+                                    setTaken(false);
+                                    setValid(false);
+
                                     dispatch(
                                         addInputState(
                                             FORM_NAME + "-username",
@@ -111,6 +120,10 @@ export default function IRegister(): JSX.Element {
                                         waiting ? " is-disabled" : ""
                                     }`}
                                     onClick={async () => {
+                                        setErrorText("");
+                                        setTaken(false);
+                                        setValid(false);
+
                                         const username = Client.randomUsername();
 
                                         dispatch(
@@ -144,6 +157,8 @@ export default function IRegister(): JSX.Element {
                                         waiting ? " is-loading" : ""
                                     }`}
                                     onClick={async () => {
+                                        switchFX.play();
+
                                         setWaiting(true);
 
                                         const PK = Client.generateSecretKey();
@@ -245,6 +260,7 @@ export default function IRegister(): JSX.Element {
                                             username
                                         );
                                         if (!user) {
+                                            errorFX.play();
                                             console.warn(
                                                 "registration failed.",
                                                 err
@@ -255,12 +271,12 @@ export default function IRegister(): JSX.Element {
                                             }
                                             return;
                                         }
+                                        // confirmFX.play();
 
                                         if (!err) {
                                             setWaiting(true);
                                             const err = await client.login();
                                             if (!err) {
-                                                alertFX.play();
                                                 history.push(
                                                     "/messaging/" +
                                                         client.users.me().userID

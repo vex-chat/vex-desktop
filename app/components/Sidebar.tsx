@@ -1,11 +1,13 @@
 import {
+    faArrowAltCircleRight,
     faCog,
+    faEye,
     faFingerprint,
     faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ISession, IUser } from "@vex-chat/vex-js";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useParams } from "react-router-dom";
 import {
@@ -26,15 +28,16 @@ import {
 import { resetUser, selectUser } from "../reducers/user";
 import { strToIcon } from "../utils/strToIcon";
 import { IconUsername } from "./IconUsername";
-import { client } from "../views/Base";
+import { switchFX, client } from "../views/Base";
 import { routes } from "../constants/routes";
 import { resetMessages } from "../reducers/messages";
 
-export const clickFX = new Audio("https://www.extrahash.org/move.wav");
-clickFX.load();
-
-export const alertFX = new Audio("https://www.extrahash.org/alert.wav");
-alertFX.load();
+const emptyUser: IUser = {
+    userID: "",
+    signKey: "",
+    username: "",
+    lastSeen: new Date(Date.now()),
+};
 
 export default function Sidebar(): JSX.Element {
     const user: IUser = useSelector(selectUser);
@@ -48,6 +51,17 @@ export default function Sidebar(): JSX.Element {
     const sessions: Record<string, Record<string, ISession>> = useSelector(
         selectSessions
     );
+
+    const [foundUser, setFoundUser] = useState(emptyUser);
+
+    const newConversation = (user: IUser) => {
+        switchFX.play();
+        dispatch(addFamiliar(user));
+        dispatch(addInputState("search-bar", ""));
+        dispatch(stubSession(user.userID));
+
+        history.push(routes.MESSAGING + "/" + user.userID);
+    };
 
     return (
         <div className="sidebar">
@@ -145,12 +159,28 @@ export default function Sidebar(): JSX.Element {
                 </figure>
 
                 <div className="field">
-                    <p className="control has-icons-left">
+                    <p
+                        className={`control has-icons-left${
+                            foundUser.userID !== "" ? " has-icons-right" : ""
+                        }`}
+                    >
                         <input
-                            className="input has-icons-left is-grey is-small is-rounded search-bar"
+                            className={`input is-grey is-small is-rounded search-bar${
+                                foundUser.userID !== "" ? " is-success" : ""
+                            }`}
                             type="text"
                             placeholder="Search"
                             value={inputs["search-bar"] || ""}
+                            onKeyDown={async (event) => {
+                                if (event.key === "Enter") {
+                                    if (foundUser.userID !== "") {
+                                        newConversation(foundUser);
+                                        setFoundUser(emptyUser);
+                                    }
+                                } else {
+                                    setFoundUser(emptyUser);
+                                }
+                            }}
                             onChange={async (event) => {
                                 dispatch(
                                     addInputState(
@@ -181,24 +211,9 @@ export default function Sidebar(): JSX.Element {
                                             event.target.value
                                         );
                                         if (serverResults) {
-                                            dispatch(
-                                                addFamiliar(serverResults)
-                                            );
-                                            dispatch(
-                                                addInputState("search-bar", "")
-                                            );
-                                            dispatch(
-                                                stubSession(
-                                                    serverResults.userID
-                                                )
-                                            );
-
-                                            history.push(
-                                                routes.MESSAGING +
-                                                    "/" +
-                                                    serverResults.userID
-                                            );
-                                            clickFX.play();
+                                            setFoundUser(serverResults);
+                                        } else {
+                                            setFoundUser(emptyUser);
                                         }
                                     }
                                 } catch (err) {
@@ -206,12 +221,23 @@ export default function Sidebar(): JSX.Element {
                                 }
                             }}
                         />
+
                         <span className="icon is-small is-left">
                             <FontAwesomeIcon
-                                className="is-left"
-                                icon={faSearch}
+                                className={`is-left`}
+                                icon={
+                                    foundUser.userID !== "" ? faEye : faSearch
+                                }
                             />
                         </span>
+                        {foundUser.userID !== "" && (
+                            <span className="icon is-small is-right has-text-success">
+                                <FontAwesomeIcon
+                                    className="is-right"
+                                    icon={faArrowAltCircleRight}
+                                />
+                            </span>
+                        )}
                     </p>
                 </div>
             </div>
