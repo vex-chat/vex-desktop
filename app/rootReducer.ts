@@ -5,7 +5,7 @@ import userReducer from "./reducers/user";
 import familiarsReducer from "./reducers/familiars";
 import inputsReducer from "./reducers/inputs";
 import messageReducer from "./reducers/messages";
-import conversationReducer from "./reducers/conversations";
+import sessionReducer from "./reducers/sessions";
 import settingsReducer from "./reducers/settings";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -16,7 +16,7 @@ export default function createRootReducer(history: History) {
         familiars: familiarsReducer,
         inputs: inputsReducer,
         messages: messageReducer,
-        conversations: conversationReducer,
+        sessions: sessionReducer,
         settings: settingsReducer,
     });
 }

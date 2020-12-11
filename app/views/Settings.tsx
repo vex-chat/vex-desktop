@@ -12,34 +12,32 @@ export default function Settings(): JSX.Element {
         <div className="Aligner full-size">
             <div className="Aligner-item Aligner-item--top">
                 <a
-                    className="delete settings-delete is-large"
+                    className="delete settings-delete is-medium"
                     onClick={() => {
                         history.goBack();
                     }}
                 ></a>
             </div>
             <div className="Aligner-item">
-                <div className="has-background-white box">
-                    <label className="label is-large">Settings</label>
-                    <ul>
-                        <li>
-                            <label className="checkbox settings-box">
-                                <input
-                                    onChange={() => {
-                                        dispatch(
-                                            setSettings({
-                                                key: "notifications",
-                                                value: !settings.notifications,
-                                            })
-                                        );
-                                    }}
-                                    type="checkbox"
-                                    checked={settings.notifications as boolean}
-                                />
-                                &nbsp; Notifications
-                            </label>
-                        </li>
-                    </ul>
+                <div className="panel is-light">
+                    <p className="panel-heading">Settings</p>
+                    <div className="panel-block">
+                        <label className="checkbox settings-box">
+                            <input
+                                onChange={() => {
+                                    dispatch(
+                                        setSettings({
+                                            key: "notifications",
+                                            value: !settings.notifications,
+                                        })
+                                    );
+                                }}
+                                type="checkbox"
+                                checked={settings.notifications as boolean}
+                            />
+                            &nbsp; Notifications
+                        </label>
+                    </div>
                 </div>
             </div>
             <div className="Aligner-item Aligner-item--bottom"></div>

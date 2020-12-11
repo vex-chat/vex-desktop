@@ -10,7 +10,7 @@ import { setUser } from "../reducers/user";
 import os from "os";
 import { addFamiliar, setFamiliars } from "../reducers/familiars";
 import { addMessage } from "../reducers/messages";
-import { addConversation, setConversations } from "../reducers/conversations";
+import { addSession, setSessions } from "../reducers/sessions";
 import Register from "../views/Register";
 import Loading from "../components/Loading";
 import Settings from "../views/Settings";
@@ -65,10 +65,12 @@ export default function Base(): JSX.Element {
             const me = client.users.me();
             dispatch(setUser(me));
 
-            history.push(routes.MESSAGING + "/" + me.userID);
+            if (history.location.pathname === "/") {
+                history.push(routes.MESSAGING + "/" + me.userID);
+            }
 
             const conversations = await client.conversations.retrieve();
-            dispatch(setConversations(conversations));
+            dispatch(setSessions(conversations));
 
             const familiars = await client.familiars.retrieve();
             dispatch(setFamiliars(familiars));
@@ -84,7 +86,7 @@ export default function Base(): JSX.Element {
         client.on(
             "conversation",
             async (conversation: ISession, user: IUser) => {
-                dispatch(addConversation(conversation));
+                dispatch(addSession(conversation));
                 dispatch(addFamiliar(user));
             }
         );

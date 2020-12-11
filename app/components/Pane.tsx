@@ -9,12 +9,13 @@ import { client } from "../views/Base";
 import { ISzDisplayMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
-import {
-    markConversation,
-    selectConversations,
-} from "../reducers/conversations";
+import { markSession, selectSessions } from "../reducers/sessions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import {
+    faCheckCircle,
+    faExclamationTriangle,
+    faSkull,
+} from "@fortawesome/free-solid-svg-icons";
 import { routes } from "../constants/routes";
 import { Link } from "react-router-dom";
 
@@ -23,17 +24,17 @@ export default function Pane(): JSX.Element {
     const dispatch = useDispatch();
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const inputValues: Record<string, string> = useSelector(selectInputStates);
-    const conversations = useSelector(selectConversations);
+    const sessions = useSelector(selectSessions);
 
     const history = useHistory();
 
     // url parameters
     const params: { userID: string } = useParams();
 
-    const fingerprints = Object.keys(conversations[params.userID] || {});
+    const sessionIDs = Object.keys(sessions[params.userID] || {});
     let hasUnverifiedSession = false;
-    for (const fingerprint of fingerprints) {
-        if (!conversations[params.userID][fingerprint].verified) {
+    for (const sessionID of sessionIDs) {
+        if (!sessions[params.userID][sessionID].verified) {
             hasUnverifiedSession = true;
         }
     }
@@ -98,65 +99,101 @@ export default function Pane(): JSX.Element {
                     component={() => (
                         <div className="verify-wrapper">
                             <div className="verify-mnemonic-wrapper">
-                                {fingerprints.map((fingerprint) => {
+                                {sessionIDs.map((sessionID) => {
                                     const session =
-                                        conversations[params.userID][
-                                            fingerprint
-                                        ];
+                                        sessions[params.userID][sessionID];
 
                                     const mnemonic = client.sessions.verify(
                                         session
                                     );
 
                                     return (
-                                        <div key={session.sessionID}>
-                                            <code
-                                                key={session.sessionID}
-                                                className="verify-mnemonic"
-                                            >
-                                                <p className="is-family-monospace">
-                                                    {mnemonic}
+                                        <div
+                                            className="panel is-danger"
+                                            key={session.sessionID}
+                                        >
+                                            <p className="panel-heading">
+                                                Verify Session with{" "}
+                                                {familiar.username}
+                                            </p>
+                                            <div className="panel-block">
+                                                <code
+                                                    key={session.sessionID}
+                                                    className="verify-mnemonic"
+                                                >
+                                                    <label className="label is-small is-family-primary">
+                                                        Safety Words:
+                                                    </label>
+                                                    <p>{mnemonic}</p>
+                                                </code>
+                                            </div>
+                                            <div className="panel-block">
+                                                <p>
+                                                    <span className="icon">
+                                                        <FontAwesomeIcon
+                                                            icon={
+                                                                faExclamationTriangle
+                                                            }
+                                                            className="has-text-danger"
+                                                        />
+                                                    </span>
+                                                    &nbsp;
+                                                    {familiar.username} is using
+                                                    an unverified session.
                                                 </p>
-                                            </code>
-
-                                            <p>
-                                                Verify with the other user
-                                                through a secure method of
-                                                communication that these words
-                                                match.
-                                            </p>
-                                            <br />
-                                            <p>
-                                                If they don&apos;t match, you
-                                                could be getting pwned.
-                                            </p>
-                                            <br />
-                                            <div className="buttons">
-                                                <button
-                                                    className="button"
-                                                    onClick={() => {
-                                                        history.goBack();
-                                                    }}
-                                                >
-                                                    Go Back
-                                                </button>
-                                                <button
-                                                    className="button is-success"
-                                                    onClick={async () => {
-                                                        await client.sessions.markVerified(
-                                                            fingerprint
-                                                        );
-                                                        dispatch(
-                                                            markConversation(
-                                                                params.userID,
-                                                                fingerprint,
-                                                                true
-                                                            )
-                                                        );
-                                                    }}
-                                                >
-                                                    They Match
-                                                </button>
+                                            </div>
+                                            <div className="panel-block">
+                                                <p>
+                                                    <span className="icon">
+                                                        <FontAwesomeIcon
+                                                            icon={faCheckCircle}
+                                                            className="has-text-success"
+                                                        />
+                                                    </span>
+                                                    &nbsp; Verify with the other
+                                                    user that the words match.
+                                                </p>
+                                            </div>
+                                            <div className="panel-block">
+                                                <p>
+                                                    <span className="icon">
+                                                        <FontAwesomeIcon
+                                                            icon={faSkull}
+                                                        />
+                                                    </span>
+                                                    &nbsp; If they don&apos;t
+                                                    match, you could be getting
+                                                    pwned. &nbsp;
+                                                </p>
+                                            </div>
+                                            <div className="panel-block">
+                                                <div className="buttons is-right">
+                                                    <button
+                                                        className="button is-right"
+                                                        onClick={() => {
+                                                            history.goBack();
+                                                        }}
+                                                    >
+                                                        Go Back
+                                                    </button>
+                                                    <button
+                                                        className="button is-success is-right"
+                                                        onClick={async () => {
+                                                            await client.sessions.markVerified(
+                                                                sessionID
+                                                            );
+                                                            dispatch(
+                                                                markSession(
+                                                                    params.userID,
+                                                                    sessionID,
+                                                                    true
+                                                                )
+                                                            );
+                                                        }}
+                                                    >
+                                                        They Match
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     );

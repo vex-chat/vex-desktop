@@ -9,10 +9,10 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useParams } from "react-router-dom";
 import {
-    resetConversations,
-    selectConversations,
-    stubConversation,
-} from "../reducers/conversations";
+    resetSessions,
+    selectSessions,
+    stubSession,
+} from "../reducers/sessions";
 import {
     addFamiliar,
     resetFamiliars,
@@ -45,8 +45,8 @@ export default function Sidebar(): JSX.Element {
     const inputs = useSelector(selectInputStates);
 
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
-    const conversations: Record<string, Record<string, ISession>> = useSelector(
-        selectConversations
+    const sessions: Record<string, Record<string, ISession>> = useSelector(
+        selectSessions
     );
 
     return (
@@ -128,7 +128,7 @@ export default function Sidebar(): JSX.Element {
                                             );
 
                                             // reset state
-                                            dispatch(resetConversations());
+                                            dispatch(resetSessions());
                                             dispatch(resetFamiliars());
                                             dispatch(resetInputStates());
                                             dispatch(resetMessages());
@@ -188,7 +188,7 @@ export default function Sidebar(): JSX.Element {
                                                 addInputState("search-bar", "")
                                             );
                                             dispatch(
-                                                stubConversation(
+                                                stubSession(
                                                     serverResults.userID
                                                 )
                                             );
@@ -224,7 +224,7 @@ export default function Sidebar(): JSX.Element {
                         subtitle: "",
                     })}
 
-                    {Object.keys(conversations).map((userID) => {
+                    {Object.keys(sessions).map((userID) => {
                         if (familiars[userID] === undefined) {
                             return;
                         }

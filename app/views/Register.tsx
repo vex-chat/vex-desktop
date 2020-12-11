@@ -8,10 +8,11 @@ import { alertFX } from "../components/Sidebar";
 import { client, IDisplayMessage, initClient } from "../views/Base";
 import { useHistory } from "react-router";
 import { setUser } from "../reducers/user";
-import { addConversation, setConversations } from "../reducers/conversations";
+import { addSession, setSessions } from "../reducers/sessions";
 import { addFamiliar, setFamiliars } from "../reducers/familiars";
 import { addMessage } from "../reducers/messages";
 import { remote } from "electron";
+import { routes } from "../constants/routes";
 
 const FORM_NAME = "register_component";
 
@@ -160,7 +161,7 @@ export default function IRegister(): JSX.Element {
 
                                             const conversations = await client.conversations.retrieve();
                                             dispatch(
-                                                setConversations(conversations)
+                                                setSessions(conversations)
                                             );
 
                                             const familiars = await client.familiars.retrieve();
@@ -185,9 +186,7 @@ export default function IRegister(): JSX.Element {
                                                 user: IUser
                                             ) => {
                                                 dispatch(
-                                                    addConversation(
-                                                        conversation
-                                                    )
+                                                    addSession(conversation)
                                                 );
                                                 dispatch(addFamiliar(user));
                                             }
@@ -228,7 +227,8 @@ export default function IRegister(): JSX.Element {
                                                             .getCurrentWindow()
                                                             .show();
                                                         history.push(
-                                                            "/messaging/" +
+                                                            routes.MESSAGING +
+                                                                "/" +
                                                                 (dispMsg.direction ===
                                                                 "incoming"
                                                                     ? dispMsg.sender

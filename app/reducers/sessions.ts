@@ -44,21 +44,21 @@ export const serializeSession = (
     };
 };
 
-const conversationSlice = createSlice({
-    name: "conversations",
+const sessionSlice = createSlice({
+    name: "sessions",
     initialState: {},
     reducers: {
         mark: (
             state: Record<string, Record<string, ISerializedSession>>,
             action
         ) => {
-            const { userID, conversationID, status } = action.payload;
+            const { userID, sessionID, status } = action.payload;
 
-            if (!state[userID] || !state[userID][conversationID]) {
+            if (!state[userID] || !state[userID][sessionID]) {
                 return state;
             }
 
-            state[userID][conversationID].verified = status;
+            state[userID][sessionID].verified = Boolean(status);
             return state;
         },
         set: (
@@ -90,51 +90,51 @@ const conversationSlice = createSlice({
                 state[payload.userID!] = {};
             }
 
-            state[payload.userID][payload.fingerprint] = payload;
+            state[payload.userID][payload.sessionID] = payload;
 
             return state;
         },
     },
 });
 
-export const { set, add, stub, reset, mark } = conversationSlice.actions;
+export const { set, add, stub, reset, mark } = sessionSlice.actions;
 
-export const addConversation = (
-    conversation: XTypes.SQL.ISession
-): AppThunk => (dispatch) => {
-    dispatch(add(serializeSession(conversation)));
+export const addSession = (session: XTypes.SQL.ISession): AppThunk => (
+    dispatch
+) => {
+    dispatch(add(serializeSession(session)));
 };
 
-export const stubConversation = (userID: string): AppThunk => (dispatch) => {
+export const stubSession = (userID: string): AppThunk => (dispatch) => {
     dispatch(stub(userID));
 };
 
-export const markConversation = (
+export const markSession = (
     userID: string,
-    conversationID: string,
+    sessionID: string,
     status: boolean
 ): AppThunk => (dispatch) => {
-    const payload = { userID, conversationID, status };
+    const payload = { userID, sessionID, status };
     dispatch(mark(payload));
 };
 
-export const setConversations = (
-    conversations: Record<string, ISession[]>
-): AppThunk => (dispatch) => {
-    dispatch(resetConversations());
-    for (const userID in conversations) {
-        for (const session of conversations[userID]) {
+export const setSessions = (sessions: Record<string, ISession[]>): AppThunk => (
+    dispatch
+) => {
+    dispatch(resetSessions());
+    for (const userID in sessions) {
+        for (const session of sessions[userID]) {
             dispatch(add(serializeSession(session)));
         }
     }
 };
 
-export const resetConversations = (): AppThunk => (dispatch) => {
+export const resetSessions = (): AppThunk => (dispatch) => {
     dispatch(reset());
 };
 
-export const selectConversations = (
+export const selectSessions = (
     state: RootState
-): Record<string, Record<string, XTypes.SQL.ISession>> => state.conversations;
+): Record<string, Record<string, XTypes.SQL.ISession>> => state.sessions;
 
-export default conversationSlice.reducer;
+export default sessionSlice.reducer;
