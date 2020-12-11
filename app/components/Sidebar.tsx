@@ -86,7 +86,9 @@ export default function Sidebar(): JSX.Element {
                             >
                                 <img
                                     className="is-rounded"
-                                    src={strToIcon(user.username.slice(0, 2))}
+                                    src={strToIcon(
+                                        user.username || "".slice(0, 2)
+                                    )}
                                 />
                             </div>
                             <div

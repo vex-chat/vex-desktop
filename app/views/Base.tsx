@@ -5,7 +5,7 @@ import { routes } from "../constants/routes";
 import App from "../views/App";
 import Messaging from "../views/Messaging";
 import { Client, IMessage, IConversation } from "@vex-chat/vex-js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../reducers/user";
 import os from "os";
 import { addFamiliar, setFamiliars } from "../reducers/familiars";
@@ -14,13 +14,10 @@ import { addConversation, setConversations } from "../reducers/conversations";
 import Register from "../views/Register";
 import Loading from "../components/Loading";
 import Settings from "../views/Settings";
+import { selectSettings } from "../reducers/settings";
 
 const homedir = os.homedir();
 export const progFolder = `${homedir}/.vex-desktop`;
-
-// localStorage.setItem("PK", Client.generateSecretKey());
-
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 
 export let client: Client;
 
@@ -57,6 +54,7 @@ export interface IDisplayMessage extends IMessage {
 export default function Base(): JSX.Element {
     const dispatch = useDispatch();
     const history = useHistory();
+    const settings = useSelector(selectSettings);
 
     useEffect(() => {
         client.on("needs-register", async () => {
@@ -100,6 +98,7 @@ export default function Base(): JSX.Element {
             dispatch(addMessage(dispMsg));
 
             if (
+                settings.notifications &&
                 dispMsg.direction === "incoming" &&
                 message.recipient !== message.sender
             ) {
