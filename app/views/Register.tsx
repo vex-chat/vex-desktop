@@ -1,6 +1,6 @@
 import { faCheck, faTimes, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Client, IConversation, IMessage } from "@vex-chat/vex-js";
+import { Client, IMessage, ISession, IUser } from "@vex-chat/vex-js";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectInputStates, addInputState } from "../reducers/inputs";
@@ -181,18 +181,15 @@ export default function IRegister(): JSX.Element {
                                         client.on(
                                             "conversation",
                                             async (
-                                                conversation: IConversation
+                                                conversation: ISession,
+                                                user: IUser
                                             ) => {
                                                 dispatch(
                                                     addConversation(
                                                         conversation
                                                     )
                                                 );
-                                                dispatch(
-                                                    addFamiliar(
-                                                        conversation.user
-                                                    )
-                                                );
+                                                dispatch(addFamiliar(user));
                                             }
                                         );
 

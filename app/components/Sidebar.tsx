@@ -4,12 +4,11 @@ import {
     faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IUser } from "@vex-chat/vex-js";
+import { ISession, IUser } from "@vex-chat/vex-js";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useParams } from "react-router-dom";
 import {
-    addConversation,
     resetConversations,
     selectConversations,
     stubConversation,
@@ -46,7 +45,9 @@ export default function Sidebar(): JSX.Element {
     const inputs = useSelector(selectInputStates);
 
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
-    const conversations: Record<string, any> = useSelector(selectConversations);
+    const conversations: Record<string, Record<string, ISession>> = useSelector(
+        selectConversations
+    );
 
     return (
         <div className="sidebar">
@@ -193,7 +194,9 @@ export default function Sidebar(): JSX.Element {
                                             );
 
                                             history.push(
-                                                "./" + serverResults.userID
+                                                routes.MESSAGING +
+                                                    "/" +
+                                                    serverResults.userID
                                             );
                                             clickFX.play();
                                         }
@@ -264,7 +267,7 @@ function FamiliarButton({
             }`}
             key={user.userID}
         >
-            <Link to={"./" + user.userID}>
+            <Link to={routes.MESSAGING + "/" + user.userID}>
                 {IconUsername(user, 48, subtitle)}
             </Link>
         </li>

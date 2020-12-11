@@ -1,7 +1,7 @@
-import { Client, IUser } from "@vex-chat/vex-js";
-import React, { useEffect, useRef } from "react";
+import { IUser } from "@vex-chat/vex-js";
+import React, { Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { Route, Switch, useParams } from "react-router";
 import { selectFamiliars } from "../reducers/familiars";
 import { IconUsername } from "../components/IconUsername";
 import { selectInputStates, addInputState } from "../reducers/inputs";
@@ -9,16 +9,16 @@ import { client } from "../views/Base";
 import { ISzDisplayMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
-import { selectUser } from "../reducers/user";
 import { selectConversations } from "../reducers/conversations";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { routes } from "../constants/routes";
+import { Link } from "react-router-dom";
 
 export default function Pane(): JSX.Element {
     // state
     const dispatch = useDispatch();
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
-    const user = useSelector(selectUser);
     const inputValues: Record<string, string> = useSelector(selectInputStates);
     const conversations = useSelector(selectConversations);
 
@@ -63,59 +63,113 @@ export default function Pane(): JSX.Element {
                     <div className="column is-narrow has-text-centered">
                         <div className="pane-topbar-content">
                             <div className="container">
-                                {IconUsername(user, 32, "")}
+                                {IconUsername(familiar, 32, "")}
                             </div>
                         </div>
                     </div>
                     <div className="column is-narrow">
                         {hasUnverifiedSession && (
-                            <span
-                                onClick={() => {
-                                    for (const fingerprint of fingerprints) {
-                                        const mnemonic = client.sessions.verify(
-                                            conversations[params.userID][
-                                                fingerprint
-                                            ]
-                                        );
-                                        console.log(mnemonic);
-                                    }
-                                }}
+                            <Link
+                                to={
+                                    routes.MESSAGING +
+                                    "/" +
+                                    params.userID +
+                                    "/verify"
+                                }
                                 className="has-text-danger pointer help"
                             >
-                                <FontAwesomeIcon icon={faExclamationTriangle} />{" "}
-                                Unverified{" "}
-                            </span>
+                                <FontAwesomeIcon icon={faExclamationTriangle} />
+                                Unverified
+                            </Link>
                         )}
                     </div>
                 </div>
-            </div>{" "}
-            <div className="conversation-wrapper">
-                {threadMessages &&
-                    Object.keys(threadMessages).map((key) => {
-                        return MessageBox(threadMessages[key]);
-                    })}
-                <div ref={messagesEndRef} />
             </div>
-            <div className="chat-input-wrapper">
-                <textarea
-                    value={inputValue}
-                    className="textarea chat-input has-fixed-size is-focused"
-                    rows={2}
-                    onChange={(event) => {
-                        dispatch(
-                            addInputState(params.userID, event.target.value)
+
+            <Switch>
+                <Route
+                    exact
+                    path={routes.MESSAGING + "/:userID/verify"}
+                    component={() => (
+                        <div className="verify-wrapper">
+                            <h1 className="title">Verify</h1>
+
+                            {fingerprints.map((fingerprint) => {
+                                const session =
+                                    conversations[params.userID][fingerprint];
+
+                                const mnemonic = client.sessions.verify(
+                                    session
+                                );
+
+                                return (
+                                    <p
+                                        className="is-family-monospace"
+                                        key={session.sessionID}
+                                    >
+                                        {mnemonic}
+                                    </p>
+                                );
+                            })}
+                        </div>
+                    )}
+                />
+                <Route
+                    exact
+                    path={routes.MESSAGING + "/:userID"}
+                    render={() => {
+                        return (
+                            <Fragment>
+                                <div className="conversation-wrapper">
+                                    {threadMessages &&
+                                        Object.keys(threadMessages).map(
+                                            (key) => {
+                                                return MessageBox(
+                                                    threadMessages[key]
+                                                );
+                                            }
+                                        )}
+                                    <div ref={messagesEndRef} />
+                                </div>
+                                <div className="chat-input-wrapper">
+                                    <textarea
+                                        value={inputValue}
+                                        className="textarea chat-input has-fixed-size is-focused"
+                                        rows={2}
+                                        onChange={(event) => {
+                                            dispatch(
+                                                addInputState(
+                                                    params.userID,
+                                                    event.target.value
+                                                )
+                                            );
+                                        }}
+                                        onKeyDown={(event) => {
+                                            if (
+                                                event.key === "Enter" &&
+                                                !event.shiftKey
+                                            ) {
+                                                event.preventDefault();
+
+                                                client.messages.send(
+                                                    familiar.userID,
+                                                    inputValue
+                                                );
+                                                dispatch(
+                                                    addInputState(
+                                                        params.userID,
+                                                        ""
+                                                    )
+                                                );
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </Fragment>
                         );
                     }}
-                    onKeyDown={(event) => {
-                        if (event.key === "Enter" && !event.shiftKey) {
-                            event.preventDefault();
-
-                            client.messages.send(familiar.userID, inputValue);
-                            dispatch(addInputState(params.userID, ""));
-                        }
-                    }}
-                />
-            </div>
+                ></Route>
+            </Switch>
         </div>
     );
 }

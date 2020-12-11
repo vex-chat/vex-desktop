@@ -1,13 +1,55 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../store";
 import { XTypes } from "@vex-chat/types-js";
+import { ISession } from "@vex-chat/vex-js";
+
+interface ISerializedSession {
+    sessionID: string;
+    userID: string;
+    mode: "initiator" | "receiver";
+    SK: string;
+    publicKey: string;
+    fingerprint: string;
+    lastUsed: string;
+    verified: boolean;
+}
+
+export const deserializeSession = (
+    session: ISerializedSession
+): XTypes.SQL.ISession => {
+    return {
+        sessionID: session.sessionID,
+        userID: session.userID,
+        mode: session.mode,
+        SK: session.SK,
+        publicKey: session.publicKey,
+        fingerprint: session.fingerprint,
+        lastUsed: new Date(session.lastUsed),
+        verified: session.verified,
+    };
+};
+
+export const serializeSession = (
+    session: XTypes.SQL.ISession
+): ISerializedSession => {
+    return {
+        sessionID: session.sessionID,
+        userID: session.userID,
+        mode: session.mode,
+        SK: session.SK,
+        publicKey: session.publicKey,
+        fingerprint: session.fingerprint,
+        lastUsed: session.lastUsed.toString(),
+        verified: session.verified,
+    };
+};
 
 const conversationSlice = createSlice({
     name: "conversations",
     initialState: {},
     reducers: {
         set: (
-            _state: Record<string, Record<string, XTypes.SQL.ISession>>,
+            _state: Record<string, Record<string, ISerializedSession>>,
             action
         ) => {
             return action.payload;
@@ -16,7 +58,7 @@ const conversationSlice = createSlice({
             return {};
         },
         stub: (
-            state: Record<string, Record<string, XTypes.SQL.ISession>>,
+            state: Record<string, Record<string, ISerializedSession>>,
             action
         ) => {
             if (state[action.payload] === undefined) {
@@ -24,20 +66,18 @@ const conversationSlice = createSlice({
             }
         },
         add: (
-            state: Record<string, Record<string, XTypes.SQL.ISession>>,
+            state: Record<string, Record<string, ISerializedSession>>,
             action
         ) => {
-            const payload: XTypes.SQL.ISession = action.payload;
+            const payload: ISerializedSession = action.payload;
+
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (state[payload.userID!] === undefined) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 state[payload.userID!] = {};
-            } else {
-                if (payload.fingerprint !== undefined) {
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    state[payload.userID!][payload.fingerprint] = payload;
-                }
             }
+
+            state[payload.userID][payload.fingerprint] = payload;
 
             return state;
         },
@@ -49,7 +89,7 @@ export const { set, add, stub, reset } = conversationSlice.actions;
 export const addConversation = (
     conversation: XTypes.SQL.ISession
 ): AppThunk => (dispatch) => {
-    dispatch(add(conversation));
+    dispatch(add(serializeSession(conversation)));
 };
 
 export const stubConversation = (userID: string): AppThunk => (dispatch) => {
@@ -57,9 +97,14 @@ export const stubConversation = (userID: string): AppThunk => (dispatch) => {
 };
 
 export const setConversations = (
-    state: Record<string, Record<string, XTypes.SQL.ISession>>
+    conversations: Record<string, ISession[]>
 ): AppThunk => (dispatch) => {
-    dispatch(set(state));
+    dispatch(resetConversations());
+    for (const userID in conversations) {
+        for (const session of conversations[userID]) {
+            dispatch(add(serializeSession(session)));
+        }
+    }
 };
 
 export const resetConversations = (): AppThunk => (dispatch) => {

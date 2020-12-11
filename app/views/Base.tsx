@@ -4,7 +4,7 @@ import { Switch, Route, useHistory } from "react-router-dom";
 import { routes } from "../constants/routes";
 import App from "../views/App";
 import Messaging from "../views/Messaging";
-import { Client, IMessage, IConversation } from "@vex-chat/vex-js";
+import { Client, IMessage, ISession, IUser } from "@vex-chat/vex-js";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../reducers/user";
 import os from "os";
@@ -65,7 +65,7 @@ export default function Base(): JSX.Element {
             const me = client.users.me();
             dispatch(setUser(me));
 
-            history.push("/messaging/" + me.userID);
+            history.push(routes.MESSAGING + "/" + me.userID);
 
             const conversations = await client.conversations.retrieve();
             dispatch(setConversations(conversations));
@@ -81,10 +81,13 @@ export default function Base(): JSX.Element {
             }
         });
 
-        client.on("conversation", async (conversation: IConversation) => {
-            dispatch(addConversation(conversation));
-            dispatch(addFamiliar(conversation.user));
-        });
+        client.on(
+            "conversation",
+            async (conversation: ISession, user: IUser) => {
+                dispatch(addConversation(conversation));
+                dispatch(addFamiliar(user));
+            }
+        );
 
         client.on("message", async (message: IMessage) => {
             const dispMsg: IDisplayMessage = {
@@ -109,7 +112,8 @@ export default function Base(): JSX.Element {
                 msgNotification.onclick = () => {
                     remote.getCurrentWindow().show();
                     history.push(
-                        "/messaging/" +
+                        routes.MESSAGING +
+                            "/" +
                             (dispMsg.direction === "incoming"
                                 ? dispMsg.sender
                                 : dispMsg.recipient)
@@ -123,7 +127,10 @@ export default function Base(): JSX.Element {
         <App>
             <div className="title-bar" />
             <Switch>
-                <Route path={routes.MESSAGING} component={Messaging} />
+                <Route
+                    path={routes.MESSAGING + "/:userID/:page?"}
+                    component={Messaging}
+                />
                 <Route path={routes.REGISTER} component={Register} />
                 <Route path={routes.SETTINGS} component={Settings} />
                 <Route exact path={"/"} component={() => Loading(256)} />

@@ -8,6 +8,10 @@ textarea {
     border-radius: 0px !important;
 }
 
+.mnemonic-pre {
+    max-width: 400px;
+}
+
 .settings-box {
     padding: 1ch;
 }
@@ -86,6 +90,17 @@ div {
     z-index: -1;
 }
 
+
+.verify-wrapper {
+    position: relative;
+    top: 0;
+    bottom: 160px;
+    height: calc(100vh - 160px);
+    overflow-y:auto;
+    z-index: 0;
+    padding: 10px 20px;
+}
+
 .conversation-wrapper {
     position: relative;
     top: 0;
@@ -158,6 +173,7 @@ div.sidebar > aside > ul > li > a:hover {
     padding: 1px;
 }
 
+
 .search-wrapper {
     position: sticky;
     top: 0;
@@ -167,7 +183,7 @@ div.sidebar > aside > ul > li > a:hover {
     margin: 0px;
     background-color: $light;
     border-bottom: solid 1px darken($light, 5%);
-    z-index: 100;
+    z-index: 1;
 }
 
 .message-wrapper {
