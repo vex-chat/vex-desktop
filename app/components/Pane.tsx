@@ -5,14 +5,14 @@ import { Route, Switch, useHistory, useParams } from "react-router";
 import { selectFamiliars } from "../reducers/familiars";
 import { IconUsername } from "../components/IconUsername";
 import { selectInputStates, addInputState } from "../reducers/inputs";
-import { client } from "../views/Base";
+import { client, IDisplayMessage, switchFX } from "../views/Base";
 import { ISzDisplayMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
 import { markSession, selectSessions } from "../reducers/sessions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ReactTooltip from "react-tooltip";
 import {
-    faCheck,
     faCheckCircle,
     faExclamation,
     faExclamationTriangle,
@@ -22,6 +22,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { routes } from "../constants/routes";
 import { Link } from "react-router-dom";
+import { selectUser } from "../reducers/user";
+import crypto from "crypto";
 
 export default function Pane(): JSX.Element {
     // state
@@ -51,6 +53,9 @@ export default function Pane(): JSX.Element {
     const allMessages = useSelector(selectMessages);
     const threadMessages = allMessages[params.userID];
 
+    const messageIDs = Object.keys(threadMessages || {});
+    const user = useSelector(selectUser);
+
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -61,6 +66,7 @@ export default function Pane(): JSX.Element {
     };
 
     useEffect(() => {
+        ReactTooltip.rebuild();
         scrollToBottom();
     });
 
@@ -89,6 +95,7 @@ export default function Pane(): JSX.Element {
                                     "/verify"
                                 }
                                 className="has-text-danger pointer help"
+                                data-tip="This user has an unverified session."
                             >
                                 <span className="icon">
                                     <FontAwesomeIcon
@@ -192,7 +199,9 @@ export default function Pane(): JSX.Element {
                                                                         Verify
                                                                     </button>
                                                                 )}
-                                                                {session.verified && (
+                                                                {Boolean(
+                                                                    session.verified
+                                                                ) && (
                                                                     <span>
                                                                         <span className="icon">
                                                                             <FontAwesomeIcon
@@ -310,6 +319,7 @@ export default function Pane(): JSX.Element {
                                                     <button
                                                         className="button is-success is-right"
                                                         onClick={async () => {
+                                                            switchFX.play();
                                                             await client.sessions.markVerified(
                                                                 sessionID
                                                             );
@@ -345,14 +355,40 @@ export default function Pane(): JSX.Element {
                         return (
                             <Fragment>
                                 <div className="conversation-wrapper">
-                                    {threadMessages &&
-                                        Object.keys(threadMessages).map(
-                                            (key) => {
-                                                return MessageBox(
-                                                    threadMessages[key]
-                                                );
-                                            }
+                                    {messageIDs.length === 0 &&
+                                        params.userID === user.userID && (
+                                            <div>
+                                                {MessageBox({
+                                                    timestamp: new Date(
+                                                        Date.now()
+                                                    ),
+                                                    sender: user.userID,
+                                                    recipient: user.userID,
+                                                    direction: "incoming",
+                                                    nonce: crypto
+                                                        .randomBytes(24)
+                                                        .toString("hex"),
+                                                    message:
+                                                        "Welcome to vex messenger!",
+                                                })}
+                                                {MessageBox({
+                                                    timestamp: new Date(
+                                                        Date.now()
+                                                    ),
+                                                    sender: user.userID,
+                                                    recipient: user.userID,
+                                                    direction: "incoming",
+                                                    nonce: crypto
+                                                        .randomBytes(24)
+                                                        .toString("hex"),
+                                                    message:
+                                                        "This is a personal thread for taking notes, or whatever you'd like.",
+                                                })}
+                                            </div>
                                         )}
+                                    {messageIDs.map((key) => {
+                                        return MessageBox(threadMessages[key]);
+                                    })}
                                     <div ref={messagesEndRef} />
                                 </div>
                                 <div className="chat-input-wrapper">
@@ -398,7 +434,7 @@ export default function Pane(): JSX.Element {
     );
 }
 
-function MessageBox(message: ISzDisplayMessage): JSX.Element {
+function MessageBox(message: IDisplayMessage | ISzDisplayMessage): JSX.Element {
     if (message.direction !== "incoming") {
         return (
             <div key={message.nonce} className="message-wrapper has-text-right">

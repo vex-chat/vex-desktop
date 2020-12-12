@@ -247,7 +247,7 @@ export default function Sidebar(): JSX.Element {
                     {FamiliarButton({
                         user: familiars[user.userID],
                         params,
-                        subtitle: "",
+                        subtitle: "Me",
                     })}
 
                     {Object.keys(sessions).map((userID) => {
