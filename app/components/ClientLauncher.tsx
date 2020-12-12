@@ -41,6 +41,18 @@ export function initClient(): void {
     client.init();
 }
 
+function objifySessions(sessions: ISession[]): Record<string, ISession[]> {
+    const sessionsObj: Record<string, ISession[]> = {};
+
+    for (const sess of sessions) {
+        if (sessionsObj[sess.userID] === undefined) {
+            sessionsObj[sess.userID] = [];
+        }
+        sessionsObj[sess.userID].push(sess);
+    }
+    return sessionsObj;
+}
+
 export function ClientLauncher(): JSX.Element {
     const dispatch = useDispatch();
     const history = useHistory();
@@ -60,8 +72,8 @@ export function ClientLauncher(): JSX.Element {
 
             history.push(routes.MESSAGING + "/" + me.userID);
 
-            const conversations = await client.conversations.retrieve();
-            dispatch(setSessions(conversations));
+            const sessions = await client.sessions.retrieve();
+            dispatch(setSessions(objifySessions(sessions)));
 
             const familiars = await client.familiars.retrieve();
             dispatch(setFamiliars(familiars));
