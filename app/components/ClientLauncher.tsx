@@ -21,7 +21,6 @@ export let client: Client;
 export function initClient(): void {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const PK = localStorage.getItem("PK")!;
-    console.log(PK);
     client = new Client(PK, {
         dbFolder: progFolder,
     });

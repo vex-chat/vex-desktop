@@ -46,6 +46,17 @@ export default function Pane(): JSX.Element {
         }
     }
 
+    const scrollToBottom = () => {
+        if (messagesEndRef.current) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (messagesEndRef.current as any).scrollIntoView();
+        }
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    });
+
     const allVerified = !hasUnverifiedSession && sessionIDs.length > 0;
 
     const familiar: IUser | undefined = familiars[params.userID];
@@ -59,20 +70,9 @@ export default function Pane(): JSX.Element {
 
     const messagesEndRef = useRef(null);
 
-    const scrollToBottom = () => {
-        if (messagesEndRef.current) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (messagesEndRef.current as any).scrollIntoView();
-        }
-    };
-
     const messageOneRef = createRef();
     const messageTwoRef = createRef();
     const messageThreeRef = createRef();
-
-    useEffect(() => {
-        scrollToBottom();
-    });
 
     if (!familiar) {
         return <div className="pane"></div>;

@@ -3,7 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Client } from "@vex-chat/vex-js";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addInputState, resetInputStates } from "../reducers/inputs";
+import {
+    addInputState,
+    resetInputStates,
+    selectInputStates,
+} from "../reducers/inputs";
 import { errorFX, switchFX } from "../views/Base";
 import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
@@ -11,26 +15,25 @@ import { progFolder, client } from "../components/ClientLauncher";
 import { resetUser } from "../reducers/user";
 import { resetApp } from "../reducers/app";
 import { resetMessages } from "../reducers/messages";
-import { selectClassNames } from "../reducers/classNames";
 
-const FORM_NAME = "register_component";
+const FORM_NAME = "register_username";
 
 export default function IRegister(): JSX.Element {
     const dispatch = useDispatch();
-
-    const classNames = useSelector(selectClassNames);
-
     const history = useHistory();
 
     const [valid, setValid] = useState(false);
     const [taken, setTaken] = useState(false);
+
+    const inputs = useSelector(selectInputStates);
+
+    const value = inputs[FORM_NAME] || "";
+
     const [waiting, setWaiting] = useState(false);
     const [errorText, setErrorText] = useState("");
 
-    const value = classNames[FORM_NAME + "-username"] || "";
-
     useEffect(() => {
-        if ((classNames[FORM_NAME + "-username"] || "").length > 2) {
+        if (value.length > 2) {
             setValid(true);
         } else {
             setValid(false);
@@ -73,7 +76,7 @@ export default function IRegister(): JSX.Element {
 
                                     dispatch(
                                         addInputState(
-                                            FORM_NAME + "-username",
+                                            FORM_NAME,
                                             event.target.value
                                         )
                                     );
@@ -131,10 +134,7 @@ export default function IRegister(): JSX.Element {
                                         const username = Client.randomUsername();
 
                                         dispatch(
-                                            addInputState(
-                                                FORM_NAME + "-username",
-                                                username
-                                            )
+                                            addInputState(FORM_NAME, username)
                                         );
 
                                         const serverResults = await client.users.retrieve(

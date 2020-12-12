@@ -19,7 +19,6 @@ import { IconUsername } from "./IconUsername";
 import { switchFX } from "../views/Base";
 import { routes } from "../constants/routes";
 import { client } from "./ClientLauncher";
-import { addClassName, selectClassNames } from "../reducers/classNames";
 
 const emptyUser: IUser = {
     userID: "",
@@ -35,7 +34,8 @@ export default function Sidebar(): JSX.Element {
 
     const dispatch = useDispatch();
     const inputs = useSelector(selectInputStates);
-    const classNames = useSelector(selectClassNames);
+
+    const [className, setClassName] = useState("");
 
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const sessions: Record<string, Record<string, ISession>> = useSelector(
@@ -58,33 +58,14 @@ export default function Sidebar(): JSX.Element {
             <div className="field has-addons search-wrapper">
                 <figure className="user-icon image is-32x32">
                     {user.userID !== "" && (
-                        <div
-                            className={`dropdown ${
-                                classNames["own-user-icon-dropdown"] || ""
-                            }`}
-                        >
+                        <div className={`dropdown ${className}`}>
                             <div
                                 className="dropdown-trigger pointer"
                                 onClick={() => {
-                                    if (
-                                        classNames["own-user-icon-dropdown"] ==
-                                            "" ||
-                                        classNames["own-user-icon-dropdown"] ==
-                                            undefined
-                                    ) {
-                                        dispatch(
-                                            addClassName(
-                                                "own-user-icon-dropdown",
-                                                "is-active"
-                                            )
-                                        );
+                                    if (className == "") {
+                                        setClassName("is-active");
                                     } else {
-                                        dispatch(
-                                            addClassName(
-                                                "own-user-icon-dropdown",
-                                                ""
-                                            )
-                                        );
+                                        setClassName("");
                                     }
                                 }}
                             >
