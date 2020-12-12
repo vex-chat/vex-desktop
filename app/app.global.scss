@@ -1,6 +1,8 @@
 $tag-radius: 10px;
 $panel-tab-border-bottom: none;
+$panel-item-border: none;
 
+@import "../node_modules/@fortawesome/fontawesome-svg-core/styles.css";
 @import "../node_modules/bulma/bulma.sass";
 
 textarea {

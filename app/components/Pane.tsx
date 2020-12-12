@@ -12,16 +12,16 @@ import { format } from "date-fns";
 import { markSession, selectSessions } from "../reducers/sessions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+    faCheck,
     faCheckCircle,
+    faExclamation,
     faExclamationTriangle,
     faLock,
-    faLockOpen,
     faSkull,
-    faTimes,
+    faUnlock,
 } from "@fortawesome/free-solid-svg-icons";
 import { routes } from "../constants/routes";
 import { Link } from "react-router-dom";
-import { getUserTag } from "../utils/getUserTag";
 
 export default function Pane(): JSX.Element {
     // state
@@ -42,6 +42,8 @@ export default function Pane(): JSX.Element {
             hasUnverifiedSession = true;
         }
     }
+
+    const allVerified = !hasUnverifiedSession && sessionIDs.length > 0;
 
     const familiar: IUser | undefined = familiars[params.userID];
     const inputValue: string = inputValues[params.userID] || "";
@@ -88,8 +90,28 @@ export default function Pane(): JSX.Element {
                                 }
                                 className="has-text-danger pointer help"
                             >
-                                <FontAwesomeIcon icon={faExclamationTriangle} />
-                                Unverified
+                                <span className="icon">
+                                    <FontAwesomeIcon
+                                        icon={faExclamationTriangle}
+                                    />
+                                </span>
+                                Unverified Session
+                            </Link>
+                        )}
+                        {allVerified && (
+                            <Link
+                                to={
+                                    routes.MESSAGING +
+                                    "/" +
+                                    params.userID +
+                                    "/verify"
+                                }
+                                className="has-text-success pointer help"
+                            >
+                                <span className="icon">
+                                    <FontAwesomeIcon icon={faCheckCircle} />
+                                </span>
+                                Verified
                             </Link>
                         )}
                     </div>
@@ -107,6 +129,21 @@ export default function Pane(): JSX.Element {
                                     <p className="panel-heading">
                                         Active Sessions
                                     </p>
+                                    {hasUnverifiedSession && (
+                                        <div className="panel-block">
+                                            <span className="icon">
+                                                {" "}
+                                                <FontAwesomeIcon
+                                                    icon={faExclamation}
+                                                    className="has-text-danger"
+                                                />{" "}
+                                            </span>
+                                            <span className="help">
+                                                This user has unverified
+                                                sessions.
+                                            </span>
+                                        </div>
+                                    )}
                                     {sessionIDs.map((sessionID) => {
                                         const session =
                                             sessions[params.userID][sessionID];
@@ -115,20 +152,15 @@ export default function Pane(): JSX.Element {
                                                 key={sessionID}
                                                 className="panel-block"
                                             >
-                                                <div className="table is-fullwidth">
+                                                <table className="table is-fullwidth is-striped">
                                                     <tbody>
                                                         <tr>
                                                             <th>
                                                                 <FontAwesomeIcon
-                                                                    className={
-                                                                        session.verified
-                                                                            ? ""
-                                                                            : "has-text-danger"
-                                                                    }
                                                                     icon={
                                                                         session.verified
                                                                             ? faLock
-                                                                            : faTimes
+                                                                            : faUnlock
                                                                     }
                                                                 />
                                                             </th>
@@ -136,12 +168,14 @@ export default function Pane(): JSX.Element {
                                                                 {" "}
                                                                 <code>
                                                                     #
-                                                                    {getUserTag(
-                                                                        sessionID
+                                                                    {sessionID.slice(
+                                                                        0,
+                                                                        8
                                                                     )}
                                                                 </code>
                                                             </th>
-                                                            <th>
+
+                                                            <th className="has-text-right">
                                                                 {!session.verified && (
                                                                     <button
                                                                         className="button is-danger is-small"
@@ -158,10 +192,22 @@ export default function Pane(): JSX.Element {
                                                                         Verify
                                                                     </button>
                                                                 )}
+                                                                {session.verified && (
+                                                                    <span>
+                                                                        <span className="icon">
+                                                                            <FontAwesomeIcon
+                                                                                icon={
+                                                                                    faCheckCircle
+                                                                                }
+                                                                                className="has-text-success"
+                                                                            ></FontAwesomeIcon>
+                                                                        </span>
+                                                                    </span>
+                                                                )}
                                                             </th>
                                                         </tr>
                                                     </tbody>
-                                                </div>
+                                                </table>
                                             </div>
                                         );
                                     })}
@@ -274,7 +320,11 @@ export default function Pane(): JSX.Element {
                                                                     true
                                                                 )
                                                             );
-                                                            history.goBack();
+                                                            history.push(
+                                                                routes.MESSAGING +
+                                                                    "/" +
+                                                                    params.userID
+                                                            );
                                                         }}
                                                     >
                                                         They Match

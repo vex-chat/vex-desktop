@@ -21,10 +21,10 @@ export const progFolder = `${homedir}/.vex-desktop`;
 
 export let client: Client;
 
-export const switchFX = new Audio("./sounds/switch_005.ogg");
+export const switchFX = new Audio("assets/sounds/switch_005.ogg");
 switchFX.load();
 
-export const errorFX = new Audio("./sounds/error_008.ogg");
+export const errorFX = new Audio("assets/sounds/error_008.ogg");
 errorFX.load();
 
 export function initClient(): void {

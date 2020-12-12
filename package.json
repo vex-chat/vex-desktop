@@ -36,6 +36,7 @@
         "productName": "Vex Desktop",
         "appId": "vex.chat.desktop",
         "files": [
+            "assets/",
             "dist/",
             "node_modules/",
             "app.html",
