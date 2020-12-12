@@ -64,6 +64,7 @@ export default function Base(): JSX.Element {
     const settings = useSelector(selectSettings);
 
     useEffect(() => {
+        ReactTooltip.rebuild();
         client.on("needs-register", async () => {
             history.push("/register");
         });

@@ -1,5 +1,5 @@
 import { IUser } from "@vex-chat/vex-js";
-import React, { Fragment, useEffect, useRef } from "react";
+import React, { createRef, Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
 import { selectFamiliars } from "../reducers/familiars";
@@ -65,8 +65,20 @@ export default function Pane(): JSX.Element {
         }
     };
 
+    const messageOneRef = createRef();
+    const messageTwoRef = createRef();
+    const messageThreeRef = createRef();
+
     useEffect(() => {
         ReactTooltip.rebuild();
+        if (params.userID === user.userID && hasUnverifiedSession) {
+            if (history.location.pathname.includes("verify")) {
+                ReactTooltip.show(messageTwoRef.current as Element);
+                ReactTooltip.show(messageThreeRef.current as Element);
+            } else {
+                ReactTooltip.show(messageOneRef.current as Element);
+            }
+        }
         scrollToBottom();
     });
 
@@ -76,6 +88,7 @@ export default function Pane(): JSX.Element {
 
     return (
         <div className="pane">
+            <ReactTooltip effect="solid" />
             <div className="pane-topbar">
                 <div className="columns is-centered">
                     <div className="column is-narrow has-text-centered">
@@ -94,8 +107,18 @@ export default function Pane(): JSX.Element {
                                     params.userID +
                                     "/verify"
                                 }
+                                onClick={() => {
+                                    ReactTooltip.hide();
+                                }}
                                 className="has-text-danger pointer help"
-                                data-tip="This user has an unverified session."
+                                ref={messageOneRef as any}
+                                data-event={"disabled"}
+                                data-multiline={true}
+                                data-tip={
+                                    params.userID === user.userID
+                                        ? "For new conversations, verify the other user's identity.<br>Let's give it a go."
+                                        : ""
+                                }
                             >
                                 <span className="icon">
                                     <FontAwesomeIcon
@@ -184,20 +207,40 @@ export default function Pane(): JSX.Element {
 
                                                             <th className="has-text-right">
                                                                 {!session.verified && (
-                                                                    <button
-                                                                        className="button is-danger is-small"
-                                                                        onClick={() => {
-                                                                            history.push(
-                                                                                routes.MESSAGING +
-                                                                                    "/" +
-                                                                                    familiar.userID +
-                                                                                    "/verify/" +
-                                                                                    session.sessionID
-                                                                            );
-                                                                        }}
+                                                                    <span
+                                                                        data-event={
+                                                                            "disabled"
+                                                                        }
+                                                                        ref={
+                                                                            messageTwoRef as any
+                                                                        }
+                                                                        data-multiline={
+                                                                            true
+                                                                        }
+                                                                        data-tip={
+                                                                            params.userID ===
+                                                                            user.userID
+                                                                                ? "This is your list of encryption sessions with this user.<br>Click here to verify the safe words."
+                                                                                : ""
+                                                                        }
                                                                     >
-                                                                        Verify
-                                                                    </button>
+                                                                        <button
+                                                                            className="button is-danger is-small"
+                                                                            onClick={() => {
+                                                                                ReactTooltip.hide();
+                                                                                history.push(
+                                                                                    routes.MESSAGING +
+                                                                                        "/" +
+                                                                                        familiar.userID +
+                                                                                        "/verify/" +
+                                                                                        session.sessionID
+                                                                                );
+                                                                                ReactTooltip.rebuild();
+                                                                            }}
+                                                                        >
+                                                                            Verify
+                                                                        </button>
+                                                                    </span>
                                                                 )}
                                                                 {Boolean(
                                                                     session.verified
@@ -318,8 +361,15 @@ export default function Pane(): JSX.Element {
                                                     </button>
                                                     <button
                                                         className="button is-success is-right"
+                                                        ref={
+                                                            messageThreeRef as any
+                                                        }
+                                                        data-event={"disabled"}
+                                                        data-multiline={true}
+                                                        data-tip="In real conversations, check that the words match and click here.<br>Of course this time, it's just us."
                                                         onClick={async () => {
                                                             switchFX.play();
+                                                            ReactTooltip.hide();
                                                             await client.sessions.markVerified(
                                                                 sessionID
                                                             );
