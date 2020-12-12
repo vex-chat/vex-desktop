@@ -1,19 +1,18 @@
 {
-    "name": "electron-react-boilerplate",
-    "productName": "electron-react-boilerplate",
-    "version": "1.4.0",
-    "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+    "name": "vex-desktop",
+    "productName": "Vex Desktop",
+    "version": "0.3.0",
     "main": "./main.prod.js",
     "author": {
-        "name": "Electron React Boilerplate Maintainers",
-        "email": "electronreactboilerplate@gmail.com",
-        "url": "https://github.com/electron-react-boilerplate"
+        "name": "LogicBite LLC",
+        "email": "hello@logicbite.org",
+        "url": "https://logicbite.org/"
     },
     "scripts": {
         "electron-rebuild": "node -r ../internals/scripts/BabelRegister.js ../internals/scripts/ElectronRebuild.js",
         "postinstall": "yarn electron-rebuild"
     },
-    "license": "MIT",
+    "license": "UNLICENSED",
     "dependencies": {
         "@vex-chat/vex-js": "^0.10.5",
         "react-loading": "^2.0.3"
