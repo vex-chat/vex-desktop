@@ -3,11 +3,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Client } from "@vex-chat/vex-js";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectInputStates, addInputState } from "../reducers/inputs";
+import {
+    selectInputStates,
+    addInputState,
+    resetInputStates,
+} from "../reducers/inputs";
 import { errorFX, switchFX } from "../views/Base";
 import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
 import { progFolder, client } from "../components/ClientLauncher";
+import { resetUser } from "../reducers/user";
+import { resetApp } from "../reducers/app";
+import { resetMessages } from "../reducers/messages";
+import { resetSettings } from "../reducers/settings";
 
 const FORM_NAME = "register_component";
 
@@ -34,7 +42,16 @@ export default function IRegister(): JSX.Element {
 
     return (
         <div className="Aligner full-size">
-            <div className="Aligner-item Aligner-item--top"></div>
+            <div className="Aligner-item Aligner-item--top">
+                <div className="Aligner-item Aligner-item--top">
+                    <a
+                        className="delete settings-delete is-medium"
+                        onClick={() => {
+                            history.goBack();
+                        }}
+                    ></a>
+                </div>
+            </div>
             <div className="Aligner-item">
                 <div className="box has-background-white register-form">
                     <div className="field">
@@ -150,6 +167,13 @@ export default function IRegister(): JSX.Element {
                                         switchFX.play();
                                         setWaiting(true);
 
+                                        await client.close();
+                                        dispatch(resetUser);
+                                        dispatch(resetApp);
+                                        dispatch(resetInputStates);
+                                        dispatch(resetMessages);
+                                        dispatch(resetUser);
+
                                         const PK = Client.generateSecretKey();
                                         localStorage.setItem("PK", PK);
 
@@ -159,14 +183,12 @@ export default function IRegister(): JSX.Element {
                                         tempClient.on("ready", async () => {
                                             const username = value;
                                             // eslint-disable-next-line prefer-const
-                                            let [
+                                            const [
                                                 user,
                                                 err,
                                             ] = await tempClient.register(
                                                 username
                                             );
-
-                                            console.log(user);
 
                                             await tempClient.close();
 
