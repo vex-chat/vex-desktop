@@ -136,20 +136,20 @@ export default class MenuBuilder {
                 },
             ],
         };
-        const subMenuViewProd: MenuItemConstructorOptions = {
-            label: "View",
-            submenu: [
-                {
-                    label: "Toggle Full Screen",
-                    accelerator: "Ctrl+Command+F",
-                    click: () => {
-                        this.mainWindow.setFullScreen(
-                            !this.mainWindow.isFullScreen()
-                        );
-                    },
-                },
-            ],
-        };
+        // const subMenuViewProd: MenuItemConstructorOptions = {
+        //     label: "View",
+        //     submenu: [
+        //         {
+        //             label: "Toggle Full Screen",
+        //             accelerator: "Ctrl+Command+F",
+        //             click: () => {
+        //                 this.mainWindow.setFullScreen(
+        //                     !this.mainWindow.isFullScreen()
+        //                 );
+        //             },
+        //         },
+        //     ],
+        // };
         const subMenuWindow: DarwinMenuItemConstructorOptions = {
             label: "Window",
             submenu: [
@@ -183,7 +183,7 @@ export default class MenuBuilder {
             process.env.NODE_ENV === "development" ||
             process.env.DEBUG_PROD === "true"
                 ? subMenuViewDev
-                : subMenuViewProd;
+                : subMenuViewDev;
 
         return [
             subMenuAbout,

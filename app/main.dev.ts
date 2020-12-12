@@ -77,9 +77,9 @@ const createWindow = async () => {
         titleBarStyle: "hidden",
         frame: false,
         icon: getAssetPath("icon.png"),
-        webPreferences:{
-            nodeIntegration: true
-          },
+        webPreferences: {
+            nodeIntegration: true,
+        },
     });
 
     mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -90,8 +90,6 @@ const createWindow = async () => {
         if (!mainWindow) {
             throw new Error('"mainWindow" is not defined');
         }
-
-        mainWindow.webContents.openDevTools();
 
         if (process.env.START_MINIMIZED) {
             mainWindow.minimize();
