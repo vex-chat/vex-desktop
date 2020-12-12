@@ -96,13 +96,10 @@ export function ClientLauncher(): JSX.Element {
             history.push(routes.LAUNCH);
         });
 
-        client.on(
-            "conversation",
-            async (conversation: ISession, user: IUser) => {
-                dispatch(addSession(conversation));
-                dispatch(addFamiliar(user));
-            }
-        );
+        client.on("session", async (session: ISession, user: IUser) => {
+            dispatch(addSession(session));
+            dispatch(addFamiliar(user));
+        });
 
         client.on("message", async (message: IMessage) => {
             const dispMsg: IDisplayMessage = {

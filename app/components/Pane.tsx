@@ -243,9 +243,7 @@ export default function Pane(): JSX.Element {
                                                                         </Tooltip>
                                                                     </span>
                                                                 )}
-                                                                {Boolean(
-                                                                    session.verified
-                                                                ) && (
+                                                                {session.verified && (
                                                                     <span>
                                                                         <span className="icon">
                                                                             <FontAwesomeIcon
