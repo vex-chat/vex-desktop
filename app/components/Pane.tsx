@@ -5,7 +5,7 @@ import { Route, Switch, useHistory, useParams } from "react-router";
 import { selectFamiliars } from "../reducers/familiars";
 import { IconUsername } from "../components/IconUsername";
 import { selectInputStates, addInputState } from "../reducers/inputs";
-import { client, IDisplayMessage, switchFX } from "../views/Base";
+import { IDisplayMessage, switchFX } from "../views/Base";
 import { ISzDisplayMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
@@ -24,6 +24,7 @@ import { routes } from "../constants/routes";
 import { Link } from "react-router-dom";
 import { selectUser } from "../reducers/user";
 import crypto from "crypto";
+import { client } from "./ClientLauncher";
 
 export default function Pane(): JSX.Element {
     // state
@@ -197,11 +198,7 @@ export default function Pane(): JSX.Element {
                                                             <th>
                                                                 {" "}
                                                                 <code>
-                                                                    #
-                                                                    {sessionID.slice(
-                                                                        0,
-                                                                        8
-                                                                    )}
+                                                                    {sessionID}
                                                                 </code>
                                                             </th>
 
@@ -269,7 +266,7 @@ export default function Pane(): JSX.Element {
                                     })}
                                     <div className="panel-block">
                                         <button
-                                            className="button"
+                                            className="button is-small"
                                             onClick={() => history.goBack()}
                                         >
                                             Go Back

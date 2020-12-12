@@ -28,9 +28,10 @@ import {
 import { resetUser, selectUser } from "../reducers/user";
 import { strToIcon } from "../utils/strToIcon";
 import { IconUsername } from "./IconUsername";
-import { switchFX, client } from "../views/Base";
+import { switchFX } from "../views/Base";
 import { routes } from "../constants/routes";
 import { resetMessages } from "../reducers/messages";
+import { client } from "./ClientLauncher";
 
 const emptyUser: IUser = {
     userID: "",
@@ -133,20 +134,12 @@ export default function Sidebar(): JSX.Element {
                                         to={routes.REGISTER}
                                         className="dropdown-item has-text-danger"
                                         onClick={async () => {
-                                            await client.close();
                                             dispatch(
                                                 addInputState(
                                                     "own-user-icon-dropdown",
                                                     ""
                                                 )
                                             );
-
-                                            // reset state
-                                            dispatch(resetSessions());
-                                            dispatch(resetFamiliars());
-                                            dispatch(resetInputStates());
-                                            dispatch(resetMessages());
-                                            dispatch(resetUser());
                                         }}
                                     >
                                         <FontAwesomeIcon icon={faFingerprint} />

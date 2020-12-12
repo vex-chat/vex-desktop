@@ -1,23 +1,13 @@
 import { faCheck, faTimes, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Client, IMessage, ISession, IUser } from "@vex-chat/vex-js";
+import { Client } from "@vex-chat/vex-js";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectInputStates, addInputState } from "../reducers/inputs";
-import {
-    client,
-    errorFX,
-    IDisplayMessage,
-    initClient,
-    switchFX,
-} from "../views/Base";
+import { errorFX, switchFX } from "../views/Base";
 import { useHistory } from "react-router";
-import { setUser } from "../reducers/user";
-import { addSession, setSessions } from "../reducers/sessions";
-import { addFamiliar, setFamiliars } from "../reducers/familiars";
-import { addMessage } from "../reducers/messages";
-import { remote } from "electron";
 import { routes } from "../constants/routes";
+import { progFolder, client } from "../components/ClientLauncher";
 
 const FORM_NAME = "register_component";
 
@@ -158,138 +148,44 @@ export default function IRegister(): JSX.Element {
                                     }`}
                                     onClick={async () => {
                                         switchFX.play();
-
                                         setWaiting(true);
 
                                         const PK = Client.generateSecretKey();
                                         localStorage.setItem("PK", PK);
 
-                                        initClient();
-
-                                        client.on("authed", async () => {
-                                            const me = client.users.me();
-                                            dispatch(setUser(me));
-
-                                            history.push(
-                                                routes.MESSAGING +
-                                                    "/" +
-                                                    me.userID
-                                            );
-
-                                            const conversations = await client.conversations.retrieve();
-                                            dispatch(
-                                                setSessions(conversations)
-                                            );
-
-                                            const familiars = await client.familiars.retrieve();
-                                            dispatch(setFamiliars(familiars));
-
-                                            for (const user of familiars) {
-                                                const history = await client.messages.retrieve(
-                                                    user.userID
-                                                );
-                                                for (const message of history) {
-                                                    dispatch(
-                                                        addMessage(message)
-                                                    );
-                                                }
-                                            }
+                                        const tempClient = new Client(PK, {
+                                            dbFolder: progFolder,
                                         });
-
-                                        client.on(
-                                            "conversation",
-                                            async (
-                                                conversation: ISession,
-                                                user: IUser
-                                            ) => {
-                                                dispatch(
-                                                    addSession(conversation)
-                                                );
-                                                dispatch(addFamiliar(user));
-                                            }
-                                        );
-
-                                        client.on(
-                                            "message",
-                                            async (message: IMessage) => {
-                                                const dispMsg: IDisplayMessage = {
-                                                    message: message.message,
-                                                    recipient:
-                                                        message.recipient,
-                                                    nonce: message.nonce,
-                                                    timestamp:
-                                                        message.timestamp,
-                                                    sender: message.sender,
-                                                    direction:
-                                                        message.direction,
-                                                };
-                                                dispatch(addMessage(dispMsg));
-
-                                                if (
-                                                    dispMsg.direction ===
-                                                        "incoming" &&
-                                                    message.recipient !==
-                                                        message.sender
-                                                ) {
-                                                    const msgNotification = new Notification(
-                                                        "Vex",
-                                                        {
-                                                            body:
-                                                                message.message,
-                                                        }
-                                                    );
-
-                                                    msgNotification.onclick = () => {
-                                                        remote
-                                                            .getCurrentWindow()
-                                                            .show();
-                                                        history.push(
-                                                            routes.MESSAGING +
-                                                                "/" +
-                                                                (dispMsg.direction ===
-                                                                "incoming"
-                                                                    ? dispMsg.sender
-                                                                    : dispMsg.recipient)
-                                                        );
-                                                    };
-                                                }
-                                            }
-                                        );
-
-                                        const username = value;
-                                        // eslint-disable-next-line prefer-const
-                                        let [user, err] = await client.register(
-                                            username
-                                        );
-                                        if (!user) {
-                                            errorFX.play();
-                                            console.warn(
-                                                "registration failed.",
-                                                err
+                                        tempClient.on("ready", async () => {
+                                            const username = value;
+                                            // eslint-disable-next-line prefer-const
+                                            let [
+                                                user,
+                                                err,
+                                            ] = await tempClient.register(
+                                                username
                                             );
-                                            setWaiting(false);
-                                            if (err) {
+
+                                            console.log(user);
+
+                                            await tempClient.close();
+
+                                            if (err !== null) {
+                                                errorFX.play();
+                                                setWaiting(false);
+                                                console.warn(
+                                                    "registration failed.",
+                                                    err
+                                                );
                                                 setErrorText(err.toString());
                                             }
-                                            return;
-                                        }
-                                        // confirmFX.play();
 
-                                        if (!err) {
-                                            setWaiting(true);
-                                            const err = await client.login();
-                                            if (!err) {
-                                                history.push(
-                                                    routes.MESSAGING +
-                                                        "/" +
-                                                        client.users.me().userID
-                                                );
+                                            if (user !== null) {
+                                                setWaiting(false);
+                                                history.push(routes.LAUNCH);
                                             }
-                                        } else {
-                                            setWaiting(false);
-                                            setErrorText(err.toString());
-                                            console.error(err);
-                                        }
+                                        });
+                                        tempClient.init();
                                     }}
                                 >
                                     Chat
