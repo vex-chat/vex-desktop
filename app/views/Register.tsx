@@ -15,7 +15,6 @@ import { progFolder, client } from "../components/ClientLauncher";
 import { resetUser } from "../reducers/user";
 import { resetApp } from "../reducers/app";
 import { resetMessages } from "../reducers/messages";
-import { resetSettings } from "../reducers/settings";
 
 const FORM_NAME = "register_component";
 
