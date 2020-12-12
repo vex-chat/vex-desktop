@@ -15,6 +15,7 @@ import Register from "../views/Register";
 import Loading from "../components/Loading";
 import Settings from "../views/Settings";
 import { selectSettings } from "../reducers/settings";
+import { setApp } from "../reducers/app";
 
 const homedir = os.homedir();
 export const progFolder = `${homedir}/.vex-desktop`;
@@ -76,7 +77,6 @@ export default function Base(): JSX.Element {
             }
 
             const conversations = await client.conversations.retrieve();
-
             dispatch(setSessions(conversations));
 
             const familiars = await client.familiars.retrieve();
@@ -88,6 +88,7 @@ export default function Base(): JSX.Element {
                     dispatch(addMessage(message));
                 }
             }
+            dispatch(setApp("initialLoad", false));
         });
 
         client.on(
