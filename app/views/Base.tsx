@@ -9,6 +9,10 @@ import Loading from "../components/Loading";
 import Settings from "../views/Settings";
 import { ClientLauncher } from "../components/ClientLauncher";
 
+import closeIcon from "../assets/icons/close.svg";
+import minimizeIcon from "../assets/icons/minimize.svg";
+import maximizeIcon from "../assets/icons/maximize.svg";
+
 export const switchFX = new Audio("assets/sounds/switch_005.ogg");
 switchFX.load();
 
@@ -21,9 +25,65 @@ export interface IDisplayMessage extends IMessage {
 }
 
 export default function Base(): JSX.Element {
+    function closeWindow() {
+        const remote = window.require
+            ? window.require("electron").remote
+            : null;
+        const WIN = remote?.getCurrentWindow();
+        WIN?.close();
+    }
+
+    function minimizeWindow() {
+        const remote = window.require
+            ? window.require("electron").remote
+            : null;
+        const WIN = remote?.getCurrentWindow();
+        WIN?.minimize();
+    }
+
+    function maximizeWindow() {
+        const remote = window.require
+            ? window.require("electron").remote
+            : null;
+        const WIN = remote?.getCurrentWindow();
+        WIN?.maximize();
+    }
+
     return (
         <App>
-            <div className="title-bar" />
+            <div className="title-bar">
+                {process.platform !== "darwin" && (
+                    <div className="window-buttons">
+                        <span
+                            onClick={() => minimizeWindow()}
+                            className="icon is-small minimize-button "
+                        >
+                            <img
+                                src={(minimizeIcon as unknown) as string}
+                                className="window-button-icon"
+                            />
+                        </span>
+                        <span
+                            onClick={() => maximizeWindow()}
+                            className="icon maximize-button is-small has-text-danger pointer"
+                        >
+                            <img
+                                src={(maximizeIcon as unknown) as string}
+                                className="window-button-icon"
+                            />
+                        </span>
+                        <span
+                            onClick={() => closeWindow()}
+                            className="icon close-button is-small has-text-danger pointer"
+                        >
+                            <img
+                                src={(closeIcon as unknown) as string}
+                                className="window-button-icon"
+                            />
+                        </span>
+                    </div>
+                )}
+            </div>
             <Switch>
                 <Route
                     path={routes.MESSAGING + "/:userID/:page?/:sessionID?"}

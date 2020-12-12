@@ -11,6 +11,10 @@ textarea {
     border-radius: 0px !important;
 }
 
+.window-buttons {
+    float: right;
+}
+
 .mnemonic-pre {
     max-width: 400px;
 }
@@ -37,6 +41,19 @@ input {
 
 button {
     border-radius: 10px! important;
+}
+
+.window-buttons {
+    padding-top: 1px;
+    padding-right: 10px;
+}
+
+.maximize-button {
+    margin-right: 7.5px;
+}
+
+.minimize-button {
+    margin-right: 7.5px;
 }
 
 .title-bar {
@@ -210,6 +227,7 @@ div.sidebar > aside > ul > li > a:hover {
     margin-bottom: 0;
 }
 
+
 .session-body {
     width: 100% !important;
 }
@@ -217,6 +235,10 @@ div.sidebar > aside > ul > li > a:hover {
 .familiar-button {
     padding: 10px 10px 10px 20px;
     cursor: pointer;
+}
+
+.window-button-icon:hover {
+    color: pink;
 }
 
 .pointer {
