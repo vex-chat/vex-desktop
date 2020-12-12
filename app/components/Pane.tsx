@@ -11,7 +11,7 @@ import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
 import { markSession, selectSessions } from "../reducers/sessions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ReactTooltip from "react-tooltip";
+import Tooltip from "@material-ui/core/Tooltip";
 import {
     faCheckCircle,
     faExclamation,
@@ -70,15 +70,6 @@ export default function Pane(): JSX.Element {
     const messageThreeRef = createRef();
 
     useEffect(() => {
-        ReactTooltip.rebuild();
-        if (params.userID === user.userID && hasUnverifiedSession) {
-            if (history.location.pathname.includes("verify")) {
-                ReactTooltip.show(messageTwoRef.current as Element);
-                ReactTooltip.show(messageThreeRef.current as Element);
-            } else {
-                ReactTooltip.show(messageOneRef.current as Element);
-            }
-        }
         scrollToBottom();
     });
 
@@ -88,7 +79,6 @@ export default function Pane(): JSX.Element {
 
     return (
         <div className="pane">
-            <ReactTooltip effect="solid" />
             <div className="pane-topbar">
                 <div className="columns is-centered">
                     <div className="column is-narrow has-text-centered">
@@ -100,33 +90,43 @@ export default function Pane(): JSX.Element {
                     </div>
                     <div className="column is-narrow">
                         {hasUnverifiedSession && (
-                            <Link
-                                to={
-                                    routes.MESSAGING +
-                                    "/" +
-                                    params.userID +
-                                    "/verify"
+                            <Tooltip
+                                open={
+                                    params.userID === user.userID &&
+                                    !history.location.pathname.includes(
+                                        "verify"
+                                    )
                                 }
-                                onClick={() => {
-                                    ReactTooltip.hide();
-                                }}
-                                className="has-text-danger pointer help"
-                                ref={messageOneRef as any}
-                                data-event={"disabled"}
-                                data-multiline={true}
-                                data-tip={
-                                    params.userID === user.userID
-                                        ? "For new conversations, verify the other user's identity.<br>Let's give it a go."
-                                        : ""
+                                title={
+                                    "For new conversations, verify the other user's identity."
                                 }
                             >
-                                <span className="icon">
-                                    <FontAwesomeIcon
-                                        icon={faExclamationTriangle}
-                                    />
-                                </span>
-                                Unverified Session
-                            </Link>
+                                <Link
+                                    to={
+                                        routes.MESSAGING +
+                                        "/" +
+                                        params.userID +
+                                        "/verify"
+                                    }
+                                    className="has-text-danger pointer help"
+                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                    ref={messageOneRef as any}
+                                    data-event={"disabled"}
+                                    data-multiline={true}
+                                    data-tip={
+                                        params.userID === user.userID
+                                            ? "For new conversations, verify the other user's identity."
+                                            : ""
+                                    }
+                                >
+                                    <span className="icon">
+                                        <FontAwesomeIcon
+                                            icon={faExclamationTriangle}
+                                        />
+                                    </span>
+                                    Unverified Session
+                                </Link>
+                            </Tooltip>
                         )}
                         {allVerified && (
                             <Link
@@ -152,7 +152,7 @@ export default function Pane(): JSX.Element {
                 <Route
                     exact
                     path={routes.MESSAGING + "/:userID/verify"}
-                    component={() => (
+                    render={() => (
                         <div className="verify-wrapper">
                             <div className="verify-mnemonic-wrapper">
                                 <div className="panel">
@@ -212,34 +212,38 @@ export default function Pane(): JSX.Element {
                                                                             "disabled"
                                                                         }
                                                                         ref={
+                                                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                                                             messageTwoRef as any
                                                                         }
-                                                                        data-multiline={
-                                                                            true
-                                                                        }
-                                                                        data-tip={
-                                                                            params.userID ===
-                                                                            user.userID
-                                                                                ? "This is your list of encryption sessions with this user.<br>Click here to verify the safe words."
-                                                                                : ""
-                                                                        }
                                                                     >
-                                                                        <button
-                                                                            className="button is-danger is-small"
-                                                                            onClick={() => {
-                                                                                ReactTooltip.hide();
-                                                                                history.push(
-                                                                                    routes.MESSAGING +
-                                                                                        "/" +
-                                                                                        familiar.userID +
-                                                                                        "/verify/" +
-                                                                                        session.sessionID
-                                                                                );
-                                                                                ReactTooltip.rebuild();
-                                                                            }}
+                                                                        <Tooltip
+                                                                            open={
+                                                                                params.userID ===
+                                                                                    user.userID &&
+                                                                                history.location.pathname.includes(
+                                                                                    "verify"
+                                                                                )
+                                                                            }
+                                                                            title={
+                                                                                "Click here to verify the safe words."
+                                                                            }
+                                                                            placement="top"
                                                                         >
-                                                                            Verify
-                                                                        </button>
+                                                                            <button
+                                                                                className="button is-danger is-small"
+                                                                                onClick={() => {
+                                                                                    history.push(
+                                                                                        history
+                                                                                            .location
+                                                                                            .pathname +
+                                                                                            "/" +
+                                                                                            session.sessionID
+                                                                                    );
+                                                                                }}
+                                                                            >
+                                                                                Verify
+                                                                            </button>
+                                                                        </Tooltip>
                                                                     </span>
                                                                 )}
                                                                 {Boolean(
@@ -279,7 +283,7 @@ export default function Pane(): JSX.Element {
                 <Route
                     exact
                     path={routes.MESSAGING + "/:userID/verify/:sessionID"}
-                    component={() => (
+                    render={() => (
                         <div className="verify-wrapper">
                             <div className="verify-mnemonic-wrapper">
                                 {sessionIDs.map((sessionID) => {
@@ -359,36 +363,49 @@ export default function Pane(): JSX.Element {
                                                     >
                                                         Go Back
                                                     </button>
-                                                    <button
-                                                        className="button is-success is-right"
-                                                        ref={
-                                                            messageThreeRef as any
+                                                    <Tooltip
+                                                        open={
+                                                            params.userID ===
+                                                            user.userID
                                                         }
-                                                        data-event={"disabled"}
-                                                        data-multiline={true}
-                                                        data-tip="In real conversations, check that the words match and click here.<br>Of course this time, it's just us."
-                                                        onClick={async () => {
-                                                            switchFX.play();
-                                                            ReactTooltip.hide();
-                                                            await client.sessions.markVerified(
-                                                                sessionID
-                                                            );
-                                                            dispatch(
-                                                                markSession(
-                                                                    params.userID,
-                                                                    sessionID,
-                                                                    true
-                                                                )
-                                                            );
-                                                            history.push(
-                                                                routes.MESSAGING +
-                                                                    "/" +
-                                                                    params.userID
-                                                            );
-                                                        }}
+                                                        title={
+                                                            "In real conversations, check that the words match and click here."
+                                                        }
                                                     >
-                                                        They Match
-                                                    </button>
+                                                        <button
+                                                            className="button is-success is-right"
+                                                            ref={
+                                                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                                messageThreeRef as any
+                                                            }
+                                                            data-event={
+                                                                "disabled"
+                                                            }
+                                                            data-multiline={
+                                                                true
+                                                            }
+                                                            onClick={async () => {
+                                                                switchFX.play();
+                                                                await client.sessions.markVerified(
+                                                                    sessionID
+                                                                );
+                                                                dispatch(
+                                                                    markSession(
+                                                                        params.userID,
+                                                                        sessionID,
+                                                                        true
+                                                                    )
+                                                                );
+                                                                history.push(
+                                                                    routes.MESSAGING +
+                                                                        "/" +
+                                                                        params.userID
+                                                                );
+                                                            }}
+                                                        >
+                                                            They Match
+                                                        </button>
+                                                    </Tooltip>
                                                 </div>
                                             </div>
                                         </div>
@@ -441,40 +458,52 @@ export default function Pane(): JSX.Element {
                                     })}
                                     <div ref={messagesEndRef} />
                                 </div>
-                                <div className="chat-input-wrapper">
-                                    <textarea
-                                        value={inputValue}
-                                        className="textarea chat-input has-fixed-size is-focused"
-                                        rows={2}
-                                        onChange={(event) => {
-                                            dispatch(
-                                                addInputState(
-                                                    params.userID,
-                                                    event.target.value
-                                                )
-                                            );
-                                        }}
-                                        onKeyDown={(event) => {
-                                            if (
-                                                event.key === "Enter" &&
-                                                !event.shiftKey
-                                            ) {
-                                                event.preventDefault();
-
-                                                client.messages.send(
-                                                    familiar.userID,
-                                                    inputValue
-                                                );
+                                <Tooltip
+                                    open={
+                                        params.userID === user.userID &&
+                                        !history.location.pathname.includes(
+                                            "verify"
+                                        ) &&
+                                        Object.keys(threadMessages || {})
+                                            .length === 0
+                                    }
+                                    title="Send a message here to try it out."
+                                >
+                                    <div className="chat-input-wrapper">
+                                        <textarea
+                                            value={inputValue}
+                                            className="textarea chat-input has-fixed-size is-focused"
+                                            rows={2}
+                                            onChange={(event) => {
                                                 dispatch(
                                                     addInputState(
                                                         params.userID,
-                                                        ""
+                                                        event.target.value
                                                     )
                                                 );
-                                            }
-                                        }}
-                                    />
-                                </div>
+                                            }}
+                                            onKeyDown={(event) => {
+                                                if (
+                                                    event.key === "Enter" &&
+                                                    !event.shiftKey
+                                                ) {
+                                                    event.preventDefault();
+
+                                                    client.messages.send(
+                                                        familiar.userID,
+                                                        inputValue
+                                                    );
+                                                    dispatch(
+                                                        addInputState(
+                                                            params.userID,
+                                                            ""
+                                                        )
+                                                    );
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                </Tooltip>
                             </Fragment>
                         );
                     }}

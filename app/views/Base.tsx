@@ -15,7 +15,6 @@ import Register from "../views/Register";
 import Loading from "../components/Loading";
 import Settings from "../views/Settings";
 import { selectSettings } from "../reducers/settings";
-import ReactTooltip from "react-tooltip";
 
 const homedir = os.homedir();
 export const progFolder = `${homedir}/.vex-desktop`;
@@ -64,7 +63,6 @@ export default function Base(): JSX.Element {
     const settings = useSelector(selectSettings);
 
     useEffect(() => {
-        ReactTooltip.rebuild();
         client.on("needs-register", async () => {
             history.push("/register");
         });
@@ -136,7 +134,6 @@ export default function Base(): JSX.Element {
 
     return (
         <App>
-            <ReactTooltip effect={"solid"} />
             <div className="title-bar" />
             <Switch>
                 <Route
