@@ -1,7 +1,7 @@
 {
     "name": "vex-desktop",
     "productName": "Vex Desktop",
-    "version": "0.3.0",
+    "version": "0.3.3",
     "main": "./main.prod.js",
     "author": {
         "name": "LogicBite LLC",
