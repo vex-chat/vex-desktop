@@ -99,6 +99,20 @@ const createWindow = async () => {
         }
     });
 
+    if (process.platform === "darwin") {
+        let forceQuit = false;
+        app.on("before-quit", function () {
+            forceQuit = true;
+        });
+        mainWindow.on("close", function (event) {
+            if (!forceQuit) {
+                event.preventDefault();
+
+                mainWindow?.hide();
+            }
+        });
+    }
+
     mainWindow.on("closed", () => {
         mainWindow = null;
     });
@@ -133,4 +147,7 @@ app.on("activate", () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (mainWindow === null) createWindow();
+    if (process.platform === "darwin") {
+        mainWindow?.show();
+    }
 });

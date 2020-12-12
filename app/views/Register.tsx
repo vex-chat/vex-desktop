@@ -56,7 +56,7 @@ export default function IRegister(): JSX.Element {
                 <div className="box has-background-white register-form">
                     <div className="field">
                         <label className="label is-small">
-                            Just pick a username:{" "}
+                            Pick a username:{" "}
                             {taken && (
                                 <span className="has-text-danger">
                                     Username is taken!
