@@ -10,28 +10,16 @@ import { ISession, IUser } from "@vex-chat/vex-js";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useParams } from "react-router-dom";
-import {
-    resetSessions,
-    selectSessions,
-    stubSession,
-} from "../reducers/sessions";
-import {
-    addFamiliar,
-    resetFamiliars,
-    selectFamiliars,
-} from "../reducers/familiars";
-import {
-    selectInputStates,
-    addInputState,
-    resetInputStates,
-} from "../reducers/inputs";
-import { resetUser, selectUser } from "../reducers/user";
+import { selectSessions, stubSession } from "../reducers/sessions";
+import { addFamiliar, selectFamiliars } from "../reducers/familiars";
+import { selectInputStates, addInputState } from "../reducers/inputs";
+import { selectUser } from "../reducers/user";
 import { strToIcon } from "../utils/strToIcon";
 import { IconUsername } from "./IconUsername";
 import { switchFX } from "../views/Base";
 import { routes } from "../constants/routes";
-import { resetMessages } from "../reducers/messages";
 import { client } from "./ClientLauncher";
+import { addClassName, selectClassNames } from "../reducers/classNames";
 
 const emptyUser: IUser = {
     userID: "",
@@ -47,6 +35,7 @@ export default function Sidebar(): JSX.Element {
 
     const dispatch = useDispatch();
     const inputs = useSelector(selectInputStates);
+    const classNames = useSelector(selectClassNames);
 
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const sessions: Record<string, Record<string, ISession>> = useSelector(
@@ -71,27 +60,27 @@ export default function Sidebar(): JSX.Element {
                     {user.userID !== "" && (
                         <div
                             className={`dropdown ${
-                                inputs["own-user-icon-dropdown"] || ""
+                                classNames["own-user-icon-dropdown"] || ""
                             }`}
                         >
                             <div
                                 className="dropdown-trigger pointer"
                                 onClick={() => {
                                     if (
-                                        inputs["own-user-icon-dropdown"] ==
+                                        classNames["own-user-icon-dropdown"] ==
                                             "" ||
-                                        inputs["own-user-icon-dropdown"] ==
+                                        classNames["own-user-icon-dropdown"] ==
                                             undefined
                                     ) {
                                         dispatch(
-                                            addInputState(
+                                            addClassName(
                                                 "own-user-icon-dropdown",
                                                 "is-active"
                                             )
                                         );
                                     } else {
                                         dispatch(
-                                            addInputState(
+                                            addClassName(
                                                 "own-user-icon-dropdown",
                                                 ""
                                             )

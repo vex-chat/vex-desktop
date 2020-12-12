@@ -3,11 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Client } from "@vex-chat/vex-js";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    selectInputStates,
-    addInputState,
-    resetInputStates,
-} from "../reducers/inputs";
+import { addInputState, resetInputStates } from "../reducers/inputs";
 import { errorFX, switchFX } from "../views/Base";
 import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
@@ -15,12 +11,14 @@ import { progFolder, client } from "../components/ClientLauncher";
 import { resetUser } from "../reducers/user";
 import { resetApp } from "../reducers/app";
 import { resetMessages } from "../reducers/messages";
+import { selectClassNames } from "../reducers/classNames";
 
 const FORM_NAME = "register_component";
 
 export default function IRegister(): JSX.Element {
     const dispatch = useDispatch();
-    const inputs = useSelector(selectInputStates);
+
+    const classNames = useSelector(selectClassNames);
 
     const history = useHistory();
 
@@ -29,10 +27,10 @@ export default function IRegister(): JSX.Element {
     const [waiting, setWaiting] = useState(false);
     const [errorText, setErrorText] = useState("");
 
-    const value = inputs[FORM_NAME + "-username"] || "";
+    const value = classNames[FORM_NAME + "-username"] || "";
 
     useEffect(() => {
-        if ((inputs[FORM_NAME + "-username"] || "").length > 2) {
+        if ((classNames[FORM_NAME + "-username"] || "").length > 2) {
             setValid(true);
         } else {
             setValid(false);

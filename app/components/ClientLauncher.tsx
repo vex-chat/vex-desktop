@@ -4,14 +4,15 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
-import { setApp } from "../reducers/app";
+import { resetApp, setApp } from "../reducers/app";
 import { addFamiliar, setFamiliars } from "../reducers/familiars";
-import { addMessage } from "../reducers/messages";
+import { addMessage, resetMessages } from "../reducers/messages";
 import { addSession, setSessions } from "../reducers/sessions";
 import { selectSettings } from "../reducers/settings";
 import { setUser } from "../reducers/user";
 import { IDisplayMessage } from "../views/Base";
 import os from "os";
+import { resetInputStates } from "../reducers/inputs";
 
 const homedir = os.homedir();
 export const progFolder = `${homedir}/.vex-desktop`;
@@ -35,9 +36,8 @@ export function initClient(): void {
             client.emit("needs-register");
         }
     });
-    // emitted when manually closed
     client.on("close", async () => {
-        console.log("Shut down.");
+        console.log("Shut down manually.");
     });
     client.init();
 }
@@ -74,6 +74,15 @@ export function ClientLauncher(): JSX.Element {
                 }
             }
             dispatch(setApp("initialLoad", false));
+        });
+
+        client.on("disconnect", async () => {
+            await client.close();
+            dispatch(resetApp);
+            dispatch(resetInputStates);
+            dispatch(resetMessages);
+
+            history.push(routes.LAUNCH);
         });
 
         client.on(
