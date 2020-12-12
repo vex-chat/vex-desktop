@@ -77,16 +77,9 @@ const createWindow = async () => {
         titleBarStyle: "hidden",
         frame: false,
         icon: getAssetPath("icon.png"),
-        webPreferences:
-            (process.env.NODE_ENV === "development" ||
-                process.env.E2E_BUILD === "true") &&
-            process.env.ERB_SECURE !== "true"
-                ? {
-                      nodeIntegration: true,
-                  }
-                : {
-                      preload: path.join(__dirname, "dist/renderer.prod.js"),
-                  },
+        webPreferences:{
+            nodeIntegration: true
+          },
     });
 
     mainWindow.loadURL(`file://${__dirname}/app.html`);
