@@ -125,7 +125,7 @@ export default function Pane(): JSX.Element {
                                             icon={faExclamationTriangle}
                                         />
                                     </span>
-                                    Unverified Session
+                                    Unverified
                                 </Link>
                             </Tooltip>
                         )}
