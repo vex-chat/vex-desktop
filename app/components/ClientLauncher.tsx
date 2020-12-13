@@ -22,7 +22,7 @@ export let client: Client;
 
 const launchEvents = new EventEmitter();
 
-export function initClient(): void {
+export async function initClient(): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const PK = localStorage.getItem("PK")!;
     client = new Client(PK, {
