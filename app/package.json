@@ -14,7 +14,7 @@
     },
     "license": "UNLICENSED",
     "dependencies": {
-        "@vex-chat/vex-js": "^0.10.10",
+        "@vex-chat/vex-js": "^0.10.13",
         "react-loading": "^2.0.3"
     }
 }

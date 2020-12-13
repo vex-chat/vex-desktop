@@ -3,7 +3,6 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { routes } from "../constants/routes";
 import App from "../views/App";
 import Messaging from "../views/Messaging";
-import { IMessage } from "@vex-chat/vex-js";
 import Register from "../views/Register";
 import Loading from "../components/Loading";
 import Settings from "../views/Settings";
@@ -18,11 +17,6 @@ switchFX.load();
 
 export const errorFX = new Audio("assets/sounds/error_008.ogg");
 errorFX.load();
-
-export interface IDisplayMessage extends IMessage {
-    timestamp: Date;
-    direction: "outgoing" | "incoming";
-}
 
 export default function Base(): JSX.Element {
     function closeWindow() {

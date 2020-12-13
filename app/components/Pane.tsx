@@ -1,12 +1,12 @@
-import { IUser } from "@vex-chat/vex-js";
+import { IMessage, IUser } from "@vex-chat/vex-js";
 import React, { createRef, Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
 import { selectFamiliars } from "../reducers/familiars";
 import { IconUsername } from "../components/IconUsername";
 import { selectInputStates, addInputState } from "../reducers/inputs";
-import { IDisplayMessage, switchFX } from "../views/Base";
-import { ISzDisplayMessage } from "../reducers/messages";
+import { switchFX } from "../views/Base";
+import { ISerializedMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
 import { markSession, selectSessions } from "../reducers/sessions";
@@ -432,6 +432,7 @@ export default function Pane(): JSX.Element {
                                                         .toString("hex"),
                                                     message:
                                                         "Welcome to vex messenger!",
+                                                    decrypted: true,
                                                 })}
                                                 {MessageBox({
                                                     timestamp: new Date(
@@ -445,6 +446,7 @@ export default function Pane(): JSX.Element {
                                                         .toString("hex"),
                                                     message:
                                                         "This is a personal thread for taking notes, or whatever you'd like.",
+                                                    decrypted: true,
                                                 })}
                                             </div>
                                         )}
@@ -508,27 +510,67 @@ export default function Pane(): JSX.Element {
     );
 }
 
-function MessageBox(message: IDisplayMessage | ISzDisplayMessage): JSX.Element {
+function MessageBox(message: IMessage | ISerializedMessage): JSX.Element {
     if (message.direction !== "incoming") {
         return (
             <div key={message.nonce} className="message-wrapper has-text-right">
-                <div className="tag is-large is-info message-box">
-                    <p className="has-text-white">
-                        <span className="has-text-left">{message.message}</span>
+                <div
+                    className={`tag message-box ${
+                        message.decrypted ? "is-info" : "is-danger"
+                    }`}
+                >
+                    <div className="has-text-white">
+                        <span className="has-text-left">
+                            {message.decrypted ? (
+                                <div className="message-text-wrapper">
+                                    {message.message}
+                                </div>
+                            ) : (
+                                <div className="message-text-wrapper">
+                                    <code>
+                                        <FontAwesomeIcon icon={faExclamation} />{" "}
+                                        Decryption Failed
+                                    </code>
+                                </div>
+                            )}
+                        </span>
                         <br />
                         <span className="help has-text-right">
                             {format(new Date(message.timestamp), "kk:mm:ss")}
                         </span>
-                    </p>
+                    </div>
                 </div>
             </div>
         );
     } else {
         return (
             <div key={message.nonce} className="message-wrapper has-text-left">
-                <div className="tag is-large is-light message-box">
-                    <p className="has-text-black">
-                        <span className="has-text-left">{message.message}</span>
+                <div
+                    className={`tag message-box ${
+                        message.decrypted ? "is-light" : "is-danger"
+                    }`}
+                >
+                    <p
+                        className={`${
+                            message.decrypted
+                                ? "has-text-black"
+                                : "has-text-white"
+                        }`}
+                    >
+                        <span className="has-text-left">
+                            {message.decrypted ? (
+                                <div className="message-text-wrapper">
+                                    {message.message}
+                                </div>
+                            ) : (
+                                <div className="message-text-wrapper">
+                                    <code>
+                                        <FontAwesomeIcon icon={faExclamation} />{" "}
+                                        Decryption Failed
+                                    </code>
+                                </div>
+                            )}
+                        </span>
                         <br />
                         <span className="help has-text-right">
                             {format(new Date(message.timestamp), "kk:mm:ss")}

@@ -10,7 +10,6 @@ import { addMessage, resetMessages } from "../reducers/messages";
 import { addSession, setSessions } from "../reducers/sessions";
 import { selectSettings } from "../reducers/settings";
 import { setUser } from "../reducers/user";
-import { IDisplayMessage } from "../views/Base";
 import os from "os";
 import { resetInputStates } from "../reducers/inputs";
 
@@ -103,19 +102,11 @@ export function ClientLauncher(): JSX.Element {
         });
 
         client.on("message", async (message: IMessage) => {
-            const dispMsg: IDisplayMessage = {
-                message: message.message,
-                recipient: message.recipient,
-                nonce: message.nonce,
-                timestamp: message.timestamp,
-                sender: message.sender,
-                direction: message.direction,
-            };
-            dispatch(addMessage(dispMsg));
+            dispatch(addMessage(message));
 
             if (
                 settings.notifications &&
-                dispMsg.direction === "incoming" &&
+                message.direction === "incoming" &&
                 message.recipient !== message.sender
             ) {
                 const msgNotification = new Notification("Vex", {
@@ -127,9 +118,9 @@ export function ClientLauncher(): JSX.Element {
                     history.push(
                         routes.MESSAGING +
                             "/" +
-                            (dispMsg.direction === "incoming"
-                                ? dispMsg.sender
-                                : dispMsg.recipient)
+                            (message.direction === "incoming"
+                                ? message.sender
+                                : message.recipient)
                     );
                 };
             }

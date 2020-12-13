@@ -1,18 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IDisplayMessage } from "../views/Base";
+import { IMessage } from "@vex-chat/vex-js";
 import { AppThunk, RootState } from "../store";
 
-export interface ISzDisplayMessage {
+export interface ISerializedMessage {
     message: string;
     nonce: string;
     timestamp: string;
     sender: string;
     recipient: string;
     direction: "incoming" | "outgoing";
+    decrypted: boolean;
 }
 
-function serializeMessage(message: IDisplayMessage): ISzDisplayMessage {
-    const serialized: ISzDisplayMessage = {
+function serializeMessage(message: IMessage): ISerializedMessage {
+    const serialized: ISerializedMessage = {
+        decrypted: message.decrypted,
         message: message.message,
         nonce: message.nonce,
         timestamp: message.timestamp.toString(),
@@ -31,7 +33,7 @@ const messageSlice = createSlice({
             return {};
         },
         add: (
-            state: Record<string, Record<string, ISzDisplayMessage>>,
+            state: Record<string, Record<string, ISerializedMessage>>,
             action
         ) => {
             const thread =
@@ -59,15 +61,13 @@ export const resetMessages = (): AppThunk => (dispatch) => {
     dispatch(reset());
 };
 
-export const addMessage = (message: IDisplayMessage): AppThunk => (
-    dispatch
-) => {
+export const addMessage = (message: IMessage): AppThunk => (dispatch) => {
     const szMsg = serializeMessage(message);
     dispatch(add(szMsg));
 };
 
 export const selectMessages = (
     state: RootState
-): Record<string, Record<string, ISzDisplayMessage>> => state.messages;
+): Record<string, Record<string, ISerializedMessage>> => state.messages;
 
 export default messageSlice.reducer;
