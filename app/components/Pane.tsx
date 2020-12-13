@@ -5,7 +5,6 @@ import { Route, Switch, useHistory, useParams } from "react-router";
 import { selectFamiliars } from "../reducers/familiars";
 import { IconUsername } from "../components/IconUsername";
 import { selectInputStates, addInputState } from "../reducers/inputs";
-import { switchFX } from "../views/Base";
 import { ISerializedMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
@@ -380,7 +379,6 @@ export default function Pane(): JSX.Element {
                                                                 true
                                                             }
                                                             onClick={async () => {
-                                                                switchFX.play();
                                                                 await client.sessions.markVerified(
                                                                     sessionID
                                                                 );
