@@ -4,6 +4,7 @@ import {
     faEye,
     faFingerprint,
     faSearch,
+    faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ISession, IUser } from "@vex-chat/vex-js";
@@ -99,6 +100,27 @@ export default function Sidebar(): JSX.Element {
                                     >
                                         <FontAwesomeIcon icon={faCog} />
                                         &nbsp; Preferences
+                                    </Link>
+                                    <Link
+                                        to={
+                                            routes.MESSAGING +
+                                            "/" +
+                                            user.userID +
+                                            "/info"
+                                        }
+                                        className="dropdown-item"
+                                        onClick={async () => {
+                                            setClassName("");
+                                            dispatch(
+                                                addInputState(
+                                                    "own-user-icon-dropdown",
+                                                    ""
+                                                )
+                                            );
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faUserAlt} />
+                                        &nbsp; My Info
                                     </Link>
                                     <Link
                                         to={routes.REGISTER}

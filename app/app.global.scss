@@ -4,11 +4,16 @@ $panel-item-border: none;
 
 @import "../node_modules/@fortawesome/fontawesome-svg-core/styles.css";
 @import "../node_modules/bulma/bulma.sass";
+@import "../node_modules/highlight.js/scss/ascetic.scss";
 
 textarea {
     border: 1px solid darken($light, 10%) !important;
     outline: none;
     border-radius: 0px !important;
+}
+
+.horizontal-scroll {
+    overflow-x: auto;
 }
 
 .window-buttons {
@@ -73,6 +78,10 @@ div {
 .tag:not(body) {
     padding: 10px 15px 5px 15px;
     line-height: 1.25;
+}
+
+.hljs {
+    overflow-y: auto;
 }
 
 .message-box {

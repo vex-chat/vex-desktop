@@ -24,6 +24,7 @@ import { Link } from "react-router-dom";
 import { selectUser } from "../reducers/user";
 import crypto from "crypto";
 import { client } from "./ClientLauncher";
+import { Highlighter } from "./Highlighter";
 
 export default function Pane(): JSX.Element {
     // state
@@ -149,6 +150,23 @@ export default function Pane(): JSX.Element {
             </div>
 
             <Switch>
+                <Route
+                    exact
+                    path={routes.MESSAGING + "/:userID/info"}
+                    render={() => (
+                        <div className="verify-wrapper">
+                            <div className="verify-mnemonic-wrapper">
+                                {Highlighter(JSON.stringify(user, null, 4))}
+                                <button
+                                    className="button is-small"
+                                    onClick={() => history.goBack()}
+                                >
+                                    Go Back
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                />
                 <Route
                     exact
                     path={routes.MESSAGING + "/:userID/verify"}

@@ -53,7 +53,7 @@ export async function initClient(): Promise<void> {
         await client.login();
     });
     client.on("closed", async () => {
-        console.log("Shut down manually.");
+        log.info("Shut down manually.");
     });
     client.init();
 }
@@ -105,7 +105,6 @@ export function ClientLauncher(): JSX.Element {
     };
 
     const retryHandler = async () => {
-        console.log("reached retry handler");
         history.push(routes.HOME);
     };
 
@@ -120,7 +119,6 @@ export function ClientLauncher(): JSX.Element {
 
     const sessionHandler = async (session: ISession, user: IUser) => {
         dispatch(addSession(session));
-        console.log(user);
         dispatch(addFamiliar(user));
     };
 
