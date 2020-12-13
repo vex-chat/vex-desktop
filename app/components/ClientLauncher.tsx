@@ -23,6 +23,7 @@ export function initClient(): void {
     const PK = localStorage.getItem("PK")!;
     client = new Client(PK, {
         dbFolder: progFolder,
+        logLevel: "info",
     });
     client.on("ready", async () => {
         const registeredUser = await client.users.retrieve(
