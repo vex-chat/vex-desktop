@@ -33,7 +33,7 @@ export default function IRegister(): JSX.Element {
     const [errorText, setErrorText] = useState("");
 
     useEffect(() => {
-        if (value.length > 2) {
+        if (value.length > 2 && value.length < 20) {
             setValid(true);
         } else {
             setValid(false);
@@ -81,19 +81,26 @@ export default function IRegister(): JSX.Element {
                                         )
                                     );
 
-                                    if (event.target.value.length > 2) {
+                                    if (
+                                        event.target.value.length > 2 &&
+                                        event.target.value.length < 20
+                                    ) {
                                         setValid(true);
                                     } else {
                                         setValid(false);
                                     }
 
-                                    const serverResults = await client.users.retrieve(
+                                    const tempClient = new Client(undefined, {
+                                        dbFolder: progFolder,
+                                    });
+                                    const [
+                                        user,
+                                    ] = await tempClient.users.retrieve(
                                         event.target.value
                                     );
-                                    if (serverResults) {
+
+                                    if (user !== null) {
                                         setTaken(true);
-                                    } else {
-                                        setTaken(false);
                                     }
                                 }}
                                 placeholder="Username"
@@ -137,11 +144,25 @@ export default function IRegister(): JSX.Element {
                                             addInputState(FORM_NAME, username)
                                         );
 
-                                        const serverResults = await client.users.retrieve(
+                                        const [
+                                            serverResults,
+                                            err,
+                                        ] = await client.users.retrieve(
                                             username
                                         );
 
-                                        if (username.length > 2) {
+                                        if (
+                                            err &&
+                                            err.response &&
+                                            err.response.status === 200
+                                        ) {
+                                            setTaken(true);
+                                        }
+
+                                        if (
+                                            username.length > 2 &&
+                                            username.length < 20
+                                        ) {
                                             setValid(true);
                                         } else {
                                             setValid(false);

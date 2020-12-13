@@ -170,13 +170,21 @@ export default function Sidebar(): JSX.Element {
                                             }
                                         }
 
-                                        const serverResults = await client.users.retrieve(
+                                        const [
+                                            serverResults,
+                                            err,
+                                        ] = await client.users.retrieve(
                                             event.target.value
                                         );
+                                        if (
+                                            err &&
+                                            err.response &&
+                                            err.response.status === 404
+                                        ) {
+                                            setFoundUser(emptyUser);
+                                        }
                                         if (serverResults) {
                                             setFoundUser(serverResults);
-                                        } else {
-                                            setFoundUser(emptyUser);
                                         }
                                     }
                                 } catch (err) {
