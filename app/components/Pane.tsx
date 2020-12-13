@@ -550,7 +550,7 @@ function MessageBox(message: IMessage | ISerializedMessage): JSX.Element {
                         message.decrypted ? "is-light" : "is-danger"
                     }`}
                 >
-                    <p
+                    <div
                         className={`${
                             message.decrypted
                                 ? "has-text-black"
@@ -575,7 +575,7 @@ function MessageBox(message: IMessage | ISerializedMessage): JSX.Element {
                         <span className="help has-text-right">
                             {format(new Date(message.timestamp), "kk:mm:ss")}
                         </span>
-                    </p>
+                    </div>
                 </div>
             </div>
         );
