@@ -35,7 +35,7 @@ export function initClient(): void {
             client.emit("needs-register");
         }
     });
-    client.on("close", async () => {
+    client.on("closed", async () => {
         console.log("Shut down manually.");
     });
     client.init();
@@ -61,7 +61,9 @@ export function ClientLauncher(): JSX.Element {
     useEffect(() => {
         initClient();
 
-        client.on("needs-register", async () => {
+        // this is hacky fix this
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        client.on("needs-register" as any, async () => {
             history.push("/register");
         });
 
@@ -75,7 +77,7 @@ export function ClientLauncher(): JSX.Element {
             const sessions = await client.sessions.retrieve();
             dispatch(setSessions(objifySessions(sessions)));
 
-            const familiars = await client.familiars.retrieve();
+            const familiars = await client.users.familiars();
             dispatch(setFamiliars(familiars));
 
             for (const user of familiars) {
