@@ -70,6 +70,11 @@ div {
     box-shadow: none;
 }
 
+pre.hljs {
+    padding: 0px;
+    padding-bottom: 10px;
+}
+
 .input-wrapper {
     padding-bottom: 12px;
 }
@@ -107,7 +112,6 @@ div {
     padding: 10px 15px 5px 15px;
     line-height: 1.25;
 }
-
 
 .message-box {
     white-space: unset !important;
@@ -256,6 +260,8 @@ div.sidebar > aside > ul > li > a:hover {
 .media + .media {
     border-top: 0px solid;
     margin-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 .field:not(:last-child) {

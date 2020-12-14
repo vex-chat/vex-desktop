@@ -26,6 +26,7 @@ import { selectUser } from "../reducers/user";
 import crypto from "crypto";
 import { client } from "./ClientLauncher";
 import { Highlighter } from "./Highlighter";
+import { strToIcon } from "../utils/strToIcon";
 
 export default function Pane(): JSX.Element {
     // state
@@ -80,6 +81,39 @@ export default function Pane(): JSX.Element {
     if (!familiar) {
         return <div className="pane"></div>;
     }
+
+    // chunks the current messages by sender so that we can display multiple
+    // messages per user in a smaller format
+    const chunkedMessages: IMessage | ISerializedMessage[][] = [[]];
+    for (let i = 0; i < messageIDs.length; i++) {
+        if (chunkedMessages[0] === undefined) {
+            chunkedMessages.push([]);
+        }
+
+        const currentMessage = threadMessages[messageIDs[i]];
+
+        if (chunkedMessages[chunkedMessages.length - 1].length === 0) {
+            chunkedMessages[chunkedMessages.length - 1].push(currentMessage);
+        } else {
+            if (
+                chunkedMessages[chunkedMessages.length - 1][0].sender ===
+                currentMessage.sender
+            ) {
+                chunkedMessages[chunkedMessages.length - 1].push(
+                    currentMessage
+                );
+            } else {
+                chunkedMessages.push([]);
+                chunkedMessages[chunkedMessages.length - 1].push(
+                    currentMessage
+                );
+            }
+        }
+
+        console.log(messageIDs[i], threadMessages[messageIDs[i]]);
+    }
+
+    console.log(chunkedMessages);
 
     return (
         <div className="pane">
@@ -461,44 +495,42 @@ export default function Pane(): JSX.Element {
                     exact
                     path={routes.MESSAGING + "/:userID"}
                     render={() => {
+                        const startMessages: ISerializedMessage[] = [
+                            {
+                                timestamp: new Date(Date.now()).toString(),
+                                sender: user.userID,
+                                recipient: user.userID,
+                                direction: "incoming",
+                                nonce: crypto.randomBytes(24).toString("hex"),
+                                message: "Welcome to vex messenger!",
+                                decrypted: true,
+                            },
+                            {
+                                timestamp: new Date(Date.now()).toString(),
+                                sender: user.userID,
+                                recipient: user.userID,
+                                direction: "incoming",
+                                nonce: crypto.randomBytes(24).toString("hex"),
+                                message:
+                                    "This is a personal thread for taking notes, or whatever you'd like.",
+                                decrypted: true,
+                            },
+                        ];
+
                         return (
                             <Fragment>
                                 <div className="conversation-wrapper">
                                     {messageIDs.length === 0 &&
                                         params.userID === user.userID && (
                                             <div>
-                                                {MessageBox({
-                                                    timestamp: new Date(
-                                                        Date.now()
-                                                    ),
-                                                    sender: user.userID,
-                                                    recipient: user.userID,
-                                                    direction: "incoming",
-                                                    nonce: crypto
-                                                        .randomBytes(24)
-                                                        .toString("hex"),
-                                                    message:
-                                                        "Welcome to vex messenger!",
-                                                    decrypted: true,
-                                                })}
-                                                {MessageBox({
-                                                    timestamp: new Date(
-                                                        Date.now()
-                                                    ),
-                                                    sender: user.userID,
-                                                    recipient: user.userID,
-                                                    direction: "incoming",
-                                                    nonce: crypto
-                                                        .randomBytes(24)
-                                                        .toString("hex"),
-                                                    message:
-                                                        "This is a personal thread for taking notes, or whatever you'd like.",
-                                                    decrypted: true,
-                                                })}
+                                                {MessageBox(
+                                                    startMessages,
+                                                    familiars
+                                                )}
                                             </div>
                                         )}
-                                    {messageIDs.map((key) => {
-                                        return MessageBox(threadMessages[key]);
+                                    {chunkedMessages.map((chunk) => {
+                                        return MessageBox(chunk, familiars);
                                     })}
                                     <div ref={messagesEndRef} />
                                 </div>
@@ -556,74 +588,52 @@ export default function Pane(): JSX.Element {
     );
 }
 
-function MessageBox(message: IMessage | ISerializedMessage): JSX.Element {
-    if (message.direction !== "incoming") {
-        return (
-            <div key={message.nonce} className="message-wrapper has-text-right">
-                <div
-                    className={`tag message-box ${
-                        message.decrypted ? "is-info" : "is-danger"
-                    }`}
-                >
-                    <div className="has-text-white">
-                        <span className="has-text-left">
-                            {message.decrypted ? (
-                                <div className="message-text-wrapper">
-                                    {message.message}
-                                </div>
-                            ) : (
-                                <div className="message-text-wrapper">
-                                    <code>
-                                        <FontAwesomeIcon icon={faExclamation} />{" "}
-                                        Decryption Failed
-                                    </code>
-                                </div>
-                            )}
-                        </span>
-                        <br />
-                        <span className="help has-text-right">
-                            {format(new Date(message.timestamp), "kk:mm:ss")}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        );
-    } else {
-        return (
-            <div key={message.nonce} className="message-wrapper has-text-left">
-                <div
-                    className={`tag message-box ${
-                        message.decrypted ? "is-light" : "is-danger"
-                    }`}
-                >
-                    <div
-                        className={`${
-                            message.decrypted
-                                ? "has-text-black"
-                                : "has-text-white"
-                        }`}
-                    >
-                        <span className="has-text-left">
-                            {message.decrypted ? (
-                                <div className="message-text-wrapper">
-                                    {message.message}
-                                </div>
-                            ) : (
-                                <div className="message-text-wrapper">
-                                    <code>
-                                        <FontAwesomeIcon icon={faExclamation} />{" "}
-                                        Decryption Failed
-                                    </code>
-                                </div>
-                            )}
-                        </span>
-                        <br />
-                        <span className="help has-text-right">
-                            {format(new Date(message.timestamp), "kk:mm:ss")}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        );
+function MessageBox(
+    messages: ISerializedMessage[],
+    familiars: Record<string, IUser>
+): JSX.Element {
+    if (messages.length == 0) {
+        throw new Error("Message array cannot be empty.");
     }
+
+    const sender = familiars[messages[0].sender];
+
+    return (
+        <article className="chat-message media" key={messages[0].nonce}>
+            <figure className="media-left">
+                <p className="image is-48x48">
+                    <img
+                        className="is-rounded"
+                        src={strToIcon(sender?.username || "Unknown")}
+                    />
+                </p>
+            </figure>
+            <div className="media-content">
+                <div className="content">
+                    <p>
+                        <strong>{sender?.username || "Unknown User"}</strong>
+                        &nbsp;&nbsp;
+                        <small className="has-text-dark">
+                            {format(new Date(messages[0].timestamp), "kk:mm")}
+                        </small>
+                        <br />
+                        {messages.map((message) => (
+                            <Fragment key={message.nonce}>
+                                <span>
+                                    {" "}
+                                    {message.decrypted ? (
+                                        message.message
+                                    ) : (
+                                        <code>Decryption Failed</code>
+                                    )}
+                                </span>
+                                <br />
+                            </Fragment>
+                        ))}
+                    </p>
+                </div>
+            </div>
+            <div className="media-right" />
+        </article>
+    );
 }
