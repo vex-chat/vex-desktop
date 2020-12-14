@@ -1,5 +1,5 @@
 import { IMessage, IUser } from "@vex-chat/vex-js";
-import React, { createRef, Fragment, useEffect, useRef } from "react";
+import React, { createRef, Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
 import { selectFamiliars } from "../reducers/familiars";
@@ -18,6 +18,7 @@ import {
     faLock,
     faSkull,
     faUnlock,
+    faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { routes } from "../constants/routes";
 import { Link } from "react-router-dom";
@@ -32,6 +33,8 @@ export default function Pane(): JSX.Element {
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const inputValues: Record<string, string> = useSelector(selectInputStates);
     const sessions = useSelector(selectSessions);
+
+    const [className, setClassName] = useState("");
 
     const history = useHistory();
 
@@ -82,10 +85,44 @@ export default function Pane(): JSX.Element {
         <div className="pane">
             <div className="pane-topbar">
                 <div className="columns is-centered">
-                    <div className="column is-narrow has-text-centered">
+                    <div className="column is-narrow">
                         <div className="pane-topbar-content">
-                            <div className="container">
-                                {IconUsername(familiar, 32, "")}
+                            <div className={`dropdown ${className}`}>
+                                <div
+                                    className="dropdown-trigger pointer"
+                                    onClick={() => {
+                                        if (className == "") {
+                                            setClassName("is-active");
+                                        } else {
+                                            setClassName("");
+                                        }
+                                    }}
+                                >
+                                    {IconUsername(familiar, 32)}
+                                </div>
+                                <div
+                                    className="dropdown-menu"
+                                    id="dropdown-menu2"
+                                    role="menu"
+                                >
+                                    <div className="dropdown-content">
+                                        <Link
+                                            to={
+                                                routes.MESSAGING +
+                                                "/" +
+                                                familiar.userID +
+                                                "/info"
+                                            }
+                                            className="dropdown-item"
+                                            onClick={async () => {
+                                                setClassName("");
+                                            }}
+                                        >
+                                            <FontAwesomeIcon icon={faUserAlt} />
+                                            &nbsp; User Info
+                                        </Link>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -153,140 +190,139 @@ export default function Pane(): JSX.Element {
                 <Route
                     exact
                     path={routes.MESSAGING + "/:userID/info"}
-                    render={() => (
-                        <div className="verify-wrapper">
-                            <div className="verify-mnemonic-wrapper">
-                                {Highlighter(JSON.stringify(user, null, 4))}
-                                <button
-                                    className="button is-small"
-                                    onClick={() => history.goBack()}
-                                >
-                                    Go Back
-                                </button>
+                    render={() => {
+                        return (
+                            <div className="pane-screen-wrapper">
+                                <div className="verify-mnemonic-wrapper">
+                                    {Highlighter(
+                                        JSON.stringify(familiar, null, 4)
+                                    )}
+                                    <button
+                                        className="button is-small"
+                                        onClick={() => history.goBack()}
+                                    >
+                                        Go Back
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        );
+                    }}
                 />
                 <Route
                     exact
                     path={routes.MESSAGING + "/:userID/verify"}
                     render={() => (
-                        <div className="verify-wrapper">
-                            <div className="verify-mnemonic-wrapper">
-                                <div className="panel">
-                                    <p className="panel-heading">
-                                        Active Sessions
-                                    </p>
-                                    {hasUnverifiedSession && (
-                                        <div className="panel-block">
-                                            <span className="icon">
-                                                {" "}
-                                                <FontAwesomeIcon
-                                                    icon={faExclamation}
-                                                    className="has-text-danger"
-                                                />{" "}
-                                            </span>
-                                            <span className="help">
-                                                This user has unverified
-                                                sessions.
-                                            </span>
-                                        </div>
-                                    )}
-                                    {sessionIDs.map((sessionID) => {
-                                        const session =
-                                            sessions[params.userID][sessionID];
-                                        return (
-                                            <div
-                                                key={sessionID}
-                                                className="panel-block"
-                                            >
-                                                <table className="table is-fullwidth is-striped">
-                                                    <tbody>
-                                                        <tr>
-                                                            <th>
-                                                                <FontAwesomeIcon
-                                                                    icon={
-                                                                        session.verified
-                                                                            ? faLock
-                                                                            : faUnlock
-                                                                    }
-                                                                />
-                                                            </th>
-                                                            <th>
-                                                                {" "}
-                                                                <code>
-                                                                    {sessionID}
-                                                                </code>
-                                                            </th>
-
-                                                            <th className="has-text-right">
-                                                                {!session.verified && (
-                                                                    <span
-                                                                        data-event={
-                                                                            "disabled"
-                                                                        }
-                                                                        ref={
-                                                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                                            messageTwoRef as any
-                                                                        }
-                                                                    >
-                                                                        <Tooltip
-                                                                            open={
-                                                                                params.userID ===
-                                                                                    user.userID &&
-                                                                                history.location.pathname.includes(
-                                                                                    "verify"
-                                                                                )
-                                                                            }
-                                                                            title={
-                                                                                "Click here to verify the safe words."
-                                                                            }
-                                                                            placement="top"
-                                                                        >
-                                                                            <button
-                                                                                className="button is-danger is-small"
-                                                                                onClick={() => {
-                                                                                    history.push(
-                                                                                        history
-                                                                                            .location
-                                                                                            .pathname +
-                                                                                            "/" +
-                                                                                            session.sessionID
-                                                                                    );
-                                                                                }}
-                                                                            >
-                                                                                Verify
-                                                                            </button>
-                                                                        </Tooltip>
-                                                                    </span>
-                                                                )}
-                                                                {session.verified && (
-                                                                    <span>
-                                                                        <span className="icon">
-                                                                            <FontAwesomeIcon
-                                                                                icon={
-                                                                                    faCheckCircle
-                                                                                }
-                                                                                className="has-text-success"
-                                                                            ></FontAwesomeIcon>
-                                                                        </span>
-                                                                    </span>
-                                                                )}
-                                                            </th>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        );
-                                    })}
+                        <div className="pane-screen-wrapper">
+                            <div className="panel">
+                                <p className="panel-heading">Active Sessions</p>
+                                {hasUnverifiedSession && (
                                     <div className="panel-block">
-                                        <button
-                                            className="button is-small"
-                                            onClick={() => history.goBack()}
-                                        >
-                                            Go Back
-                                        </button>
+                                        <span className="icon">
+                                            {" "}
+                                            <FontAwesomeIcon
+                                                icon={faExclamation}
+                                                className="has-text-danger"
+                                            />{" "}
+                                        </span>
+                                        <span className="help">
+                                            This user has unverified sessions.
+                                        </span>
                                     </div>
+                                )}
+                                {sessionIDs.map((sessionID) => {
+                                    const session =
+                                        sessions[params.userID][sessionID];
+                                    return (
+                                        <div
+                                            key={sessionID}
+                                            className="panel-block"
+                                        >
+                                            <table className="table is-fullwidth is-striped">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>
+                                                            <FontAwesomeIcon
+                                                                icon={
+                                                                    session.verified
+                                                                        ? faLock
+                                                                        : faUnlock
+                                                                }
+                                                            />
+                                                        </th>
+                                                        <th>
+                                                            {" "}
+                                                            <code>
+                                                                {sessionID}
+                                                            </code>
+                                                        </th>
+
+                                                        <th className="has-text-right">
+                                                            {!session.verified && (
+                                                                <span
+                                                                    data-event={
+                                                                        "disabled"
+                                                                    }
+                                                                    ref={
+                                                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                                        messageTwoRef as any
+                                                                    }
+                                                                >
+                                                                    <Tooltip
+                                                                        open={
+                                                                            params.userID ===
+                                                                                user.userID &&
+                                                                            history.location.pathname.includes(
+                                                                                "verify"
+                                                                            )
+                                                                        }
+                                                                        title={
+                                                                            "Click here to verify the safe words."
+                                                                        }
+                                                                        placement="top"
+                                                                    >
+                                                                        <button
+                                                                            className="button is-danger is-small"
+                                                                            onClick={() => {
+                                                                                history.push(
+                                                                                    history
+                                                                                        .location
+                                                                                        .pathname +
+                                                                                        "/" +
+                                                                                        session.sessionID
+                                                                                );
+                                                                            }}
+                                                                        >
+                                                                            Verify
+                                                                        </button>
+                                                                    </Tooltip>
+                                                                </span>
+                                                            )}
+                                                            {session.verified && (
+                                                                <span>
+                                                                    <span className="icon">
+                                                                        <FontAwesomeIcon
+                                                                            icon={
+                                                                                faCheckCircle
+                                                                            }
+                                                                            className="has-text-success"
+                                                                        ></FontAwesomeIcon>
+                                                                    </span>
+                                                                </span>
+                                                            )}
+                                                        </th>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    );
+                                })}
+                                <div className="panel-block">
+                                    <button
+                                        className="button is-small"
+                                        onClick={() => history.goBack()}
+                                    >
+                                        Go Back
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -296,133 +332,127 @@ export default function Pane(): JSX.Element {
                     exact
                     path={routes.MESSAGING + "/:userID/verify/:sessionID"}
                     render={() => (
-                        <div className="verify-wrapper">
-                            <div className="verify-mnemonic-wrapper">
-                                {sessionIDs.map((sessionID) => {
-                                    const session =
-                                        sessions[params.userID][sessionID];
+                        <div className="pane-screen-wrapper">
+                            {sessionIDs.map((sessionID) => {
+                                const session =
+                                    sessions[params.userID][sessionID];
 
-                                    const mnemonic = client.sessions.verify(
-                                        session
-                                    );
+                                const mnemonic = client.sessions.verify(
+                                    session
+                                );
 
-                                    return (
-                                        <div
-                                            className="panel is-danger"
-                                            key={session.sessionID}
-                                        >
-                                            <p className="panel-heading">
-                                                Verify Session with{" "}
-                                                {familiar.username}
+                                return (
+                                    <div
+                                        className="panel is-danger"
+                                        key={session.sessionID}
+                                    >
+                                        <p className="panel-heading">
+                                            Verify Session with{" "}
+                                            {familiar.username}
+                                        </p>
+                                        <div className="panel-block">
+                                            <code
+                                                key={session.sessionID}
+                                                className="verify-mnemonic"
+                                            >
+                                                <label className="label is-small is-family-primary">
+                                                    Safety Words:
+                                                </label>
+                                                <p>{mnemonic}</p>
+                                            </code>
+                                        </div>
+                                        <div className="panel-block">
+                                            <p>
+                                                <span className="icon">
+                                                    <FontAwesomeIcon
+                                                        icon={
+                                                            faExclamationTriangle
+                                                        }
+                                                        className="has-text-danger"
+                                                    />
+                                                </span>
+                                                &nbsp;
+                                                {familiar.username} is using an
+                                                unverified session.
                                             </p>
-                                            <div className="panel-block">
-                                                <code
-                                                    key={session.sessionID}
-                                                    className="verify-mnemonic"
+                                        </div>
+                                        <div className="panel-block">
+                                            <p>
+                                                <span className="icon">
+                                                    <FontAwesomeIcon
+                                                        icon={faCheckCircle}
+                                                        className="has-text-success"
+                                                    />
+                                                </span>
+                                                &nbsp; Verify with the other
+                                                user that the words match.
+                                            </p>
+                                        </div>
+                                        <div className="panel-block">
+                                            <p>
+                                                <span className="icon">
+                                                    <FontAwesomeIcon
+                                                        icon={faSkull}
+                                                    />
+                                                </span>
+                                                &nbsp; If they don&apos;t match,
+                                                you could be getting pwned.
+                                                &nbsp;
+                                            </p>
+                                        </div>
+                                        <div className="panel-block">
+                                            <div className="buttons is-right">
+                                                <button
+                                                    className="button is-right"
+                                                    onClick={() => {
+                                                        history.goBack();
+                                                    }}
                                                 >
-                                                    <label className="label is-small is-family-primary">
-                                                        Safety Words:
-                                                    </label>
-                                                    <p>{mnemonic}</p>
-                                                </code>
-                                            </div>
-                                            <div className="panel-block">
-                                                <p>
-                                                    <span className="icon">
-                                                        <FontAwesomeIcon
-                                                            icon={
-                                                                faExclamationTriangle
-                                                            }
-                                                            className="has-text-danger"
-                                                        />
-                                                    </span>
-                                                    &nbsp;
-                                                    {familiar.username} is using
-                                                    an unverified session.
-                                                </p>
-                                            </div>
-                                            <div className="panel-block">
-                                                <p>
-                                                    <span className="icon">
-                                                        <FontAwesomeIcon
-                                                            icon={faCheckCircle}
-                                                            className="has-text-success"
-                                                        />
-                                                    </span>
-                                                    &nbsp; Verify with the other
-                                                    user that the words match.
-                                                </p>
-                                            </div>
-                                            <div className="panel-block">
-                                                <p>
-                                                    <span className="icon">
-                                                        <FontAwesomeIcon
-                                                            icon={faSkull}
-                                                        />
-                                                    </span>
-                                                    &nbsp; If they don&apos;t
-                                                    match, you could be getting
-                                                    pwned. &nbsp;
-                                                </p>
-                                            </div>
-                                            <div className="panel-block">
-                                                <div className="buttons is-right">
+                                                    Go Back
+                                                </button>
+                                                <Tooltip
+                                                    open={
+                                                        params.userID ===
+                                                        user.userID
+                                                    }
+                                                    title={
+                                                        "In real conversations, check that the words match and click here."
+                                                    }
+                                                >
                                                     <button
-                                                        className="button is-right"
-                                                        onClick={() => {
-                                                            history.goBack();
+                                                        className="button is-success is-right"
+                                                        ref={
+                                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                            messageThreeRef as any
+                                                        }
+                                                        data-event={"disabled"}
+                                                        data-multiline={true}
+                                                        onClick={async () => {
+                                                            await client.sessions.markVerified(
+                                                                sessionID
+                                                            );
+                                                            dispatch(
+                                                                markSession(
+                                                                    params.userID,
+                                                                    sessionID,
+                                                                    true
+                                                                )
+                                                            );
+                                                            history.push(
+                                                                routes.MESSAGING +
+                                                                    "/" +
+                                                                    params.userID
+                                                            );
                                                         }}
                                                     >
-                                                        Go Back
+                                                        They Match
                                                     </button>
-                                                    <Tooltip
-                                                        open={
-                                                            params.userID ===
-                                                            user.userID
-                                                        }
-                                                        title={
-                                                            "In real conversations, check that the words match and click here."
-                                                        }
-                                                    >
-                                                        <button
-                                                            className="button is-success is-right"
-                                                            ref={
-                                                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                                messageThreeRef as any
-                                                            }
-                                                            data-event={
-                                                                "disabled"
-                                                            }
-                                                            data-multiline={
-                                                                true
-                                                            }
-                                                            onClick={async () => {
-                                                                await client.sessions.markVerified(
-                                                                    sessionID
-                                                                );
-                                                                dispatch(
-                                                                    markSession(
-                                                                        params.userID,
-                                                                        sessionID,
-                                                                        true
-                                                                    )
-                                                                );
-                                                                history.push(
-                                                                    routes.MESSAGING +
-                                                                        "/" +
-                                                                        params.userID
-                                                                );
-                                                            }}
-                                                        >
-                                                            They Match
-                                                        </button>
-                                                    </Tooltip>
-                                                </div>
+                                                </Tooltip>
                                             </div>
                                         </div>
-                                    );
-                                })}
-                            </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
                 />
@@ -486,7 +516,6 @@ export default function Pane(): JSX.Element {
                                         <textarea
                                             value={inputValue}
                                             className="textarea chat-input has-fixed-size is-focused"
-                                            rows={2}
                                             onChange={(event) => {
                                                 dispatch(
                                                     addInputState(

@@ -6,14 +6,52 @@ $panel-item-border: none;
 @import "../node_modules/bulma/bulma.sass";
 @import "../node_modules/highlight.js/scss/ascetic.scss";
 
+
+
+body::-webkit-scrollbar {
+	width: 12px;
+	background-color: $light;
+}
+
+body::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: $light;
+}
+
+body::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: $dark;
+}
+
+
+html {
+    overflow-y: hidden; /* Hide vertical scrollbar */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
 textarea {
+    position: relative;
     border: 1px solid darken($light, 10%) !important;
     outline: none;
     border-radius: 0px !important;
+    height: 100% !important;
+    width: 100%;
+}
+
+input {
+    border-radius: 10px !important;
+}
+
+button {
+    border-radius: 10px! important;
+}
+
+div {
+    display: block;
 }
 
 .horizontal-scroll {
-    overflow-x: auto;
+    overflow-x: scroll;
 }
 
 .window-buttons {
@@ -40,14 +78,6 @@ textarea {
     border-radius: 10px !important;
 }
 
-input {
-    border-radius: 10px !important;
-}
-
-button {
-    border-radius: 10px! important;
-}
-
 .window-buttons {
     padding-top: 1px;
     padding-right: 10px;
@@ -71,18 +101,13 @@ button {
     background-image: linear-gradient(to left, $light, $white);
 }
 
-div {
-    display: block;
-}
+
 
 .tag:not(body) {
     padding: 10px 15px 5px 15px;
     line-height: 1.25;
 }
 
-.hljs {
-    overflow-y: auto;
-}
 
 .message-box {
     white-space: unset !important;
@@ -117,10 +142,6 @@ div {
     background-color: unset;
 }
 
-.verify-mnemonic-wrapper {
-    padding: 0ch 4ch;
-}
-
 .pane {
     position: absolute;
     width: calc(100% - 265px);
@@ -132,24 +153,33 @@ div {
 }
 
 
-.verify-wrapper {
+.pane-screen-wrapper {
     position: relative;
     top: 0;
-    bottom: 160px;
-    height: calc(100vh - 160px);
+    bottom: 170px;
+    height: calc(100vh - 176px);
     overflow-y:auto;
     z-index: 0;
-    padding: 10px 20px;
+    padding: 1ch 4ch;
 }
 
 .conversation-wrapper {
     position: relative;
     top: 0;
-    bottom: 160px;
-    height: calc(100vh - 160px);
+    bottom: 180px;
+    height: calc(100vh - 176px);
     overflow-y:auto;
     z-index: 0;
     padding: 10px 20px;
+    border-bottom: 1px solid $light;
+}
+
+.conversation-wrapper::-webkit-scrollbar {
+    display: show;
+}
+
+pre.hljs > code.hljs {
+    overflow-x: scroll;
 }
 
 div.sidebar > aside > ul > li > a:hover {
@@ -196,15 +226,11 @@ div.sidebar > aside > ul > li > a:hover {
     margin: 0 auto;
 }
 
-::-webkit-scrollbar {
-    display: none;
- }
 
 .chat-input-wrapper {
     position: fixed;
     bottom: 0;
     width: calc(100% - 265px);
-    padding: 10px 20px;
     height: 100px;
 }
 
@@ -260,7 +286,11 @@ div.sidebar > aside > ul > li > a:hover {
 
 .dropdown-content {
     margin-top: 3px;
-     min-width: 230px;
+    width: auto;
+}
+
+.user-dropdown {
+    min-width: 230px;
 }
 
 .settings-delete {
@@ -314,21 +344,3 @@ div.sidebar > aside > ul > li > a:hover {
 }
 
 
-.menu-list a {
-    padding: 0;
-}
-
-body::-webkit-scrollbar {
-	width: 12px;
-	background-color: $light;
-}
-
-  body::-webkit-scrollbar-track {
-	border-radius: 10px;
-	background-color: $light;
-}
-
-  body::-webkit-scrollbar-thumb {
-	border-radius: 10px;
-	background-color: $dark;
-}

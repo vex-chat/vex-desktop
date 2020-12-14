@@ -82,7 +82,7 @@ export default function Sidebar(): JSX.Element {
                                 id="dropdown-menu2"
                                 role="menu"
                             >
-                                <div className="dropdown-content">
+                                <div className="dropdown-content user-dropdown">
                                     <div className="dropdown-item">
                                         {IconUsername(user, 48, "")}
                                     </div>
