@@ -178,10 +178,6 @@ div {
     display: show;
 }
 
-pre.hljs > code.hljs {
-    overflow-x: scroll;
-}
-
 div.sidebar > aside > ul > li > a:hover {
     background-color:darken($light, 5%);
 }

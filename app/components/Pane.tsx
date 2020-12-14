@@ -195,7 +195,8 @@ export default function Pane(): JSX.Element {
                             <div className="pane-screen-wrapper">
                                 <div className="verify-mnemonic-wrapper">
                                     {Highlighter(
-                                        JSON.stringify(familiar, null, 4)
+                                        JSON.stringify(familiar, null, 4),
+                                        "json"
                                     )}
                                     <button
                                         className="button is-small"
