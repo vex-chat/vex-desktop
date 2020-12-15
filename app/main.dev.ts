@@ -19,6 +19,8 @@ import MenuBuilder from "./menu";
 
 log.transports.file.level = "info";
 
+app.commandLine.appendArgument("--enable-features=Metal");
+
 export default class AppUpdater {
     constructor() {
         log.transports.file.level = "info";

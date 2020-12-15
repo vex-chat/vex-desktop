@@ -219,6 +219,8 @@
         "@hot-loader/react-dom": "^16.13.0",
         "@material-ui/core": "^4.11.2",
         "@reduxjs/toolkit": "^1.4.0",
+        "@types/uuid": "^8.3.0",
+        "@vex-chat/types-js": "^0.7.5",
         "bulma": "^0.9.1",
         "connected-react-router": "^6.6.1",
         "date-fns": "^2.16.1",
@@ -235,7 +237,8 @@
         "redux": "^4.0.5",
         "redux-thunk": "^2.3.0",
         "regenerator-runtime": "^0.13.5",
-        "source-map-support": "^0.5.19"
+        "source-map-support": "^0.5.19",
+        "uuid": "^8.3.2"
     },
     "devEngines": {
         "node": ">=7.x",

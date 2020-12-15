@@ -1,6 +1,6 @@
 import { Client, IMessage, ISession, IUser } from "@vex-chat/vex-js";
 import { sleep } from "@extrahash/sleep";
-import { remote } from "electron";
+import { ipcRenderer, remote } from "electron";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
@@ -108,7 +108,8 @@ export function ClientLauncher(): JSX.Element {
         history.push(routes.HOME);
     };
 
-    const disconnectHandler = async () => {
+    const relaunch = async () => {
+        log.info("Relaunching client.");
         await client.close();
         dispatch(resetApp);
         dispatch(resetInputStates);
@@ -145,15 +146,19 @@ export function ClientLauncher(): JSX.Element {
     };
 
     useEffect(() => {
+        ipcRenderer.off("relaunch", relaunch);
+
         initClient();
 
         launchEvents.on("needs-register", needsRegisterHandler);
         launchEvents.on("retry", retryHandler);
 
         client.on("authed", authedHandler);
-        client.on("disconnect", disconnectHandler);
+        client.on("disconnect", relaunch);
         client.on("session", sessionHandler);
         client.on("message", messageHandler);
+
+        ipcRenderer.on("relaunch", relaunch);
 
         return () => {
             launchEvents.off("needs-register", needsRegisterHandler);

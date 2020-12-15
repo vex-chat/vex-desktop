@@ -4,4 +4,5 @@ export const routes: Record<string, string> = {
     REGISTER: "/register",
     SETTINGS: "/settings",
     LAUNCH: "/launch",
+    SERVERS: "/server",
 };

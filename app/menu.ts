@@ -37,6 +37,8 @@ export default class MenuBuilder {
         return menu;
     }
 
+    sendRelaunch = (): void => this.mainWindow.webContents.send("relaunch");
+
     setupDevelopmentEnvironment(): void {
         this.mainWindow.webContents.on("context-menu", (_, props) => {
             const { x, y } = props;
@@ -134,6 +136,11 @@ export default class MenuBuilder {
                         this.mainWindow.webContents.toggleDevTools();
                     },
                 },
+                {
+                    label: "Relaunch",
+                    accelerator: "Command+F12",
+                    click: this.sendRelaunch,
+                },
             ],
         };
         // const subMenuViewProd: MenuItemConstructorOptions = {
@@ -167,6 +174,7 @@ export default class MenuBuilder {
                 { label: "Bring All to Front", selector: "arrangeInFront:" },
             ],
         };
+
         const subMenuHelp: MenuItemConstructorOptions = {
             label: "Help",
             submenu: [
@@ -241,6 +249,11 @@ export default class MenuBuilder {
                                   click: () => {
                                       this.mainWindow.webContents.toggleDevTools();
                                   },
+                              },
+                              {
+                                  label: "Relaunch",
+                                  accelerator: "Alt+Ctrl+F12",
+                                  click: this.sendRelaunch,
                               },
                           ]
                         : [

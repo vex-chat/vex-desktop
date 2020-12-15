@@ -1,22 +1,88 @@
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, Link } from "react-router-dom";
 import { routes } from "../constants/routes";
 import App from "../views/App";
-import Messaging from "../views/Messaging";
 import Register from "../views/Register";
 import Loading from "../components/Loading";
 import Settings from "../views/Settings";
-import { ClientLauncher } from "../components/ClientLauncher";
 
 import closeIcon from "../assets/icons/close.svg";
 import minimizeIcon from "../assets/icons/minimize.svg";
 import maximizeIcon from "../assets/icons/maximize.svg";
+import { ServerBar } from "../components/ServerBar";
+import { strToIcon } from "../utils/strToIcon";
+import { XTypes } from "@vex-chat/types-js";
+import * as uuid from "uuid";
+import { ClientLauncher } from "../components/ClientLauncher";
+import Messaging from "./Messaging";
 
 export const switchFX = new Audio("assets/sounds/switch_005.ogg");
 switchFX.load();
 
 export const errorFX = new Audio("assets/sounds/error_008.ogg");
 errorFX.load();
+
+const dummyServer: _IServer = {
+    serverID: uuid.v4(),
+    name: "Dummies",
+    icon: strToIcon("DU"),
+};
+
+const dummyChannel: XTypes.SQL.IChannel = {
+    serverID: dummyServer.serverID,
+    name: "general",
+    channelID: uuid.v4(),
+};
+
+const dummyChannel2: XTypes.SQL.IChannel = {
+    serverID: dummyServer.serverID,
+    name: "chat",
+    channelID: uuid.v4(),
+};
+export const dummyChannels = [dummyChannel, dummyChannel2];
+
+export const dummyServers: _IServer[] = [dummyServer];
+
+export interface _IServer extends XTypes.SQL.IServer {
+    icon: string;
+}
+
+function ChannelSideBar(props: {
+    server: _IServer;
+    channels?: XTypes.SQL.IChannel[];
+}) {
+    if (!props.channels) {
+        return (
+            <div className="sidebar">
+                <div className="server-titlebar">{props.server.name}</div>
+            </div>
+        );
+    }
+    return (
+        <div className="sidebar">
+            <div className="server-titlebar">{props.server.name}</div>
+            <aside className="menu">
+                <ul className="menu-list">
+                    {props.channels.map((channel) => (
+                        <li key={channel.channelID}>
+                            <Link
+                                to={
+                                    routes.SERVERS +
+                                    "/" +
+                                    props.server.serverID +
+                                    "/" +
+                                    channel.channelID
+                                }
+                            >
+                                {channel.name}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </aside>
+        </div>
+    );
+}
 
 export default function Base(): JSX.Element {
     function closeWindow() {
@@ -43,54 +109,72 @@ export default function Base(): JSX.Element {
         WIN?.maximize();
     }
 
+    const TitleBar = () => (
+        <div className="title-bar">
+            {process.platform !== "darwin" && (
+                <div className="window-buttons">
+                    <span
+                        onClick={() => minimizeWindow()}
+                        className="icon is-small minimize-button "
+                    >
+                        <img
+                            src={(minimizeIcon as unknown) as string}
+                            className="window-button-icon"
+                        />
+                    </span>
+                    <span
+                        onClick={() => maximizeWindow()}
+                        className="icon maximize-button is-small has-text-danger pointer"
+                    >
+                        <img
+                            src={(maximizeIcon as unknown) as string}
+                            className="window-button-icon"
+                        />
+                    </span>
+                    <span
+                        onClick={() => closeWindow()}
+                        className="icon close-button is-small has-text-danger pointer"
+                    >
+                        <img
+                            src={(closeIcon as unknown) as string}
+                            className="window-button-icon"
+                        />
+                    </span>
+                </div>
+            )}
+        </div>
+    );
+
     return (
         <App>
-            <div className="title-bar">
-                {process.platform !== "darwin" && (
-                    <div className="window-buttons">
-                        <span
-                            onClick={() => minimizeWindow()}
-                            className="icon is-small minimize-button "
-                        >
-                            <img
-                                src={(minimizeIcon as unknown) as string}
-                                className="window-button-icon"
-                            />
-                        </span>
-                        <span
-                            onClick={() => maximizeWindow()}
-                            className="icon maximize-button is-small has-text-danger pointer"
-                        >
-                            <img
-                                src={(maximizeIcon as unknown) as string}
-                                className="window-button-icon"
-                            />
-                        </span>
-                        <span
-                            onClick={() => closeWindow()}
-                            className="icon close-button is-small has-text-danger pointer"
-                        >
-                            <img
-                                src={(closeIcon as unknown) as string}
-                                className="window-button-icon"
-                            />
-                        </span>
-                    </div>
-                )}
-            </div>
+            <TitleBar />
             <Switch>
                 <Route
-                    path={routes.MESSAGING + "/:userID/:page?/:sessionID?"}
-                    component={Messaging}
+                    path={routes.MESSAGING + "/:userID?/:page?/:sessionID?"}
+                    render={() => <Messaging />}
+                />
+                <Route
+                    path={routes.SERVERS + "/:serverID?/:channelID?"}
+                    render={() => {
+                        return (
+                            <div>
+                                <ServerBar servers={dummyServers} />
+                                <ChannelSideBar
+                                    server={dummyServer}
+                                    channels={dummyChannels}
+                                />
+                            </div>
+                        );
+                    }}
                 />
                 <Route path={routes.REGISTER} component={Register} />
                 <Route path={routes.SETTINGS} component={Settings} />
                 <Route
                     path={routes.LAUNCH}
-                    component={() => (
+                    render={() => (
                         <div>
-                            {ClientLauncher()}
-                            {Loading(256)}
+                            <ClientLauncher />
+                            <Loading size={256} animation={"cylon"} />
                         </div>
                     )}
                 />

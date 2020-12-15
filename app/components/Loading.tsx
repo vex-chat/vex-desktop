@@ -1,8 +1,8 @@
 import React from "react";
 import ReactLoading from "react-loading";
 
-export default function Loading(
-    size: number,
+export default function Loading(props: {
+    size: number;
     animation:
         | "blank"
         | "balls"
@@ -11,18 +11,18 @@ export default function Loading(
         | "cylon"
         | "spin"
         | "spinningBubbles"
-        | "spokes" = "cylon"
-): JSX.Element {
+        | "spokes";
+}): JSX.Element {
     return (
         <div className="Aligner full-size">
             <div className="Aligner-item Aligner-item--top"></div>
             <div className="Aligner-item">
                 <div className="">
                     <ReactLoading
-                        type={animation}
+                        type={props.animation}
                         color={`hsl(0, 0%, 71%)`}
-                        height={size}
-                        width={size}
+                        height={props.size}
+                        width={props.size}
                     />
                 </div>
             </div>

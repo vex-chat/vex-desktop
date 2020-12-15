@@ -27,6 +27,7 @@ import crypto from "crypto";
 import { client } from "./ClientLauncher";
 import { Highlighter } from "./Highlighter";
 import { strToIcon } from "../utils/strToIcon";
+import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 
 export default function Pane(): JSX.Element {
     // state
@@ -564,6 +565,8 @@ function MessageBox(
         return <span key={crypto.randomBytes(16).toString("hex")} />;
     }
 
+    const regex = /(```[^]+```)/;
+
     const sender = familiars[messages[0].sender];
 
     return (
@@ -577,28 +580,62 @@ function MessageBox(
                 </p>
             </figure>
             <div className="media-content">
-                <div className="content">
-                    <p>
-                        <strong>{sender?.username || "Unknown User"}</strong>
-                        &nbsp;&nbsp;
-                        <small className="has-text-dark">
-                            {format(new Date(messages[0].timestamp), "kk:mm")}
-                        </small>
-                        <br />
-                        {messages.map((message) => (
-                            <Fragment key={message.nonce}>
-                                <span>
-                                    {" "}
-                                    {message.decrypted ? (
+                <div className="content message-wrapper">
+                    <strong>{sender?.username || "Unknown User"}</strong>
+                    &nbsp;&nbsp;
+                    <small className="has-text-dark">
+                        {format(new Date(messages[0].timestamp), "kk:mm")}
+                    </small>
+                    <br />
+                    {messages.map((message) => {
+                        const isCode = regex.test(message.message);
+
+                        if (isCode) {
+                            // removing ```
+                            const languageInput = message.message
+                                .replace(/```/g, "")
+                                .split("\n")[0]
+                                .trim();
+
+                            if (
+                                allowedHighlighterTypes.includes(languageInput)
+                            ) {
+                                return Highlighter(
+                                    message.message
+                                        .replace(/```/g, "")
+                                        .replace(languageInput, "")
+                                        .trim(),
+                                    languageInput,
+                                    message.nonce
+                                );
+                            }
+
+                            return (
+                                <div
+                                    className="message-code"
+                                    key={message.nonce}
+                                >
+                                    {Highlighter(
                                         message.message
-                                    ) : (
+                                            .replace(/```/g, "")
+                                            .trim(),
+                                        null
+                                    )}
+                                </div>
+                            );
+                        }
+
+                        return (
+                            <Fragment key={message.nonce}>
+                                <p className="message-text">
+                                    {!message.decrypted && (
                                         <code>Decryption Failed</code>
                                     )}
-                                </span>
-                                <br />
+                                    {message.message}
+                                </p>
                             </Fragment>
-                        ))}
-                    </p>
+                        );
+                    })}
                 </div>
             </div>
             <div className="media-right" />

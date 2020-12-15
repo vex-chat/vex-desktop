@@ -1,12 +1,16 @@
 $tag-radius: 10px;
 $panel-tab-border-bottom: none;
 $panel-item-border: none;
+$menu-item-active-background-color: darken(hsl(0, 0%, 96%), 5%);
+$menu-item-active-color: hsl(0, 0%, 4%);
 
 @import "../node_modules/@fortawesome/fontawesome-svg-core/styles.css";
 @import "../node_modules/bulma/bulma.sass";
-@import "../node_modules/highlight.js/scss/ascetic.scss";
+@import "../node_modules/highlight.js/scss/github.scss";
 
-
+.hljs {
+    background-color: $light !important;
+}
 
 body::-webkit-scrollbar {
 	width: 12px;
@@ -21,6 +25,14 @@ body::-webkit-scrollbar-track {
 body::-webkit-scrollbar-thumb {
 	border-radius: 10px;
 	background-color: $dark;
+}
+
+.message-text {
+    margin-bottom: 4px !important;
+}
+
+.message-code {
+    margin-bottom: 4px !important;
 }
 
 
@@ -46,6 +58,7 @@ button {
     border-radius: 10px! important;
 }
 
+
 div {
     display: block;
 }
@@ -70,9 +83,14 @@ div {
     box-shadow: none;
 }
 
+
+
 pre.hljs {
     padding: 0px;
-    padding-bottom: 10px;
+}
+
+button {
+    margin-top: 10px;
 }
 
 .input-wrapper {
@@ -133,11 +151,57 @@ pre.hljs {
     border-bottom: 2px solid $light;
 }
 
+.serverbar {
+    position: absolute;
+    overflow-y: auto;
+    width: 72px;
+    height: calc(100% - 22px);
+    bottom: 0;
+    background-image: linear-gradient(to top, $light, $white);
+    left: 0;
+    z-index: -1;
+}
+
+.server-icon-image.is-active {
+    border-radius: 10px! important;
+}
+
+
+.server-icon-wrapper {
+    margin: 1ch;
+    padding: 0 !important;
+}
+
+// .server-icon-wrapper.is-active::before {
+//     content:"\A";
+//     width:10px;
+//     height:10px;
+//     border-radius:50%;
+//     background: $dark;
+//     display: inline-block;
+// }
+
+
+.server-icon-image {
+    border-radius: 100%! important;
+}
+
+.server-title-text {
+    padding: 8px 16px 8px 16px;
+}
+
+.server-titlebar {
+    width: 100%;
+    height: 55px;
+    border-bottom: 1px solid darken($light, 5%);
+}
+
 .sidebar {
     position: absolute;
     overflow-y: auto;
     width: 265px;
     height: calc(100% - 22px);
+    left: 72px;
     top: 22px;
     background-color: $light;
 }
@@ -148,7 +212,7 @@ pre.hljs {
 
 .pane {
     position: absolute;
-    width: calc(100% - 265px);
+    width: calc(100% - 265px - 72px);
     right: 0;
     height: calc(100% - 22px);
     top: 22px;
@@ -304,6 +368,7 @@ div.sidebar > aside > ul > li > a:hover {
 .register-form-buttons {
     margin-left: 0px;
     margin-right: -3px;
+    margin-top: -10px;
 }
 
 .input-wrapper {
