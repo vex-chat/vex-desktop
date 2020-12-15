@@ -10,6 +10,7 @@ import closeIcon from "../assets/icons/close.svg";
 import minimizeIcon from "../assets/icons/minimize.svg";
 import maximizeIcon from "../assets/icons/maximize.svg";
 import { ServerBar } from "../components/ServerBar";
+import { ChannelBar } from "../components/ChannelBar";
 import { strToIcon } from "../utils/strToIcon";
 import { XTypes } from "@vex-chat/types-js";
 import * as uuid from "uuid";
@@ -45,49 +46,6 @@ export const dummyServers: _IServer[] = [dummyServer];
 
 export interface _IServer extends XTypes.SQL.IServer {
     icon: string;
-}
-
-function ChannelSideBar(props: {
-    server: _IServer;
-    channels: XTypes.SQL.IChannel[];
-}) {
-    const history = useHistory();
-
-    return (
-        <div className="sidebar">
-            <div className="server-titlebar">
-                <h1 className="title is-size-4 server-title-text">
-                    {props.server.name}
-                </h1>
-            </div>
-            <aside className="menu">
-                <ul className="menu-list">
-                    {props.channels.map((channel) => (
-                        <li key={channel.channelID}>
-                            <Link
-                                to={
-                                    routes.SERVERS +
-                                    "/" +
-                                    props.server.serverID +
-                                    "/" +
-                                    channel.channelID
-                                }
-                                className={
-                                    history.location.pathname.includes(
-                                        channel.channelID
-                                    )
-                                        ? "is-active"
-                                        : ""
-                                }
-                            >
-                                {channel.name}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </aside>
-        </div>
-    );
 }
 
 export default function Base(): JSX.Element {
@@ -165,7 +123,7 @@ export default function Base(): JSX.Element {
                         return (
                             <div>
                                 <ServerBar servers={dummyServers} />
-                                <ChannelSideBar
+                                <ChannelBar
                                     server={dummyServer}
                                     channels={dummyChannels}
                                 />
