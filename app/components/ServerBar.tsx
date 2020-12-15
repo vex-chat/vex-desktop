@@ -2,7 +2,7 @@ import React from "react";
 import * as uuid from "uuid";
 import { strToIcon } from "../utils/strToIcon";
 import { routes } from "../constants/routes";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { _IServer } from "../views/Base";
 
 const dmServer: _IServer = {
@@ -26,14 +26,26 @@ function ServerIcon(props: {
     server: _IServer;
     routeOverride?: string;
 }): JSX.Element {
+    const history = useHistory();
+
     const href = props.routeOverride
         ? props.routeOverride
         : routes.SERVERS + "/" + props.server.serverID;
 
+    const isActiveModifier = history.location.pathname.includes(href)
+        ? "is-active"
+        : "";
+
     return (
-        <div className={`server-icon-wrapper`} key={props.server.serverID}>
+        <div
+            className={`server-icon-wrapper ${isActiveModifier}`}
+            key={props.server.serverID}
+        >
             <Link to={href}>
-                <img className={`server-icon-image`} src={props.server.icon} />
+                <img
+                    className={`server-icon-image ${isActiveModifier}`}
+                    src={props.server.icon}
+                />
             </Link>
         </div>
     );

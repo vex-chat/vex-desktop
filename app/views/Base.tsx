@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, Redirect, Link } from "react-router-dom";
+import { Switch, Route, Redirect, Link, useHistory } from "react-router-dom";
 import { routes } from "../constants/routes";
 import App from "../views/App";
 import Register from "../views/Register";
@@ -49,18 +49,17 @@ export interface _IServer extends XTypes.SQL.IServer {
 
 function ChannelSideBar(props: {
     server: _IServer;
-    channels?: XTypes.SQL.IChannel[];
+    channels: XTypes.SQL.IChannel[];
 }) {
-    if (!props.channels) {
-        return (
-            <div className="sidebar">
-                <div className="server-titlebar">{props.server.name}</div>
-            </div>
-        );
-    }
+    const history = useHistory();
+
     return (
         <div className="sidebar">
-            <div className="server-titlebar">{props.server.name}</div>
+            <div className="server-titlebar">
+                <h1 className="title is-size-4 server-title-text">
+                    {props.server.name}
+                </h1>
+            </div>
             <aside className="menu">
                 <ul className="menu-list">
                     {props.channels.map((channel) => (
@@ -72,6 +71,13 @@ function ChannelSideBar(props: {
                                     props.server.serverID +
                                     "/" +
                                     channel.channelID
+                                }
+                                className={
+                                    history.location.pathname.includes(
+                                        channel.channelID
+                                    )
+                                        ? "is-active"
+                                        : ""
                                 }
                             >
                                 {channel.name}
