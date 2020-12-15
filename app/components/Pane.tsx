@@ -1,4 +1,4 @@
-import { IMessage, IUser } from "@vex-chat/vex-js";
+import { IUser } from "@vex-chat/vex-js";
 import React, { createRef, Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
@@ -81,40 +81,6 @@ export default function Pane(): JSX.Element {
     if (!familiar) {
         return <div className="pane"></div>;
     }
-
-    // chunks the current messages by sender so that we can display multiple
-    // messages per user in a smaller format
-    const chunkedMessages: IMessage | ISerializedMessage[][] = [[]];
-    for (let i = 0; i < messageIDs.length; i++) {
-        if (chunkedMessages[0] === undefined) {
-            chunkedMessages.push([]);
-        }
-
-        const currentMessage = threadMessages[messageIDs[i]];
-
-        if (chunkedMessages[chunkedMessages.length - 1].length === 0) {
-            chunkedMessages[chunkedMessages.length - 1].push(currentMessage);
-        } else {
-            if (
-                chunkedMessages[chunkedMessages.length - 1][0].sender ===
-                currentMessage.sender
-            ) {
-                chunkedMessages[chunkedMessages.length - 1].push(
-                    currentMessage
-                );
-            } else {
-                chunkedMessages.push([]);
-                chunkedMessages[chunkedMessages.length - 1].push(
-                    currentMessage
-                );
-            }
-        }
-
-        console.log(messageIDs[i], threadMessages[messageIDs[i]]);
-    }
-
-    console.log(chunkedMessages);
-
     return (
         <div className="pane">
             <div className="pane-topbar">
@@ -529,9 +495,11 @@ export default function Pane(): JSX.Element {
                                                 )}
                                             </div>
                                         )}
-                                    {chunkedMessages.map((chunk) => {
-                                        return MessageBox(chunk, familiars);
-                                    })}
+                                    {chunkMessages(threadMessages || {}).map(
+                                        (chunk) => {
+                                            return MessageBox(chunk, familiars);
+                                        }
+                                    )}
                                     <div ref={messagesEndRef} />
                                 </div>
                                 <Tooltip
@@ -593,7 +561,7 @@ function MessageBox(
     familiars: Record<string, IUser>
 ): JSX.Element {
     if (messages.length == 0) {
-        throw new Error("Message array cannot be empty.");
+        return <span key={crypto.randomBytes(16).toString("hex")} />;
     }
 
     const sender = familiars[messages[0].sender];
@@ -636,4 +604,46 @@ function MessageBox(
             <div className="media-right" />
         </article>
     );
+}
+
+/**
+ * Chunks the messages into chunks of the same sender consecutively, so they can be displayed in
+ * a smaller format.
+ *
+ *
+ *
+ * @param threadMessages The thread message object.
+ */
+function chunkMessages(
+    threadMessages: Record<string, ISerializedMessage>
+): ISerializedMessage[][] {
+    const messageIDs = Object.keys(threadMessages);
+
+    const chunkedMessages: ISerializedMessage[][] = [[]];
+    for (let i = 0; i < messageIDs.length; i++) {
+        if (chunkedMessages[0] === undefined) {
+            chunkedMessages.push([]);
+        }
+
+        const currentMessage = threadMessages[messageIDs[i]];
+
+        if (chunkedMessages[chunkedMessages.length - 1].length === 0) {
+            chunkedMessages[chunkedMessages.length - 1].push(currentMessage);
+        } else {
+            if (
+                chunkedMessages[chunkedMessages.length - 1][0].sender ===
+                currentMessage.sender
+            ) {
+                chunkedMessages[chunkedMessages.length - 1].push(
+                    currentMessage
+                );
+            } else {
+                chunkedMessages.push([]);
+                chunkedMessages[chunkedMessages.length - 1].push(
+                    currentMessage
+                );
+            }
+        }
+    }
+    return chunkedMessages;
 }
