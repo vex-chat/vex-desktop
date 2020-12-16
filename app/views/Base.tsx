@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, Redirect, Link, useHistory } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { routes } from "../constants/routes";
 import App from "../views/App";
 import Register from "../views/Register";
@@ -11,11 +11,11 @@ import minimizeIcon from "../assets/icons/minimize.svg";
 import maximizeIcon from "../assets/icons/maximize.svg";
 import { ServerBar } from "../components/ServerBar";
 import { ChannelBar } from "../components/ChannelBar";
-import { strToIcon } from "../utils/strToIcon";
-import { XTypes } from "@vex-chat/types-js";
-import * as uuid from "uuid";
 import { ClientLauncher } from "../components/ClientLauncher";
+import CreateServer from "../components/CreateServer";
 import Messaging from "./Messaging";
+import { useSelector } from "react-redux";
+import { selectServers } from "../reducers/servers";
 
 export const switchFX = new Audio("assets/sounds/switch_005.ogg");
 switchFX.load();
@@ -23,32 +23,9 @@ switchFX.load();
 export const errorFX = new Audio("assets/sounds/error_008.ogg");
 errorFX.load();
 
-const dummyServer: _IServer = {
-    serverID: uuid.v4(),
-    name: "Dummies",
-    icon: strToIcon("DU"),
-};
-
-const dummyChannel: XTypes.SQL.IChannel = {
-    serverID: dummyServer.serverID,
-    name: "general",
-    channelID: uuid.v4(),
-};
-
-const dummyChannel2: XTypes.SQL.IChannel = {
-    serverID: dummyServer.serverID,
-    name: "chat",
-    channelID: uuid.v4(),
-};
-export const dummyChannels = [dummyChannel, dummyChannel2];
-
-export const dummyServers: _IServer[] = [dummyServer];
-
-export interface _IServer extends XTypes.SQL.IServer {
-    icon: string;
-}
-
 export default function Base(): JSX.Element {
+    const servers = useSelector(selectServers);
+
     function closeWindow() {
         const remote = window.require
             ? window.require("electron").remote
@@ -119,13 +96,14 @@ export default function Base(): JSX.Element {
                 />
                 <Route
                     path={routes.SERVERS + "/:serverID?/:channelID?"}
-                    render={() => {
+                    render={({ match }) => {
+                        const { serverID } = match.params;
                         return (
                             <div>
-                                <ServerBar servers={dummyServers} />
+                                <ServerBar />
                                 <ChannelBar
-                                    server={dummyServer}
-                                    channels={dummyChannels}
+                                    server={servers[serverID]}
+                                    channels={[]}
                                 />
                             </div>
                         );
@@ -141,6 +119,21 @@ export default function Base(): JSX.Element {
                             <Loading size={256} animation={"cylon"} />
                         </div>
                     )}
+                />
+                <Route
+                    path={routes.CREATE + "/:resourceType?"}
+                    render={({ match }) => {
+                        switch (match.params.resourceType) {
+                            case "server":
+                                return <CreateServer />;
+                            default:
+                                console.warn(
+                                    "Unsupported resource type for create route" +
+                                        match.params.resourceType
+                                );
+                                return;
+                        }
+                    }}
                 />
                 <Route
                     exact

@@ -12,8 +12,16 @@ $menu-item-active-color: hsl(0, 0%, 4%);
     background-color: $light !important;
 }
 
+.server-button-icon {
+    font-size: 52px;
+    color: darken($light, 10%);
+
+}
+
+.server-button {margin-top: 3px;}
+
 body::-webkit-scrollbar {
-	width: 12px;
+    width: 12px;
 	background-color: $light;
 }
 

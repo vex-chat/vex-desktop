@@ -1,14 +1,14 @@
 import { XTypes } from "@vex-chat/types-js";
+import { IServer } from "@vex-chat/vex-js";
 import React from "react";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { routes } from "../constants/routes";
-import { _IServer } from "../views/Base";
 
 export function ChannelBar(props: {
-    server: _IServer;
+    server: IServer;
     channels: XTypes.SQL.IChannel[];
-}) {
+}): JSX.Element {
     const history = useHistory();
 
     return (

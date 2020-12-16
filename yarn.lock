@@ -2047,6 +2047,11 @@
   dependencies:
     source-map "^0.6.1"
 
+"@types/uuid@^8.3.0":
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.0.tgz#215c231dff736d5ba92410e6d602050cce7e273f"
+  integrity sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
+
 "@types/webpack-env@^1.15.2":
   version "1.15.2"
   resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.15.2.tgz"
@@ -2155,10 +2160,10 @@
     "@typescript-eslint/types" "4.9.1"
     eslint-visitor-keys "^2.0.0"
 
-"@vex-chat/types-js@^0.7.5":
-  version "0.7.5"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/types-js/0.7.5/bf696d1d380dae4c808cb8451234e7ddac912e884b06a89680991537ed84cc4c#562c0448166d0f3fae3a9df272e7216f4e77d265"
-  integrity sha512-G9tvlsbQ7bllb+tewz1TqPWWf7ssOgxqaLd8GjAyYCVcFux1qZc6KUgj51r3OE1jLTMDSbIElDyEVx7ED7w1SA==
+"@vex-chat/types-js@^0.7.6":
+  version "0.7.6"
+  resolved "https://npm.pkg.github.com/download/@vex-chat/types-js/0.7.6/d0bbe9e0642cadbe0202dbe3336108169568446723b5a23c96c8aaf41d9b2b7b#584334650498e1f631480b83c43fc98d67149c86"
+  integrity sha512-j+8AfcacQTT5PWMOBEZ0E3Q7U3hivwhJXYPdTvg+m1fp300JPwitSZnm3T2kq7zzJSOChCcb8ZM/qbQGLeF9Cw==
   dependencies:
     tweetnacl "^1.0.3"
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import { Client, IMessage, ISession, IUser } from "@vex-chat/vex-js";
 import { sleep } from "@extrahash/sleep";
 import { ipcRenderer, remote } from "electron";
@@ -15,20 +16,33 @@ import os from "os";
 import { resetInputStates } from "../reducers/inputs";
 import { EventEmitter } from "events";
 import log from "electron-log";
+import { setServers } from "../reducers/servers";
+
+declare global {
+    interface Window {
+        vex: Client;
+    }
+}
 
 const homedir = os.homedir();
 export const progFolder = `${homedir}/.vex-desktop`;
-export let client: Client;
+// eslint-disable-next-line no-var
+let client: Client;
 
 const launchEvents = new EventEmitter();
 
 export async function initClient(): Promise<void> {
+    if (client && client.hasInit) {
+        await client.close();
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const PK = localStorage.getItem("PK")!;
     client = new Client(PK, {
         dbFolder: progFolder,
         logLevel: "info",
     });
+    window.vex = client;
     client.on("ready", async () => {
         const [, err] = await client.users.retrieve(client.getKeys().public);
 
@@ -135,13 +149,16 @@ export function ClientLauncher(): JSX.Element {
 
         const familiars = await client.users.familiars();
         dispatch(setFamiliars(familiars));
-
         for (const user of familiars) {
             const history = await client.messages.retrieve(user.userID);
             for (const message of history) {
                 dispatch(addMessage(message));
             }
         }
+
+        const servers = await client.servers.retrieve();
+        dispatch(setServers(servers));
+
         dispatch(setApp("initialLoad", false));
     };
 

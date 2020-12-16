@@ -3,27 +3,46 @@ import * as uuid from "uuid";
 import { strToIcon } from "../utils/strToIcon";
 import { routes } from "../constants/routes";
 import { Link, useHistory } from "react-router-dom";
-import { _IServer } from "../views/Base";
+import { useSelector } from "react-redux";
+import { selectServers } from "../reducers/servers";
+import { IServer } from "@vex-chat/vex-js";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const dmServer: _IServer = {
+const dmServer: IServer = {
     serverID: uuid.v4(),
     name: "Direct Messages",
     icon: strToIcon("DM"),
 };
 
-export function ServerBar(props: { servers: _IServer[] }): JSX.Element {
+export function ServerBar(): JSX.Element {
+    const servers = useSelector(selectServers);
+    const serverIDs = Object.keys(servers);
+
     return (
         <div className="serverbar">
             <ServerIcon server={dmServer} routeOverride={routes.MESSAGING} />
-            {props.servers.map((server) => (
-                <ServerIcon key={server.serverID} server={server} />
+            {serverIDs.map((serverID) => (
+                <ServerIcon key={serverID} server={servers[serverID]} />
             ))}
+            <div className={`server-icon-wrapper`}>
+                <Link to={routes.CREATE + "/server"}>
+                    <button className="button is-medium server-button">
+                        <span className="icon is-medium">
+                            <FontAwesomeIcon
+                                className="server-button-icon"
+                                icon={faPlus}
+                            />
+                        </span>
+                    </button>
+                </Link>
+            </div>
         </div>
     );
 }
 
 function ServerIcon(props: {
-    server: _IServer;
+    server: IServer;
     routeOverride?: string;
 }): JSX.Element {
     const history = useHistory();
@@ -44,7 +63,7 @@ function ServerIcon(props: {
             <Link to={href}>
                 <img
                     className={`server-icon-image ${isActiveModifier}`}
-                    src={props.server.icon}
+                    src={props.server.icon || strToIcon(props.server.name)}
                 />
             </Link>
         </div>

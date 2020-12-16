@@ -11,7 +11,7 @@ import {
 import { errorFX, switchFX } from "../views/Base";
 import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
-import { progFolder, client } from "../components/ClientLauncher";
+import { progFolder } from "../components/ClientLauncher";
 import { resetUser } from "../reducers/user";
 import { resetApp } from "../reducers/app";
 import { resetMessages } from "../reducers/messages";
@@ -66,7 +66,7 @@ export default function IRegister(): JSX.Element {
                         </label>
                         <div className="control input-wrapper has-icons-left has-icons-right">
                             <input
-                                className="username-input input"
+                                className="servername-input input"
                                 type="username"
                                 value={value}
                                 onChange={async (event) => {
@@ -144,6 +144,8 @@ export default function IRegister(): JSX.Element {
                                             addInputState(FORM_NAME, username)
                                         );
 
+                                        const client = window.vex;
+
                                         const [
                                             serverResults,
                                             err,
@@ -184,7 +186,7 @@ export default function IRegister(): JSX.Element {
                                     onClick={async () => {
                                         switchFX.play();
                                         setWaiting(true);
-
+                                        const client = window.vex;
                                         await client.close();
                                         dispatch(resetUser);
                                         dispatch(resetApp);

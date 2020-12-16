@@ -8,6 +8,7 @@ import messageReducer from "./reducers/messages";
 import sessionReducer from "./reducers/sessions";
 import settingsReducer from "./reducers/settings";
 import appReducer from "./reducers/app";
+import serverReducer from "./reducers/servers";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function createRootReducer(history: History) {
@@ -20,5 +21,6 @@ export default function createRootReducer(history: History) {
         sessions: sessionReducer,
         settings: settingsReducer,
         app: appReducer,
+        servers: serverReducer,
     });
 }

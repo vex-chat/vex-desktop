@@ -24,7 +24,6 @@ import { routes } from "../constants/routes";
 import { Link } from "react-router-dom";
 import { selectUser } from "../reducers/user";
 import crypto from "crypto";
-import { client } from "./ClientLauncher";
 import { Highlighter } from "./Highlighter";
 import { strToIcon } from "../utils/strToIcon";
 import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
@@ -339,6 +338,7 @@ export default function Pane(): JSX.Element {
                                 const session =
                                     sessions[params.userID][sessionID];
 
+                                const client = window.vex;
                                 const mnemonic = client.sessions.verify(
                                     session
                                 );
@@ -533,6 +533,7 @@ export default function Pane(): JSX.Element {
                                                 ) {
                                                     event.preventDefault();
 
+                                                    const client = window.vex;
                                                     client.messages.send(
                                                         familiar.userID,
                                                         inputValue
