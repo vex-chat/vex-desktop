@@ -19,6 +19,7 @@ import log from "electron-log";
 import { setServers } from "../reducers/servers";
 import { addChannels } from "../reducers/channels";
 import { addGroupMessage } from "../reducers/groupMessages";
+import Loading from "./Loading";
 
 declare global {
     interface Window {
@@ -200,5 +201,5 @@ export function ClientLauncher(): JSX.Element {
             launchEvents.off("retry", retryHandler);
         };
     });
-    return <div />;
+    return <Loading size={256} animation={"cylon"} />;
 }
