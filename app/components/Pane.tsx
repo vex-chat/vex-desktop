@@ -571,7 +571,7 @@ export default function Pane(): JSX.Element {
     );
 }
 
-function MessageBox(
+export function MessageBox(
     messages: ISerializedMessage[],
     familiars: Record<string, IUser>
 ): JSX.Element {
@@ -665,7 +665,7 @@ function MessageBox(
  *
  * @param threadMessages The thread message object.
  */
-function chunkMessages(
+export function chunkMessages(
     threadMessages: Record<string, ISerializedMessage>
 ): ISerializedMessage[][] {
     const messageIDs = Object.keys(threadMessages);

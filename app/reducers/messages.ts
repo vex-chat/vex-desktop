@@ -10,9 +10,10 @@ export interface ISerializedMessage {
     recipient: string;
     direction: "incoming" | "outgoing";
     decrypted: boolean;
+    group?: string;
 }
 
-function serializeMessage(message: IMessage): ISerializedMessage {
+export function serializeMessage(message: IMessage): ISerializedMessage {
     const serialized: ISerializedMessage = {
         decrypted: message.decrypted,
         message: message.message,
@@ -21,6 +22,7 @@ function serializeMessage(message: IMessage): ISerializedMessage {
         sender: message.sender,
         recipient: message.recipient,
         direction: message.direction,
+        group: message.group,
     };
     return serialized;
 }

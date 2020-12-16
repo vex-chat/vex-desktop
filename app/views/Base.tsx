@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment, useEffect, useRef } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { routes } from "../constants/routes";
 import App from "../views/App";
@@ -17,6 +17,9 @@ import Messaging from "./Messaging";
 import { useDispatch, useSelector } from "react-redux";
 import { selectServers } from "../reducers/servers";
 import { addInputState, selectInputStates } from "../reducers/inputs";
+import { selectGroupMessages } from "../reducers/groupMessages";
+import { chunkMessages, MessageBox } from "../components/Pane";
+import { selectFamiliars } from "../reducers/familiars";
 
 export const switchFX = new Audio("assets/sounds/switch_005.ogg");
 switchFX.load();
@@ -28,6 +31,20 @@ export default function Base(): JSX.Element {
     const servers = useSelector(selectServers);
     const dispatch = useDispatch();
     const inputs = useSelector(selectInputStates);
+    const groupMessages = useSelector(selectGroupMessages);
+    const familiars = useSelector(selectFamiliars);
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        if (messagesEndRef.current) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (messagesEndRef.current as any).scrollIntoView();
+        }
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    });
 
     function closeWindow() {
         const remote = window.require
@@ -101,44 +118,74 @@ export default function Base(): JSX.Element {
                     path={routes.SERVERS + "/:serverID?/:channelID?"}
                     render={({ match }) => {
                         const { serverID, channelID } = match.params;
+                        const threadMessages = groupMessages[channelID];
+
                         return (
                             <div>
                                 <ServerBar />
                                 <ChannelBar server={servers[serverID]} />
                                 <div className="pane">
-                                    <div className="chat-input-wrapper">
-                                        <textarea
-                                            value={inputs[serverID + channelID]}
-                                            className="textarea chat-input has-fixed-size"
-                                            onChange={(event) => {
-                                                dispatch(
-                                                    addInputState(
-                                                        serverID + channelID,
-                                                        event.target.value
-                                                    )
-                                                );
-                                            }}
-                                            onKeyDown={(event) => {
-                                                if (
-                                                    event.key === "Enter" &&
-                                                    !event.shiftKey
-                                                ) {
-                                                    event.preventDefault();
-
-                                                    const client = window.vex;
-                                                    // send to group
-
-                                                    dispatch(
-                                                        addInputState(
-                                                            serverID +
-                                                                channelID,
-                                                            ""
-                                                        )
+                                    {channelID !== undefined && (
+                                        <Fragment>
+                                            <div className="conversation-wrapper">
+                                                {chunkMessages(
+                                                    threadMessages || {}
+                                                ).map((chunk) => {
+                                                    return MessageBox(
+                                                        chunk,
+                                                        familiars
                                                     );
-                                                }
-                                            }}
-                                        />
-                                    </div>
+                                                })}
+                                                <div ref={messagesEndRef} />
+                                            </div>
+
+                                            <div className="chat-input-wrapper">
+                                                <textarea
+                                                    value={inputs[channelID]}
+                                                    className="textarea chat-input has-fixed-size"
+                                                    onChange={(event) => {
+                                                        dispatch(
+                                                            addInputState(
+                                                                channelID,
+                                                                event.target
+                                                                    .value
+                                                            )
+                                                        );
+                                                    }}
+                                                    onKeyDown={(event) => {
+                                                        if (
+                                                            event.key ===
+                                                                "Enter" &&
+                                                            !event.shiftKey
+                                                        ) {
+                                                            event.preventDefault();
+
+                                                            const client =
+                                                                window.vex;
+                                                            // send to group
+
+                                                            console.log(
+                                                                channelID
+                                                            );
+                                                            client.messages.group(
+                                                                channelID,
+                                                                inputs[
+                                                                    channelID
+                                                                ]
+                                                            );
+
+                                                            dispatch(
+                                                                addInputState(
+                                                                    channelID,
+                                                                    ""
+                                                                )
+                                                            );
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                        </Fragment>
+                                    )}
                                 </div>
                             </div>
                         );

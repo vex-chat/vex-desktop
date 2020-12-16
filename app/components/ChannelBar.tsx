@@ -1,6 +1,5 @@
 import { faHashtag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { XTypes } from "@vex-chat/types-js";
 import { IServer } from "@vex-chat/vex-js";
 import React from "react";
 import { useSelector } from "react-redux";

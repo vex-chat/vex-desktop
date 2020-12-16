@@ -10,6 +10,7 @@ import settingsReducer from "./reducers/settings";
 import appReducer from "./reducers/app";
 import serverReducer from "./reducers/servers";
 import channelReducer from "./reducers/channels";
+import groupMessageReducer from "./reducers/groupMessages";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function createRootReducer(history: History) {
@@ -24,5 +25,6 @@ export default function createRootReducer(history: History) {
         app: appReducer,
         servers: serverReducer,
         channels: channelReducer,
+        groupMessages: groupMessageReducer,
     });
 }

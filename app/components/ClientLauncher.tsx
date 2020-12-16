@@ -18,6 +18,7 @@ import { EventEmitter } from "events";
 import log from "electron-log";
 import { setServers } from "../reducers/servers";
 import { addChannels } from "../reducers/channels";
+import { addGroupMessage } from "../reducers/groupMessages";
 
 declare global {
     interface Window {
@@ -87,9 +88,14 @@ export function ClientLauncher(): JSX.Element {
     const settings = useSelector(selectSettings);
 
     const messageHandler = async (message: IMessage) => {
-        dispatch(addMessage(message));
+        if (message.group) {
+            dispatch(addGroupMessage(message));
+        } else {
+            dispatch(addMessage(message));
+        }
 
         if (
+            !message.group &&
             settings.notifications &&
             message.direction === "incoming" &&
             message.recipient !== message.sender
@@ -149,7 +155,11 @@ export function ClientLauncher(): JSX.Element {
         for (const user of familiars) {
             const history = await client.messages.retrieve(user.userID);
             for (const message of history) {
-                dispatch(addMessage(message));
+                if (message.group) {
+                    dispatch(addGroupMessage(message));
+                } else {
+                    dispatch(addMessage(message));
+                }
             }
         }
 

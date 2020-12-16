@@ -15,6 +15,7 @@ import { progFolder } from "../components/ClientLauncher";
 import { resetUser } from "../reducers/user";
 import { resetApp } from "../reducers/app";
 import { resetMessages } from "../reducers/messages";
+import { resetGroupMessages } from "../reducers/groupMessages";
 
 const FORM_NAME = "register_username";
 
@@ -103,7 +104,7 @@ export default function IRegister(): JSX.Element {
                                         setTaken(true);
                                     }
                                 }}
-                                placeholder="Username"
+                                placeholder={Client.randomUsername()}
                             />
                             <span className="icon is-small is-left">
                                 <FontAwesomeIcon icon={faUserAlt} />
@@ -193,6 +194,7 @@ export default function IRegister(): JSX.Element {
                                         dispatch(resetInputStates);
                                         dispatch(resetMessages);
                                         dispatch(resetUser);
+                                        dispatch(resetGroupMessages);
 
                                         const PK = Client.generateSecretKey();
                                         localStorage.setItem("PK", PK);

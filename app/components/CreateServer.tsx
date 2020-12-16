@@ -4,6 +4,8 @@ import { Client, IServer } from "@vex-chat/vex-js";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import { routes } from "../constants/routes";
+import { addChannels } from "../reducers/channels";
 import { addInputState, selectInputStates } from "../reducers/inputs";
 import { addServer } from "../reducers/servers";
 
@@ -36,6 +38,7 @@ export default function ICreateServer(): JSX.Element {
                             <input
                                 className="servername-input input"
                                 type="username"
+                                placeholder={"My Cool Server"}
                                 value={inputStates[FORM_NAME] || ""}
                                 onChange={(event) => {
                                     dispatch(
@@ -67,9 +70,16 @@ export default function ICreateServer(): JSX.Element {
                                             const server: IServer = await client.servers.create(
                                                 inputStates[FORM_NAME]
                                             );
-                                            console.log(server);
+                                            const channels = await client.channels.retrieve(
+                                                server.serverID
+                                            );
                                             dispatch(addServer(server));
-                                            history.goBack();
+                                            dispatch(addChannels(channels));
+                                            history.push(
+                                                routes.SERVERS +
+                                                    "/" +
+                                                    server.serverID
+                                            );
                                         } catch (err) {
                                             console.error(err);
                                         }
