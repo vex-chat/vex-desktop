@@ -2,7 +2,7 @@
 import { Client, IMessage, ISession, IUser } from "@vex-chat/vex-js";
 import { sleep } from "@extrahash/sleep";
 import { ipcRenderer, remote } from "electron";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
@@ -34,6 +34,10 @@ let client: Client;
 const launchEvents = new EventEmitter();
 
 export async function initClient(): Promise<void> {
+    if (window.vex && window.vex.hasInit) {
+        await window.vex.close();
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const PK = localStorage.getItem("PK")!;
     client = new Client(PK, {
@@ -63,9 +67,6 @@ export async function initClient(): Promise<void> {
             }
         }
         await client.login();
-    });
-    client.on("closed", async () => {
-        log.info("Shut down manually.");
     });
     client.init();
 }
@@ -126,8 +127,13 @@ export function ClientLauncher(): JSX.Element {
     };
 
     const relaunch = async () => {
-        log.info("Relaunching client.");
         await client.close();
+
+        client.off("authed", authedHandler);
+        client.off("disconnect", relaunch);
+        client.off("session", sessionHandler);
+        client.off("message", messageHandler);
+
         dispatch(resetApp);
         dispatch(resetInputStates);
         dispatch(resetMessages);
@@ -173,11 +179,12 @@ export function ClientLauncher(): JSX.Element {
         dispatch(setApp("initialLoad", false));
     };
 
-    useEffect(() => {
-        ipcRenderer.off("relaunch", relaunch);
-
+    useMemo(() => {
+        ipcRenderer.on("relaunch", relaunch);
         initClient();
+    }, []);
 
+    useEffect(() => {
         launchEvents.on("needs-register", needsRegisterHandler);
         launchEvents.on("retry", retryHandler);
 
@@ -185,8 +192,6 @@ export function ClientLauncher(): JSX.Element {
         client.on("disconnect", relaunch);
         client.on("session", sessionHandler);
         client.on("message", messageHandler);
-
-        ipcRenderer.on("relaunch", relaunch);
 
         return () => {
             launchEvents.off("needs-register", needsRegisterHandler);
