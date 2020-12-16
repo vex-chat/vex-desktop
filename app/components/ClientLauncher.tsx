@@ -17,6 +17,7 @@ import { resetInputStates } from "../reducers/inputs";
 import { EventEmitter } from "events";
 import log from "electron-log";
 import { setServers } from "../reducers/servers";
+import { addChannels } from "../reducers/channels";
 
 declare global {
     interface Window {
@@ -32,10 +33,6 @@ let client: Client;
 const launchEvents = new EventEmitter();
 
 export async function initClient(): Promise<void> {
-    if (client && client.hasInit) {
-        await client.close();
-    }
-
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const PK = localStorage.getItem("PK")!;
     client = new Client(PK, {
@@ -158,6 +155,10 @@ export function ClientLauncher(): JSX.Element {
 
         const servers = await client.servers.retrieve();
         dispatch(setServers(servers));
+        for (const server of servers) {
+            const channels = await client.channels.retrieve(server.serverID);
+            dispatch(addChannels(channels));
+        }
 
         dispatch(setApp("initialLoad", false));
     };

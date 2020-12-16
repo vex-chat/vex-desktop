@@ -14,8 +14,9 @@ import { ChannelBar } from "../components/ChannelBar";
 import { ClientLauncher } from "../components/ClientLauncher";
 import CreateServer from "../components/CreateServer";
 import Messaging from "./Messaging";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectServers } from "../reducers/servers";
+import { addInputState, selectInputStates } from "../reducers/inputs";
 
 export const switchFX = new Audio("assets/sounds/switch_005.ogg");
 switchFX.load();
@@ -25,6 +26,8 @@ errorFX.load();
 
 export default function Base(): JSX.Element {
     const servers = useSelector(selectServers);
+    const dispatch = useDispatch();
+    const inputs = useSelector(selectInputStates);
 
     function closeWindow() {
         const remote = window.require
@@ -97,14 +100,46 @@ export default function Base(): JSX.Element {
                 <Route
                     path={routes.SERVERS + "/:serverID?/:channelID?"}
                     render={({ match }) => {
-                        const { serverID } = match.params;
+                        const { serverID, channelID } = match.params;
                         return (
                             <div>
                                 <ServerBar />
-                                <ChannelBar
-                                    server={servers[serverID]}
-                                    channels={[]}
-                                />
+                                <ChannelBar server={servers[serverID]} />
+                                <div className="pane">
+                                    <div className="chat-input-wrapper">
+                                        <textarea
+                                            value={inputs[serverID + channelID]}
+                                            className="textarea chat-input has-fixed-size"
+                                            onChange={(event) => {
+                                                dispatch(
+                                                    addInputState(
+                                                        serverID + channelID,
+                                                        event.target.value
+                                                    )
+                                                );
+                                            }}
+                                            onKeyDown={(event) => {
+                                                if (
+                                                    event.key === "Enter" &&
+                                                    !event.shiftKey
+                                                ) {
+                                                    event.preventDefault();
+
+                                                    const client = window.vex;
+                                                    // send to group
+
+                                                    dispatch(
+                                                        addInputState(
+                                                            serverID +
+                                                                channelID,
+                                                            ""
+                                                        )
+                                                    );
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         );
                     }}

@@ -17,6 +17,7 @@ import {
     faExclamationTriangle,
     faLock,
     faSkull,
+    faTimes,
     faUnlock,
     faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
@@ -388,6 +389,18 @@ export default function Pane(): JSX.Element {
                                                 </span>
                                                 &nbsp; Verify with the other
                                                 user that the words match.
+                                            </p>
+                                        </div>
+                                        <div className="panel-block">
+                                            <p>
+                                                <span className="icon">
+                                                    <FontAwesomeIcon
+                                                        icon={faTimes}
+                                                        className="has-text-danger"
+                                                    />
+                                                </span>
+                                                &nbsp; DON&apos;T use vex to
+                                                communicate the words.
                                             </p>
                                         </div>
                                         <div className="panel-block">
