@@ -179,6 +179,8 @@ export function ClientLauncher(): JSX.Element {
         dispatch(setApp("initialLoad", false));
     };
 
+    /* giving useMemo an empty set of dependencies
+    so that this only happens once */
     useMemo(() => {
         ipcRenderer.on("relaunch", relaunch);
         initClient();
