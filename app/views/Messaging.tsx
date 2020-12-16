@@ -4,7 +4,6 @@ import Pane from "../components/Pane";
 import { useSelector } from "react-redux";
 import { selectApp } from "../reducers/app";
 import Loading from "../components/Loading";
-import { dummyServers } from "./Base";
 import { ServerBar } from "../components/ServerBar";
 
 export default function Messaging(): JSX.Element {
@@ -16,7 +15,7 @@ export default function Messaging(): JSX.Element {
 
     return (
         <Fragment>
-            <ServerBar servers={dummyServers} />
+            <ServerBar />
             <Sidebar />
             <Pane />
         </Fragment>

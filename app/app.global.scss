@@ -170,28 +170,24 @@ button {
     z-index: -1;
 }
 
-.server-icon-image.is-active {
-    border-radius: 10px! important;
-}
-
 
 .server-icon-wrapper {
     margin: 1ch;
     padding: 0 !important;
 }
 
-// .server-icon-wrapper.is-active::before {
-//     content:"\A";
-//     width:10px;
-//     height:10px;
-//     border-radius:50%;
-//     background: $dark;
-//     display: inline-block;
-// }
-
 
 .server-icon-image {
     border-radius: 100%! important;
+    transition: border-radius ease 0.1s;
+}
+
+.server-icon-image:hover {
+    border-radius: 20px! important;
+}
+
+.server-icon-image.is-active {
+    border-radius: 10px! important;
 }
 
 .server-title-text {

@@ -19,7 +19,6 @@ import { strToIcon } from "../utils/strToIcon";
 import { IconUsername } from "./IconUsername";
 import { switchFX } from "../views/Base";
 import { routes } from "../constants/routes";
-import { client } from "./ClientLauncher";
 
 const emptyUser: IUser = {
     userID: "",
@@ -192,6 +191,7 @@ export default function Sidebar(): JSX.Element {
                                             }
                                         }
 
+                                        const client = window.vex;
                                         const [
                                             serverResults,
                                             err,
