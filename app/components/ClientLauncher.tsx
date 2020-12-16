@@ -139,7 +139,7 @@ export function ClientLauncher(): JSX.Element {
         dispatch(resetInputStates);
         dispatch(resetMessages);
 
-        history.push(routes.LAUNCH);
+        history.push(routes.HOME);
     };
 
     const sessionHandler = async (session: ISession, user: IUser) => {
@@ -189,7 +189,7 @@ export function ClientLauncher(): JSX.Element {
 
     useEffect(() => {
         launchEvents.on("needs-register", needsRegisterHandler);
-        launchEvents.on("retry", retryHandler);
+        launchEvents.on("retry", relaunch);
 
         client.on("authed", authedHandler);
         client.on("disconnect", relaunch);
