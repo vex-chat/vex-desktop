@@ -1,7 +1,13 @@
 import { IUser } from "@vex-chat/vex-js";
 import React, { createRef, Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Switch, useHistory, useParams } from "react-router";
+import {
+    Route,
+    Switch,
+    useHistory,
+    useLocation,
+    useParams,
+} from "react-router";
 import { selectFamiliars } from "../reducers/familiars";
 import { IconUsername } from "../components/IconUsername";
 import { selectInputStates, addInputState } from "../reducers/inputs";
@@ -30,19 +36,25 @@ import { Highlighter } from "./Highlighter";
 import { strToIcon } from "../utils/strToIcon";
 import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 
+// A custom hook that builds on useLocation to parse
+// the query string for you.
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
+
 export default function MessagingPane(): JSX.Element {
     // state
     const dispatch = useDispatch();
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const inputValues: Record<string, string> = useSelector(selectInputStates);
-    const sessions = useSelector(selectSessions);
-
     const [className, setClassName] = useState("");
-
     const history = useHistory();
-
     // url parameters
     const params: { userID: string } = useParams();
+
+    const query = useQuery();
+
+    const sessions = useSelector(selectSessions);
 
     const sessionIDs = Object.keys(sessions[params.userID] || {});
     let hasUnverifiedSession = false;
@@ -286,12 +298,20 @@ export default function MessagingPane(): JSX.Element {
                                                                         <button
                                                                             className="button is-danger is-small"
                                                                             onClick={() => {
+                                                                                const forwardPath = query.get(
+                                                                                    "forward"
+                                                                                );
+
                                                                                 history.push(
                                                                                     history
                                                                                         .location
                                                                                         .pathname +
                                                                                         "/" +
-                                                                                        session.sessionID
+                                                                                        session.sessionID +
+                                                                                        (forwardPath !==
+                                                                                            null &&
+                                                                                            "?forward=" +
+                                                                                                forwardPath)
                                                                                 );
                                                                             }}
                                                                         >
@@ -454,6 +474,16 @@ export default function MessagingPane(): JSX.Element {
                                                                     true
                                                                 )
                                                             );
+
+                                                            const forwardPath = query.get(
+                                                                "forward"
+                                                            );
+                                                            if (forwardPath) {
+                                                                history.push(
+                                                                    forwardPath
+                                                                );
+                                                                return;
+                                                            }
                                                             history.push(
                                                                 routes.MESSAGING +
                                                                     "/" +
@@ -508,15 +538,22 @@ export default function MessagingPane(): JSX.Element {
                                     {messageIDs.length === 0 &&
                                         params.userID === user.userID && (
                                             <div>
-                                                {MessageBox(
-                                                    startMessages,
-                                                    familiars
-                                                )}
+                                                <MessageBox
+                                                    messages={startMessages}
+                                                />
                                             </div>
                                         )}
                                     {chunkMessages(threadMessages || {}).map(
                                         (chunk) => {
-                                            return MessageBox(chunk, familiars);
+                                            return (
+                                                <MessageBox
+                                                    key={
+                                                        chunk[0]?.mailID ||
+                                                        uuid.v4()
+                                                    }
+                                                    messages={chunk}
+                                                />
+                                            );
                                         }
                                     )}
                                     <div ref={messagesEndRef} />
@@ -564,37 +601,73 @@ export default function MessagingPane(): JSX.Element {
     );
 }
 
-export function MessageBox(
-    messages: ISerializedMessage[],
-    familiars: Record<string, IUser>
-): JSX.Element {
-    if (messages.length == 0) {
+export function MessageBox(props: {
+    messages: ISerializedMessage[];
+}): JSX.Element {
+    const user = useSelector(selectUser);
+    const familiars = useSelector(selectFamiliars);
+    const history = useHistory();
+    if (props.messages.length == 0) {
         return <span key={crypto.randomBytes(16).toString("hex")} />;
     }
 
     // don't match no characters of any length
     const regex = /(```[^]+```)/;
-    const sender = familiars[messages[0].sender];
+    const sender = familiars[props.messages[0].sender];
+
+    if (!sender) {
+        return <span key={uuid.v4()} />;
+    }
+
+    const sessions = useSelector(selectSessions);
+
+    const sessionIDs = Object.keys(sessions[sender.userID] || {});
+    let hasUnverifiedSession = false;
+    for (const sessionID of sessionIDs) {
+        if (!sessions[sender.userID][sessionID].verified) {
+            hasUnverifiedSession = true;
+        }
+    }
 
     return (
-        <article className="chat-message media" key={messages[0].nonce}>
+        <article className="chat-message media" key={props.messages[0].nonce}>
             <figure className="media-left">
                 <p className="image is-48x48">
                     <img
                         className="is-rounded"
-                        src={strToIcon(sender?.username || "Unknown")}
+                        src={strToIcon(sender.username)}
                     />
                 </p>
             </figure>
             <div className="media-content">
                 <div className="content message-wrapper">
-                    <strong>{sender?.username || "Unknown User"}</strong>
+                    <strong>{sender.username || "Unknown User"}</strong>
                     &nbsp;&nbsp;
                     <small className="has-text-dark">
-                        {format(new Date(messages[0].timestamp), "kk:mm")}
+                        {format(new Date(props.messages[0].timestamp), "kk:mm")}
                     </small>
+                    &nbsp;&nbsp;
+                    {hasUnverifiedSession && sender.userID !== user.userID && (
+                        <span
+                            className="icon is-small pointer"
+                            onClick={() => {
+                                history.push(
+                                    routes.MESSAGING +
+                                        "/" +
+                                        sender.userID +
+                                        "/verify?forward=" +
+                                        history.location.pathname
+                                );
+                            }}
+                        >
+                            <FontAwesomeIcon
+                                icon={faExclamationTriangle}
+                                className={"has-text-danger"}
+                            />
+                        </span>
+                    )}
                     <br />
-                    {messages.map((message) => {
+                    {props.messages.map((message) => {
                         const isCode = regex.test(message.message);
 
                         if (isCode) {

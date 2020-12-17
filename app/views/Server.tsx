@@ -10,7 +10,6 @@ import { chunkMessages, MessageBox } from "../components/MessagingPane";
 import { ServerBar } from "../components/ServerBar";
 import { routes } from "../constants/routes";
 import { selectChannels } from "../reducers/channels";
-import { selectFamiliars } from "../reducers/familiars";
 import { selectGroupMessages } from "../reducers/groupMessages";
 import { addInputState, selectInputStates } from "../reducers/inputs";
 import { selectServers } from "../reducers/servers";
@@ -20,7 +19,6 @@ export function Server(props: { match: match<any> }): JSX.Element {
     const dispatch = useDispatch();
     const groupMessages = useSelector(selectGroupMessages);
     const servers = useSelector(selectServers);
-    const familiars = useSelector(selectFamiliars);
     const inputs = useSelector(selectInputStates);
     const messagesEndRef = useRef(null);
     const channels = useSelector(selectChannels);
@@ -69,9 +67,7 @@ export function Server(props: { match: match<any> }): JSX.Element {
                                     }
                                     onSelectUser={async (user: IUser) => {
                                         const client = window.vex;
-
                                         const { userID } = user;
-
                                         const permission = await client.permissions.create(
                                             {
                                                 userID,
@@ -80,7 +76,6 @@ export function Server(props: { match: match<any> }): JSX.Element {
                                                     match.params.serverID,
                                             }
                                         );
-
                                         console.log(permission);
                                     }}
                                 />
@@ -95,7 +90,12 @@ export function Server(props: { match: match<any> }): JSX.Element {
                                 <div className="conversation-wrapper">
                                     {chunkMessages(threadMessages || {}).map(
                                         (chunk) => {
-                                            return MessageBox(chunk, familiars);
+                                            return (
+                                                <MessageBox
+                                                    key={chunk[0].mailID}
+                                                    messages={chunk}
+                                                />
+                                            );
                                         }
                                     )}
                                     <div ref={messagesEndRef} />
