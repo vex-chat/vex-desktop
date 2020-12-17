@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
-import MessagingBar from "../components/MessagingBar";
-import Pane from "../components/Pane";
+import MessagingBar, { UserMenu } from "../components/MessagingBar";
+import MessagingPane from "../components/MessagingPane";
 import { useSelector } from "react-redux";
 import { selectApp } from "../reducers/app";
 import Loading from "../components/Loading";
@@ -17,7 +17,8 @@ export default function Messaging(): JSX.Element {
         <Fragment>
             <ServerBar />
             <MessagingBar />
-            <Pane />
+            <MessagingPane />
+            <UserMenu />
         </Fragment>
     );
 }

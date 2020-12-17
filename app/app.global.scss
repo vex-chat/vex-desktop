@@ -72,6 +72,17 @@ div {
     display: block;
 }
 
+.user-menu-wrapper {
+    position: absolute;
+    bottom: 0;
+    width: 265px;
+    left: 72px;
+    height: 55px;
+    border-top: 1px solid darken($light, 10%);
+    padding: 10px 20px;
+    background-color: $light;
+}
+
 .horizontal-scroll {
     overflow-x: scroll;
 }
@@ -205,9 +216,10 @@ button {
     position: absolute;
     overflow-y: auto;
     width: 265px;
-    height: calc(100% - 22px);
+    height: calc(100% - 22px - 55px);
     left: 72px;
     top: 22px;
+    bottom: 55px;
     background-color: $light;
 }
 

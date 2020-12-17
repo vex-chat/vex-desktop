@@ -1,12 +1,15 @@
+import { faHashtag } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IUser } from "@vex-chat/vex-js";
 import React, { Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { match, Route, Switch } from "react-router";
 import { ChannelBar } from "../components/ChannelBar";
-import { UserSearchBar } from "../components/MessagingBar";
-import { chunkMessages, MessageBox } from "../components/Pane";
+import { UserMenu, UserSearchBar } from "../components/MessagingBar";
+import { chunkMessages, MessageBox } from "../components/MessagingPane";
 import { ServerBar } from "../components/ServerBar";
 import { routes } from "../constants/routes";
+import { selectChannels } from "../reducers/channels";
 import { selectFamiliars } from "../reducers/familiars";
 import { selectGroupMessages } from "../reducers/groupMessages";
 import { addInputState, selectInputStates } from "../reducers/inputs";
@@ -20,9 +23,11 @@ export function Server(props: { match: match<any> }): JSX.Element {
     const familiars = useSelector(selectFamiliars);
     const inputs = useSelector(selectInputStates);
     const messagesEndRef = useRef(null);
+    const channels = useSelector(selectChannels);
 
     const { serverID, channelID } = props.match.params;
     const threadMessages = groupMessages[channelID];
+    const serverChannels = channels[serverID];
 
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
@@ -39,7 +44,17 @@ export function Server(props: { match: match<any> }): JSX.Element {
         <div>
             <ServerBar />
             <ChannelBar server={servers[serverID]} />
+            <UserMenu />
             <div className="pane">
+                <div className="pane-topbar">
+                    {serverChannels[channelID] && (
+                        <h2 className="subtitle">
+                            <FontAwesomeIcon icon={faHashtag} />
+                            &nbsp;&nbsp;
+                            {serverChannels[channelID].name}
+                        </h2>
+                    )}
+                </div>
                 <Switch>
                     <Route
                         exact

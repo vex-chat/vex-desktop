@@ -32,8 +32,6 @@ export default function MessagingBar(): JSX.Element {
     const params: { userID: string } = useParams();
     const dispatch = useDispatch();
 
-    const [className, setClassName] = useState("");
-
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const sessions: Record<string, Record<string, ISession>> = useSelector(
         selectSessions
@@ -49,93 +47,7 @@ export default function MessagingBar(): JSX.Element {
 
     return (
         <div className="sidebar">
-            <div className="field has-addons search-wrapper">
-                <figure className="user-icon image is-32x32">
-                    {user.userID !== "" && (
-                        <div className={`dropdown ${className}`}>
-                            <div
-                                className="dropdown-trigger pointer"
-                                onClick={() => {
-                                    if (className == "") {
-                                        setClassName("is-active");
-                                    } else {
-                                        setClassName("");
-                                    }
-                                }}
-                            >
-                                <img
-                                    className="is-rounded"
-                                    src={strToIcon(
-                                        user.username || "".slice(0, 2)
-                                    )}
-                                />
-                            </div>
-                            <div
-                                className="dropdown-menu"
-                                id="dropdown-menu2"
-                                role="menu"
-                            >
-                                <div className="dropdown-content user-dropdown">
-                                    <div className="dropdown-item">
-                                        {IconUsername(user, 48, "")}
-                                    </div>
-                                    <Link
-                                        to={routes.SETTINGS}
-                                        className="dropdown-item"
-                                        onClick={() => {
-                                            dispatch(
-                                                addInputState(
-                                                    "own-user-icon-dropdown",
-                                                    ""
-                                                )
-                                            );
-                                        }}
-                                    >
-                                        <FontAwesomeIcon icon={faCog} />
-                                        &nbsp; Preferences
-                                    </Link>
-                                    <Link
-                                        to={
-                                            routes.MESSAGING +
-                                            "/" +
-                                            user.userID +
-                                            "/info"
-                                        }
-                                        className="dropdown-item"
-                                        onClick={async () => {
-                                            setClassName("");
-                                            dispatch(
-                                                addInputState(
-                                                    "own-user-icon-dropdown",
-                                                    ""
-                                                )
-                                            );
-                                        }}
-                                    >
-                                        <FontAwesomeIcon icon={faUserAlt} />
-                                        &nbsp; My Info
-                                    </Link>
-                                    <Link
-                                        to={routes.REGISTER}
-                                        className="dropdown-item has-text-danger"
-                                        onClick={async () => {
-                                            dispatch(
-                                                addInputState(
-                                                    "own-user-icon-dropdown",
-                                                    ""
-                                                )
-                                            );
-                                        }}
-                                    >
-                                        <FontAwesomeIcon icon={faFingerprint} />
-                                        &nbsp; New Identity
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </figure>
-
+            <div className="field search-wrapper">
                 <div className="field">
                     <p className={`control`}>
                         <UserSearchBar
@@ -258,5 +170,108 @@ export function UserSearchBar(props: {
                 }
             }}
         />
+    );
+}
+
+export function UserMenu(): JSX.Element {
+    const user = useSelector(selectUser);
+    const [className, setClassName] = useState("");
+    const dispatch = useDispatch();
+
+    return (
+        <div className="user-menu-wrapper">
+            <div className="columns">
+                <div className="column is-narrow">
+                    <figure className="user-icon image is-32x32">
+                        <span className={`dropdown is-up ${className}`}>
+                            <div
+                                className="dropdown-trigger pointer"
+                                onClick={() => {
+                                    if (className == "") {
+                                        setClassName("is-active");
+                                    } else {
+                                        setClassName("");
+                                    }
+                                }}
+                            >
+                                <img
+                                    className="is-rounded"
+                                    src={strToIcon(
+                                        user.username || "".slice(0, 2)
+                                    )}
+                                />
+                            </div>
+
+                            <div
+                                className="dropdown-menu"
+                                id="dropdown-menu2"
+                                role="menu"
+                            >
+                                <div className="dropdown-content user-dropdown">
+                                    <div className="dropdown-item">
+                                        {IconUsername(user, 48, "")}
+                                    </div>
+                                    <Link
+                                        to={routes.SETTINGS}
+                                        className="dropdown-item"
+                                        onClick={() => {
+                                            dispatch(
+                                                addInputState(
+                                                    "own-user-icon-dropdown",
+                                                    ""
+                                                )
+                                            );
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faCog} />
+                                        &nbsp; Preferences
+                                    </Link>
+                                    <Link
+                                        to={
+                                            routes.MESSAGING +
+                                            "/" +
+                                            user.userID +
+                                            "/info"
+                                        }
+                                        className="dropdown-item"
+                                        onClick={async () => {
+                                            setClassName("");
+                                            dispatch(
+                                                addInputState(
+                                                    "own-user-icon-dropdown",
+                                                    ""
+                                                )
+                                            );
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faUserAlt} />
+                                        &nbsp; My Info
+                                    </Link>
+                                    <Link
+                                        to={routes.REGISTER}
+                                        className="dropdown-item has-text-danger"
+                                        onClick={async () => {
+                                            dispatch(
+                                                addInputState(
+                                                    "own-user-icon-dropdown",
+                                                    ""
+                                                )
+                                            );
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faFingerprint} />
+                                        &nbsp; New Identity
+                                    </Link>
+                                </div>
+                            </div>
+                        </span>
+                    </figure>
+                </div>
+
+                <div className="column">
+                    <span className="help">{user.username}</span>
+                </div>
+            </div>
+        </div>
     );
 }

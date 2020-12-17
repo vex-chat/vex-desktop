@@ -30,7 +30,7 @@ import { Highlighter } from "./Highlighter";
 import { strToIcon } from "../utils/strToIcon";
 import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 
-export default function Pane(): JSX.Element {
+export default function MessagingPane(): JSX.Element {
     // state
     const dispatch = useDispatch();
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
