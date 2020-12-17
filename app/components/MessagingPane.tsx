@@ -572,8 +572,8 @@ export function MessageBox(
         return <span key={crypto.randomBytes(16).toString("hex")} />;
     }
 
+    // don't match no characters of any length
     const regex = /(```[^]+```)/;
-
     const sender = familiars[messages[0].sender];
 
     return (
@@ -607,13 +607,20 @@ export function MessageBox(
                             if (
                                 allowedHighlighterTypes.includes(languageInput)
                             ) {
-                                return Highlighter(
-                                    message.message
-                                        .replace(/```/g, "")
-                                        .replace(languageInput, "")
-                                        .trim(),
-                                    languageInput,
-                                    message.nonce
+                                return (
+                                    <div
+                                        className="message-code"
+                                        key={message.nonce}
+                                    >
+                                        {Highlighter(
+                                            message.message
+                                                .replace(/```/g, "")
+                                                .replace(languageInput, "")
+                                                .trim(),
+                                            languageInput,
+                                            message.nonce
+                                        )}
+                                    </div>
                                 );
                             }
 
