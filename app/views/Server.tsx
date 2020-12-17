@@ -52,8 +52,21 @@ export function Server(props: { match: match<any> }): JSX.Element {
                                         match.params.serverID +
                                         match.params.channelID
                                     }
-                                    onSelectUser={(user: IUser) => {
-                                        console.log(user);
+                                    onSelectUser={async (user: IUser) => {
+                                        const client = window.vex;
+
+                                        const { userID } = user;
+
+                                        const permission = await client.permissions.create(
+                                            {
+                                                userID,
+                                                resourceType: "server",
+                                                resourceID:
+                                                    match.params.serverID,
+                                            }
+                                        );
+
+                                        console.log(permission);
                                     }}
                                 />
                             </div>

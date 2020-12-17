@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import { markSession, selectSessions } from "../reducers/sessions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Tooltip from "@material-ui/core/Tooltip";
+import * as uuid from "uuid";
 import {
     faCheckCircle,
     faExclamation,
@@ -260,7 +261,7 @@ export default function Pane(): JSX.Element {
 
                                                         <th className="has-text-right">
                                                             {!session.verified && (
-                                                                <span
+                                                                <div
                                                                     data-event={
                                                                         "disabled"
                                                                     }
@@ -297,10 +298,10 @@ export default function Pane(): JSX.Element {
                                                                             Verify
                                                                         </button>
                                                                     </Tooltip>
-                                                                </span>
+                                                                </div>
                                                             )}
                                                             {session.verified && (
-                                                                <span>
+                                                                <div>
                                                                     <span className="icon">
                                                                         <FontAwesomeIcon
                                                                             icon={
@@ -309,7 +310,7 @@ export default function Pane(): JSX.Element {
                                                                             className="has-text-success"
                                                                         ></FontAwesomeIcon>
                                                                     </span>
-                                                                </span>
+                                                                </div>
                                                             )}
                                                         </th>
                                                     </tr>
@@ -484,6 +485,8 @@ export default function Pane(): JSX.Element {
                                 nonce: crypto.randomBytes(24).toString("hex"),
                                 message: "Welcome to vex messenger!",
                                 decrypted: true,
+                                mailID: uuid.v4(),
+                                group: null,
                             },
                             {
                                 timestamp: new Date(Date.now()).toString(),
@@ -494,6 +497,8 @@ export default function Pane(): JSX.Element {
                                 message:
                                     "This is a personal thread for taking notes, or whatever you'd like.",
                                 decrypted: true,
+                                mailID: uuid.v4(),
+                                group: null,
                             },
                         ];
 
@@ -516,52 +521,40 @@ export default function Pane(): JSX.Element {
                                     )}
                                     <div ref={messagesEndRef} />
                                 </div>
-                                <Tooltip
-                                    open={
-                                        params.userID === user.userID &&
-                                        !history.location.pathname.includes(
-                                            "verify"
-                                        ) &&
-                                        Object.keys(threadMessages || {})
-                                            .length === 0
-                                    }
-                                    title="Send a message here to try it out."
-                                >
-                                    <div className="chat-input-wrapper">
-                                        <textarea
-                                            value={inputValue}
-                                            className="textarea chat-input has-fixed-size is-focused"
-                                            onChange={(event) => {
+                                <div className="chat-input-wrapper">
+                                    <textarea
+                                        value={inputValue}
+                                        className="textarea chat-input has-fixed-size is-focused"
+                                        onChange={(event) => {
+                                            dispatch(
+                                                addInputState(
+                                                    params.userID,
+                                                    event.target.value
+                                                )
+                                            );
+                                        }}
+                                        onKeyDown={(event) => {
+                                            if (
+                                                event.key === "Enter" &&
+                                                !event.shiftKey
+                                            ) {
+                                                event.preventDefault();
+
+                                                const client = window.vex;
+                                                client.messages.send(
+                                                    familiar.userID,
+                                                    inputValue
+                                                );
                                                 dispatch(
                                                     addInputState(
                                                         params.userID,
-                                                        event.target.value
+                                                        ""
                                                     )
                                                 );
-                                            }}
-                                            onKeyDown={(event) => {
-                                                if (
-                                                    event.key === "Enter" &&
-                                                    !event.shiftKey
-                                                ) {
-                                                    event.preventDefault();
-
-                                                    const client = window.vex;
-                                                    client.messages.send(
-                                                        familiar.userID,
-                                                        inputValue
-                                                    );
-                                                    dispatch(
-                                                        addInputState(
-                                                            params.userID,
-                                                            ""
-                                                        )
-                                                    );
-                                                }
-                                            }}
-                                        />
-                                    </div>
-                                </Tooltip>
+                                            }
+                                        }}
+                                    />
+                                </div>
                             </Fragment>
                         );
                     }}
