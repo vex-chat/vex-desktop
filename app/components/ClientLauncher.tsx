@@ -1,5 +1,11 @@
 /* eslint-disable no-case-declarations */
-import { Client, IMessage, ISession, IUser } from "@vex-chat/vex-js";
+import {
+    Client,
+    IMessage,
+    IPermission,
+    ISession,
+    IUser,
+} from "@vex-chat/vex-js";
 import { sleep } from "@extrahash/sleep";
 import { ipcRenderer, remote } from "electron";
 import React, { useEffect, useMemo } from "react";
@@ -20,10 +26,15 @@ import os from "os";
 import { resetInputStates } from "../reducers/inputs";
 import { EventEmitter } from "events";
 import log from "electron-log";
-import { resetServers, setServers } from "../reducers/servers";
+import { resetServers, selectServers, setServers } from "../reducers/servers";
 import { addChannels, resetChannels } from "../reducers/channels";
 import { addGroupMessage, resetGroupMessages } from "../reducers/groupMessages";
 import Loading from "./Loading";
+import {
+    addPermission,
+    resetPermissions,
+    setPermissions,
+} from "../reducers/permissions";
 
 declare global {
     interface Window {
@@ -92,6 +103,7 @@ export function ClientLauncher(): JSX.Element {
     const dispatch = useDispatch();
     const history = useHistory();
     const settings = useSelector(selectSettings);
+    const servers = useSelector(selectServers);
 
     const messageHandler = async (message: IMessage) => {
         if (message.group) {
@@ -134,6 +146,7 @@ export function ClientLauncher(): JSX.Element {
         client.off("disconnect", relaunch);
         client.off("session", sessionHandler);
         client.off("message", messageHandler);
+        client.off("permission", permissionHandler);
 
         dispatch(resetApp());
         dispatch(resetChannels());
@@ -144,6 +157,7 @@ export function ClientLauncher(): JSX.Element {
         dispatch(resetServers());
         dispatch(resetSessions());
         dispatch(resetUser());
+        dispatch(resetPermissions());
 
         history.push(routes.HOME);
     };
@@ -183,7 +197,37 @@ export function ClientLauncher(): JSX.Element {
             dispatch(addChannels(channels));
         }
 
+        const permissions = await client.permissions.retrieve();
+        dispatch(setPermissions(permissions));
+
         dispatch(setApp("initialLoad", false));
+    };
+
+    const permissionHandler = async (permission: IPermission) => {
+        dispatch(addPermission(permission));
+
+        switch (permission.resourceType) {
+            case "server":
+                if (servers[permission.resourceID] === undefined) {
+                    const newServers = await client.servers.retrieve();
+                    dispatch(setServers(newServers));
+
+                    for (const server of newServers) {
+                        const channels = await client.channels.retrieve(
+                            server.serverID
+                        );
+                        dispatch(addChannels(channels));
+                    }
+                }
+                break;
+            default:
+                log.info(
+                    "Unsupported permission type " +
+                        permission.resourceType +
+                        " for permissionHandler()."
+                );
+                break;
+        }
     };
 
     /* giving useMemo an empty set of dependencies
@@ -201,6 +245,7 @@ export function ClientLauncher(): JSX.Element {
         client.on("disconnect", relaunch);
         client.on("session", sessionHandler);
         client.on("message", messageHandler);
+        client.on("permission", permissionHandler);
 
         return () => {
             launchEvents.off("needs-register", needsRegisterHandler);

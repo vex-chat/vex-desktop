@@ -13,6 +13,7 @@ import { selectChannels } from "../reducers/channels";
 import { selectGroupMessages } from "../reducers/groupMessages";
 import { addInputState, selectInputStates } from "../reducers/inputs";
 import { selectServers } from "../reducers/servers";
+import * as uuid from "uuid";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Server(props: { match: match<any> }): JSX.Element {
@@ -25,7 +26,9 @@ export function Server(props: { match: match<any> }): JSX.Element {
 
     const { serverID, channelID } = props.match.params;
     const threadMessages = groupMessages[channelID];
-    const serverChannels = channels[serverID];
+    const serverChannels = channels ? channels[serverID] || {} : {};
+
+    const server = servers[serverID];
 
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
@@ -37,6 +40,11 @@ export function Server(props: { match: match<any> }): JSX.Element {
     useEffect(() => {
         scrollToBottom();
     });
+
+    // loading
+    if (!server) {
+        return <div />;
+    }
 
     return (
         <div>
@@ -92,7 +100,10 @@ export function Server(props: { match: match<any> }): JSX.Element {
                                         (chunk) => {
                                             return (
                                                 <MessageBox
-                                                    key={chunk[0].mailID}
+                                                    key={
+                                                        chunk[0]?.mailID ||
+                                                        uuid.v4()
+                                                    }
                                                     messages={chunk}
                                                 />
                                             );

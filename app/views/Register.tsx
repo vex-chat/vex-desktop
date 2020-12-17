@@ -20,6 +20,7 @@ import { resetChannels } from "../reducers/channels";
 import { resetFamiliars } from "../reducers/familiars";
 import { resetServers } from "../reducers/servers";
 import { resetSessions } from "../reducers/sessions";
+import { resetPermissions } from "../reducers/permissions";
 
 const FORM_NAME = "register_username";
 
@@ -204,6 +205,7 @@ export default function IRegister(): JSX.Element {
                                         dispatch(resetServers());
                                         dispatch(resetSessions());
                                         dispatch(resetUser());
+                                        dispatch(resetPermissions());
 
                                         console.log(
                                             "ATTEMPTING TO CLOSE CLIENT"

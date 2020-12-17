@@ -220,7 +220,7 @@
         "@hot-loader/react-dom": "^16.13.0",
         "@material-ui/core": "^4.11.2",
         "@reduxjs/toolkit": "^1.4.0",
-        "@vex-chat/types-js": "^0.7.6",
+        "@vex-chat/types-js": "^0.7.13",
         "bulma": "^0.9.1",
         "connected-react-router": "^6.6.1",
         "date-fns": "^2.16.1",

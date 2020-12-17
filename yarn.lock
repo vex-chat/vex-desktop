@@ -2160,10 +2160,10 @@
     "@typescript-eslint/types" "4.9.1"
     eslint-visitor-keys "^2.0.0"
 
-"@vex-chat/types-js@^0.7.6":
-  version "0.7.6"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/types-js/0.7.6/d0bbe9e0642cadbe0202dbe3336108169568446723b5a23c96c8aaf41d9b2b7b#584334650498e1f631480b83c43fc98d67149c86"
-  integrity sha512-j+8AfcacQTT5PWMOBEZ0E3Q7U3hivwhJXYPdTvg+m1fp300JPwitSZnm3T2kq7zzJSOChCcb8ZM/qbQGLeF9Cw==
+"@vex-chat/types-js@^0.7.13":
+  version "0.7.13"
+  resolved "https://npm.pkg.github.com/download/@vex-chat/types-js/0.7.13/3e9e4199cad1e2823a0398220d0ec79d6d05222cd323890f0a977e43bdc6befa#b4bc1b9da93fd030550c38e7d9c1d57c11e485cb"
+  integrity sha512-0t9Gjzni1SRhUMlnpM1T0ZpMkBi+XXhaj3RCj8Zx42VuHr8nt9IKwRheO85b7N7O9OOtPQAL4Rz9HHAIWxN1VQ==
   dependencies:
     tweetnacl "^1.0.3"
 
