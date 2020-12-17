@@ -16,6 +16,10 @@ import { resetUser } from "../reducers/user";
 import { resetApp } from "../reducers/app";
 import { resetMessages } from "../reducers/messages";
 import { resetGroupMessages } from "../reducers/groupMessages";
+import { resetChannels } from "../reducers/channels";
+import { resetFamiliars } from "../reducers/familiars";
+import { resetServers } from "../reducers/servers";
+import { resetSessions } from "../reducers/sessions";
 
 const FORM_NAME = "register_username";
 
@@ -188,13 +192,24 @@ export default function IRegister(): JSX.Element {
                                         switchFX.play();
                                         setWaiting(true);
                                         const client = window.vex;
+
+                                        console.log("ATTEMPTING TO RESET");
+
+                                        dispatch(resetApp());
+                                        dispatch(resetChannels());
+                                        dispatch(resetFamiliars());
+                                        dispatch(resetGroupMessages());
+                                        dispatch(resetInputStates());
+                                        dispatch(resetMessages());
+                                        dispatch(resetServers());
+                                        dispatch(resetSessions());
+                                        dispatch(resetUser());
+
+                                        console.log(
+                                            "ATTEMPTING TO CLOSE CLIENT"
+                                        );
+
                                         await client.close();
-                                        dispatch(resetUser);
-                                        dispatch(resetApp);
-                                        dispatch(resetInputStates);
-                                        dispatch(resetMessages);
-                                        dispatch(resetUser);
-                                        dispatch(resetGroupMessages);
 
                                         const PK = Client.generateSecretKey();
                                         localStorage.setItem("PK", PK);

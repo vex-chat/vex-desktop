@@ -7,6 +7,7 @@ import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { routes } from "../constants/routes";
 import { selectChannels } from "../reducers/channels";
+import * as uuid from "uuid";
 
 export function ChannelBar(props: { server: IServer }): JSX.Element {
     const history = useHistory();
@@ -24,7 +25,10 @@ export function ChannelBar(props: { server: IServer }): JSX.Element {
                         to={
                             routes.SERVERS +
                             "/" +
+                            // accept channelID value for a later time
                             props.server.serverID +
+                            "/" +
+                            uuid.v4() +
                             "/add-user"
                         }
                     >

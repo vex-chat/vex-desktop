@@ -1,9 +1,6 @@
 import {
-    faArrowAltCircleRight,
     faCog,
-    faEye,
     faFingerprint,
-    faSearch,
     faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -27,13 +24,13 @@ const emptyUser: IUser = {
     lastSeen: new Date(Date.now()),
 };
 
-export default function Sidebar(): JSX.Element {
+export default function MessagingBar(): JSX.Element {
+    const FORM_NAME = "dm-search-input";
+
     const user: IUser = useSelector(selectUser);
     const history = useHistory();
     const params: { userID: string } = useParams();
-
     const dispatch = useDispatch();
-    const inputs = useSelector(selectInputStates);
 
     const [className, setClassName] = useState("");
 
@@ -42,12 +39,9 @@ export default function Sidebar(): JSX.Element {
         selectSessions
     );
 
-    const [foundUser, setFoundUser] = useState(emptyUser);
-
     const newConversation = (user: IUser) => {
         switchFX.play();
         dispatch(addFamiliar(user));
-        dispatch(addInputState("search-bar", ""));
         dispatch(stubSession(user.userID));
 
         history.push(routes.MESSAGING + "/" + user.userID);
@@ -143,94 +137,13 @@ export default function Sidebar(): JSX.Element {
                 </figure>
 
                 <div className="field">
-                    <p
-                        className={`control has-icons-left${
-                            foundUser.userID !== "" ? " has-icons-right" : ""
-                        }`}
-                    >
-                        <input
-                            className={`input is-grey is-small is-rounded search-bar${
-                                foundUser.userID !== "" ? " is-success" : ""
-                            }`}
-                            type="text"
-                            placeholder="Search"
-                            value={inputs["search-bar"] || ""}
-                            onKeyDown={async (event) => {
-                                if (event.key === "Enter") {
-                                    if (foundUser.userID !== "") {
-                                        newConversation(foundUser);
-                                        setFoundUser(emptyUser);
-                                    }
-                                } else {
-                                    setFoundUser(emptyUser);
-                                }
-                            }}
-                            onChange={async (event) => {
-                                dispatch(
-                                    addInputState(
-                                        "search-bar",
-                                        event.target.value
-                                    )
-                                );
-
-                                const results: Record<string, IUser> = {};
-
-                                try {
-                                    if (event.target.value.length > 2) {
-                                        for (const userID in familiars) {
-                                            if (
-                                                familiars[userID].username
-                                                    .trim()
-                                                    .toLowerCase()
-                                                    .includes(
-                                                        event.target.value.toLowerCase()
-                                                    )
-                                            ) {
-                                                results[userID] =
-                                                    familiars[userID];
-                                            }
-                                        }
-
-                                        const client = window.vex;
-                                        const [
-                                            serverResults,
-                                            err,
-                                        ] = await client.users.retrieve(
-                                            event.target.value
-                                        );
-                                        if (
-                                            err &&
-                                            err.response &&
-                                            err.response.status === 404
-                                        ) {
-                                            setFoundUser(emptyUser);
-                                        }
-                                        if (serverResults) {
-                                            setFoundUser(serverResults);
-                                        }
-                                    }
-                                } catch (err) {
-                                    console.error(err);
-                                }
+                    <p className={`control`}>
+                        <UserSearchBar
+                            formName={FORM_NAME}
+                            onSelectUser={(user: IUser) => {
+                                newConversation(user);
                             }}
                         />
-
-                        <span className="icon is-small is-left">
-                            <FontAwesomeIcon
-                                className={`is-left`}
-                                icon={
-                                    foundUser.userID !== "" ? faEye : faSearch
-                                }
-                            />
-                        </span>
-                        {foundUser.userID !== "" && (
-                            <span className="icon is-small is-right has-text-success">
-                                <FontAwesomeIcon
-                                    className="is-right"
-                                    icon={faArrowAltCircleRight}
-                                />
-                            </span>
-                        )}
                     </p>
                 </div>
             </div>
@@ -290,5 +203,60 @@ function FamiliarButton({
                 {IconUsername(user, 48, subtitle)}
             </Link>
         </li>
+    );
+}
+
+export function UserSearchBar(props: {
+    formName: string;
+    onSelectUser: (user: IUser) => void;
+}): JSX.Element {
+    const [foundUser, setFoundUser] = useState(emptyUser);
+    const dispatch = useDispatch();
+    const inputs = useSelector(selectInputStates);
+
+    return (
+        <input
+            className={`input is-grey is-small is-rounded search-bar${
+                foundUser.userID !== "" ? " is-success" : ""
+            }`}
+            type="text"
+            placeholder="Search"
+            value={inputs[props.formName] || ""}
+            onKeyDown={async (event) => {
+                if (event.key === "Enter") {
+                    if (foundUser.userID !== "") {
+                        dispatch(addInputState(props.formName, ""));
+                        setFoundUser(emptyUser);
+                        props.onSelectUser(foundUser);
+                    }
+                } else {
+                    setFoundUser(emptyUser);
+                }
+            }}
+            onChange={async (event) => {
+                dispatch(addInputState(props.formName, event.target.value));
+                try {
+                    if (event.target.value.length > 2) {
+                        const client = window.vex;
+                        const [
+                            serverResults,
+                            err,
+                        ] = await client.users.retrieve(event.target.value);
+                        if (
+                            err &&
+                            err.response &&
+                            err.response.status === 404
+                        ) {
+                            setFoundUser(emptyUser);
+                        }
+                        if (serverResults) {
+                            setFoundUser(serverResults);
+                        }
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            }}
+        />
     );
 }

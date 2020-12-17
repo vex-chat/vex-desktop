@@ -1,9 +1,12 @@
+import { IUser } from "@vex-chat/vex-js";
 import React, { Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { match } from "react-router";
+import { match, Route, Switch } from "react-router";
 import { ChannelBar } from "../components/ChannelBar";
+import { UserSearchBar } from "../components/MessagingBar";
 import { chunkMessages, MessageBox } from "../components/Pane";
 import { ServerBar } from "../components/ServerBar";
+import { routes } from "../constants/routes";
 import { selectFamiliars } from "../reducers/familiars";
 import { selectGroupMessages } from "../reducers/groupMessages";
 import { addInputState, selectInputStates } from "../reducers/inputs";
@@ -37,51 +40,77 @@ export function Server(props: { match: match<any> }): JSX.Element {
             <ServerBar />
             <ChannelBar server={servers[serverID]} />
             <div className="pane">
-                {channelID !== undefined && (
-                    <Fragment>
-                        <div className="conversation-wrapper">
-                            {chunkMessages(threadMessages || {}).map(
-                                (chunk) => {
-                                    return MessageBox(chunk, familiars);
-                                }
-                            )}
-                            <div ref={messagesEndRef} />
-                        </div>
-
-                        <div className="chat-input-wrapper">
-                            <textarea
-                                value={inputs[channelID]}
-                                className="textarea chat-input has-fixed-size"
-                                onChange={(event) => {
-                                    dispatch(
-                                        addInputState(
-                                            channelID,
-                                            event.target.value
-                                        )
-                                    );
-                                }}
-                                onKeyDown={(event) => {
-                                    if (
-                                        event.key === "Enter" &&
-                                        !event.shiftKey
-                                    ) {
-                                        event.preventDefault();
-
-                                        const client = window.vex;
-
-                                        // send to group
-                                        client.messages.group(
-                                            channelID,
-                                            inputs[channelID]
-                                        );
-
-                                        dispatch(addInputState(channelID, ""));
+                <Switch>
+                    <Route
+                        exact
+                        path={routes.SERVERS + "/:serverID/:channelID/add-user"}
+                        render={({ match }) => (
+                            <div className="pane-screen-wrapper">
+                                <UserSearchBar
+                                    formName={
+                                        "server-user-serach-bar" +
+                                        match.params.serverID +
+                                        match.params.channelID
                                     }
-                                }}
-                            />
-                        </div>
-                    </Fragment>
-                )}
+                                    onSelectUser={(user: IUser) => {
+                                        console.log(user);
+                                    }}
+                                />
+                            </div>
+                        )}
+                    />
+                    <Route
+                        exact
+                        path={routes.SERVERS + "/:serverID/:channelID"}
+                        render={() => (
+                            <Fragment>
+                                <div className="conversation-wrapper">
+                                    {chunkMessages(threadMessages || {}).map(
+                                        (chunk) => {
+                                            return MessageBox(chunk, familiars);
+                                        }
+                                    )}
+                                    <div ref={messagesEndRef} />
+                                </div>
+
+                                <div className="chat-input-wrapper">
+                                    <textarea
+                                        value={inputs[channelID]}
+                                        className="textarea chat-input has-fixed-size"
+                                        onChange={(event) => {
+                                            dispatch(
+                                                addInputState(
+                                                    channelID,
+                                                    event.target.value
+                                                )
+                                            );
+                                        }}
+                                        onKeyDown={(event) => {
+                                            if (
+                                                event.key === "Enter" &&
+                                                !event.shiftKey
+                                            ) {
+                                                event.preventDefault();
+
+                                                const client = window.vex;
+
+                                                // send to group
+                                                client.messages.group(
+                                                    channelID,
+                                                    inputs[channelID]
+                                                );
+
+                                                dispatch(
+                                                    addInputState(channelID, "")
+                                                );
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </Fragment>
+                        )}
+                    ></Route>
+                </Switch>
             </div>
         </div>
     );

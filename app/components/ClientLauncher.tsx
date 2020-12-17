@@ -7,18 +7,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
 import { resetApp, setApp } from "../reducers/app";
-import { addFamiliar, setFamiliars } from "../reducers/familiars";
+import {
+    addFamiliar,
+    resetFamiliars,
+    setFamiliars,
+} from "../reducers/familiars";
 import { addMessage, resetMessages } from "../reducers/messages";
-import { addSession, setSessions } from "../reducers/sessions";
+import { addSession, resetSessions, setSessions } from "../reducers/sessions";
 import { selectSettings } from "../reducers/settings";
-import { setUser } from "../reducers/user";
+import { resetUser, setUser } from "../reducers/user";
 import os from "os";
 import { resetInputStates } from "../reducers/inputs";
 import { EventEmitter } from "events";
 import log from "electron-log";
-import { setServers } from "../reducers/servers";
-import { addChannels } from "../reducers/channels";
-import { addGroupMessage } from "../reducers/groupMessages";
+import { resetServers, setServers } from "../reducers/servers";
+import { addChannels, resetChannels } from "../reducers/channels";
+import { addGroupMessage, resetGroupMessages } from "../reducers/groupMessages";
 import Loading from "./Loading";
 
 declare global {
@@ -131,9 +135,15 @@ export function ClientLauncher(): JSX.Element {
         client.off("session", sessionHandler);
         client.off("message", messageHandler);
 
-        dispatch(resetApp);
-        dispatch(resetInputStates);
-        dispatch(resetMessages);
+        dispatch(resetApp());
+        dispatch(resetChannels());
+        dispatch(resetFamiliars());
+        dispatch(resetGroupMessages());
+        dispatch(resetInputStates());
+        dispatch(resetMessages());
+        dispatch(resetServers());
+        dispatch(resetSessions());
+        dispatch(resetUser());
 
         history.push(routes.HOME);
     };
