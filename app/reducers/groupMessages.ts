@@ -24,8 +24,8 @@ const groupMessageSlice = createSlice({
             if (!state[group]) {
                 state[group] = {};
             }
-            if (!state[group][message.nonce]) {
-                state[group][message.nonce] = message;
+            if (!state[group][message.mailID]) {
+                state[group][message.mailID] = message;
             }
             return state;
         },

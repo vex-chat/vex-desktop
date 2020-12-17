@@ -1,4 +1,4 @@
-import { faHashtag } from "@fortawesome/free-solid-svg-icons";
+import { faHashtag, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IServer } from "@vex-chat/vex-js";
 import React from "react";
@@ -19,7 +19,19 @@ export function ChannelBar(props: { server: IServer }): JSX.Element {
         <div className="sidebar">
             <div className="server-titlebar">
                 <h1 className="title is-size-4 server-title-text">
-                    {props.server.name}
+                    {props.server.name}{" "}
+                    <Link
+                        to={
+                            routes.SERVERS +
+                            "/" +
+                            props.server.serverID +
+                            "/add-user"
+                        }
+                    >
+                        <span className="add-user-icon">
+                            <FontAwesomeIcon icon={faUserPlus} />
+                        </span>
+                    </Link>
                 </h1>
             </div>
             <aside className="menu">

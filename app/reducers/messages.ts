@@ -3,6 +3,7 @@ import { IMessage } from "@vex-chat/vex-js";
 import { AppThunk, RootState } from "../store";
 
 export interface ISerializedMessage {
+    mailID: string;
     message: string;
     nonce: string;
     timestamp: string;
@@ -10,11 +11,12 @@ export interface ISerializedMessage {
     recipient: string;
     direction: "incoming" | "outgoing";
     decrypted: boolean;
-    group?: string;
+    group: string | null;
 }
 
 export function serializeMessage(message: IMessage): ISerializedMessage {
     const serialized: ISerializedMessage = {
+        mailID: message.mailID,
         decrypted: message.decrypted,
         message: message.message,
         nonce: message.nonce,
@@ -48,8 +50,8 @@ const messageSlice = createSlice({
                 state[thread] = {};
             }
 
-            if (!state[thread][message.nonce]) {
-                state[thread][message.nonce] = message;
+            if (!state[thread][message.mailID]) {
+                state[thread][message.mailID] = message;
             }
 
             return state;

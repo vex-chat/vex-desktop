@@ -32,8 +32,8 @@ export default function Base(): JSX.Element {
                     path={routes.SERVERS + "/:serverID?/:channelID?"}
                     render={({ match }) => <Server match={match} />}
                 />
-                <Route path={routes.REGISTER} component={Register} />
-                <Route path={routes.SETTINGS} component={Settings} />
+                <Route path={routes.REGISTER} render={() => <Register />} />
+                <Route path={routes.SETTINGS} render={() => <Settings />} />
                 <Route path={routes.LAUNCH} render={() => <ClientLauncher />} />
                 <Route
                     path={routes.CREATE + "/:resourceType?"}

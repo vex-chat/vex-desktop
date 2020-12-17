@@ -123,10 +123,6 @@ export function ClientLauncher(): JSX.Element {
         history.push(routes.REGISTER);
     };
 
-    const retryHandler = async () => {
-        history.push(routes.HOME);
-    };
-
     const relaunch = async () => {
         await client.close();
 
@@ -198,7 +194,7 @@ export function ClientLauncher(): JSX.Element {
 
         return () => {
             launchEvents.off("needs-register", needsRegisterHandler);
-            launchEvents.off("retry", retryHandler);
+            launchEvents.off("retry", relaunch);
         };
     });
     return <Loading size={256} animation={"cylon"} />;
