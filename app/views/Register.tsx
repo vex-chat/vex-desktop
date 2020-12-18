@@ -46,6 +46,21 @@ export default function IRegister(): JSX.Element {
         }
     });
 
+    const resetClient = async () => {
+        const client = window.vex;
+        dispatch(resetApp());
+        dispatch(resetChannels());
+        dispatch(resetFamiliars());
+        dispatch(resetGroupMessages());
+        dispatch(resetInputStates());
+        dispatch(resetMessages());
+        dispatch(resetServers());
+        dispatch(resetSessions());
+        dispatch(resetUser());
+        dispatch(resetPermissions());
+        await client.close();
+    };
+
     return (
         <div className="Aligner full-size">
             <div className="Aligner-item Aligner-item--top">
@@ -192,26 +207,6 @@ export default function IRegister(): JSX.Element {
                                     onClick={async () => {
                                         switchFX.play();
                                         setWaiting(true);
-                                        const client = window.vex;
-
-                                        console.log("ATTEMPTING TO RESET");
-
-                                        dispatch(resetApp());
-                                        dispatch(resetChannels());
-                                        dispatch(resetFamiliars());
-                                        dispatch(resetGroupMessages());
-                                        dispatch(resetInputStates());
-                                        dispatch(resetMessages());
-                                        dispatch(resetServers());
-                                        dispatch(resetSessions());
-                                        dispatch(resetUser());
-                                        dispatch(resetPermissions());
-
-                                        console.log(
-                                            "ATTEMPTING TO CLOSE CLIENT"
-                                        );
-
-                                        await client.close();
 
                                         const PK = Client.generateSecretKey();
                                         localStorage.setItem("PK", PK);
@@ -243,6 +238,7 @@ export default function IRegister(): JSX.Element {
 
                                             if (user !== null) {
                                                 setWaiting(false);
+                                                await resetClient();
                                                 history.push(routes.LAUNCH);
                                             }
                                         });
