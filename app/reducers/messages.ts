@@ -12,6 +12,8 @@ export interface ISerializedMessage {
     direction: "incoming" | "outgoing";
     decrypted: boolean;
     group: string | null;
+    failed: boolean;
+    failMessage: string;
 }
 
 export function serializeMessage(message: IMessage): ISerializedMessage {
@@ -25,6 +27,8 @@ export function serializeMessage(message: IMessage): ISerializedMessage {
         recipient: message.recipient,
         direction: message.direction,
         group: message.group,
+        failed: false,
+        failMessage: "",
     };
     return serialized;
 }
@@ -56,10 +60,49 @@ const messageSlice = createSlice({
 
             return state;
         },
+        fail: (
+            state: Record<string, Record<string, ISerializedMessage>>,
+            action
+        ) => {
+            const {
+                message,
+                errorString,
+            }: {
+                message: ISerializedMessage;
+                errorString: string;
+            } = action.payload;
+
+            const thread =
+                action.payload.message.direction === "outgoing"
+                    ? action.payload.message.recipient
+                    : action.payload.message.sender;
+
+            console.log("thread", thread);
+
+            if (
+                state[thread] === undefined ||
+                state[thread][message.mailID] === undefined
+            ) {
+                // it doesn't exist, we are done
+                console.log("IT DOEsn't exist");
+                return state;
+            }
+
+            const failedMessage = state[thread][message.mailID];
+
+            // mark it failed
+            failedMessage.failed = true;
+            failedMessage.failMessage = errorString;
+
+            console.log(failedMessage);
+            state[thread][message.mailID] = failedMessage;
+
+            return state;
+        },
     },
 });
 
-export const { add, reset } = messageSlice.actions;
+export const { add, reset, fail } = messageSlice.actions;
 
 export const resetMessages = (): AppThunk => (dispatch) => {
     dispatch(reset());
@@ -68,6 +111,15 @@ export const resetMessages = (): AppThunk => (dispatch) => {
 export const addMessage = (message: IMessage): AppThunk => (dispatch) => {
     const szMsg = serializeMessage(message);
     dispatch(add(szMsg));
+};
+
+export const failMessage = (
+    message: IMessage,
+    errorString: string
+): AppThunk => (dispatch) => {
+    const szMsg = serializeMessage(message);
+    const payload = { message: szMsg, errorString };
+    dispatch(fail(payload));
 };
 
 export const selectMessages = (

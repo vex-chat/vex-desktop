@@ -11,7 +11,7 @@ import {
 import { selectFamiliars } from "../reducers/familiars";
 import { IconUsername } from "../components/IconUsername";
 import { selectInputStates, addInputState } from "../reducers/inputs";
-import { ISerializedMessage } from "../reducers/messages";
+import { failMessage, ISerializedMessage } from "../reducers/messages";
 import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
 import { markSession, selectSessions } from "../reducers/sessions";
@@ -528,6 +528,8 @@ export default function MessagingPane(): JSX.Element {
                                 decrypted: true,
                                 mailID: uuid.v4(),
                                 group: null,
+                                failed: false,
+                                failMessage: "",
                             },
                             {
                                 timestamp: new Date(Date.now()).toString(),
@@ -540,6 +542,8 @@ export default function MessagingPane(): JSX.Element {
                                 decrypted: true,
                                 mailID: uuid.v4(),
                                 group: null,
+                                failed: false,
+                                failMessage: "",
                             },
                         ];
 
@@ -581,7 +585,7 @@ export default function MessagingPane(): JSX.Element {
                                                 )
                                             );
                                         }}
-                                        onKeyDown={(event) => {
+                                        onKeyDown={async (event) => {
                                             if (
                                                 event.key === "Enter" &&
                                                 !event.shiftKey
@@ -589,10 +593,26 @@ export default function MessagingPane(): JSX.Element {
                                                 event.preventDefault();
 
                                                 const client = window.vex;
-                                                client.messages.send(
-                                                    familiar.userID,
-                                                    inputValue
-                                                );
+                                                try {
+                                                    await client.messages.send(
+                                                        familiar.userID,
+                                                        inputValue
+                                                    );
+                                                } catch (err) {
+                                                    console.log(err);
+                                                    if (err.message) {
+                                                        console.log(err);
+                                                        dispatch(
+                                                            failMessage(
+                                                                err.message,
+                                                                err.error.error
+                                                            )
+                                                        );
+                                                    } else {
+                                                        console.warn(err);
+                                                    }
+                                                }
+
                                                 dispatch(
                                                     addInputState(
                                                         params.userID,
@@ -729,7 +749,22 @@ export function MessageBox(props: {
                                     {!message.decrypted && (
                                         <code>Decryption Failed</code>
                                     )}
-                                    {message.message}
+                                    {message.failed ? (
+                                        <span className="has-text-danger">
+                                            {message.message}
+                                        </span>
+                                    ) : (
+                                        message.message
+                                    )}
+                                    &nbsp;&nbsp;
+                                    {message.failed && (
+                                        <span className="help has-text-danger">
+                                            <FontAwesomeIcon
+                                                icon={faExclamationTriangle}
+                                            />{" "}
+                                            Failed: {message.failMessage}{" "}
+                                        </span>
+                                    )}
                                 </p>
                             </Fragment>
                         );

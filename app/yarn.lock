@@ -100,13 +100,6 @@
   dependencies:
     tweetnacl "^1.0.3"
 
-"@vex-chat/types-js@^0.7.10":
-  version "0.7.10"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/types-js/0.7.10/72ebe1d7d4617c7231368720b9099a3930935e4c65db6e3cca26292e9a9ba71b#9128e93b91e291462a7b270671176fab6306f564"
-  integrity sha512-7SdQmDTXbiZxHod6j3zuiTB49CLOaITzSIOe8pZrLCzjAHlZjeptdox3Sa44yaJJVOT/NVjxkFWQDZqowdbLQQ==
-  dependencies:
-    tweetnacl "^1.0.3"
-
 "@vex-chat/types-js@^0.7.13":
   version "0.7.13"
   resolved "https://npm.pkg.github.com/download/@vex-chat/types-js/0.7.13/3e9e4199cad1e2823a0398220d0ec79d6d05222cd323890f0a977e43bdc6befa#b4bc1b9da93fd030550c38e7d9c1d57c11e485cb"
@@ -114,10 +107,10 @@
   dependencies:
     tweetnacl "^1.0.3"
 
-"@vex-chat/vex-js@^0.10.44":
-  version "0.10.44"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/vex-js/0.10.44/1850241038da8bd5a8770e271cda1e0db5b605bc5df2aa54d54e0473e4a34448#6752ddb035d60453fbe053973a5df47bf05fd89f"
-  integrity sha512-ih1FWNOfy45uuoWkN3AXze48kIbuDCkXzngxqzwW+9EjflU7/5OzAbs/0tRYyKb+3hVugXuv1lc4ldDMqGmvBQ==
+"@vex-chat/vex-js@^0.10.53":
+  version "0.10.53"
+  resolved "https://npm.pkg.github.com/download/@vex-chat/vex-js/0.10.53/fafb38c3705a272430483bbec9150957ec828da3b26b79ab2c461e87e76e1e4c#8be9d0d70b8b09feae3a52e916f888fd0374c035"
+  integrity sha512-VeJYRMVeKa7XmTyQlEj7NWBX7FF83aNLdlGU1hGU3jtCYyxfdBb65XXk3hDo8imXaxdsQku8hKaxcNurFwzG7Q==
   dependencies:
     "@extrahash/sleep" "^1.0.0"
     "@types/create-hmac" "^1.1.0"

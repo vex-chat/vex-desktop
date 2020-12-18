@@ -10,7 +10,10 @@ import { chunkMessages, MessageBox } from "../components/MessagingPane";
 import { ServerBar } from "../components/ServerBar";
 import { routes } from "../constants/routes";
 import { selectChannels } from "../reducers/channels";
-import { selectGroupMessages } from "../reducers/groupMessages";
+import {
+    selectGroupMessages,
+    failGroupMessage,
+} from "../reducers/groupMessages";
 import { addInputState, selectInputStates } from "../reducers/inputs";
 import { selectServers } from "../reducers/servers";
 import * as uuid from "uuid";
@@ -124,7 +127,7 @@ export function Server(props: { match: match<any> }): JSX.Element {
                                                 )
                                             );
                                         }}
-                                        onKeyDown={(event) => {
+                                        onKeyDown={async (event) => {
                                             if (
                                                 event.key === "Enter" &&
                                                 !event.shiftKey
@@ -133,11 +136,23 @@ export function Server(props: { match: match<any> }): JSX.Element {
 
                                                 const client = window.vex;
 
-                                                // send to group
-                                                client.messages.group(
-                                                    channelID,
-                                                    inputs[channelID]
-                                                );
+                                                try {
+                                                    // send to group
+                                                    await client.messages.group(
+                                                        channelID,
+                                                        inputs[channelID]
+                                                    );
+                                                } catch (err) {
+                                                    // failed message is thrown
+                                                    if (err.message) {
+                                                        dispatch(
+                                                            failGroupMessage(
+                                                                err.message,
+                                                                err.error.error
+                                                            )
+                                                        );
+                                                    }
+                                                }
 
                                                 dispatch(
                                                     addInputState(channelID, "")

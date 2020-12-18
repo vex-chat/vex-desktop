@@ -29,13 +29,58 @@ const groupMessageSlice = createSlice({
             }
             return state;
         },
+        fail: (
+            state: Record<string, Record<string, ISerializedMessage>>,
+            action
+        ) => {
+            const {
+                message,
+                errorString,
+            }: {
+                message: ISerializedMessage;
+                errorString: string;
+            } = action.payload;
+
+            const thread =
+                action.payload.message.direction === "outgoing"
+                    ? action.payload.message.recipient
+                    : action.payload.message.sender;
+
+            if (
+                state[thread] === undefined ||
+                !state[thread][message.mailID] === undefined
+            ) {
+                // it doesn't exist, we are done
+                return state;
+            }
+
+            const failedMessage = state[thread][message.mailID];
+
+            // mark it failed
+            failedMessage.failed = true;
+            failedMessage.failMessage = errorString;
+
+            console.log(failedMessage);
+            state[thread][message.mailID] = failedMessage;
+
+            return state;
+        },
     },
 });
 
-export const { add, reset } = groupMessageSlice.actions;
+export const { add, reset, fail } = groupMessageSlice.actions;
 
 export const resetGroupMessages = (): AppThunk => (dispatch) => {
     dispatch(reset());
+};
+
+export const failGroupMessage = (
+    message: IMessage,
+    errorString: string
+): AppThunk => (dispatch) => {
+    const szMsg = serializeMessage(message);
+    const payload = { message: szMsg, errorString };
+    dispatch(fail(payload));
 };
 
 export const addGroupMessage = (message: IMessage): AppThunk => (dispatch) => {
