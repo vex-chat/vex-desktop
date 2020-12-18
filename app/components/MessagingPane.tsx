@@ -811,8 +811,8 @@ export function chunkMessages(
                 const chunkTimeLength =
                     thisMessageTime.getTime() - firstMessageTime.getTime();
 
-                // five minutes for starters
-                if (chunkTimeLength < 1000 * 60 * 5) {
+                // three minutes
+                if (chunkTimeLength < 1000 * 60 * 3) {
                     chunkedMessages[chunkedMessages.length - 1].push(
                         currentMessage
                     );

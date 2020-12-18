@@ -135,22 +135,23 @@ export function Server(props: { match: match<any> }): JSX.Element {
                                                 event.preventDefault();
 
                                                 const client = window.vex;
-
                                                 try {
-                                                    // send to group
                                                     await client.messages.group(
                                                         channelID,
                                                         inputs[channelID]
                                                     );
                                                 } catch (err) {
-                                                    // failed message is thrown
+                                                    console.log(err);
                                                     if (err.message) {
+                                                        console.log(err);
                                                         dispatch(
                                                             failGroupMessage(
                                                                 err.message,
                                                                 err.error.error
                                                             )
                                                         );
+                                                    } else {
+                                                        console.warn(err);
                                                     }
                                                 }
 

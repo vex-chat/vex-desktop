@@ -41,27 +41,23 @@ const groupMessageSlice = createSlice({
                 errorString: string;
             } = action.payload;
 
-            const thread =
-                action.payload.message.direction === "outgoing"
-                    ? action.payload.message.recipient
-                    : action.payload.message.sender;
+            const group = action.payload.message.group;
 
             if (
-                state[thread] === undefined ||
-                !state[thread][message.mailID] === undefined
+                state[group] === undefined ||
+                state[group][message.mailID] === undefined
             ) {
                 // it doesn't exist, we are done
+                console.log("derbleblort!");
                 return state;
             }
 
-            const failedMessage = state[thread][message.mailID];
+            const failedMessage = state[group][message.mailID];
 
             // mark it failed
             failedMessage.failed = true;
             failedMessage.failMessage = errorString;
-
-            console.log(failedMessage);
-            state[thread][message.mailID] = failedMessage;
+            state[group][message.mailID] = failedMessage;
 
             return state;
         },

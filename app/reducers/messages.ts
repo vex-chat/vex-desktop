@@ -77,14 +77,11 @@ const messageSlice = createSlice({
                     ? action.payload.message.recipient
                     : action.payload.message.sender;
 
-            console.log("thread", thread);
-
             if (
                 state[thread] === undefined ||
                 state[thread][message.mailID] === undefined
             ) {
                 // it doesn't exist, we are done
-                console.log("IT DOEsn't exist");
                 return state;
             }
 
@@ -93,8 +90,6 @@ const messageSlice = createSlice({
             // mark it failed
             failedMessage.failed = true;
             failedMessage.failMessage = errorString;
-
-            console.log(failedMessage);
             state[thread][message.mailID] = failedMessage;
 
             return state;

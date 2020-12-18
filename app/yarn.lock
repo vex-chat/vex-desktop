@@ -107,10 +107,10 @@
   dependencies:
     tweetnacl "^1.0.3"
 
-"@vex-chat/vex-js@^0.10.53":
-  version "0.10.53"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/vex-js/0.10.53/fafb38c3705a272430483bbec9150957ec828da3b26b79ab2c461e87e76e1e4c#8be9d0d70b8b09feae3a52e916f888fd0374c035"
-  integrity sha512-VeJYRMVeKa7XmTyQlEj7NWBX7FF83aNLdlGU1hGU3jtCYyxfdBb65XXk3hDo8imXaxdsQku8hKaxcNurFwzG7Q==
+"@vex-chat/vex-js@^0.10.54":
+  version "0.10.54"
+  resolved "https://npm.pkg.github.com/download/@vex-chat/vex-js/0.10.54/da9609d177b3c9dd7166d2dbf8f42904ef64ef50627dc7cd6442e0e80e3ab864#ae25e697acd9721da14da01536636fe1eb67d2c4"
+  integrity sha512-A3cdATlOuVFqnHLXkTl6DhTwVtDChA+b8reL9WCeD8/9Gw57V5zXMalk4CeYw9NhPMGkh8fbhlxcC1WgopAJaQ==
   dependencies:
     "@extrahash/sleep" "^1.0.0"
     "@types/create-hmac" "^1.1.0"
