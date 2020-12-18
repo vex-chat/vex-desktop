@@ -181,6 +181,7 @@ export function ClientLauncher(): JSX.Element {
         dispatch(setFamiliars(familiars));
         for (const user of familiars) {
             const history = await client.messages.retrieve(user.userID);
+            console.log(history);
             for (const message of history) {
                 if (message.group) {
                     dispatch(addGroupMessage(message));
