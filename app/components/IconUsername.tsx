@@ -1,10 +1,13 @@
 import { IUser } from "@vex-chat/vex-js";
 import React from "react";
 import { strToIcon } from "../utils/strToIcon";
+import { IconDefinition } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function IconUsername(
     user: IUser,
     iconSize = 48 | 32,
+    icon?: IconDefinition,
     subtitle = ""
 ): JSX.Element {
     const size = iconSize.toString() + "x" + iconSize.toString();
@@ -12,12 +15,16 @@ export function IconUsername(
     return (
         <span className="media">
             <span className="media-left">
-                <figure className={`image is-${size}`}>
-                    <img
-                        className="is-rounded"
-                        src={strToIcon(user.username)}
-                    />
-                </figure>
+                {icon !== undefined ? (
+                    <FontAwesomeIcon className="icon-username-fa" icon={icon} />
+                ) : (
+                    <figure className={`image is-${size}`}>
+                        <img
+                            className="is-rounded"
+                            src={strToIcon(user.username)}
+                        />
+                    </figure>
+                )}
             </span>
             <span className="media-content">
                 <p

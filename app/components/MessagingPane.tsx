@@ -19,7 +19,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Tooltip from "@material-ui/core/Tooltip";
 import * as uuid from "uuid";
 import {
+    faAt,
     faCheckCircle,
+    faEnvelopeOpenText,
     faExclamation,
     faExclamationTriangle,
     faLock,
@@ -93,12 +95,21 @@ export default function MessagingPane(): JSX.Element {
     const messageThreeRef = createRef();
 
     if (!familiar) {
-        return <div className="pane"></div>;
+        return (
+            <div className="pane">
+                <div className="pane-topbar">
+                    <h1 className="subtitle">
+                        <FontAwesomeIcon icon={faEnvelopeOpenText} />
+                        &nbsp;&nbsp; Direct Messages
+                    </h1>
+                </div>
+            </div>
+        );
     }
     return (
         <div className="pane">
             <div className="pane-topbar">
-                <div className="columns is-centered">
+                <div className="columns">
                     <div className="column is-narrow">
                         <div className="pane-topbar-content">
                             <div className={`dropdown ${className}`}>
@@ -112,7 +123,7 @@ export default function MessagingPane(): JSX.Element {
                                         }
                                     }}
                                 >
-                                    {IconUsername(familiar, 32)}
+                                    {IconUsername(familiar, 32, faAt)}
                                 </div>
                                 <div
                                     className="dropdown-menu"

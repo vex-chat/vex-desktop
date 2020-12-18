@@ -23,6 +23,10 @@ $menu-item-active-color: hsl(0, 0%, 4%);
     border: 1px solid $light;
 }
 
+.icon-username-fa {
+    margin-top: 7px;
+}
+
 .server-button.is-active {
     // background-color: $light;
     border-color: darken($light, 10%);

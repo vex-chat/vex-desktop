@@ -112,7 +112,7 @@ function FamiliarButton({
             key={user.userID}
         >
             <Link to={routes.MESSAGING + "/" + user.userID}>
-                {IconUsername(user, 48, subtitle)}
+                {IconUsername(user, 48, undefined, subtitle)}
             </Link>
         </li>
     );
@@ -209,7 +209,7 @@ export function UserMenu(): JSX.Element {
                             >
                                 <div className="dropdown-content user-dropdown">
                                     <div className="dropdown-item">
-                                        {IconUsername(user, 48, "")}
+                                        {IconUsername(user, 48, undefined, "")}
                                     </div>
                                     <Link
                                         to={routes.SETTINGS}
