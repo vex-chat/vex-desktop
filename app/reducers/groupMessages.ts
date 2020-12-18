@@ -48,7 +48,6 @@ const groupMessageSlice = createSlice({
                 state[group][message.mailID] === undefined
             ) {
                 // it doesn't exist, we are done
-                console.log("derbleblort!");
                 return state;
             }
 
