@@ -33,7 +33,10 @@ export function ChannelBar(props: { server: IServer }): JSX.Element {
                         }
                     >
                         <span className="add-user-icon">
-                            <FontAwesomeIcon icon={faUserPlus} />
+                            <FontAwesomeIcon
+                                className="has-text-dark"
+                                icon={faUserPlus}
+                            />
                         </span>
                     </Link>
                 </h1>

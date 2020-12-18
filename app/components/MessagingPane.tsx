@@ -758,9 +758,25 @@ export function chunkMessages(
                 chunkedMessages[chunkedMessages.length - 1][0].sender ===
                 currentMessage.sender
             ) {
-                chunkedMessages[chunkedMessages.length - 1].push(
-                    currentMessage
+                const firstMessageTime = new Date(
+                    chunkedMessages[chunkedMessages.length - 1][0].timestamp
                 );
+                const thisMessageTime = new Date(currentMessage.timestamp);
+                const chunkTimeLength =
+                    thisMessageTime.getTime() - firstMessageTime.getTime();
+
+                // five minutes for starters
+                if (chunkTimeLength < 1000 * 60 * 5) {
+                    chunkedMessages[chunkedMessages.length - 1].push(
+                        currentMessage
+                    );
+                    // start a new chunk if the chunk is too old
+                } else {
+                    chunkedMessages.push([]);
+                    chunkedMessages[chunkedMessages.length - 1].push(
+                        currentMessage
+                    );
+                }
             } else {
                 chunkedMessages.push([]);
                 chunkedMessages[chunkedMessages.length - 1].push(

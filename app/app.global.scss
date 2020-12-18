@@ -13,12 +13,30 @@ $menu-item-active-color: hsl(0, 0%, 4%);
 }
 
 .server-button-icon {
-    font-size: 52px;
+    font-size: 36px;
     color: darken($light, 10%);
 
 }
 
-.server-button {margin-top: 3px;}
+.server-button {
+    margin-top: 3px;
+    border: 1px solid $light;
+}
+
+.server-button.is-active {
+    // background-color: $light;
+    border-color: darken($light, 10%);
+    border: 1px solid $blue;
+}
+
+.server-button.is-active > span > svg {
+    color: darken($light, 20%) !important;
+}
+
+.server-button.is-active >  {
+    background-color: $light;
+    border-color: darken($light, 10%);
+}
 
 body::-webkit-scrollbar {
     width: 12px;
@@ -37,6 +55,7 @@ body::-webkit-scrollbar-thumb {
 
 .message-text {
     margin-bottom: 4px !important;
+    word-wrap: break-word;
 }
 
 .message-code {
@@ -253,7 +272,10 @@ button {
     top: 0;
     bottom: 180px;
     height: calc(100vh - 176px);
-    overflow-y:auto;
+    width: calc(100vw - 72px - 265px);
+    right: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
     z-index: 0;
     padding: 10px 20px;
     border-bottom: 1px solid $light;
@@ -311,6 +333,10 @@ div.sidebar > aside > ul > li > a:hover {
     float: right;
 }
 
+.add-user-icon:hover {
+    color: lighten($dark, 10%);
+}
+
 
 .chat-input-wrapper {
     position: fixed;
@@ -339,6 +365,9 @@ div.sidebar > aside > ul > li > a:hover {
 }
 
 .message-wrapper {
+    position: relative;
+    // i am not sure why i ahve to take out 500px here
+    max-width: calc(100vw - 500px);
     padding-bottom: 1ch;
 }
 
