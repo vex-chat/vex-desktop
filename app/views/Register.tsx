@@ -10,8 +10,7 @@ import {
 } from "../reducers/inputs";
 import { errorFX, switchFX } from "../views/Base";
 import { useHistory } from "react-router";
-import { routes } from "../constants/routes";
-import { progFolder } from "../components/ClientLauncher";
+import { keyFolder, progFolder } from "../components/ClientLauncher";
 import { resetUser } from "../reducers/user";
 import { resetApp } from "../reducers/app";
 import { resetMessages } from "../reducers/messages";
@@ -21,8 +20,15 @@ import { resetFamiliars } from "../reducers/familiars";
 import { resetServers } from "../reducers/servers";
 import { resetSessions } from "../reducers/sessions";
 import { resetPermissions } from "../reducers/permissions";
+import fs from "fs";
+import nacl from "tweetnacl";
+import pbkdf2 from "pbkdf2";
+import { xConcat, xMakeNonce, XUtils } from "@vex-chat/crypto-js";
+import { routes } from "../constants/routes";
 
-const FORM_NAME = "register_username";
+const USERNAME_INPUT_NAME = "register_username";
+const PASSWORD_INPUT_NAME = "register_password";
+const CONFIRM_INPUT_NAME = "register_confirmpass";
 
 export default function IRegister(): JSX.Element {
     const dispatch = useDispatch();
@@ -33,13 +39,15 @@ export default function IRegister(): JSX.Element {
 
     const inputs = useSelector(selectInputStates);
 
-    const value = inputs[FORM_NAME] || "";
+    const username = inputs[USERNAME_INPUT_NAME] || "";
+    const password = inputs[PASSWORD_INPUT_NAME] || "";
+    const passConfirm = inputs[CONFIRM_INPUT_NAME] || "";
 
     const [waiting, setWaiting] = useState(false);
     const [errorText, setErrorText] = useState("");
 
     useEffect(() => {
-        if (value.length > 2 && value.length < 20) {
+        if (username.length > 2 && username.length < 20) {
             setValid(true);
         } else {
             setValid(false);
@@ -89,7 +97,7 @@ export default function IRegister(): JSX.Element {
                             <input
                                 className="servername-input input"
                                 type="username"
-                                value={value}
+                                value={username}
                                 onChange={async (event) => {
                                     setErrorText("");
                                     setTaken(false);
@@ -97,7 +105,7 @@ export default function IRegister(): JSX.Element {
 
                                     dispatch(
                                         addInputState(
-                                            FORM_NAME,
+                                            USERNAME_INPUT_NAME,
                                             event.target.value
                                         )
                                     );
@@ -148,106 +156,178 @@ export default function IRegister(): JSX.Element {
                                 {errorText}
                             </span>
                         )}
-                        <div className="control button-container">
-                            <div className="buttons register-form-buttons is-right">
-                                <button
-                                    className={`button is-light${
-                                        waiting ? " is-disabled" : ""
-                                    }`}
-                                    onClick={async () => {
-                                        setErrorText("");
-                                        setTaken(false);
-                                        setValid(false);
+                    </div>
+                    <div className="field">
+                        <label className="label is-small">
+                            Password to encrypt your keys:
+                        </label>
+                        <input
+                            className="password-input input"
+                            type="password"
+                            value={password}
+                            onChange={(event) => {
+                                dispatch(
+                                    addInputState(
+                                        PASSWORD_INPUT_NAME,
+                                        event.target.value
+                                    )
+                                );
+                            }}
+                        />
+                    </div>
+                    <br />
+                    <div className="field">
+                        <label className="label is-small">
+                            Confirm password:{" "}
+                            {password !== passConfirm && (
+                                <span className="has-text-danger">
+                                    Does not match!
+                                </span>
+                            )}
+                        </label>
+                        <input
+                            className={`password-input input ${
+                                password !== passConfirm && "is-danger"
+                            }`}
+                            type="password"
+                            value={passConfirm}
+                            onChange={(event) => {
+                                dispatch(
+                                    addInputState(
+                                        CONFIRM_INPUT_NAME,
+                                        event.target.value
+                                    )
+                                );
+                            }}
+                        />
+                    </div>
 
-                                        const username = Client.randomUsername();
+                    <br />
 
-                                        dispatch(
-                                            addInputState(FORM_NAME, username)
-                                        );
+                    <div className="field">
+                        <div className="buttons register-form-buttons is-right">
+                            <button
+                                className={`button is-light${
+                                    waiting ? " is-disabled" : ""
+                                }`}
+                                onClick={async () => {
+                                    setErrorText("");
+                                    setTaken(false);
+                                    setValid(false);
 
-                                        const client = window.vex;
+                                    const username = Client.randomUsername();
 
-                                        const [
-                                            serverResults,
-                                            err,
-                                        ] = await client.users.retrieve(
+                                    dispatch(
+                                        addInputState(
+                                            USERNAME_INPUT_NAME,
                                             username
-                                        );
+                                        )
+                                    );
 
-                                        if (
-                                            err &&
-                                            err.response &&
-                                            err.response.status === 200
-                                        ) {
-                                            setTaken(true);
-                                        }
+                                    const client = window.vex;
 
-                                        if (
-                                            username.length > 2 &&
-                                            username.length < 20
-                                        ) {
-                                            setValid(true);
-                                        } else {
-                                            setValid(false);
-                                        }
+                                    const [
+                                        serverResults,
+                                        err,
+                                    ] = await client.users.retrieve(username);
 
-                                        if (serverResults) {
-                                            setTaken(true);
-                                        } else {
-                                            setTaken(false);
-                                        }
-                                    }}
-                                >
-                                    Random
-                                </button>
-                                <button
-                                    className={`button is-success${
-                                        waiting ? " is-loading" : ""
-                                    }`}
-                                    onClick={async () => {
-                                        switchFX.play();
-                                        setWaiting(true);
+                                    if (
+                                        err &&
+                                        err.response &&
+                                        err.response.status === 200
+                                    ) {
+                                        setTaken(true);
+                                    }
 
-                                        const PK = Client.generateSecretKey();
-                                        localStorage.setItem("PK", PK);
+                                    if (
+                                        username.length > 2 &&
+                                        username.length < 20
+                                    ) {
+                                        setValid(true);
+                                    } else {
+                                        setValid(false);
+                                    }
 
-                                        const tempClient = new Client(PK, {
-                                            dbFolder: progFolder,
-                                        });
-                                        tempClient.on("ready", async () => {
-                                            const username = value;
-                                            // eslint-disable-next-line prefer-const
-                                            const [
-                                                user,
-                                                err,
-                                            ] = await tempClient.register(
-                                                username
+                                    if (serverResults) {
+                                        setTaken(true);
+                                    } else {
+                                        setTaken(false);
+                                    }
+                                }}
+                            >
+                                Random
+                            </button>
+                            <button
+                                className={`button is-success${
+                                    waiting ? " is-loading" : ""
+                                } `}
+                                disabled={
+                                    password !== passConfirm ||
+                                    password.length < 3
+                                }
+                                onClick={async () => {
+                                    switchFX.play();
+                                    setWaiting(true);
+
+                                    const PK = Client.generateSecretKey();
+                                    localStorage.setItem("PK", PK);
+
+                                    const tempClient = new Client(PK, {
+                                        dbFolder: progFolder,
+                                    });
+                                    tempClient.on("ready", async () => {
+                                        // eslint-disable-next-line prefer-const
+                                        const [
+                                            user,
+                                            err,
+                                        ] = await tempClient.register(username);
+
+                                        await tempClient.close();
+
+                                        if (err !== null) {
+                                            errorFX.play();
+                                            setWaiting(false);
+                                            console.warn(
+                                                "registration failed.",
+                                                err
                                             );
+                                            setErrorText(err.toString());
+                                        }
 
-                                            await tempClient.close();
+                                        if (user !== null) {
+                                            setWaiting(false);
+                                            const keyPath =
+                                                keyFolder + "/" + user.username;
+                                            saveKeyFile(keyPath, password, PK);
 
-                                            if (err !== null) {
-                                                errorFX.play();
-                                                setWaiting(false);
-                                                console.warn(
-                                                    "registration failed.",
-                                                    err
+                                            try {
+                                                const confirm = loadKeyFile(
+                                                    keyPath,
+                                                    password
                                                 );
-                                                setErrorText(err.toString());
+                                                if (confirm !== PK) {
+                                                    console.log(confirm, PK);
+                                                    throw new Error(
+                                                        "Key file that was written to disk is corrupt."
+                                                    );
+                                                }
+                                            } catch (err) {
+                                                setErrorText(
+                                                    "Failed to save the keyfile to disk: " +
+                                                        err.toString()
+                                                );
+                                                return;
                                             }
 
-                                            if (user !== null) {
-                                                setWaiting(false);
-                                                await resetClient();
-                                                history.push(routes.LAUNCH);
-                                            }
-                                        });
-                                        tempClient.init();
-                                    }}
-                                >
-                                    Chat
-                                </button>
-                            </div>
+                                            await resetClient();
+                                            history.push(routes.LAUNCH);
+                                        }
+                                    });
+                                    tempClient.init();
+                                }}
+                            >
+                                Chat
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -256,3 +336,65 @@ export default function IRegister(): JSX.Element {
         </div>
     );
 }
+
+export const saveKeyFile = (
+    path: string,
+    password: string,
+    secretKey: string
+): void => {
+    const UNENCRYPTED_SIGNKEY = XUtils.decodeHex(secretKey);
+
+    // generate random amount of iterations
+    const R1 = nacl.randomBytes(1);
+    const R2 = nacl.randomBytes(1);
+    const N1 = XUtils.uint8ArrToNumber(R1);
+    const N2 = XUtils.uint8ArrToNumber(R2);
+    const iterations = N1 * N2;
+
+    // length 6
+    const ITERATIONS = XUtils.numberToUint8Arr(iterations);
+
+    // length 24
+    const PKBDF_SALT = xMakeNonce();
+
+    // derived key to encrypt our signkeys with
+    const ENCRYPTION_KEY = Uint8Array.from(
+        pbkdf2.pbkdf2Sync(password, PKBDF_SALT, iterations, 32)
+    );
+    const NONCE = xMakeNonce();
+
+    const ENCRYPTED_SIGNKEY = nacl.secretbox(
+        UNENCRYPTED_SIGNKEY,
+        NONCE,
+        ENCRYPTION_KEY
+    );
+    fs.writeFileSync(
+        path,
+        xConcat(ITERATIONS, PKBDF_SALT, NONCE, ENCRYPTED_SIGNKEY)
+    );
+};
+
+export const loadKeyFile = (path: string, password: string): string => {
+    const keyFile = Uint8Array.from(fs.readFileSync(path));
+    const ITERATIONS = XUtils.uint8ArrToNumber(keyFile.slice(0, 6));
+    const PKBDF_SALT = keyFile.slice(6, 30);
+    const ENCRYPTION_NONCE = keyFile.slice(30, 54);
+    // this is the id key we need to decrypt
+    const ENCRYPTED_KEY = keyFile.slice(54);
+    // the derived key from the user's password
+    const DERIVED_KEY = Uint8Array.from(
+        pbkdf2.pbkdf2Sync(password, PKBDF_SALT, ITERATIONS, 32)
+    );
+
+    const DECRYPTED_SIGNKEY = nacl.secretbox.open(
+        ENCRYPTED_KEY,
+        ENCRYPTION_NONCE,
+        DERIVED_KEY
+    );
+
+    if (!DECRYPTED_SIGNKEY) {
+        throw new Error("Decryption failed. Wrong password?");
+    } else {
+        return XUtils.encodeHex(DECRYPTED_SIGNKEY);
+    }
+};

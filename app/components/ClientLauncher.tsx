@@ -44,6 +44,9 @@ declare global {
 
 const homedir = os.homedir();
 export const progFolder = `${homedir}/.vex-desktop`;
+export const dbFolder = `${progFolder}/databases`;
+export const keyFolder = `${progFolder}/keys`;
+
 // eslint-disable-next-line no-var
 let client: Client;
 
@@ -57,7 +60,7 @@ export async function initClient(): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const PK = localStorage.getItem("PK")!;
     client = new Client(PK, {
-        dbFolder: progFolder,
+        dbFolder,
         logLevel: "info",
     });
     window.vex = client;

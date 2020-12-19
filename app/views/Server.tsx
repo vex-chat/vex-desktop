@@ -22,24 +22,12 @@ import { IconUsername } from "../components/IconUsername";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Server(props: { match: match<any> }): JSX.Element {
     const servers = useSelector(selectServers);
-    const messagesEndRef = useRef(null);
     const channels = useSelector(selectChannels);
 
     const { serverID, channelID } = props.match.params;
     const serverChannels = channels ? channels[serverID] || {} : {};
 
     const server = servers[serverID];
-
-    const scrollToBottom = () => {
-        if (messagesEndRef.current) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (messagesEndRef.current as any).scrollIntoView();
-        }
-    };
-
-    useEffect(() => {
-        scrollToBottom();
-    });
 
     // loading
     if (!server) {
@@ -139,6 +127,17 @@ export function ServerPane(): JSX.Element {
     const inputs = useSelector(selectInputStates);
     const messagesEndRef = useRef(null);
     const dispatch = useDispatch();
+
+    const scrollToBottom = () => {
+        if (messagesEndRef.current) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (messagesEndRef.current as any).scrollIntoView();
+        }
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    });
 
     return (
         <Fragment>
