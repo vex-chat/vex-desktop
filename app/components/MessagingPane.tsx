@@ -711,7 +711,16 @@ export function MessageBox(props: {
                                             {message.message}
                                         </span>
                                     ) : (
-                                        message.message
+                                        <span
+                                            className={`${
+                                                message.message.charAt(0) ===
+                                                ">"
+                                                    ? "has-text-success has-text-weight-bold"
+                                                    : ""
+                                            }`}
+                                        >
+                                            {message.message}
+                                        </span>
                                     )}
                                     &nbsp;&nbsp;
                                     {message.failed && (
