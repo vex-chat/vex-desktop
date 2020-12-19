@@ -1,6 +1,8 @@
 import {
+    faCheck,
     faCog,
     faFingerprint,
+    faSearch,
     faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,7 +19,7 @@ import { IconUsername } from "./IconUsername";
 import { switchFX } from "../views/Base";
 import { routes } from "../constants/routes";
 
-const emptyUser: IUser = {
+export const emptyUser: IUser = {
     userID: "",
     signKey: "",
     username: "",
@@ -49,14 +51,12 @@ export default function MessagingBar(): JSX.Element {
         <div className="sidebar">
             <div className="field search-wrapper">
                 <div className="field">
-                    <p className={`control`}>
-                        <UserSearchBar
-                            formName={FORM_NAME}
-                            onSelectUser={(user: IUser) => {
-                                newConversation(user);
-                            }}
-                        />
-                    </p>
+                    <UserSearchBar
+                        formName={FORM_NAME}
+                        onSelectUser={(user: IUser) => {
+                            newConversation(user);
+                        }}
+                    />
                 </div>
             </div>
 
@@ -120,56 +120,72 @@ function FamiliarButton({
 
 export function UserSearchBar(props: {
     formName: string;
-    onSelectUser: (user: IUser) => void;
+    onSelectUser?: (user: IUser) => void;
+    onFoundUser?: (user: IUser) => void;
 }): JSX.Element {
     const [foundUser, setFoundUser] = useState(emptyUser);
     const dispatch = useDispatch();
     const inputs = useSelector(selectInputStates);
 
     return (
-        <input
-            className={`input is-grey is-small is-rounded search-bar${
-                foundUser.userID !== "" ? " is-success" : ""
-            }`}
-            type="text"
-            placeholder="Search"
-            value={inputs[props.formName] || ""}
-            onKeyDown={async (event) => {
-                if (event.key === "Enter") {
-                    if (foundUser.userID !== "") {
-                        dispatch(addInputState(props.formName, ""));
-                        setFoundUser(emptyUser);
-                        props.onSelectUser(foundUser);
-                    }
-                } else {
-                    setFoundUser(emptyUser);
-                }
-            }}
-            onChange={async (event) => {
-                dispatch(addInputState(props.formName, event.target.value));
-                try {
-                    if (event.target.value.length > 2) {
-                        const client = window.vex;
-                        const [
-                            serverResults,
-                            err,
-                        ] = await client.users.retrieve(event.target.value);
-                        if (
-                            err &&
-                            err.response &&
-                            err.response.status === 404
-                        ) {
+        <div className="control has-icons-left">
+            <input
+                className={`input has-icons-right is-grey is-small is-rounded search-bar${
+                    foundUser.userID !== "" ? " is-success" : ""
+                }`}
+                type="text"
+                placeholder="Search for user"
+                value={inputs[props.formName] || ""}
+                onKeyDown={async (event) => {
+                    if (event.key === "Enter") {
+                        if (foundUser.userID !== "") {
+                            dispatch(addInputState(props.formName, ""));
                             setFoundUser(emptyUser);
+                            if (props.onSelectUser) {
+                                props.onSelectUser(foundUser);
+                            }
                         }
-                        if (serverResults) {
-                            setFoundUser(serverResults);
+                    } else {
+                        if (props.onFoundUser) {
+                            props.onFoundUser(emptyUser);
                         }
+                        setFoundUser(emptyUser);
                     }
-                } catch (err) {
-                    console.error(err);
-                }
-            }}
-        />
+                }}
+                onChange={async (event) => {
+                    dispatch(addInputState(props.formName, event.target.value));
+                    try {
+                        if (event.target.value.length > 2) {
+                            const client = window.vex;
+                            const [
+                                serverResults,
+                                err,
+                            ] = await client.users.retrieve(event.target.value);
+                            if (
+                                err &&
+                                err.response &&
+                                err.response.status === 404
+                            ) {
+                                setFoundUser(emptyUser);
+                            }
+                            if (serverResults) {
+                                if (props.onFoundUser) {
+                                    props.onFoundUser(serverResults);
+                                }
+                                setFoundUser(serverResults);
+                            }
+                        }
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }}
+            />
+            <span className="icon is-left">
+                <FontAwesomeIcon
+                    icon={foundUser === emptyUser ? faSearch : faCheck}
+                />
+            </span>
+        </div>
     );
 }
 

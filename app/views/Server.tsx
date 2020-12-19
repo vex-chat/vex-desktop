@@ -1,11 +1,11 @@
 import { faHashtag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IUser } from "@vex-chat/vex-js";
-import React, { Fragment, useEffect, useRef } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { match, Route, Switch } from "react-router";
+import { match, Route, Switch, useParams } from "react-router";
 import { ChannelBar } from "../components/ChannelBar";
-import { UserMenu, UserSearchBar } from "../components/MessagingBar";
+import { UserMenu, UserSearchBar, emptyUser } from "../components/MessagingBar";
 import { chunkMessages, MessageBox } from "../components/MessagingPane";
 import { ServerBar } from "../components/ServerBar";
 import { routes } from "../constants/routes";
@@ -17,18 +17,15 @@ import {
 import { addInputState, selectInputStates } from "../reducers/inputs";
 import { selectServers } from "../reducers/servers";
 import * as uuid from "uuid";
+import { IconUsername } from "../components/IconUsername";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Server(props: { match: match<any> }): JSX.Element {
-    const dispatch = useDispatch();
-    const groupMessages = useSelector(selectGroupMessages);
     const servers = useSelector(selectServers);
-    const inputs = useSelector(selectInputStates);
     const messagesEndRef = useRef(null);
     const channels = useSelector(selectChannels);
 
     const { serverID, channelID } = props.match.params;
-    const threadMessages = groupMessages[channelID];
     const serverChannels = channels ? channels[serverID] || {} : {};
 
     const server = servers[serverID];
@@ -68,105 +65,134 @@ export function Server(props: { match: match<any> }): JSX.Element {
                     <Route
                         exact
                         path={routes.SERVERS + "/:serverID/:channelID/add-user"}
-                        render={({ match }) => (
-                            <div className="pane-screen-wrapper">
-                                <UserSearchBar
-                                    formName={
-                                        "server-user-serach-bar" +
-                                        match.params.serverID +
-                                        match.params.channelID
-                                    }
-                                    onSelectUser={async (user: IUser) => {
-                                        const client = window.vex;
-                                        const { userID } = user;
-                                        const permission = await client.permissions.create(
-                                            {
-                                                userID,
-                                                resourceType: "server",
-                                                resourceID:
-                                                    match.params.serverID,
-                                            }
-                                        );
-                                        console.log(permission);
-                                    }}
-                                />
-                            </div>
-                        )}
+                        render={() => <AddUser />}
                     />
                     <Route
                         exact
                         path={routes.SERVERS + "/:serverID/:channelID"}
-                        render={() => (
-                            <Fragment>
-                                <div className="conversation-wrapper">
-                                    {chunkMessages(threadMessages || {}).map(
-                                        (chunk) => {
-                                            return (
-                                                <MessageBox
-                                                    key={
-                                                        chunk[0]?.mailID ||
-                                                        uuid.v4()
-                                                    }
-                                                    messages={chunk}
-                                                />
-                                            );
-                                        }
-                                    )}
-                                    <div ref={messagesEndRef} />
-                                </div>
-
-                                <div className="chat-input-wrapper">
-                                    <textarea
-                                        value={inputs[channelID]}
-                                        className="textarea chat-input has-fixed-size"
-                                        onChange={(event) => {
-                                            dispatch(
-                                                addInputState(
-                                                    channelID,
-                                                    event.target.value
-                                                )
-                                            );
-                                        }}
-                                        onKeyDown={async (event) => {
-                                            if (
-                                                event.key === "Enter" &&
-                                                !event.shiftKey
-                                            ) {
-                                                event.preventDefault();
-
-                                                const client = window.vex;
-                                                try {
-                                                    await client.messages.group(
-                                                        channelID,
-                                                        inputs[channelID]
-                                                    );
-                                                } catch (err) {
-                                                    console.log(err);
-                                                    if (err.message) {
-                                                        console.log(err);
-                                                        dispatch(
-                                                            failGroupMessage(
-                                                                err.message,
-                                                                err.error.error
-                                                            )
-                                                        );
-                                                    } else {
-                                                        console.warn(err);
-                                                    }
-                                                }
-
-                                                dispatch(
-                                                    addInputState(channelID, "")
-                                                );
-                                            }
-                                        }}
-                                    />
-                                </div>
-                            </Fragment>
-                        )}
-                    ></Route>
+                        render={() => <ServerPane />}
+                    />
                 </Switch>
             </div>
         </div>
+    );
+}
+
+interface IServerParams {
+    serverID: string;
+    channelID: string;
+}
+export function AddUser(): JSX.Element {
+    const servers = useSelector(selectServers);
+    const params: IServerParams = useParams();
+    const [user, setUser] = useState(emptyUser);
+    const server = servers[params.serverID];
+
+    const addUserPermission = async (user: IUser) => {
+        const client = window.vex;
+        const { userID } = user;
+        await client.permissions.create({
+            userID,
+            resourceType: "server",
+            resourceID: params.serverID,
+        });
+    };
+
+    return (
+        <div className="pane-screen-wrapper">
+            <div className="panel">
+                <div className="panel-heading">Add a user to {server.name}</div>
+                <div className="panel-block">
+                    <UserSearchBar
+                        formName={
+                            "server-user-serach-bar" +
+                            params.serverID +
+                            params.channelID
+                        }
+                        onFoundUser={async (user: IUser) => {
+                            setUser(user);
+                        }}
+                    />
+                </div>
+                {user !== emptyUser && (
+                    <Fragment>
+                        <div className="panel-block">{IconUsername(user)}</div>
+                        <div className="panel-block">
+                            <button
+                                className="button is-small"
+                                onClick={() => addUserPermission(user)}
+                            >
+                                Add user to {server.name}
+                            </button>
+                        </div>
+                    </Fragment>
+                )}
+            </div>
+        </div>
+    );
+}
+
+export function ServerPane(): JSX.Element {
+    const params: IServerParams = useParams();
+    const groupMessages = useSelector(selectGroupMessages);
+    const threadMessages = groupMessages[params.channelID];
+    const inputs = useSelector(selectInputStates);
+    const messagesEndRef = useRef(null);
+    const dispatch = useDispatch();
+
+    return (
+        <Fragment>
+            <div className="conversation-wrapper">
+                {chunkMessages(threadMessages || {}).map((chunk) => {
+                    return (
+                        <MessageBox
+                            key={chunk[0]?.mailID || uuid.v4()}
+                            messages={chunk}
+                        />
+                    );
+                })}
+                <div ref={messagesEndRef} />
+            </div>
+
+            <div className="chat-input-wrapper">
+                <textarea
+                    value={inputs[params.channelID]}
+                    className="textarea chat-input has-fixed-size"
+                    onChange={(event) => {
+                        dispatch(
+                            addInputState(params.channelID, event.target.value)
+                        );
+                    }}
+                    onKeyDown={async (event) => {
+                        if (event.key === "Enter" && !event.shiftKey) {
+                            event.preventDefault();
+
+                            const client = window.vex;
+                            try {
+                                await client.messages.group(
+                                    params.channelID,
+                                    inputs[params.channelID]
+                                );
+                            } catch (err) {
+                                console.log(err);
+                                if (err.message) {
+                                    console.log(err);
+                                    dispatch(
+                                        failGroupMessage(
+                                            err.message,
+                                            err.error.error
+                                        )
+                                    );
+                                } else {
+                                    console.warn(err);
+                                }
+                            }
+
+                            dispatch(addInputState(params.channelID, ""));
+                        }
+                    }}
+                />
+            </div>
+        </Fragment>
     );
 }

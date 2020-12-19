@@ -8,8 +8,17 @@ $menu-item-active-color: hsl(0, 0%, 4%);
 @import "../node_modules/bulma/bulma.sass";
 @import "../node_modules/highlight.js/scss/github.scss";
 
+
 .hljs {
     background-color: $light !important;
+}
+
+.input-wrapper {
+    margin-bottom: 12px;
+}
+
+.t-12 {
+    margin-top: 12px !important;
 }
 
 .server-button-icon {
@@ -379,6 +388,7 @@ div.sidebar > aside > ul > li > a:hover {
     border-top: 0px solid;
     margin-top: 0;
     padding-bottom: 0;
+    padding-top: 7px;
     margin-bottom: 0;
 }
 

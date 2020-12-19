@@ -25,9 +25,9 @@ export function ChannelBar(props: { server: IServer }): JSX.Element {
                         to={
                             routes.SERVERS +
                             "/" +
-                            // accept channelID value for a later time
                             props.server.serverID +
                             "/" +
+                            // accept channelID value for a later time
                             uuid.v4() +
                             "/add-user"
                         }

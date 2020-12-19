@@ -205,7 +205,7 @@ export default function MessagingPane(): JSX.Element {
                                         "json"
                                     )}
                                     <button
-                                        className="button is-small"
+                                        className="button is-small t-12"
                                         onClick={() => history.goBack()}
                                     >
                                         Go Back
