@@ -31,7 +31,8 @@
         "test-e2e-live": "node -r @babel/register ./internals/scripts/CheckBuildsExist.js && cross-env NODE_ENV=test testcafe --live electron:./app ./test/e2e/HomePage.e2e.ts",
         "test-watch": "yarn test --watch",
         "prettier": "prettier '**/*.{js,jsx,ts,tsx,json,md}' --tab-width 4 --trailing-comma es5 --ignore-path .gitignore  --arrow-parens always --write",
-        "release": "ssh ender@vex.chat rm -rf ./vex-release/*; yarn package-all; rm -rf ./release/*.{yaml,blockmap,zip,yml}; rm -rf ./release/*unpacked; rm -rf ./release/mac; scp ./release/* ender@vex.chat:~/vex-release/"
+        "release-upload": "ssh ender@vex.chat rm -rf ./release-staging/*; yarn package-all; rm -rf ./release/*.{yaml,blockmap,zip,yml}; rm -rf ./release/*unpacked; rm -rf ./release/mac; scp ./release/* ender@vex.chat:~/release-staging/; ssh ender@vex.chat",
+        "release-publish": "ssh ender@vex.chat 'mv ./release-staging/* ./vex-release/'"
     },
     "build": {
         "productName": "Vex Desktop",
