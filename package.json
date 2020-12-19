@@ -12,7 +12,7 @@
         "electron-rebuild": "electron-rebuild --parallel --force --types prod,dev,optional --module-dir app",
         "lint": "npx eslint .",
         "package": "yarn build && electron-builder build --publish never",
-        "package-all": "yarn build && electron-builder build -mwl && sha256sum ./release/*.{exe,AppImage,dmg,deb}",
+        "package-all": "rm -rf ./release; yarn build && electron-builder build -mwl && sha256sum ./release/*.{exe,AppImage,dmg,deb} > ./release/SHA256.txt",
         "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
         "package-mac": "yarn build && electron-builder build --mac",
         "package-linux": "yarn build && electron-builder build --linux",
@@ -30,7 +30,8 @@
         "test-e2e": "node -r @babel/register ./internals/scripts/CheckBuildsExist.js && cross-env NODE_ENV=test testcafe electron:./app ./test/e2e/HomePage.e2e.ts",
         "test-e2e-live": "node -r @babel/register ./internals/scripts/CheckBuildsExist.js && cross-env NODE_ENV=test testcafe --live electron:./app ./test/e2e/HomePage.e2e.ts",
         "test-watch": "yarn test --watch",
-        "prettier": "prettier '**/*.{js,jsx,ts,tsx,json,md}' --tab-width 4 --trailing-comma es5 --ignore-path .gitignore  --arrow-parens always --write"
+        "prettier": "prettier '**/*.{js,jsx,ts,tsx,json,md}' --tab-width 4 --trailing-comma es5 --ignore-path .gitignore  --arrow-parens always --write",
+        "release": "ssh ender@vex.chat rm -rf ./vex-release/*; yarn package-all; rm -rf ./release/*.{yaml,blockmap,zip,yml}; rm -rf ./release/*unpacked; rm -rf ./release/mac; scp ./release/* ender@vex.chat:~/vex-release/"
     },
     "build": {
         "productName": "Vex Desktop",

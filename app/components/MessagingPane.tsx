@@ -16,7 +16,6 @@ import { selectMessages } from "../reducers/messages";
 import { format } from "date-fns";
 import { markSession, selectSessions } from "../reducers/sessions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Tooltip from "@material-ui/core/Tooltip";
 import * as uuid from "uuid";
 import {
     faAt,
@@ -152,18 +151,8 @@ export default function MessagingPane(): JSX.Element {
                         </div>
                     </div>
                     <div className="column is-narrow">
-                        {hasUnverifiedSession && (
-                            <Tooltip
-                                open={
-                                    params.userID === user.userID &&
-                                    !history.location.pathname.includes(
-                                        "verify"
-                                    )
-                                }
-                                title={
-                                    "For new conversations, verify the other user's identity."
-                                }
-                            >
+                        {familiar.userID !== user.userID &&
+                            hasUnverifiedSession && (
                                 <Link
                                     to={
                                         routes.MESSAGING +
@@ -174,13 +163,6 @@ export default function MessagingPane(): JSX.Element {
                                     className="has-text-danger pointer help"
                                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                     ref={messageOneRef as any}
-                                    data-event={"disabled"}
-                                    data-multiline={true}
-                                    data-tip={
-                                        params.userID === user.userID
-                                            ? "For new conversations, verify the other user's identity."
-                                            : ""
-                                    }
                                 >
                                     <span className="icon">
                                         <FontAwesomeIcon
@@ -189,8 +171,7 @@ export default function MessagingPane(): JSX.Element {
                                     </span>
                                     Unverified
                                 </Link>
-                            </Tooltip>
-                        )}
+                            )}
                         {allVerified && (
                             <Link
                                 to={
@@ -293,42 +274,28 @@ export default function MessagingPane(): JSX.Element {
                                                                         messageTwoRef as any
                                                                     }
                                                                 >
-                                                                    <Tooltip
-                                                                        open={
-                                                                            params.userID ===
-                                                                                user.userID &&
-                                                                            history.location.pathname.includes(
-                                                                                "verify"
-                                                                            )
-                                                                        }
-                                                                        title={
-                                                                            "Click here to verify the safe words."
-                                                                        }
-                                                                        placement="top"
-                                                                    >
-                                                                        <button
-                                                                            className="button is-danger is-small"
-                                                                            onClick={() => {
-                                                                                const forwardPath = query.get(
-                                                                                    "forward"
-                                                                                );
+                                                                    <button
+                                                                        className="button is-danger is-small"
+                                                                        onClick={() => {
+                                                                            const forwardPath = query.get(
+                                                                                "forward"
+                                                                            );
 
-                                                                                history.push(
-                                                                                    history
-                                                                                        .location
-                                                                                        .pathname +
-                                                                                        "/" +
-                                                                                        session.sessionID +
-                                                                                        (forwardPath !==
-                                                                                            null &&
-                                                                                            "?forward=" +
-                                                                                                forwardPath)
-                                                                                );
-                                                                            }}
-                                                                        >
-                                                                            Verify
-                                                                        </button>
-                                                                    </Tooltip>
+                                                                            history.push(
+                                                                                history
+                                                                                    .location
+                                                                                    .pathname +
+                                                                                    "/" +
+                                                                                    session.sessionID +
+                                                                                    (forwardPath !==
+                                                                                        null &&
+                                                                                        "?forward=" +
+                                                                                            forwardPath)
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        Verify
+                                                                    </button>
                                                                 </div>
                                                             )}
                                                             {session.verified && (
@@ -457,54 +424,44 @@ export default function MessagingPane(): JSX.Element {
                                                 >
                                                     Go Back
                                                 </button>
-                                                <Tooltip
-                                                    open={
-                                                        params.userID ===
-                                                        user.userID
+                                                <button
+                                                    className="button is-success is-right"
+                                                    ref={
+                                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                        messageThreeRef as any
                                                     }
-                                                    title={
-                                                        "In real conversations, check that the words match and click here."
-                                                    }
-                                                >
-                                                    <button
-                                                        className="button is-success is-right"
-                                                        ref={
-                                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                            messageThreeRef as any
-                                                        }
-                                                        data-event={"disabled"}
-                                                        data-multiline={true}
-                                                        onClick={async () => {
-                                                            await client.sessions.markVerified(
-                                                                sessionID
-                                                            );
-                                                            dispatch(
-                                                                markSession(
-                                                                    params.userID,
-                                                                    sessionID,
-                                                                    true
-                                                                )
-                                                            );
+                                                    data-event={"disabled"}
+                                                    data-multiline={true}
+                                                    onClick={async () => {
+                                                        await client.sessions.markVerified(
+                                                            sessionID
+                                                        );
+                                                        dispatch(
+                                                            markSession(
+                                                                params.userID,
+                                                                sessionID,
+                                                                true
+                                                            )
+                                                        );
 
-                                                            const forwardPath = query.get(
-                                                                "forward"
-                                                            );
-                                                            if (forwardPath) {
-                                                                history.push(
-                                                                    forwardPath
-                                                                );
-                                                                return;
-                                                            }
+                                                        const forwardPath = query.get(
+                                                            "forward"
+                                                        );
+                                                        if (forwardPath) {
                                                             history.push(
-                                                                routes.MESSAGING +
-                                                                    "/" +
-                                                                    params.userID
+                                                                forwardPath
                                                             );
-                                                        }}
-                                                    >
-                                                        They Match
-                                                    </button>
-                                                </Tooltip>
+                                                            return;
+                                                        }
+                                                        history.push(
+                                                            routes.MESSAGING +
+                                                                "/" +
+                                                                params.userID
+                                                        );
+                                                    }}
+                                                >
+                                                    They Match
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
