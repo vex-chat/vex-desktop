@@ -1,7 +1,7 @@
 {
     "name": "vex-desktop",
     "productName": "Vex Desktop",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "description": "Desktop application for vex chat.",
     "main": "./main.prod.js",
     "author": {
