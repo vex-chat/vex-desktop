@@ -81,6 +81,63 @@ export default function IRegister(): JSX.Element {
         }
     };
 
+    const registerUser = async () => {
+        if (password.length === 0) {
+            return;
+        }
+
+        if (password !== passConfirm) {
+            return;
+        }
+
+        switchFX.play();
+        setWaiting(true);
+
+        const PK = Client.generateSecretKey();
+        const tempClient = new Client(PK, {
+            dbFolder,
+        });
+        tempClient.on("ready", async () => {
+            // eslint-disable-next-line prefer-const
+            const [user, err] = await tempClient.register(username);
+
+            await tempClient.close();
+
+            if (err !== null) {
+                errorFX.play();
+                setWaiting(false);
+                console.warn("registration failed.", err);
+                setErrorText(err.toString());
+            }
+
+            if (user !== null) {
+                setWaiting(false);
+                const keyPath = keyFolder + "/" + user.signKey;
+                saveKeyFile(keyPath, password, PK);
+
+                try {
+                    const confirm = loadKeyFile(keyPath, password);
+                    if (confirm !== PK) {
+                        console.log(confirm, PK);
+                        throw new Error(
+                            "Key file that was written to disk is corrupt."
+                        );
+                    }
+                } catch (err) {
+                    setErrorText(
+                        "Failed to save the keyfile to disk: " + err.toString()
+                    );
+                    return;
+                }
+
+                await resetClient();
+                gaurdian.load(keyPath, password);
+                history.push(routes.LAUNCH);
+            }
+        });
+        tempClient.init();
+    };
+
     return (
         <VerticalAligner top={backButton()}>
             <div className="box has-background-white register-form">
@@ -144,6 +201,11 @@ export default function IRegister(): JSX.Element {
                             className="servername-input input"
                             type="username"
                             value={username}
+                            onKeyDown={async (event) => {
+                                if (event.key === "Enter") {
+                                    registerUser();
+                                }
+                            }}
                             onChange={async (event) => {
                                 setErrorText("");
                                 setTaken(false);
@@ -207,6 +269,11 @@ export default function IRegister(): JSX.Element {
                         className="password-input input"
                         type="password"
                         value={password}
+                        onKeyDown={async (event) => {
+                            if (event.key === "Enter") {
+                                registerUser();
+                            }
+                        }}
                         onChange={(event) => {
                             dispatch(
                                 addInputState(
@@ -233,6 +300,11 @@ export default function IRegister(): JSX.Element {
                         }`}
                         type="password"
                         value={passConfirm}
+                        onKeyDown={async (event) => {
+                            if (event.key === "Enter") {
+                                registerUser();
+                            }
+                        }}
                         onChange={(event) => {
                             dispatch(
                                 addInputState(
@@ -255,65 +327,7 @@ export default function IRegister(): JSX.Element {
                             disabled={
                                 password !== passConfirm || password.length < 3
                             }
-                            onClick={async () => {
-                                switchFX.play();
-                                setWaiting(true);
-
-                                const PK = Client.generateSecretKey();
-                                const tempClient = new Client(PK, {
-                                    dbFolder,
-                                });
-                                tempClient.on("ready", async () => {
-                                    // eslint-disable-next-line prefer-const
-                                    const [
-                                        user,
-                                        err,
-                                    ] = await tempClient.register(username);
-
-                                    await tempClient.close();
-
-                                    if (err !== null) {
-                                        errorFX.play();
-                                        setWaiting(false);
-                                        console.warn(
-                                            "registration failed.",
-                                            err
-                                        );
-                                        setErrorText(err.toString());
-                                    }
-
-                                    if (user !== null) {
-                                        setWaiting(false);
-                                        const keyPath =
-                                            keyFolder + "/" + user.signKey;
-                                        saveKeyFile(keyPath, password, PK);
-
-                                        try {
-                                            const confirm = loadKeyFile(
-                                                keyPath,
-                                                password
-                                            );
-                                            if (confirm !== PK) {
-                                                console.log(confirm, PK);
-                                                throw new Error(
-                                                    "Key file that was written to disk is corrupt."
-                                                );
-                                            }
-                                        } catch (err) {
-                                            setErrorText(
-                                                "Failed to save the keyfile to disk: " +
-                                                    err.toString()
-                                            );
-                                            return;
-                                        }
-
-                                        await resetClient();
-                                        gaurdian.load(keyPath, password);
-                                        history.push(routes.LAUNCH);
-                                    }
-                                });
-                                tempClient.init();
-                            }}
+                            onClick={registerUser}
                         >
                             Chat
                         </button>

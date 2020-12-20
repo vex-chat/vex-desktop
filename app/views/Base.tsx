@@ -173,6 +173,10 @@ export function IdentityPicker(): JSX.Element {
         return <Loading size={256} animation={"cylon"} />;
     }
 
+    if (!initialLoad && Object.keys(accounts).length === 0) {
+        history.push(routes.REGISTER);
+    }
+
     return (
         <VerticalAligner>
             <p className="title">Local Identities</p>
