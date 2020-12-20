@@ -166,11 +166,14 @@ export function ServerPane(): JSX.Element {
                         if (event.key === "Enter" && !event.shiftKey) {
                             event.preventDefault();
 
+                            const messageText = inputs[params.channelID];
+                            dispatch(addInputState(params.channelID, ""));
+
                             const client = window.vex;
                             try {
                                 await client.messages.group(
                                     params.channelID,
-                                    inputs[params.channelID]
+                                    messageText
                                 );
                             } catch (err) {
                                 console.log(err);
@@ -186,8 +189,6 @@ export function ServerPane(): JSX.Element {
                                     console.warn(err);
                                 }
                             }
-
-                            dispatch(addInputState(params.channelID, ""));
                         }
                     }}
                 />

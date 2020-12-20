@@ -549,11 +549,19 @@ export default function MessagingPane(): JSX.Element {
                                             ) {
                                                 event.preventDefault();
 
+                                                const messageText = inputValue;
+                                                dispatch(
+                                                    addInputState(
+                                                        params.userID,
+                                                        ""
+                                                    )
+                                                );
+
                                                 const client = window.vex;
                                                 try {
                                                     await client.messages.send(
                                                         familiar.userID,
-                                                        inputValue
+                                                        messageText
                                                     );
                                                 } catch (err) {
                                                     console.log(err);
@@ -569,13 +577,6 @@ export default function MessagingPane(): JSX.Element {
                                                         console.warn(err);
                                                     }
                                                 }
-
-                                                dispatch(
-                                                    addInputState(
-                                                        params.userID,
-                                                        ""
-                                                    )
-                                                );
                                             }
                                         }}
                                     />
