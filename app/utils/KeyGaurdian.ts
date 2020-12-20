@@ -23,8 +23,6 @@ export class KeyGaurdian {
     }
 }
 
-
-
 export const saveKeyFile = (
     path: string,
     password: string,
