@@ -117,7 +117,7 @@ export default function IRegister(): JSX.Element {
                                     }
 
                                     const tempClient = new Client(undefined, {
-                                        dbFolder: progFolder,
+                                        dbFolder,
                                     });
                                     const [
                                         user,
