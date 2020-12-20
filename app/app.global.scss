@@ -8,6 +8,12 @@ $menu-item-active-color: hsl(0, 0%, 4%);
 @import "../node_modules/bulma/bulma.sass";
 @import "../node_modules/highlight.js/scss/github.scss";
 
+.identity-panel {
+    max-height: 50vh;
+    width: 50vw;
+    overflow-y: scroll;
+}
+
 
 .hljs {
     background-color: $light !important;
@@ -165,6 +171,10 @@ button {
 
 .minimize-button {
     margin-right: 7.5px;
+}
+
+.identity-link {
+    width: 100%;
 }
 
 .identity-link:hover {

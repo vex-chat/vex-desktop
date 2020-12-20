@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from "react";
-import { Switch, Route, Redirect, useHistory } from "react-router-dom";
+import { Switch, Route, Redirect, useHistory, Link } from "react-router-dom";
 import { routes } from "../constants/routes";
 import App from "../views/App";
-import Register from "../views/Register";
+import Register, { backButton } from "../views/Register";
 import Settings from "../views/Settings";
 import { remote } from "electron";
 import fs from "fs";
@@ -17,7 +17,7 @@ import {
 import CreateServer from "../components/CreateServer";
 import Messaging from "./Messaging";
 import { Server } from "./Server";
-import { KeyGaurdian, loadKeyFile } from "../utils/KeyGaurdian";
+import { KeyGaurdian } from "../utils/KeyGaurdian";
 import { Client, IUser } from "@vex-chat/vex-js";
 import { IconUsername } from "../components/IconUsername";
 import { useQuery } from "../components/MessagingPane";
@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addInputState, selectInputStates } from "../reducers/inputs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
+import Loading from "../components/Loading";
 
 export const gaurdian = new KeyGaurdian();
 
@@ -102,13 +103,14 @@ export function LoginForm(): JSX.Element {
     };
 
     return (
-        <VerticalAligner>
+        <VerticalAligner top={backButton()}>
             <div className="box">
                 <label className="label is-small">Password:</label>
                 <div className="control input-wrapper has-icons-left has-icons-right">
                     <input
                         className="input"
                         type="password"
+                        placeholder="hunter2"
                         value={inputs[FORM_NAME] || ""}
                         onChange={(event) => {
                             dispatch(
@@ -136,7 +138,11 @@ export function LoginForm(): JSX.Element {
 }
 
 export function IdentityPicker(): JSX.Element {
+    const pubkeyRegex = /[0-9a-f]{64}/;
+
     const initialState: Record<string, IUser> = {};
+    const [initialLoad, setInitialLoad] = useState(true);
+    // const [errText, setErrText] = useState("");
     const [accounts, setAccounts] = useState(initialState);
     const history = useHistory();
 
@@ -145,6 +151,10 @@ export function IdentityPicker(): JSX.Element {
         const tempClient = new Client(undefined, { dbFolder });
         const accs: Record<string, IUser> = {};
         for (const keyFile of keyFiles) {
+            if (!pubkeyRegex.test(keyFile)) {
+                continue;
+            }
+
             // filename is public key
             const [user, err] = await tempClient.users.retrieve(keyFile);
             if (err) {
@@ -156,26 +166,38 @@ export function IdentityPicker(): JSX.Element {
             }
         }
         setAccounts(accs);
-    }, []);
+        setInitialLoad(false);
+    }, [history]);
+
+    if (initialLoad) {
+        return <Loading size={256} animation={"cylon"} />;
+    }
 
     return (
         <VerticalAligner>
-            <div className="panel is-light">
-                <p className="panel-heading">Local Identities</p>
-                <div className="panel-block">
-                    Which identity would you like to use?
-                </div>
-                {Object.keys(accounts).map((key) => (
-                    <div key={key} className="panel-block identity-link">
-                        <span
-                            onClick={() => {
-                                history.push(routes.LOGIN + "?key=" + key);
-                            }}
-                        >
-                            {IconUsername(accounts[key])}
-                        </span>
-                    </div>
-                ))}
+            <p className="title">Local Identities</p>
+            <p className="subtitle">Which identity would you like to use?</p>
+
+            <div className="panel is-light identity-panel">
+                {Object.keys(accounts).length > 0 &&
+                    Object.keys(accounts).map((key) => (
+                        <div key={key} className="panel-block identity-link">
+                            <span
+                                className="identity-link"
+                                onClick={() => {
+                                    history.push(routes.LOGIN + "?key=" + key);
+                                }}
+                            >
+                                {IconUsername(accounts[key])}
+                            </span>
+                        </div>
+                    ))}
+            </div>
+
+            <div className="buttons is-right">
+                <Link to={routes.REGISTER} className="button">
+                    New Identity
+                </Link>
             </div>
         </VerticalAligner>
     );

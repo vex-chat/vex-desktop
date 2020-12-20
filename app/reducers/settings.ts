@@ -4,6 +4,7 @@ import { AppThunk, RootState } from "../store";
 if (!localStorage.getItem("notifications")) {
     localStorage.setItem("notifications", "true");
 }
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const notifications = localStorage.getItem("notifications")!;
 
 const baseSettings: Record<string, string | boolean> = {

@@ -8,7 +8,7 @@ import {
     resetInputStates,
     selectInputStates,
 } from "../reducers/inputs";
-import { errorFX, switchFX, VerticalAligner } from "../views/Base";
+import { errorFX, gaurdian, switchFX, VerticalAligner } from "../views/Base";
 import { useHistory } from "react-router";
 import { dbFolder, keyFolder } from "../components/ClientLauncher";
 import { resetUser } from "../reducers/user";
@@ -64,7 +64,6 @@ export default function IRegister(): JSX.Element {
     });
 
     const resetClient = async () => {
-        const client = window.vex;
         dispatch(resetApp());
         dispatch(resetChannels());
         dispatch(resetFamiliars());
@@ -75,7 +74,11 @@ export default function IRegister(): JSX.Element {
         dispatch(resetSessions());
         dispatch(resetUser());
         dispatch(resetPermissions());
-        await client.close();
+
+        const client = window.vex;
+        if (client) {
+            await client.close();
+        }
     };
 
     return (
@@ -83,7 +86,52 @@ export default function IRegister(): JSX.Element {
             <div className="box has-background-white register-form">
                 <div className="field">
                     <label className="label is-small">
-                        Pick a username:{" "}
+                        Pick a username: &nbsp;&nbsp;
+                        <a
+                            onClick={async () => {
+                                setErrorText("");
+                                setTaken(false);
+                                setValid(false);
+
+                                const username = Client.randomUsername();
+
+                                dispatch(
+                                    addInputState(USERNAME_INPUT_NAME, username)
+                                );
+
+                                const client = window.vex;
+
+                                const [
+                                    serverResults,
+                                    err,
+                                ] = await client.users.retrieve(username);
+
+                                if (
+                                    err &&
+                                    err.response &&
+                                    err.response.status === 200
+                                ) {
+                                    setTaken(true);
+                                }
+
+                                if (
+                                    username.length > 2 &&
+                                    username.length < 20
+                                ) {
+                                    setValid(true);
+                                } else {
+                                    setValid(false);
+                                }
+
+                                if (serverResults) {
+                                    setTaken(true);
+                                } else {
+                                    setTaken(false);
+                                }
+                            }}
+                        >
+                            random
+                        </a>
                         {taken && (
                             <span className="has-text-danger">
                                 Username is taken!
@@ -201,54 +249,6 @@ export default function IRegister(): JSX.Element {
                 <div className="field">
                     <div className="buttons register-form-buttons is-right">
                         <button
-                            className={`button is-light${
-                                waiting ? " is-disabled" : ""
-                            }`}
-                            onClick={async () => {
-                                setErrorText("");
-                                setTaken(false);
-                                setValid(false);
-
-                                const username = Client.randomUsername();
-
-                                dispatch(
-                                    addInputState(USERNAME_INPUT_NAME, username)
-                                );
-
-                                const client = window.vex;
-
-                                const [
-                                    serverResults,
-                                    err,
-                                ] = await client.users.retrieve(username);
-
-                                if (
-                                    err &&
-                                    err.response &&
-                                    err.response.status === 200
-                                ) {
-                                    setTaken(true);
-                                }
-
-                                if (
-                                    username.length > 2 &&
-                                    username.length < 20
-                                ) {
-                                    setValid(true);
-                                } else {
-                                    setValid(false);
-                                }
-
-                                if (serverResults) {
-                                    setTaken(true);
-                                } else {
-                                    setTaken(false);
-                                }
-                            }}
-                        >
-                            Random
-                        </button>
-                        <button
                             className={`button is-success${
                                 waiting ? " is-loading" : ""
                             } `}
@@ -260,7 +260,6 @@ export default function IRegister(): JSX.Element {
                                 setWaiting(true);
 
                                 const PK = Client.generateSecretKey();
-
                                 const tempClient = new Client(PK, {
                                     dbFolder,
                                 });
@@ -309,6 +308,7 @@ export default function IRegister(): JSX.Element {
                                         }
 
                                         await resetClient();
+                                        gaurdian.load(keyPath, password);
                                         history.push(routes.LAUNCH);
                                     }
                                 });

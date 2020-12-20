@@ -21,6 +21,10 @@ export class KeyGaurdian {
         const SK = loadKeyFile(path, password);
         this.SK = SK;
     }
+
+    public clear(): void {
+        this.SK = null;
+    }
 }
 
 export const saveKeyFile = (

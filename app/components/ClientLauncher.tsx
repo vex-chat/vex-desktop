@@ -66,8 +66,6 @@ export async function initClient(): Promise<void> {
         await window.vex.close();
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    // const PK = localStorage.getItem("PK")!;
     const PK = gaurdian.getKey();
     client = new Client(PK, {
         dbFolder,
