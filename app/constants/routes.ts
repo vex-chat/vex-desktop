@@ -6,6 +6,7 @@ interface IRoutes {
     LAUNCH: string;
     SERVERS: string;
     CREATE: string;
+    LOGIN: string;
 }
 
 export const routes: IRoutes = {
@@ -16,4 +17,5 @@ export const routes: IRoutes = {
     LAUNCH: "/launch",
     SERVERS: "/server",
     CREATE: "/create",
+    LOGIN: "/login",
 };

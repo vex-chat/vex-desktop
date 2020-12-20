@@ -1,17 +1,32 @@
-import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import React, { useMemo, useState } from "react";
+import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 import { routes } from "../constants/routes";
 import App from "../views/App";
 import Register from "../views/Register";
 import Settings from "../views/Settings";
-
+import { remote } from "electron";
+import fs from "fs";
 import closeIcon from "../assets/icons/close.svg";
 import minimizeIcon from "../assets/icons/minimize.svg";
 import maximizeIcon from "../assets/icons/maximize.svg";
-import { ClientLauncher } from "../components/ClientLauncher";
+import {
+    ClientLauncher,
+    dbFolder,
+    keyFolder,
+} from "../components/ClientLauncher";
 import CreateServer from "../components/CreateServer";
 import Messaging from "./Messaging";
 import { Server } from "./Server";
+import { KeyGaurdian, loadKeyFile } from "../utils/KeyGaurdian";
+import { Client, IUser } from "@vex-chat/vex-js";
+import { IconUsername } from "../components/IconUsername";
+import { useQuery } from "../components/MessagingPane";
+import { useDispatch, useSelector } from "react-redux";
+import { addInputState, selectInputStates } from "../reducers/inputs";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLock } from "@fortawesome/free-solid-svg-icons";
+
+export const gaurdian = new KeyGaurdian();
 
 export const switchFX = new Audio("assets/sounds/switch_005.ogg");
 switchFX.load();
@@ -50,39 +65,137 @@ export default function Base(): JSX.Element {
                         }
                     }}
                 />
+                <Route path={routes.LOGIN} render={() => <LoginForm />} />
                 <Route
                     exact
                     path={routes.HOME}
-                    render={() => <Redirect to={routes.LAUNCH} />}
+                    render={() => {
+                        if (gaurdian.hasKey()) {
+                            return <Redirect to={routes.LAUNCH} />;
+                        } else {
+                            return <IdentityPicker />;
+                        }
+                    }}
                 />
             </Switch>
         </App>
     );
 }
 
+export function LoginForm(): JSX.Element {
+    const history = useHistory();
+    const FORM_NAME = "keyfile-login-pasword";
+    const query = useQuery();
+    const inputs = useSelector(selectInputStates);
+    const publicKey = query.get("key");
+    const dispatch = useDispatch();
+
+    const unlockKey = () => {
+        try {
+            gaurdian.load(keyFolder + "/" + publicKey, inputs[FORM_NAME]);
+        } catch (err) {
+            console.error(err);
+            return;
+        }
+
+        history.push(routes.HOME);
+    };
+
+    return (
+        <VerticalAligner>
+            <div className="box">
+                <label className="label is-small">Password:</label>
+                <div className="control input-wrapper has-icons-left has-icons-right">
+                    <input
+                        className="input"
+                        type="password"
+                        value={inputs[FORM_NAME] || ""}
+                        onChange={(event) => {
+                            dispatch(
+                                addInputState(FORM_NAME, event.target.value)
+                            );
+                        }}
+                        onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                                unlockKey();
+                            }
+                        }}
+                    />
+                    <span className="icon is-left">
+                        <FontAwesomeIcon icon={faLock} />
+                    </span>
+                </div>
+                <div className="buttons is-right">
+                    <button className="button is-success" onClick={unlockKey}>
+                        Unlock
+                    </button>
+                </div>
+            </div>
+        </VerticalAligner>
+    );
+}
+
+export function IdentityPicker(): JSX.Element {
+    const initialState: Record<string, IUser> = {};
+    const [accounts, setAccounts] = useState(initialState);
+    const history = useHistory();
+
+    useMemo(async () => {
+        const keyFiles = fs.readdirSync(keyFolder);
+        const tempClient = new Client(undefined, { dbFolder });
+        const accs: Record<string, IUser> = {};
+        for (const keyFile of keyFiles) {
+            // filename is public key
+            const [user, err] = await tempClient.users.retrieve(keyFile);
+            if (err) {
+                console.warn(err);
+                continue;
+            }
+            if (user) {
+                accs[user.signKey] = user;
+            }
+        }
+        setAccounts(accs);
+    }, []);
+
+    return (
+        <VerticalAligner>
+            <div className="panel is-light">
+                <p className="panel-heading">Local Identities</p>
+                <div className="panel-block">
+                    Which identity would you like to use?
+                </div>
+                {Object.keys(accounts).map((key) => (
+                    <div key={key} className="panel-block identity-link">
+                        <span
+                            onClick={() => {
+                                history.push(routes.LOGIN + "?key=" + key);
+                            }}
+                        >
+                            {IconUsername(accounts[key])}
+                        </span>
+                    </div>
+                ))}
+            </div>
+        </VerticalAligner>
+    );
+}
+
 export function TitleBar(): JSX.Element {
     function closeWindow() {
-        const remote = window.require
-            ? window.require("electron").remote
-            : null;
-        const WIN = remote?.getCurrentWindow();
-        WIN?.close();
+        const window = remote.getCurrentWindow();
+        window.close();
     }
 
     function minimizeWindow() {
-        const remote = window.require
-            ? window.require("electron").remote
-            : null;
-        const WIN = remote?.getCurrentWindow();
-        WIN?.minimize();
+        console.log("reached");
+        const window = remote.getCurrentWindow();
+        window.minimize();
     }
 
     function maximizeWindow() {
-        const remote = window.require
-            ? window.require("electron").remote
-            : null;
-        const WIN = remote?.getCurrentWindow();
-        WIN?.maximize();
+        const window = remote.getCurrentWindow();
+        window.maximize();
     }
 
     return (
@@ -91,7 +204,7 @@ export function TitleBar(): JSX.Element {
                 <div className="window-buttons">
                     <span
                         onClick={() => minimizeWindow()}
-                        className="icon is-small minimize-button "
+                        className="pointer icon is-small minimize-button "
                     >
                         <img
                             src={(minimizeIcon as unknown) as string}
@@ -104,7 +217,7 @@ export function TitleBar(): JSX.Element {
                     >
                         <img
                             src={(maximizeIcon as unknown) as string}
-                            className="window-button-icon"
+                            className="window-button-icon pointer"
                         />
                     </span>
                     <span
@@ -118,6 +231,24 @@ export function TitleBar(): JSX.Element {
                     </span>
                 </div>
             )}
+        </div>
+    );
+}
+
+export function VerticalAligner(props: {
+    top?: JSX.Element;
+    bottom?: JSX.Element;
+    children: React.ReactNode;
+}): JSX.Element {
+    return (
+        <div className="Aligner full-size">
+            <div className="Aligner-item Aligner-item--top">
+                {props.top ? props.top : <span />}
+            </div>
+            <div className="Aligner-item">{props.children}</div>
+            <div className="Aligner-item Aligner-item--bottom">
+                {props.bottom ? props.bottom : <span />}
+            </div>
         </div>
     );
 }

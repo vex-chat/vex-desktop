@@ -4,17 +4,8 @@ import { render } from "react-dom";
 import { AppContainer as ReactHotAppContainer } from "react-hot-loader";
 import { Client } from "@vex-chat/vex-js";
 import { history, configuredStore } from "./store";
-import fs from "fs";
-import os from "os";
 import "app.global.scss";
 import Root from "./Root";
-
-const homedir = os.homedir();
-export const progFolder = `${homedir}/.vex-desktop`;
-
-if (!fs.existsSync(progFolder)) {
-    fs.mkdirSync(progFolder);
-}
 
 const store = configuredStore();
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;

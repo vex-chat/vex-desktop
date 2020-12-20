@@ -39,7 +39,7 @@ import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 
 // A custom hook that builds on useLocation to parse
 // the query string for you.
-function useQuery() {
+export function useQuery(): URLSearchParams {
     return new URLSearchParams(useLocation().search);
 }
 

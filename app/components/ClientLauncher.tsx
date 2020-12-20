@@ -35,6 +35,8 @@ import {
     resetPermissions,
     setPermissions,
 } from "../reducers/permissions";
+import fs from "fs";
+import { gaurdian } from "../views/Base";
 
 declare global {
     interface Window {
@@ -47,6 +49,13 @@ export const progFolder = `${homedir}/.vex-desktop`;
 export const dbFolder = `${progFolder}/databases`;
 export const keyFolder = `${progFolder}/keys`;
 
+const folders = [progFolder, dbFolder, keyFolder];
+for (const folder of folders) {
+    if (!fs.existsSync(folder)) {
+        fs.mkdirSync(folder);
+    }
+}
+
 // eslint-disable-next-line no-var
 let client: Client;
 
@@ -58,7 +67,8 @@ export async function initClient(): Promise<void> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const PK = localStorage.getItem("PK")!;
+    // const PK = localStorage.getItem("PK")!;
+    const PK = gaurdian.getKey();
     client = new Client(PK, {
         dbFolder,
         logLevel: "info",

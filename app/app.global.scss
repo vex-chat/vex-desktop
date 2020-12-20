@@ -121,6 +121,7 @@ div {
 
 .window-buttons {
     float: right;
+    z-index: 11;
 }
 
 .mnemonic-pre {
@@ -166,13 +167,18 @@ button {
     margin-right: 7.5px;
 }
 
+.identity-link:hover {
+    background-color: darken($light, 5%);
+    cursor: pointer;
+}
+
 .title-bar {
     position: absolute;
     height: 22px;
     width: 100%;
     top: 0px;
     -ms-overflow-style: scrollbar;
-    -webkit-app-region:drag;
+    -webkit-app-region: drag;
     background-image: linear-gradient(to left, $light, $white);
 }
 
