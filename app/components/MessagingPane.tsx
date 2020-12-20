@@ -596,26 +596,27 @@ export function MessageBox(props: {
     const user = useSelector(selectUser);
     const familiars = useSelector(selectFamiliars);
     const history = useHistory();
-    if (props.messages.length == 0) {
-        return <span key={crypto.randomBytes(16).toString("hex")} />;
-    }
 
     // don't match no characters of any length
     const regex = /(```[^]+```)/;
-    const sender = familiars[props.messages[0].sender];
-
-    if (!sender) {
-        return <span key={uuid.v4()} />;
-    }
+    const sender = familiars[props.messages[0]?.sender] || null;
 
     const sessions = useSelector(selectSessions);
 
-    const sessionIDs = Object.keys(sessions[sender.userID] || {});
+    const sessionIDs = Object.keys(sessions[sender?.userID] || {});
     let hasUnverifiedSession = false;
     for (const sessionID of sessionIDs) {
         if (!sessions[sender.userID][sessionID].verified) {
             hasUnverifiedSession = true;
         }
+    }
+
+    if (!sender) {
+        return <span key={uuid.v4()} />;
+    }
+
+    if (props.messages.length == 0) {
+        return <span key={crypto.randomBytes(16).toString("hex")} />;
     }
 
     return (

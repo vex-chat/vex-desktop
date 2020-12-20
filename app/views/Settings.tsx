@@ -1,14 +1,11 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
-import { selectSettings, setSettings } from "../reducers/settings";
-import { VerticalAligner } from "./Base";
+import React, { useState } from "react";
+import { dataStore, VerticalAligner } from "./Base";
 import { backButton } from "./Register";
 
 export default function Settings(): JSX.Element {
-    const history = useHistory();
-    const settings = useSelector(selectSettings);
-    const dispatch = useDispatch();
+    const [notification, setNotifications] = useState(
+        dataStore.get("settings.notifications") as boolean
+    );
 
     return (
         <VerticalAligner top={backButton()}>
@@ -18,15 +15,14 @@ export default function Settings(): JSX.Element {
                     <label className="checkbox settings-box">
                         <input
                             onChange={() => {
-                                dispatch(
-                                    setSettings({
-                                        key: "notifications",
-                                        value: !settings.notifications,
-                                    })
+                                dataStore.set(
+                                    "settings.notifications",
+                                    !notification
                                 );
+                                setNotifications(!notification);
                             }}
                             type="checkbox"
-                            checked={settings.notifications as boolean}
+                            checked={notification}
                         />
                         &nbsp; Notifications
                     </label>

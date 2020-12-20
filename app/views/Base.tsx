@@ -26,6 +26,7 @@ import { addInputState, selectInputStates } from "../reducers/inputs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import Loading from "../components/Loading";
+import Store from "electron-store";
 
 export const gaurdian = new KeyGaurdian();
 
@@ -34,6 +35,8 @@ switchFX.load();
 
 export const errorFX = new Audio("assets/sounds/error_008.ogg");
 errorFX.load();
+
+export const dataStore = new Store();
 
 export default function Base(): JSX.Element {
     return (
@@ -136,7 +139,12 @@ export function LoginForm(): JSX.Element {
                     </span>
                 </div>
                 <div className="buttons is-right">
-                    <button className={`button is-success ${loading ? "is-loading" : ""}`} onClick={unlockKey}>
+                    <button
+                        className={`button is-success ${
+                            loading ? "is-loading" : ""
+                        }`}
+                        onClick={unlockKey}
+                    >
                         Unlock
                     </button>
                 </div>

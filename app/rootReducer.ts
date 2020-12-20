@@ -6,7 +6,6 @@ import familiarsReducer from "./reducers/familiars";
 import inputsReducer from "./reducers/inputs";
 import messageReducer from "./reducers/messages";
 import sessionReducer from "./reducers/sessions";
-import settingsReducer from "./reducers/settings";
 import appReducer from "./reducers/app";
 import serverReducer from "./reducers/servers";
 import channelReducer from "./reducers/channels";
@@ -22,7 +21,6 @@ export default function createRootReducer(history: History) {
         inputs: inputsReducer,
         messages: messageReducer,
         sessions: sessionReducer,
-        settings: settingsReducer,
         app: appReducer,
         servers: serverReducer,
         channels: channelReducer,

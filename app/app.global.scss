@@ -90,10 +90,15 @@ html {
 textarea {
     position: relative;
     border: 1px solid darken($light, 10%) !important;
-    outline: none;
+    outline: none !important;
     border-radius: 0px !important;
     height: 100% !important;
     width: 100%;
+}
+
+textarea:focus {
+    box-shadow: none !important;
+
 }
 
 input {

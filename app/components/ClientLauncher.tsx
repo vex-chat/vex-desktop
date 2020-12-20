@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-case-declarations */
 import {
     Client,
+    IChannel,
     IMessage,
     IPermission,
+    IServer,
     ISession,
     IUser,
 } from "@vex-chat/vex-js";
@@ -20,7 +23,6 @@ import {
 } from "../reducers/familiars";
 import { addMessage, resetMessages } from "../reducers/messages";
 import { addSession, resetSessions, setSessions } from "../reducers/sessions";
-import { selectSettings } from "../reducers/settings";
 import { resetUser, setUser } from "../reducers/user";
 import os from "os";
 import { resetInputStates } from "../reducers/inputs";
@@ -36,7 +38,7 @@ import {
     setPermissions,
 } from "../reducers/permissions";
 import fs from "fs";
-import { gaurdian } from "../views/Base";
+import { dataStore, gaurdian } from "../views/Base";
 
 declare global {
     interface Window {
@@ -110,11 +112,99 @@ function objifySessions(sessions: ISession[]): Record<string, ISession[]> {
     return sessionsObj;
 }
 
+const userRecords: Record<string, IUser> = {};
+const channelRecords: Record<string, IChannel> = {};
+const serverRecords: Record<string, IServer> = {};
+
 export function ClientLauncher(): JSX.Element {
     const dispatch = useDispatch();
     const history = useHistory();
-    const settings = useSelector(selectSettings);
     const servers = useSelector(selectServers);
+
+    const notification = async (message: IMessage) => {
+        if (
+            dataStore.get("settings.notifications") &&
+            message.direction === "incoming"
+        ) {
+            const tempClient = new Client(undefined, { dbFolder });
+
+            if (userRecords[message.sender] === undefined) {
+                const [user] = await tempClient.users.retrieve(message.sender);
+                if (!user) {
+                    return;
+                }
+                userRecords[message.sender] = user;
+            }
+            if (
+                message.group !== null &&
+                channelRecords[message.group] === undefined
+            ) {
+                const channel = await tempClient.channels.retrieveByID(
+                    message.group
+                );
+                if (!channel) {
+                    return;
+                }
+                channelRecords[message.group] = channel;
+
+                if (serverRecords[channel.serverID] === undefined) {
+                    const server = await tempClient.servers.retrieveByID(
+                        channel.serverID
+                    );
+                    if (!server) {
+                        return;
+                    }
+                    serverRecords[channel.serverID] = server;
+                }
+            }
+
+            const userRecord = userRecords[message.sender];
+            const channelRecord = message.group
+                ? channelRecords[message.group]
+                : null;
+            const serverRecord = message.group
+                ? serverRecords[channelRecord!.serverID]
+                : null;
+
+            if (message.group === null) {
+                const msgNotification = new Notification(
+                    userRecords[message.sender].username,
+                    { body: message.message }
+                );
+                msgNotification.onclick = () => {
+                    remote.getCurrentWindow().show();
+                    history.push(
+                        routes.MESSAGING +
+                            "/" +
+                            (message.direction === "incoming"
+                                ? message.sender
+                                : message.recipient)
+                    );
+                };
+            } else {
+                const msgNotification = new Notification(
+                    userRecord.username +
+                        " in " +
+                        serverRecord!.name +
+                        "/" +
+                        channelRecord!.name,
+                    {
+                        body: message.message,
+                    }
+                );
+                msgNotification.onclick = () => {
+                    remote.getCurrentWindow().show();
+                    history.push(
+                        routes.SERVERS +
+                            "/" +
+                            serverRecord!.serverID +
+                            "/" +
+                            channelRecord!.channelID
+                    );
+                };
+            }
+        }
+    };
 
     const messageHandler = async (message: IMessage) => {
         if (message.group) {
@@ -123,27 +213,7 @@ export function ClientLauncher(): JSX.Element {
             dispatch(addMessage(message));
         }
 
-        if (
-            !message.group &&
-            settings.notifications &&
-            message.direction === "incoming" &&
-            message.recipient !== message.sender
-        ) {
-            const msgNotification = new Notification("Vex", {
-                body: message.message,
-            });
-
-            msgNotification.onclick = () => {
-                remote.getCurrentWindow().show();
-                history.push(
-                    routes.MESSAGING +
-                        "/" +
-                        (message.direction === "incoming"
-                            ? message.sender
-                            : message.recipient)
-                );
-            };
-        }
+        notification(message);
     };
 
     const needsRegisterHandler = () => {
