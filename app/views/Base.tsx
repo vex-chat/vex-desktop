@@ -89,16 +89,24 @@ export function LoginForm(): JSX.Element {
     const query = useQuery();
     const inputs = useSelector(selectInputStates);
     const publicKey = query.get("key");
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
     const unlockKey = () => {
-        try {
-            gaurdian.load(keyFolder + "/" + publicKey, inputs[FORM_NAME]);
-        } catch (err) {
-            console.error(err);
+        const password = inputs[FORM_NAME];
+
+        if (!password || password == "") {
             return;
         }
-
+        setLoading(true);
+        dispatch(addInputState(FORM_NAME, ""));
+        try {
+            gaurdian.load(keyFolder + "/" + publicKey, password);
+        } catch (err) {
+            console.error(err);
+            setLoading(false);
+            return;
+        }
         history.push(routes.HOME);
     };
 
@@ -128,7 +136,7 @@ export function LoginForm(): JSX.Element {
                     </span>
                 </div>
                 <div className="buttons is-right">
-                    <button className="button is-success" onClick={unlockKey}>
+                    <button className={`button is-success ${loading ? "is-loading" : ""}`} onClick={unlockKey}>
                         Unlock
                     </button>
                 </div>
