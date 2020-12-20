@@ -10,7 +10,7 @@ import {
 } from "../reducers/inputs";
 import { errorFX, switchFX } from "../views/Base";
 import { useHistory } from "react-router";
-import { keyFolder, progFolder } from "../components/ClientLauncher";
+import { dbFolder, keyFolder, progFolder } from "../components/ClientLauncher";
 import { resetUser } from "../reducers/user";
 import { resetApp } from "../reducers/app";
 import { resetMessages } from "../reducers/messages";
@@ -20,11 +20,8 @@ import { resetFamiliars } from "../reducers/familiars";
 import { resetServers } from "../reducers/servers";
 import { resetSessions } from "../reducers/sessions";
 import { resetPermissions } from "../reducers/permissions";
-import fs from "fs";
-import nacl from "tweetnacl";
-import pbkdf2 from "pbkdf2";
-import { xConcat, xMakeNonce, XUtils } from "@vex-chat/crypto-js";
 import { routes } from "../constants/routes";
+import { loadKeyFile, saveKeyFile } from "../utils/KeyGaurdian";
 
 const USERNAME_INPUT_NAME = "register_username";
 const PASSWORD_INPUT_NAME = "register_password";
@@ -273,7 +270,7 @@ export default function IRegister(): JSX.Element {
                                     localStorage.setItem("PK", PK);
 
                                     const tempClient = new Client(PK, {
-                                        dbFolder: progFolder,
+                                        dbFolder,
                                     });
                                     tempClient.on("ready", async () => {
                                         // eslint-disable-next-line prefer-const
@@ -336,65 +333,3 @@ export default function IRegister(): JSX.Element {
         </div>
     );
 }
-
-export const saveKeyFile = (
-    path: string,
-    password: string,
-    secretKey: string
-): void => {
-    const UNENCRYPTED_SIGNKEY = XUtils.decodeHex(secretKey);
-
-    // generate random amount of iterations
-    const R1 = nacl.randomBytes(1);
-    const R2 = nacl.randomBytes(1);
-    const N1 = XUtils.uint8ArrToNumber(R1);
-    const N2 = XUtils.uint8ArrToNumber(R2);
-    const iterations = N1 * N2;
-
-    // length 6
-    const ITERATIONS = XUtils.numberToUint8Arr(iterations);
-
-    // length 24
-    const PKBDF_SALT = xMakeNonce();
-
-    // derived key to encrypt our signkeys with
-    const ENCRYPTION_KEY = Uint8Array.from(
-        pbkdf2.pbkdf2Sync(password, PKBDF_SALT, iterations, 32)
-    );
-    const NONCE = xMakeNonce();
-
-    const ENCRYPTED_SIGNKEY = nacl.secretbox(
-        UNENCRYPTED_SIGNKEY,
-        NONCE,
-        ENCRYPTION_KEY
-    );
-    fs.writeFileSync(
-        path,
-        xConcat(ITERATIONS, PKBDF_SALT, NONCE, ENCRYPTED_SIGNKEY)
-    );
-};
-
-export const loadKeyFile = (path: string, password: string): string => {
-    const keyFile = Uint8Array.from(fs.readFileSync(path));
-    const ITERATIONS = XUtils.uint8ArrToNumber(keyFile.slice(0, 6));
-    const PKBDF_SALT = keyFile.slice(6, 30);
-    const ENCRYPTION_NONCE = keyFile.slice(30, 54);
-    // this is the id key we need to decrypt
-    const ENCRYPTED_KEY = keyFile.slice(54);
-    // the derived key from the user's password
-    const DERIVED_KEY = Uint8Array.from(
-        pbkdf2.pbkdf2Sync(password, PKBDF_SALT, ITERATIONS, 32)
-    );
-
-    const DECRYPTED_SIGNKEY = nacl.secretbox.open(
-        ENCRYPTED_KEY,
-        ENCRYPTION_NONCE,
-        DERIVED_KEY
-    );
-
-    if (!DECRYPTED_SIGNKEY) {
-        throw new Error("Decryption failed. Wrong password?");
-    } else {
-        return XUtils.encodeHex(DECRYPTED_SIGNKEY);
-    }
-};
