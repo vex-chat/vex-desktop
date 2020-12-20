@@ -126,6 +126,10 @@ export function ClientLauncher(): JSX.Element {
             dataStore.get("settings.notifications") &&
             message.direction === "incoming"
         ) {
+            if (remote.getCurrentWindow().isFocused()) {
+                return;
+            }
+
             const tempClient = new Client(undefined, { dbFolder });
 
             if (userRecords[message.sender] === undefined) {
@@ -167,19 +171,12 @@ export function ClientLauncher(): JSX.Element {
                 : null;
 
             if (message.group === null) {
-                const msgNotification = new Notification(
-                    userRecords[message.sender].username,
-                    { body: message.message }
-                );
+                const msgNotification = new Notification(userRecord.username, {
+                    body: message.message,
+                });
                 msgNotification.onclick = () => {
                     remote.getCurrentWindow().show();
-                    history.push(
-                        routes.MESSAGING +
-                            "/" +
-                            (message.direction === "incoming"
-                                ? message.sender
-                                : message.recipient)
-                    );
+                    history.push(routes.MESSAGING + "/" + message.sender);
                 };
             } else {
                 const msgNotification = new Notification(
@@ -188,9 +185,7 @@ export function ClientLauncher(): JSX.Element {
                         serverRecord!.name +
                         "/" +
                         channelRecord!.name,
-                    {
-                        body: message.message,
-                    }
+                    { body: message.message }
                 );
                 msgNotification.onclick = () => {
                     remote.getCurrentWindow().show();
