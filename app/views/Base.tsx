@@ -99,6 +99,7 @@ export function LoginForm(): JSX.Element {
     const inputs = useSelector(selectInputStates);
     const publicKey = query.get("key");
     const [loading, setLoading] = useState(false);
+    const [errText, setErrText] = useState("");
     const dispatch = useDispatch();
 
     const unlockKey = () => {
@@ -113,6 +114,7 @@ export function LoginForm(): JSX.Element {
             gaurdian.load(keyFolder + "/" + publicKey, password);
         } catch (err) {
             console.error(err);
+            setErrText(err.toString());
             setLoading(false);
             return;
         }
@@ -122,6 +124,9 @@ export function LoginForm(): JSX.Element {
     return (
         <VerticalAligner top={backButton()}>
             <div className="box">
+                {errText !== "" && (
+                    <div className="notification is-danger">{errText}</div>
+                )}
                 <label className="label is-small">Password:</label>
                 <div className="control input-wrapper has-icons-left has-icons-right">
                     <input
