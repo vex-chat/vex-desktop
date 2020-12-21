@@ -8,12 +8,22 @@ $menu-item-active-color: hsl(0, 0%, 4%);
 @import "../node_modules/bulma/bulma.sass";
 @import "../node_modules/highlight.js/scss/github.scss";
 
+
 .identity-panel {
     max-height: 50vh;
     width: 50vw;
     overflow-y: scroll;
 }
 
+.title-bar-grabber {
+    position: absolute;
+    width: calc(100% - 60px);
+    height: auto;
+    line-height: 1.75;
+    color: $black;
+    -ms-overflow-style: scrollbar;
+    -webkit-app-region: drag;
+}
 
 .hljs {
     background-color: $light !important;
@@ -132,7 +142,6 @@ div {
 
 .window-buttons {
     float: right;
-    z-index: 11;
 }
 
 .mnemonic-pre {
@@ -166,16 +175,20 @@ button {
 }
 
 .window-buttons {
-    padding-top: 1px;
-    padding-right: 10px;
-}
-
-.maximize-button {
-    margin-right: 7.5px;
+    font-size: 16px;
+    margin-right: 5px;
 }
 
 .minimize-button {
-    margin-right: 7.5px;
+    margin-right: 5px;
+}
+
+.maximize-button {
+    margin-right: 3px;
+}
+
+.close-button {
+    font-size: 17px;
 }
 
 .identity-link {
@@ -190,10 +203,9 @@ button {
 .title-bar {
     position: absolute;
     height: 22px;
-    width: 100%;
+    width: calc(100% - 60px);
+    left: 0;
     top: 0px;
-    -ms-overflow-style: scrollbar;
-    -webkit-app-region: drag;
     background-image: linear-gradient(to left, $light, $white);
 }
 

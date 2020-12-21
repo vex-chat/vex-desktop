@@ -7,8 +7,6 @@ import Settings from "../views/Settings";
 import { remote } from "electron";
 import fs from "fs";
 import closeIcon from "../assets/icons/close.svg";
-import minimizeIcon from "../assets/icons/minimize.svg";
-import maximizeIcon from "../assets/icons/maximize.svg";
 import {
     ClientLauncher,
     dbFolder,
@@ -24,9 +22,17 @@ import { useQuery } from "../components/MessagingPane";
 import { useDispatch, useSelector } from "react-redux";
 import { addInputState, selectInputStates } from "../reducers/inputs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLock } from "@fortawesome/free-solid-svg-icons";
+import {
+    faLock,
+    faSquare,
+    faTimes,
+    faWindowMaximize,
+    faWindowMinimize,
+} from "@fortawesome/free-solid-svg-icons";
+import { faSquare as farSquare } from "@fortawesome/free-regular-svg-icons";
 import Loading from "../components/Loading";
 import Store from "electron-store";
+import { version } from "../package.json";
 
 export const gaurdian = new KeyGaurdian();
 
@@ -237,39 +243,38 @@ export function TitleBar(): JSX.Element {
 
     function maximizeWindow() {
         const window = remote.getCurrentWindow();
-        window.maximize();
+
+        if (window.isMaximized()) {
+            window.unmaximize();
+        } else {
+            window.maximize();
+        }
     }
 
     return (
-        <div className="title-bar">
+        <div className="title-bar" onDoubleClick={maximizeWindow}>
+            <div className="title-bar-grabber has-text-centered is-size-7">
+                vex desktop {version}
+            </div>
             {process.platform !== "darwin" && (
                 <div className="window-buttons">
                     <span
                         onClick={() => minimizeWindow()}
                         className="pointer icon is-small minimize-button "
                     >
-                        <img
-                            src={(minimizeIcon as unknown) as string}
-                            className="window-button-icon"
-                        />
+                        <FontAwesomeIcon icon={faWindowMinimize} />
                     </span>
                     <span
                         onClick={() => maximizeWindow()}
-                        className="icon maximize-button is-small has-text-danger pointer"
+                        className="icon maximize-button is-small pointer"
                     >
-                        <img
-                            src={(maximizeIcon as unknown) as string}
-                            className="window-button-icon pointer"
-                        />
+                        <FontAwesomeIcon icon={faWindowMaximize} />
                     </span>
                     <span
                         onClick={() => closeWindow()}
-                        className="icon close-button is-small has-text-danger pointer"
+                        className="icon close-button has-text-danger is-small pointer"
                     >
-                        <img
-                            src={(closeIcon as unknown) as string}
-                            className="window-button-icon"
-                        />
+                        <FontAwesomeIcon icon={faTimes} />
                     </span>
                 </div>
             )}
