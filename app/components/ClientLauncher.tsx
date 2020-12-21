@@ -258,19 +258,27 @@ export function ClientLauncher(): JSX.Element {
         for (const user of familiars) {
             const history = await client.messages.retrieve(user.userID);
             for (const message of history) {
-                if (message.group) {
-                    dispatch(addGroupMessage(message));
-                } else {
-                    dispatch(addMessage(message));
-                }
+                dispatch(addMessage(message));
             }
         }
+
+        const knownChannels: string[] = [];
 
         const servers = await client.servers.retrieve();
         dispatch(setServers(servers));
         for (const server of servers) {
             const channels = await client.channels.retrieve(server.serverID);
             dispatch(addChannels(channels));
+            for (const channel of channels) {
+                knownChannels.push(channel.channelID);
+            }
+        }
+
+        for (const channelID of knownChannels) {
+            const history = await client.messages.retrieveGroup(channelID);
+            for (const message of history) {
+                dispatch(addGroupMessage(message));
+            }
         }
 
         const permissions = await client.permissions.retrieve();

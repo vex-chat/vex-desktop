@@ -6,7 +6,6 @@ import Register, { backButton } from "../views/Register";
 import Settings from "../views/Settings";
 import { remote } from "electron";
 import fs from "fs";
-import closeIcon from "../assets/icons/close.svg";
 import {
     ClientLauncher,
     dbFolder,
@@ -24,12 +23,10 @@ import { addInputState, selectInputStates } from "../reducers/inputs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faLock,
-    faSquare,
     faTimes,
     faWindowMaximize,
     faWindowMinimize,
 } from "@fortawesome/free-solid-svg-icons";
-import { faSquare as farSquare } from "@fortawesome/free-regular-svg-icons";
 import Loading from "../components/Loading";
 import Store from "electron-store";
 import { version } from "../package.json";
