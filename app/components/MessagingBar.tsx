@@ -11,32 +11,14 @@ import { ISession, IUser } from "@vex-chat/vex-js";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useParams } from "react-router-dom";
-import {
-    resetSessions,
-    selectSessions,
-    stubSession,
-} from "../reducers/sessions";
-import {
-    addFamiliar,
-    resetFamiliars,
-    selectFamiliars,
-} from "../reducers/familiars";
-import {
-    selectInputStates,
-    addInputState,
-    resetInputStates,
-} from "../reducers/inputs";
-import { resetUser, selectUser } from "../reducers/user";
+import { selectSessions, stubSession } from "../reducers/sessions";
+import { addFamiliar, selectFamiliars } from "../reducers/familiars";
+import { selectInputStates, addInputState } from "../reducers/inputs";
+import { selectUser } from "../reducers/user";
 import { strToIcon } from "../utils/strToIcon";
 import { IconUsername } from "./IconUsername";
-import { gaurdian, switchFX } from "../views/Base";
+import { switchFX } from "../views/Base";
 import { routes } from "../constants/routes";
-import { resetApp } from "../reducers/app";
-import { resetChannels } from "../reducers/channels";
-import { resetGroupMessages } from "../reducers/groupMessages";
-import { resetMessages } from "../reducers/messages";
-import { resetServers } from "../reducers/servers";
-import { resetPermissions } from "../reducers/permissions";
 
 export const emptyUser: IUser = {
     userID: "",
@@ -213,24 +195,6 @@ export function UserMenu(): JSX.Element {
     const [className, setClassName] = useState("");
     const dispatch = useDispatch();
 
-    const resetClient = async () => {
-        dispatch(resetApp());
-        dispatch(resetChannels());
-        dispatch(resetFamiliars());
-        dispatch(resetGroupMessages());
-        dispatch(resetInputStates());
-        dispatch(resetMessages());
-        dispatch(resetServers());
-        dispatch(resetSessions());
-        dispatch(resetUser());
-        dispatch(resetPermissions());
-
-        const client = window.vex;
-        if (client) {
-            await client.close();
-        }
-    };
-
     return (
         <div className="user-menu-wrapper">
             <div className="columns">
@@ -301,7 +265,11 @@ export function UserMenu(): JSX.Element {
                                         &nbsp; My Info
                                     </Link>
                                     <Link
-                                        to={routes.REGISTER}
+                                        to={
+                                            routes.LOGOUT +
+                                            "?forward=" +
+                                            routes.REGISTER
+                                        }
                                         className="dropdown-item"
                                         onClick={async () => {
                                             dispatch(
@@ -316,18 +284,8 @@ export function UserMenu(): JSX.Element {
                                         &nbsp; New Identity
                                     </Link>
                                     <Link
-                                        to={routes.HOME}
+                                        to={routes.LOGOUT}
                                         className="dropdown-item has-text-danger"
-                                        onClick={async () => {
-                                            dispatch(
-                                                addInputState(
-                                                    "own-user-icon-dropdown",
-                                                    ""
-                                                )
-                                            );
-                                            gaurdian.clear();
-                                            await resetClient();
-                                        }}
                                     >
                                         <FontAwesomeIcon icon={faSignOutAlt} />
                                         &nbsp; Logout

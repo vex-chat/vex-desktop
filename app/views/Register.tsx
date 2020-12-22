@@ -3,23 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Client } from "@vex-chat/vex-js";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    addInputState,
-    resetInputStates,
-    selectInputStates,
-} from "../reducers/inputs";
+import { addInputState, selectInputStates } from "../reducers/inputs";
 import { errorFX, gaurdian, switchFX, VerticalAligner } from "../views/Base";
 import { useHistory } from "react-router";
 import { dbFolder, keyFolder } from "../components/ClientLauncher";
-import { resetUser } from "../reducers/user";
-import { resetApp } from "../reducers/app";
-import { resetMessages } from "../reducers/messages";
-import { resetGroupMessages } from "../reducers/groupMessages";
-import { resetChannels } from "../reducers/channels";
-import { resetFamiliars } from "../reducers/familiars";
-import { resetServers } from "../reducers/servers";
-import { resetSessions } from "../reducers/sessions";
-import { resetPermissions } from "../reducers/permissions";
 import { routes } from "../constants/routes";
 import { loadKeyFile, saveKeyFile } from "../utils/KeyGaurdian";
 
@@ -27,13 +14,17 @@ const USERNAME_INPUT_NAME = "register_username";
 const PASSWORD_INPUT_NAME = "register_password";
 const CONFIRM_INPUT_NAME = "register_confirmpass";
 
-export const backButton = (): JSX.Element => {
+export const backButton = (route?: string): JSX.Element => {
     const history = useHistory();
     return (
         <a
             className="delete settings-delete is-medium"
             onClick={() => {
-                history.goBack();
+                if (route) {
+                    history.push(route);
+                } else {
+                    history.goBack();
+                }
             }}
         />
     );
@@ -62,24 +53,6 @@ export default function IRegister(): JSX.Element {
             setValid(false);
         }
     });
-
-    const resetClient = async () => {
-        dispatch(resetApp());
-        dispatch(resetChannels());
-        dispatch(resetFamiliars());
-        dispatch(resetGroupMessages());
-        dispatch(resetInputStates());
-        dispatch(resetMessages());
-        dispatch(resetServers());
-        dispatch(resetSessions());
-        dispatch(resetUser());
-        dispatch(resetPermissions());
-
-        const client = window.vex;
-        if (client) {
-            await client.close();
-        }
-    };
 
     const registerUser = async () => {
         if (password.length === 0) {
@@ -130,16 +103,15 @@ export default function IRegister(): JSX.Element {
                     return;
                 }
 
-                await resetClient();
                 gaurdian.load(keyPath, password);
-                history.push(routes.LAUNCH);
+                history.push(routes.HOME);
             }
         });
         tempClient.init();
     };
 
     return (
-        <VerticalAligner top={backButton()}>
+        <VerticalAligner top={backButton(routes.HOME)}>
             <div className="box has-background-white register-form">
                 <div className="field">
                     <label className="label is-small">
