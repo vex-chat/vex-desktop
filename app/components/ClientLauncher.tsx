@@ -15,28 +15,19 @@ import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
-import { resetApp, setApp } from "../reducers/app";
-import {
-    addFamiliar,
-    resetFamiliars,
-    setFamiliars,
-} from "../reducers/familiars";
-import { addMessage, resetMessages } from "../reducers/messages";
-import { addSession, resetSessions, setSessions } from "../reducers/sessions";
-import { resetUser, setUser } from "../reducers/user";
+import { setApp } from "../reducers/app";
+import { addFamiliar, setFamiliars } from "../reducers/familiars";
+import { addMessage } from "../reducers/messages";
+import { addSession, setSessions } from "../reducers/sessions";
+import { setUser } from "../reducers/user";
 import os from "os";
-import { resetInputStates } from "../reducers/inputs";
 import { EventEmitter } from "events";
 import log from "electron-log";
-import { resetServers, selectServers, setServers } from "../reducers/servers";
-import { addChannels, resetChannels } from "../reducers/channels";
-import { addGroupMessage, resetGroupMessages } from "../reducers/groupMessages";
+import { selectServers, setServers } from "../reducers/servers";
+import { addChannels } from "../reducers/channels";
+import { addGroupMessage } from "../reducers/groupMessages";
 import Loading from "./Loading";
-import {
-    addPermission,
-    resetPermissions,
-    setPermissions,
-} from "../reducers/permissions";
+import { addPermission, setPermissions } from "../reducers/permissions";
 import fs from "fs";
 import { dataStore, gaurdian } from "../views/Base";
 
@@ -224,18 +215,7 @@ export function ClientLauncher(): JSX.Element {
         client.off("message", messageHandler);
         client.off("permission", permissionHandler);
 
-        dispatch(resetApp());
-        dispatch(resetChannels());
-        dispatch(resetFamiliars());
-        dispatch(resetGroupMessages());
-        dispatch(resetInputStates());
-        dispatch(resetMessages());
-        dispatch(resetServers());
-        dispatch(resetSessions());
-        dispatch(resetUser());
-        dispatch(resetPermissions());
-
-        history.push(routes.HOME);
+        history.push(routes.LOGOUT + "?clear=off");
     };
 
     const sessionHandler = async (session: ISession, user: IUser) => {

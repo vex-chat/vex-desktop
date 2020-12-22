@@ -19,7 +19,11 @@ import { Client, IUser } from "@vex-chat/vex-js";
 import { IconUsername } from "../components/IconUsername";
 import { useQuery } from "../components/MessagingPane";
 import { useDispatch, useSelector } from "react-redux";
-import { addInputState, selectInputStates } from "../reducers/inputs";
+import {
+    addInputState,
+    resetInputStates,
+    selectInputStates,
+} from "../reducers/inputs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faLock,
@@ -30,6 +34,15 @@ import {
 import Loading from "../components/Loading";
 import Store from "electron-store";
 import { version } from "../package.json";
+import { resetApp } from "../reducers/app";
+import { resetChannels } from "../reducers/channels";
+import { resetFamiliars } from "../reducers/familiars";
+import { resetGroupMessages } from "../reducers/groupMessages";
+import { resetMessages } from "../reducers/messages";
+import { resetServers } from "../reducers/servers";
+import { resetSessions } from "../reducers/sessions";
+import { resetUser } from "../reducers/user";
+import { resetPermissions } from "../reducers/permissions";
 
 export const gaurdian = new KeyGaurdian();
 
@@ -73,6 +86,7 @@ export default function Base(): JSX.Element {
                     }}
                 />
                 <Route path={routes.LOGIN} render={() => <LoginForm />} />
+                <Route path={routes.LOGOUT} render={() => <Logout />} />
                 <Route
                     exact
                     path={routes.HOME}
@@ -300,4 +314,40 @@ export function VerticalAligner(props: {
             </div>
         </div>
     );
+}
+
+export function Logout(): JSX.Element {
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const query = useQuery();
+
+    const logout = async () => {
+        const client = window.vex;
+        await client.close();
+
+        if (query.get("clear") !== "off") {
+            gaurdian.clear();
+        } else {
+            console.log(
+                "clear set to off explicitly, keeping keys in gaurdian."
+            );
+        }
+
+        dispatch(resetApp());
+        dispatch(resetChannels());
+        dispatch(resetFamiliars());
+        dispatch(resetGroupMessages());
+        dispatch(resetInputStates());
+        dispatch(resetMessages());
+        dispatch(resetServers());
+        dispatch(resetSessions());
+        dispatch(resetUser());
+        dispatch(resetPermissions());
+
+        history.push(query.get("forward") || routes.HOME);
+    };
+
+    useMemo(() => logout(), []);
+
+    return <div />;
 }
