@@ -57,12 +57,11 @@
                     "type": "link",
                     "path": "/Applications"
                 }
-            ]
+            ],
+            "writeUpdateInfo": false
         },
-        "win": {
-            "target": [
-                "nsis"
-            ]
+        "nsis": {
+            "differentialPackage": false
         },
         "linux": {
             "target": [
