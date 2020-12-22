@@ -11,7 +11,7 @@
         "electron-rebuild": "electron-rebuild --parallel --force --types prod,dev,optional --module-dir app",
         "lint": "npx eslint .",
         "package": "yarn build && electron-builder build --publish never",
-        "package-all": "rm -rf ./release; yarn build && electron-builder build -mwl --publish never",
+        "package-all": "rm -rf ./release; yarn build && electron-builder build -mwl --publish never; shasum -a 256 release/*.{exe,dmg,deb,AppImage} >> ./release/sha256.txt",
         "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
         "package-mac": "yarn build && electron-builder build --mac",
         "package-linux": "yarn build && electron-builder build --linux",
