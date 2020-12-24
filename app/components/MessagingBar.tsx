@@ -265,25 +265,6 @@ export function UserMenu(): JSX.Element {
                                         &nbsp; My Info
                                     </Link>
                                     <Link
-                                        to={
-                                            routes.LOGOUT +
-                                            "?forward=" +
-                                            routes.REGISTER
-                                        }
-                                        className="dropdown-item"
-                                        onClick={async () => {
-                                            dispatch(
-                                                addInputState(
-                                                    "own-user-icon-dropdown",
-                                                    ""
-                                                )
-                                            );
-                                        }}
-                                    >
-                                        <FontAwesomeIcon icon={faFingerprint} />
-                                        &nbsp; New Identity
-                                    </Link>
-                                    <Link
                                         to={routes.LOGOUT}
                                         className="dropdown-item has-text-danger"
                                     >
