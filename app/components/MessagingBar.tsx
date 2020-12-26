@@ -6,7 +6,7 @@ import {
     faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ISession, IUser } from "@vex-chat/vex-js";
+import { ISession, IUser } from "@vex-chat/vex";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useParams } from "react-router-dom";

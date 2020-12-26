@@ -4,7 +4,7 @@ import { routes } from "../constants/routes";
 import { Link, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectServers } from "../reducers/servers";
-import { IServer } from "@vex-chat/vex-js";
+import { IServer } from "@vex-chat/vex";
 import {
     faEnvelopeOpenText,
     faPlus,

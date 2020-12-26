@@ -1,4 +1,4 @@
-import { IUser } from "@vex-chat/vex-js";
+import { IUser } from "@vex-chat/vex";
 import React from "react";
 import { strToIcon } from "../utils/strToIcon";
 import { IconDefinition } from "@fortawesome/free-regular-svg-icons";

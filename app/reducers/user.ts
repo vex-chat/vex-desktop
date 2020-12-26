@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../store";
-import { IUser } from "@vex-chat/vex-js";
+import { IUser } from "@vex-chat/vex";
 
 export interface ISerializableUser {
     userID: string;

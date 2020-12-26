@@ -1,4 +1,4 @@
-import { xConcat, xMakeNonce, XUtils } from "@vex-chat/crypto-js";
+import { xConcat, xMakeNonce, XUtils } from "@vex-chat/crypto";
 import { pbkdf2Sync } from "pbkdf2";
 import fs from "fs";
 import nacl from "tweetnacl";

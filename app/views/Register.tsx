@@ -1,6 +1,6 @@
 import { faCheck, faTimes, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Client } from "@vex-chat/vex-js";
+import { Client } from "@vex-chat/vex";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addInputState, selectInputStates } from "../reducers/inputs";

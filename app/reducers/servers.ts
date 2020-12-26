@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../store";
-import { IServer } from "@vex-chat/vex-js";
+import { IServer } from "@vex-chat/vex";
 
 const initialState: Record<string, IServer> = {};
 

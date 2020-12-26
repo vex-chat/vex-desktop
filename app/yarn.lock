@@ -76,16 +76,16 @@
   dependencies:
     "@types/node" "*"
 
-"@vex-chat/crypto-js@^0.7.3":
+"@vex-chat/crypto@^0.7.3":
   version "0.7.3"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/crypto-js/0.7.3/0e1806548389cb1638f3c6727c072453ce09f0a27b9537fee1ee1fddbf3c439a#2d9c9f568f61580ff401bae075b93e8ebad320a3"
+  resolved "https://npm.pkg.github.com/download/@vex-chat/crypto/0.7.3/0e1806548389cb1638f3c6727c072453ce09f0a27b9537fee1ee1fddbf3c439a#2d9c9f568f61580ff401bae075b93e8ebad320a3"
   integrity sha512-vcZsn7PVSO2yjuPdwM0wR/9Qx6b7wqmu/2jP/9WNjqeejIsxKk7r3ao4gjkphvAe/idzrX4m+a2TpAlWhGbepA==
   dependencies:
     "@extrahash/keyring" "^1.0.1"
     "@types/create-hmac" "^1.1.0"
     "@types/ed2curve" "^0.2.2"
     "@types/msgpack-lite" "^0.1.7"
-    "@vex-chat/types-js" "^0.7.0"
+    "@vex-chat/types" "^0.7.0"
     bip39 "^3.0.3"
     create-hmac "^1.1.7"
     ed2curve "^0.3.0"
@@ -93,16 +93,16 @@
     msgpack-lite "^0.1.26"
     tweetnacl "^1.0.3"
 
-"@vex-chat/crypto-js@^0.7.6":
-  version "0.7.6"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/crypto-js/0.7.6/06ce2cc96f0599ac6012876c83eccdd760de34956204262a5db74c11c1cda110#b142e71ce08d43dfd8753f34aeed832013cc4461"
-  integrity sha512-mGSg37A2CliWZsxHaP9qW1iS4CpAM7ki6xf4HM6uh+EwfLcl+RhuewmmGOg2YQ7kkw3Y/TLuAzXsTYOb997G/g==
+"@vex-chat/crypto@^0.7.11":
+  version "0.7.11"
+  resolved "https://registry.yarnpkg.com/@vex-chat/crypto/-/crypto-0.7.11.tgz#14344f60b6de7b5954ac07afa1dace56d0ea29c9"
+  integrity sha512-8nyGRgMOA3w/ocPCcyjE/0yV0/wwTZkUdOvssjYl6gEAdCZtaiLv0/kpT0sHnYKJmev263qdSst2jqZCKr4CXg==
   dependencies:
     "@extrahash/keyring" "^1.0.1"
     "@types/create-hmac" "^1.1.0"
     "@types/ed2curve" "^0.2.2"
     "@types/msgpack-lite" "^0.1.7"
-    "@vex-chat/types-js" "^0.7.18"
+    "@vex-chat/types" "^0.7.21"
     bip39 "^3.0.3"
     create-hmac "^1.1.7"
     ed2curve "^0.3.0"
@@ -110,32 +110,32 @@
     msgpack-lite "^0.1.26"
     tweetnacl "^1.0.3"
 
-"@vex-chat/types-js@^0.7.0":
+"@vex-chat/types@^0.7.0":
   version "0.7.6"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/types-js/0.7.6/d0bbe9e0642cadbe0202dbe3336108169568446723b5a23c96c8aaf41d9b2b7b#584334650498e1f631480b83c43fc98d67149c86"
+  resolved "https://npm.pkg.github.com/download/@vex-chat/types/0.7.6/d0bbe9e0642cadbe0202dbe3336108169568446723b5a23c96c8aaf41d9b2b7b#584334650498e1f631480b83c43fc98d67149c86"
   integrity sha512-j+8AfcacQTT5PWMOBEZ0E3Q7U3hivwhJXYPdTvg+m1fp300JPwitSZnm3T2kq7zzJSOChCcb8ZM/qbQGLeF9Cw==
   dependencies:
     tweetnacl "^1.0.3"
 
-"@vex-chat/types-js@^0.7.18":
-  version "0.7.18"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/types-js/0.7.18/89de82370dae7745aeed9a171c1ec14a4778f731bc2511820e807b9130cbceeb#c7f55f78fcf8cd840826d4170c76552c4a48a577"
-  integrity sha512-BBsp+lH+1zvcc82JayzdqTra5IKa9cXuNlB2y1DNsntmMMU8kNrwZ5XuRTdHH7CKNZWVUzp8jPdl5pL2ughExg==
+"@vex-chat/types@^0.7.21":
+  version "0.7.21"
+  resolved "https://registry.yarnpkg.com/@vex-chat/types/-/types-0.7.21.tgz#64631ba2ac7edd5dc0ce9d32d15f76f164715a43"
+  integrity sha512-5JceTul3ei+j9t+QcLe1arKyuMDfMNwpJz1LaZ6ncWvKi6DeBrI3lHrzVZSN6uCXCrI1apB7rqCl8WxyXCkHNA==
   dependencies:
     tweetnacl "^1.0.3"
 
-"@vex-chat/vex-js@^0.11.7":
-  version "0.11.7"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/vex-js/0.11.7/d7376fb7827c441472e10cc8e9723bd776b4d1596d88127f21536ce176290b8a#5c3c9fd32b4c6bf5870e3fe911c31cc87f26d5e4"
-  integrity sha512-sIr7aP91lgOEuDFzgzyfkU4L748imzpLHENKaTni9MyG1SeULuuo+R5+YSavAbYEoS9YofFOYb5sKsICWdyhwg==
+"@vex-chat/vex@^0.11.9":
+  version "0.11.9"
+  resolved "https://registry.yarnpkg.com/@vex-chat/vex/-/vex-0.11.9.tgz#eb1925679c9f8d5efd096ce4f8c1117e99b8035b"
+  integrity sha512-A4GJqDqzRu5Q2WRny+Qcg/s5DyKuaGBpQ0AExAcdX25cpMEV065Br+Kt8wXPqTDTL7eneKBSaf+TZv9M6btuAQ==
   dependencies:
     "@extrahash/sleep" "^1.0.0"
     "@types/create-hmac" "^1.1.0"
     "@types/msgpack-lite" "^0.1.7"
     "@types/uuid" "^8.3.0"
     "@types/ws" "^7.4.0"
-    "@vex-chat/crypto-js" "^0.7.6"
-    "@vex-chat/types-js" "^0.7.18"
+    "@vex-chat/crypto" "^0.7.11"
+    "@vex-chat/types" "^0.7.21"
     axios "^0.21.0"
     chalk "^4.1.0"
     knex "^0.21.12"
@@ -264,9 +264,9 @@ aws4@^1.8.0:
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
 
 axios@^0.21.0:
-  version "0.21.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.0.tgz#26df088803a2350dff2c27f96fef99fe49442aca"
-  integrity sha512-fmkJBknJKoZwem3/IKSSLpkdNXZeBu5Q7GA/aRsr2btgrptmSCxi2oFjZHqGdK9DoTil9PIHlPIZw2EcRJXRvw==
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
+  integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
   dependencies:
     follow-redirects "^1.10.0"
 
@@ -1256,9 +1256,9 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
 
 knex@^0.21.12:
-  version "0.21.13"
-  resolved "https://registry.yarnpkg.com/knex/-/knex-0.21.13.tgz#5738db52d041d38f8bd9ab15d64f4a8ebb1e97c4"
-  integrity sha512-O3Zfc7ZHWe32q5k1Z8TqzmiGYVQ9+Tiqb4wP9tPF/ho9DUrHuuy5fLVDdkwDN0gHIr+q5t+XJzNW40DkmeL7lw==
+  version "0.21.15"
+  resolved "https://registry.yarnpkg.com/knex/-/knex-0.21.15.tgz#4f5cb5c147ee354c93d3edbf3643ef248360e77f"
+  integrity sha512-STHnPIIkExZVz0X3zIDaWC/q9EcTAfuuRE5Rev7NpOhF1QVh24K5iT2FXD0nWoJ1BUSeDs5QdgdTaz9H8oEtfg==
   dependencies:
     colorette "1.2.1"
     commander "^6.2.0"

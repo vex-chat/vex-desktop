@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IPermission } from "@vex-chat/vex-js";
+import { IPermission } from "@vex-chat/vex";
 import { AppThunk, RootState } from "../store";
 
 const initialState: Record<string, IPermission> = {};

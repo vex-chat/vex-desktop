@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IMessage } from "@vex-chat/vex-js";
+import { IMessage } from "@vex-chat/vex";
 import { AppThunk, RootState } from "../store";
 
 export interface ISerializedMessage {

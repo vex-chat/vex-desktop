@@ -15,7 +15,7 @@ import CreateServer from "../components/CreateServer";
 import Messaging from "./Messaging";
 import { Server } from "./Server";
 import { KeyGaurdian } from "../utils/KeyGaurdian";
-import { Client, IUser } from "@vex-chat/vex-js";
+import { Client, IUser } from "@vex-chat/vex";
 import { IconUsername } from "../components/IconUsername";
 import { useQuery } from "../components/MessagingPane";
 import { useDispatch, useSelector } from "react-redux";

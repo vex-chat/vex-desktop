@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IUser } from "@vex-chat/vex-js";
+import { IUser } from "@vex-chat/vex";
 import { AppThunk, RootState } from "../store";
 import { ISerializableUser, deserializeUser, serializeUser } from "./user";
 
