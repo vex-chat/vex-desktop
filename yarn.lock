@@ -2204,16 +2204,16 @@
     "@typescript-eslint/types" "4.9.1"
     eslint-visitor-keys "^2.0.0"
 
-"@vex-chat/crypto-js@^0.7.3":
-  version "0.7.3"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/crypto-js/0.7.3/0e1806548389cb1638f3c6727c072453ce09f0a27b9537fee1ee1fddbf3c439a#2d9c9f568f61580ff401bae075b93e8ebad320a3"
-  integrity sha512-vcZsn7PVSO2yjuPdwM0wR/9Qx6b7wqmu/2jP/9WNjqeejIsxKk7r3ao4gjkphvAe/idzrX4m+a2TpAlWhGbepA==
+"@vex-chat/crypto-js@^0.7.6":
+  version "0.7.6"
+  resolved "https://npm.pkg.github.com/download/@vex-chat/crypto-js/0.7.6/06ce2cc96f0599ac6012876c83eccdd760de34956204262a5db74c11c1cda110#b142e71ce08d43dfd8753f34aeed832013cc4461"
+  integrity sha512-mGSg37A2CliWZsxHaP9qW1iS4CpAM7ki6xf4HM6uh+EwfLcl+RhuewmmGOg2YQ7kkw3Y/TLuAzXsTYOb997G/g==
   dependencies:
     "@extrahash/keyring" "^1.0.1"
     "@types/create-hmac" "^1.1.0"
     "@types/ed2curve" "^0.2.2"
     "@types/msgpack-lite" "^0.1.7"
-    "@vex-chat/types-js" "^0.7.0"
+    "@vex-chat/types-js" "^0.7.18"
     bip39 "^3.0.3"
     create-hmac "^1.1.7"
     ed2curve "^0.3.0"
@@ -2221,17 +2221,10 @@
     msgpack-lite "^0.1.26"
     tweetnacl "^1.0.3"
 
-"@vex-chat/types-js@^0.7.0":
-  version "0.7.14"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/types-js/0.7.14/855d97cb620b6a2f9fea008f3da7ce23b62312aed232cd92f695a09fee9a25dd#8f836b511d93428a69d567f4c6290a5218a4a168"
-  integrity sha512-dy9HUkBnOHNWjeVuuffW7iDXruYRX/BOIw5Zt1s/3x00or8YvbPMfB4mnvxiMS38Z0GSKcKYeh3fCsFfabRIvg==
-  dependencies:
-    tweetnacl "^1.0.3"
-
-"@vex-chat/types-js@^0.7.13":
-  version "0.7.13"
-  resolved "https://npm.pkg.github.com/download/@vex-chat/types-js/0.7.13/3e9e4199cad1e2823a0398220d0ec79d6d05222cd323890f0a977e43bdc6befa#b4bc1b9da93fd030550c38e7d9c1d57c11e485cb"
-  integrity sha512-0t9Gjzni1SRhUMlnpM1T0ZpMkBi+XXhaj3RCj8Zx42VuHr8nt9IKwRheO85b7N7O9OOtPQAL4Rz9HHAIWxN1VQ==
+"@vex-chat/types-js@^0.7.18":
+  version "0.7.18"
+  resolved "https://npm.pkg.github.com/download/@vex-chat/types-js/0.7.18/89de82370dae7745aeed9a171c1ec14a4778f731bc2511820e807b9130cbceeb#c7f55f78fcf8cd840826d4170c76552c4a48a577"
+  integrity sha512-BBsp+lH+1zvcc82JayzdqTra5IKa9cXuNlB2y1DNsntmMMU8kNrwZ5XuRTdHH7CKNZWVUzp8jPdl5pL2ughExg==
   dependencies:
     tweetnacl "^1.0.3"
 

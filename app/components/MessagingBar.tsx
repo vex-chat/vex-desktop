@@ -1,7 +1,6 @@
 import {
     faCheck,
     faCog,
-    faFingerprint,
     faSearch,
     faSignOutAlt,
     faUserAlt,
@@ -263,25 +262,6 @@ export function UserMenu(): JSX.Element {
                                     >
                                         <FontAwesomeIcon icon={faUserAlt} />
                                         &nbsp; My Info
-                                    </Link>
-                                    <Link
-                                        to={
-                                            routes.LOGOUT +
-                                            "?forward=" +
-                                            routes.REGISTER
-                                        }
-                                        className="dropdown-item"
-                                        onClick={async () => {
-                                            dispatch(
-                                                addInputState(
-                                                    "own-user-icon-dropdown",
-                                                    ""
-                                                )
-                                            );
-                                        }}
-                                    >
-                                        <FontAwesomeIcon icon={faFingerprint} />
-                                        &nbsp; New Identity
                                     </Link>
                                     <Link
                                         to={routes.LOGOUT}
