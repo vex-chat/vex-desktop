@@ -33,23 +33,23 @@ jobs:
                   path: node_modules
                   key: vex-desktop-deps
 
+            - name: Setup MSBuild.exe
+              if: matrix.os == 'windows-latest'
+              uses: microsoft/setup-msbuild@v1
+
             - name: Install Dependencies
               run: yarn --network-concurrency 1
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   GITHUB_TOKEN: ${{ secrets.CI_KEY }}
 
-            - name: Setup MSBuild.exe
-              if: matrix.os == 'windows-latest'
-              uses: microsoft/setup-msbuild@v1
-
             # Build
             - name: Build
               run: |
                   if [ "$RUNNER_OS" == "macOS" ]; then
-                      yarn package-all
+                      ( yarn package-all )
                   else
-                      yarn package
+                      ( yarn package )
                   fi
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
