@@ -16,12 +16,6 @@ jobs:
     steps:
         - uses: actions/checkout@v2
 
-        - name: Setup Cache
-          uses: actions/cache@v1
-          with:
-            path: node_modules
-            key: vex-desktop-deps
-
         - name: Install Dependencies
           run: yarn --network-concurrency 1
           env:
