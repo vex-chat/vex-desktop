@@ -1,0 +1,43 @@
+name: Deploy Nightly
+on:
+  schedule:
+    - cron: '0 2 * * *' # run at 2 AM UTC
+
+jobs:
+  nightly:
+    name: Deploy nightly
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+        - uses: actions/checkout@v2
+
+        - name: Setup Cache
+          uses: actions/cache@v1
+          with:
+            path: node_modules
+            key: vex-desktop-deps
+
+        - name: Install Dependencies
+          run: yarn --network-concurrency 1
+          env:
+            NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.CI_KEY }}
+
+        # Build
+        - name: Build
+          run: |
+            yarn package
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Upload release
+          uses: svenstaro/upload-release-action@v2
+          with:
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
+            file: release/*.{exe,dmg,deb,AppImage,txt}
+            tag: nightly
+            overwrite: true
+            file_glob: true
