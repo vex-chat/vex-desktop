@@ -13,7 +13,7 @@
         "electron-rebuild": "node -r ../internals/scripts/BabelRegister.js ../internals/scripts/ElectronRebuild.js",
         "postinstall": "yarn electron-rebuild"
     },
-    "license": "UNLICENSED",
+    "license": "AGPL-3.0-or-later",
     "dependencies": {
         "@vex-chat/vex": "^0.11.9",
         "react-loading": "^2.0.3"
