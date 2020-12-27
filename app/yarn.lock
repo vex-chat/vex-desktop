@@ -76,7 +76,7 @@
   dependencies:
     "@types/node" "*"
 
-"@vex-chat/crypto@^0.7.11", "@vex-chat/crypto@^0.7.3":
+"@vex-chat/crypto@^0.7.11":
   version "0.7.11"
   resolved "https://registry.yarnpkg.com/@vex-chat/crypto/-/crypto-0.7.11.tgz#14344f60b6de7b5954ac07afa1dace56d0ea29c9"
   integrity sha512-8nyGRgMOA3w/ocPCcyjE/0yV0/wwTZkUdOvssjYl6gEAdCZtaiLv0/kpT0sHnYKJmev263qdSst2jqZCKr4CXg==
