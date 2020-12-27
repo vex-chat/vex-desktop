@@ -15,6 +15,7 @@ import path from "path";
 import { app, BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
+import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
 import MenuBuilder from "./menu";
 
 log.transports.file.level = "info";
@@ -43,26 +44,15 @@ if (
     require("electron-debug")();
 }
 
-const installExtensions = async () => {
-    const installer = require("electron-devtools-installer");
-    const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-    const extensions = ["REACT_DEVELOPER_TOOLS", "REDUX_DEVTOOLS"];
-
-    return installer
-        .default(
-            extensions.map((name) => installer[name]),
-            forceDownload
-        )
-        .catch(console.log);
-};
-
 const createWindow = async () => {
-    if (
+    /*     
+    if (    
         process.env.NODE_ENV === "development" ||
         process.env.DEBUG_PROD === "true"
     ) {
         await installExtensions();
-    }
+    } 
+    */
 
     const RESOURCES_PATH = app.isPackaged
         ? path.join(process.resourcesPath, "resources")
@@ -152,4 +142,10 @@ app.on("activate", () => {
     if (process.platform === "darwin") {
         mainWindow?.show();
     }
+});
+
+app.whenReady().then(() => {
+    installExtension(REDUX_DEVTOOLS)
+        .then((name) => console.log(`Added Extension:  ${name}`))
+        .catch((err) => console.log('An error occurred: ', err));
 });
