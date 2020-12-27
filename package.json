@@ -93,7 +93,7 @@
         "email": "hello@logicbite.org",
         "url": "https://logicbite.org/"
     },
-    "license": "UNLICENSED",
+    "license": "AGPL-3.0-or-later",
     "jest": {
         "testURL": "http://localhost/",
         "moduleNameMapper": {
