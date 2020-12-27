@@ -33,4 +33,14 @@ describe('useDebounce', () => {
 
     expect(result.current).toBe('hi');
   })
+
+  it('resets the delay on value change', () => {
+    const { result, rerender } = renderHook(({value}) => useDebounce(value, 500), props)
+
+    jest.advanceTimersByTime(250);
+    rerender({ value: 'h'})
+    jest.advanceTimersByTime(499);
+    
+    expect(result.current).toBe('');
+  })
 })
