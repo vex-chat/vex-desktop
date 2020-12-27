@@ -7,7 +7,7 @@ import { routes } from "../constants/routes";
 import { selectInputStates, addInputState } from "../reducers/inputs";
 import { gaurdian } from "../views/Base";
 import { BackButton } from "../components/BackButton";
-import { keyFolder } from "../views/ClientLauncher";
+import { keyFolder } from "../constants/folders";
 import { VerticalAligner } from "../components/VerticalAligner";
 import { useQuery } from "../hooks/useQuery";
 

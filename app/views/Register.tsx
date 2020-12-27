@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addInputState, selectInputStates } from "../reducers/inputs";
 import { gaurdian } from "../views/Base";
 import { useHistory } from "react-router";
-import { dbFolder, keyFolder } from "../views/ClientLauncher";
+import { dbFolder, keyFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
 import { loadKeyFile, saveKeyFile } from "../utils/KeyGaurdian";
 import { BackButton } from "../components/BackButton";
