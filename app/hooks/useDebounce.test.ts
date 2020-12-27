@@ -2,10 +2,35 @@ import { renderHook } from '@testing-library/react-hooks'
 
 import { useDebounce } from './useDebounce'
 
-describe('useDebounce', () => {
-  it('returns initial value', () => {
-    const { result } = renderHook(() => useDebounce('hai', 500))
+// tell jest to mock all timeout functions
+jest.useFakeTimers();
 
-    expect(result.current).toBe('hai')
+describe('useDebounce', () => {
+  const props = {
+    initialProps: { value: ''}
+  };
+
+  it('returns initial value', () => {
+    const { result } = renderHook(({value }) => useDebounce(value, 500), props)
+
+    expect(result.current).toBe('');
+  })
+
+  it('does not update the value before the delay', () => {
+    const { result, rerender } = renderHook(({value}) => useDebounce(value, 500), props)
+
+    rerender({ value: 'h'})
+    jest.advanceTimersByTime(499);
+    
+    expect(result.current).toBe('');
+  })
+
+  it('updates the value after the delay', () => {
+    const { result, rerender } = renderHook(({value}) => useDebounce(value, 500), props)
+
+    rerender({ value: 'hi'});
+    jest.advanceTimersByTime(500);
+
+    expect(result.current).toBe('hi');
   })
 })
