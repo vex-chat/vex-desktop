@@ -11,25 +11,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-        - uses: actions/checkout@v2
-
-        - name: Install Dependencies
-          run: yarn --network-concurrency 1
-          env:
-            NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            GITHUB_TOKEN: ${{ secrets.CI_KEY }}
-
-        # Build
-        - name: Build
-          run: |
-            yarn package
-            ls ./release
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
         - uses: dev-drprasad/delete-tag-and-release@v0.1.2
           with:
             delete_release: true # default: false
@@ -42,12 +26,4 @@ jobs:
           with:
             tag_name: nightly
             release_name: nightly
-
-        - name: Upload release
-          uses: svenstaro/upload-release-action@v2
-          with:
-            repo_token: ${{ secrets.GITHUB_TOKEN }}
-            file: release/*.{exe,dmg,deb,AppImage,txt}
-            tag: nightly
-            overwrite: true
-            file_glob: true
+            token: ${{ secrets.GITHUB_TOKEN }}
