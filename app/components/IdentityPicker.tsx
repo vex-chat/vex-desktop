@@ -1,4 +1,4 @@
-import { IUser, Client } from "@vex-chat/vex";
+import { IUser, Client } from "@vex-chat/libvex";
 import React, { useMemo, useState } from "react";
 import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
