@@ -4,13 +4,14 @@ import { Client } from "@vex-chat/vex";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addInputState, selectInputStates } from "../reducers/inputs";
-import { errorFX, gaurdian, switchFX } from "../views/Base";
+import { gaurdian } from "../views/Base";
 import { useHistory } from "react-router";
-import { dbFolder, keyFolder } from "../components/ClientLauncher";
+import { dbFolder, keyFolder } from "../views/ClientLauncher";
 import { routes } from "../constants/routes";
 import { loadKeyFile, saveKeyFile } from "../utils/KeyGaurdian";
 import { BackButton } from "../components/BackButton";
 import { VerticalAligner } from "../components/VerticalAligner";
+import { errorFX, switchFX } from "../constants/sounds";
 
 const USERNAME_INPUT_NAME = "register_username";
 const PASSWORD_INPUT_NAME = "register_password";

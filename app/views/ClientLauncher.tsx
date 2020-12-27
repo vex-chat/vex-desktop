@@ -26,7 +26,7 @@ import log from "electron-log";
 import { selectServers, setServers } from "../reducers/servers";
 import { addChannels } from "../reducers/channels";
 import { addGroupMessage } from "../reducers/groupMessages";
-import Loading from "./Loading";
+import Loading from "../components/Loading";
 import { addPermission, setPermissions } from "../reducers/permissions";
 import fs from "fs";
 import { dataStore, gaurdian } from "../views/Base";

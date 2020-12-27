@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
+import { useQuery } from "../hooks/useQuery";
 import { resetApp } from "../reducers/app";
 import { resetChannels } from "../reducers/channels";
 import { resetFamiliars } from "../reducers/familiars";
@@ -13,7 +14,6 @@ import { resetServers } from "../reducers/servers";
 import { resetSessions } from "../reducers/sessions";
 import { resetUser } from "../reducers/user";
 import { gaurdian } from "../views/Base";
-import { useQuery } from "./MessagingPane";
 
 export function Logout(): JSX.Element {
     const dispatch = useDispatch();

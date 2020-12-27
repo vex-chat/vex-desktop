@@ -6,12 +6,12 @@ import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
 import { selectInputStates, addInputState } from "../reducers/inputs";
 import { gaurdian } from "../views/Base";
-import { BackButton } from "./BackButton";
-import { keyFolder } from "./ClientLauncher";
-import { useQuery } from "./MessagingPane";
-import { VerticalAligner } from "./VerticalAligner";
+import { BackButton } from "../components/BackButton";
+import { keyFolder } from "../views/ClientLauncher";
+import { VerticalAligner } from "../components/VerticalAligner";
+import { useQuery } from "../hooks/useQuery";
 
-export function LoginForm(): JSX.Element {
+export function Login(): JSX.Element {
     const history = useHistory();
     const FORM_NAME = "keyfile-login-pasword";
     const query = useQuery();

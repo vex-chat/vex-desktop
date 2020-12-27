@@ -1,13 +1,7 @@
 import { IUser } from "@vex-chat/vex";
 import React, { createRef, Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    Route,
-    Switch,
-    useHistory,
-    useLocation,
-    useParams,
-} from "react-router";
+import { Route, Switch, useHistory, useParams } from "react-router";
 import { selectFamiliars } from "../reducers/familiars";
 import { IconUsername } from "../components/IconUsername";
 import { selectInputStates, addInputState } from "../reducers/inputs";
@@ -35,12 +29,7 @@ import crypto from "crypto";
 import { Highlighter } from "./Highlighter";
 import { chunkMessages } from "../utils/chunkMessages";
 import { MessageBox } from "./MessageBox";
-
-// A custom hook that builds on useLocation to parse
-// the query string for you.
-export function useQuery(): URLSearchParams {
-    return new URLSearchParams(useLocation().search);
-}
+import { useQuery } from "../hooks/useQuery";
 
 export default function MessagingPane(): JSX.Element {
     // state

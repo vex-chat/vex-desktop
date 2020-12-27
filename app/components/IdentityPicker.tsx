@@ -2,12 +2,12 @@ import { IUser, Client } from "@vex-chat/vex";
 import React, { useMemo, useState } from "react";
 import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
-import { keyFolder } from "./ClientLauncher";
+import { keyFolder } from "../views/ClientLauncher";
 import { IconUsername } from "./IconUsername";
 import fs from "fs";
 import Loading from "./Loading";
 import { Link } from "react-router-dom";
-import { dbFolder } from "../components/ClientLauncher";
+import { dbFolder } from "../views/ClientLauncher";
 import { VerticalAligner } from "./VerticalAligner";
 
 export function IdentityPicker(): JSX.Element {

@@ -2,7 +2,7 @@ import { faHashtag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useSelector } from "react-redux";
-import { match, Route, Switch } from "react-router";
+import { Route, Switch, useParams } from "react-router";
 import { ChannelBar } from "../components/ChannelBar";
 import { ServerBar } from "../components/ServerBar";
 import { routes } from "../constants/routes";
@@ -18,13 +18,14 @@ export interface IServerParams {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function Server(props: { match: match<any> }): JSX.Element {
+export function Server(): JSX.Element {
     const servers = useSelector(selectServers);
     const channels = useSelector(selectChannels);
 
-    const { serverID, channelID } = props.match.params;
-    const serverChannels = channels ? channels[serverID] || {} : {};
+    const params: { serverID: string; channelID: string } = useParams();
+    const { serverID, channelID } = params;
 
+    const serverChannels = channels ? channels[serverID] || {} : {};
     const server = servers[serverID];
 
     // loading
