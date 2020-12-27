@@ -45,15 +45,6 @@ if (
 }
 
 const createWindow = async () => {
-    /*     
-    if (    
-        process.env.NODE_ENV === "development" ||
-        process.env.DEBUG_PROD === "true"
-    ) {
-        await installExtensions();
-    } 
-    */
-
     const RESOURCES_PATH = app.isPackaged
         ? path.join(process.resourcesPath, "resources")
         : path.join(__dirname, "../resources");
