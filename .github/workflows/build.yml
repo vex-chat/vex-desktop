@@ -46,22 +46,7 @@ jobs:
             # Build
             - name: Build
               run: |
-                  if [ "$RUNNER_OS" == "macOS" ]; then
-                      ( yarn package-all )
-                  else
-                      ( yarn package )
-                  fi
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - uses: actions/upload-artifact@v2
-              if: matrix.os == 'macOS-latest'
-              with:
-                  path: |
-                      release/*.exe
-                      release/*.dmg
-                      release/*.deb
-                      release/*.AppImage
+                  yarn package
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
