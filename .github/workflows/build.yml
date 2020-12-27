@@ -42,31 +42,6 @@ jobs:
             # Build
             - name: Build
               run: |
-                  if [ "$RUNNER_OS" == "macOS" ]; then
-                      ( yarn package-all )
-                  else
-                      ( yarn package )
-                  fi
+                  yarn package
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - uses: actions/upload-artifact@v2
-              if: matrix.os == 'macOS-latest'
-              with:
-                  path: |
-                      release/*.exe
-                      release/*.dmg
-                      release/*.deb
-                      release/*.AppImage
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Upload release
-              if: matrix.os == 'macOS-latest'
-              uses: svenstaro/upload-release-action@v2
-              with:
-                  repo_token: ${{ secrets.GITHUB_TOKEN }}
-                  file: release/*.{exe,dmg,deb,AppImage}
-                  tag: ${{ github.ref }}
-                  overwrite: true
-                  file_glob: true
