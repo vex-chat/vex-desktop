@@ -1,4 +1,4 @@
-name: Deploy Nightly
+name: nightly
 on:
   schedule:
     - cron: '0 2 * * *' # run at 2 AM UTC
@@ -7,7 +7,7 @@ on:
 
 jobs:
   nightly:
-    name: Deploy nightly
+    name: nightly
     strategy:
       fail-fast: false
       matrix:
