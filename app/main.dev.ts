@@ -15,7 +15,7 @@ import path from "path";
 import { app, BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
-import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
+import installExtension, { REDUX_DEVTOOLS } from "electron-devtools-installer";
 import MenuBuilder from "./menu";
 
 log.transports.file.level = "info";
@@ -138,5 +138,5 @@ app.on("activate", () => {
 app.whenReady().then(() => {
     installExtension(REDUX_DEVTOOLS)
         .then((name) => console.log(`Added Extension:  ${name}`))
-        .catch((err) => console.log('An error occurred: ', err));
+        .catch((err) => console.log("An error occurred: ", err));
 });

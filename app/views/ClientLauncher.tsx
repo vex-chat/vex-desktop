@@ -20,16 +20,16 @@ import { addFamiliar, setFamiliars } from "../reducers/familiars";
 import { addMessage } from "../reducers/messages";
 import { addSession, setSessions } from "../reducers/sessions";
 import { setUser } from "../reducers/user";
-import os from "os";
 import { EventEmitter } from "events";
 import log from "electron-log";
 import { selectServers, setServers } from "../reducers/servers";
 import { addChannels } from "../reducers/channels";
 import { addGroupMessage } from "../reducers/groupMessages";
-import Loading from "./Loading";
+import Loading from "../components/Loading";
 import { addPermission, setPermissions } from "../reducers/permissions";
 import fs from "fs";
 import { dataStore, gaurdian } from "../views/Base";
+import { dbFolder, keyFolder, progFolder } from "../constants/folders";
 
 declare global {
     interface Window {
@@ -37,11 +37,7 @@ declare global {
     }
 }
 
-const homedir = os.homedir();
-export const progFolder = `${homedir}/.vex-desktop`;
-export const dbFolder = `${progFolder}/databases`;
-export const keyFolder = `${progFolder}/keys`;
-
+// this maybe needs a better place to go
 const folders = [progFolder, dbFolder, keyFolder];
 for (const folder of folders) {
     if (!fs.existsSync(folder)) {

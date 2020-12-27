@@ -11,7 +11,7 @@ import { addServer } from "../reducers/servers";
 
 const FORM_NAME = "create-server";
 
-export default function ICreateServer(): JSX.Element {
+export function CreateServer(): JSX.Element {
     const history = useHistory();
     const dispatch = useDispatch();
     const inputStates = useSelector(selectInputStates);
