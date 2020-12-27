@@ -1,6 +1,6 @@
-name: Build
+name: Release
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   release:
@@ -42,4 +42,4 @@ jobs:
           file: release/*.{exe,dmg,deb,AppImage,txt}
           tag: ${{ github.ref }}
           overwrite: true
-          file_glob: true  
+          file_glob: true
