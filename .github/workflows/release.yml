@@ -20,9 +20,6 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-        with: 
-          repository: vex-chat/vex-desktop
-          token: ${{ secrets.CI_KEY }}
 
       - name: Install Dependencies
         run: yarn --network-concurrency 1
