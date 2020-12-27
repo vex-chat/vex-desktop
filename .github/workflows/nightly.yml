@@ -37,6 +37,12 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+        - name: Create a Release
+          uses: actions/create-release@v1
+          with:
+            tag_name: nightly
+            release_name: nightly
+
         - name: Upload release
           uses: svenstaro/upload-release-action@v2
           with:
