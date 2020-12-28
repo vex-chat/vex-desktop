@@ -2,27 +2,26 @@ import React, { useRef, useEffect, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import {
-    selectGroupMessages,
-    failGroupMessage,
+    makeGroupMessageSelector,
+    fail,
 } from "../reducers/groupMessages";
 import { selectInputStates, addInputState } from "../reducers/inputs";
 import { chunkMessages } from "../utils/chunkMessages";
 import { IServerParams } from "../views/Server";
 import { MessageBox } from "./MessageBox";
 import * as uuid from "uuid";
+import { serializeMessage } from '../reducers/messages'
 
 export function ServerPane(): JSX.Element {
     const params: IServerParams = useParams();
-    const groupMessages = useSelector(selectGroupMessages);
-    const threadMessages = groupMessages[params.channelID];
+    const threadMessages = useSelector(makeGroupMessageSelector(params.channelID));
     const inputs = useSelector(selectInputStates);
-    const messagesEndRef = useRef(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
     const dispatch = useDispatch();
 
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (messagesEndRef.current as any).scrollIntoView();
+            messagesEndRef.current.scrollIntoView();
         }
     };
 
@@ -67,17 +66,14 @@ export function ServerPane(): JSX.Element {
                                     messageText
                                 );
                             } catch (err) {
-                                console.log(err);
                                 if (err.message) {
-                                    console.log(err);
-                                    dispatch(
-                                        failGroupMessage(
-                                            err.message,
-                                            err.error.error
-                                        )
-                                    );
-                                } else {
-                                    console.warn(err);
+
+                                    const szMsg = serializeMessage(err.message);
+
+                                    if(szMsg.group) {
+                                        dispatch(fail({message: szMsg, errorString: err.error.error}))
+                                    }
+
                                 }
                             }
                         }
