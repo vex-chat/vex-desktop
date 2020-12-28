@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../store";
 
-type InputState = Record<string, string>
+type InputState = Record<string, string>;
 
 const initialState: InputState = {
-    "keyfile-login-pasword": ''
-}
+    "keyfile-login-pasword": "",
+};
 
 const inputSlice = createSlice({
     name: "inputs",

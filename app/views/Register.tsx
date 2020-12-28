@@ -8,7 +8,6 @@ import { gaurdian } from "../views/Base";
 import { useHistory } from "react-router";
 import { dbFolder, keyFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
-import { loadKeyFile, saveKeyFile } from "../utils/KeyGaurdian";
 import { BackButton } from "../components/BackButton";
 import { VerticalAligner } from "../components/VerticalAligner";
 import { errorFX, switchFX } from "../constants/sounds";
@@ -73,10 +72,10 @@ export default function Register(): JSX.Element {
             if (user !== null) {
                 setWaiting(false);
                 const keyPath = keyFolder + "/" + user.signKey;
-                saveKeyFile(keyPath, password, PK);
+                Client.saveKeyFile(keyPath, password, PK);
 
                 try {
-                    const confirm = loadKeyFile(keyPath, password);
+                    const confirm = Client.loadKeyFile(keyPath, password);
                     if (confirm !== PK) {
                         console.log(confirm, PK);
                         throw new Error(
