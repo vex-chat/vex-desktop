@@ -8,7 +8,7 @@ import {
     IServer,
     ISession,
     IUser,
-} from "@vex-chat/vex";
+} from "@vex-chat/libvex";
 import { sleep } from "@extrahash/sleep";
 import { ipcRenderer, remote } from "electron";
 import React, { useEffect, useMemo } from "react";

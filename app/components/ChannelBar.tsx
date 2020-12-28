@@ -1,6 +1,6 @@
 import { faHashtag, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IServer } from "@vex-chat/vex";
+import { IServer } from "@vex-chat/libvex";
 import React from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
