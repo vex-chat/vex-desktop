@@ -18,7 +18,7 @@ export function ChannelBar(props: { server: IServer }): JSX.Element {
     const channelIDs = Object.keys(serverChannels || {});
 
     const permissions = useSelector(selectPermissions);
-    const serverPermission = permissions[props.server.serverID]
+    const serverPermission = permissions[props.server.serverID];
 
     console.log(serverPermission);
 
@@ -40,13 +40,12 @@ export function ChannelBar(props: { server: IServer }): JSX.Element {
                     >
                         {serverPermission?.powerLevel > 50 && (
                             <span className="add-user-icon">
-                            <FontAwesomeIcon
-                                className="has-text-dark"
-                                icon={faUserPlus}
-                            />
-                        </span>
+                                <FontAwesomeIcon
+                                    className="has-text-dark"
+                                    icon={faUserPlus}
+                                />
+                            </span>
                         )}
-
                     </Link>
                 </h1>
             </div>

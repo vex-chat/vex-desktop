@@ -14,7 +14,7 @@ import groupMessageReducer from "./reducers/groupMessages";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function createRootReducer(history: History) {
-    const router = connectRouter(history)
+    const router = connectRouter(history);
 
     const root = combineReducers({
         router,
@@ -30,5 +30,5 @@ export default function createRootReducer(history: History) {
         permissions: permissionsReducer,
     });
 
-    return root
+    return root;
 }

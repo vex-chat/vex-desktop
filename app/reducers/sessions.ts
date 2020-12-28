@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../store";
-import { XTypes } from "@vex-chat/types";
 import { ISession } from "@vex-chat/libvex";
 
 interface ISerializedSession {
@@ -14,9 +13,7 @@ interface ISerializedSession {
     verified: boolean;
 }
 
-export const deserializeSession = (
-    session: ISerializedSession
-): XTypes.SQL.ISession => {
+export const deserializeSession = (session: ISerializedSession): ISession => {
     return {
         sessionID: session.sessionID,
         userID: session.userID,
@@ -29,9 +26,7 @@ export const deserializeSession = (
     };
 };
 
-export const serializeSession = (
-    session: XTypes.SQL.ISession
-): ISerializedSession => {
+export const serializeSession = (session: ISession): ISerializedSession => {
     return {
         sessionID: session.sessionID,
         userID: session.userID,
@@ -99,9 +94,7 @@ const sessionSlice = createSlice({
 
 export const { set, add, stub, reset, mark } = sessionSlice.actions;
 
-export const addSession = (session: XTypes.SQL.ISession): AppThunk => (
-    dispatch
-) => {
+export const addSession = (session: ISession): AppThunk => (dispatch) => {
     dispatch(add(serializeSession(session)));
 };
 
@@ -135,6 +128,6 @@ export const resetSessions = (): AppThunk => (dispatch) => {
 
 export const selectSessions = (
     state: RootState
-): Record<string, Record<string, XTypes.SQL.ISession>> => state.sessions;
+): Record<string, Record<string, ISession>> => state.sessions;
 
 export default sessionSlice.reducer;

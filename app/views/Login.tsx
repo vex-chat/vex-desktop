@@ -11,7 +11,7 @@ import { keyFolder } from "../constants/folders";
 import { VerticalAligner } from "../components/VerticalAligner";
 import { useQuery } from "../hooks/useQuery";
 import { useDebounce } from "../hooks/useDebounce";
-import { RootState } from '../store'
+import { RootState } from "../store";
 
 const FORM_NAME = "keyfile-login-pasword";
 
@@ -19,7 +19,9 @@ export const Login: FunctionComponent = memo(() => {
     const history = useHistory();
 
     const query = useQuery();
-    const password = useSelector<RootState, string>(({inputs}) => inputs[FORM_NAME]);
+    const password = useSelector<RootState, string>(
+        ({ inputs }) => inputs[FORM_NAME]
+    );
     const publicKey = query.get("key");
     const [loading, setLoading] = useState(false);
     const [errText, setErrText] = useState("");
@@ -32,12 +34,11 @@ export const Login: FunctionComponent = memo(() => {
         dispatch(addInputState(FORM_NAME, debouncedInput));
     }, [debouncedInput]);
 
-
     const unlockKey = () => {
         if (password == "") return;
 
         setLoading(true);
-        setInputVal("")
+        setInputVal("");
 
         try {
             gaurdian.load(keyFolder + "/" + publicKey, password);
@@ -64,9 +65,8 @@ export const Login: FunctionComponent = memo(() => {
                         type="password"
                         placeholder="hunter2"
                         value={inputVal}
-                        onChange={({target: {value}}) => {
-                            setInputVal(value)
-                            
+                        onChange={({ target: { value } }) => {
+                            setInputVal(value);
                         }}
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
@@ -91,4 +91,4 @@ export const Login: FunctionComponent = memo(() => {
             </div>
         </VerticalAligner>
     );
-})
+});
