@@ -70,21 +70,40 @@ export function IdentityPicker(): JSX.Element {
                             {manage ? (
                                 <Fragment>
                                     <span
-                                        className={`icon identity-trash ${deleteMarked.includes(key) ? "has-text-danger" : "has-text-dark"}`}
+                                        className={`icon identity-trash ${
+                                            deleteMarked.includes(key)
+                                                ? "has-text-danger"
+                                                : "has-text-dark"
+                                        }`}
                                         onClick={() => {
-                                            const markedForDeletion = [...deleteMarked];
-                                            if (markedForDeletion.includes(key)) {
-                                                console.log("deletarino " + key);
-                                                fs.unlinkSync(keyFolder + "/" + key);
-                                                fs.unlinkSync(dbFolder + "/" + key + ".sqlite")
+                                            const markedForDeletion = [
+                                                ...deleteMarked,
+                                            ];
+                                            if (
+                                                markedForDeletion.includes(key)
+                                            ) {
+                                                console.log(
+                                                    "deletarino " + key
+                                                );
+                                                fs.unlinkSync(
+                                                    keyFolder + "/" + key
+                                                );
+                                                fs.unlinkSync(
+                                                    dbFolder +
+                                                        "/" +
+                                                        key +
+                                                        ".sqlite"
+                                                );
 
                                                 // copy accounts
-                                                const accs = {...accounts}
+                                                const accs = { ...accounts };
                                                 delete accs[key];
                                                 setAccounts(accs);
                                             } else {
                                                 markedForDeletion.push(key);
-                                                setDeleteMarked(markedForDeletion);
+                                                setDeleteMarked(
+                                                    markedForDeletion
+                                                );
                                             }
                                         }}
                                     >
@@ -124,7 +143,6 @@ export function IdentityPicker(): JSX.Element {
                     }}
                 >
                     {manage ? "Stop Managing" : "Manage"}
-
                 </Link>
                 <Link to={routes.REGISTER} className={`button`}>
                     New Identity
