@@ -25,9 +25,10 @@ jobs:
             # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
             - uses: actions/checkout@v2
 
-            - name: Prettier
+            - name: Check Style
+              if: matrix.os == 'ubuntu-latest'
               run: |
-                  yarn add prettier --dev
+                  yarn add prettier --dev --silent
                   yarn prettier-ci
 
             - name: Setup Cache
