@@ -13,7 +13,7 @@ describe('useDebounce', () => {
   it('returns initial value', () => {
     const { result } = renderHook(({value }) => useDebounce(value, 500), props)
 
-    expect(result.current).toBe('');
+    expect(result.current[0]).toBe('');
   })
 
   it('does not update the value before the delay', () => {
@@ -22,7 +22,7 @@ describe('useDebounce', () => {
     rerender({ value: 'h'})
     jest.advanceTimersByTime(499);
     
-    expect(result.current).toBe('');
+    expect(result.current[0]).toBe('');
   })
 
   it('updates the value after the delay', () => {
@@ -31,7 +31,7 @@ describe('useDebounce', () => {
     rerender({ value: 'hi'});
     jest.advanceTimersByTime(500);
 
-    expect(result.current).toBe('hi');
+    expect(result.current[0]).toBe('hi');
   })
 
   it('resets the delay on value change', () => {
@@ -41,6 +41,6 @@ describe('useDebounce', () => {
     rerender({ value: 'h'})
     jest.advanceTimersByTime(499);
     
-    expect(result.current).toBe('');
+    expect(result.current[0]).toBe('');
   })
 })

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 
-export function useDebounce<T>(value: T, delay: number) {
+export function useDebounce<T>(value: T, delay: number): [T, Dispatch<SetStateAction<T>>] {
     // State and setters for debounced value
     const [debouncedValue, setDebouncedValue] = useState(value);
   
@@ -22,5 +22,5 @@ export function useDebounce<T>(value: T, delay: number) {
       [value, delay] // Only re-call effect if value or delay changes
     );
   
-    return debouncedValue;
+    return [debouncedValue, setDebouncedValue];
   }

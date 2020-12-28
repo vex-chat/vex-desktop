@@ -1,42 +1,44 @@
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState, ChangeEvent, FunctionComponent, memo } from "react";
 import { useHistory } from "react-router";
+
 import { routes } from "../constants/routes";
-import { selectInputStates, addInputState } from "../reducers/inputs";
 import { gaurdian } from "../views/Base";
 import { BackButton } from "../components/BackButton";
 import { keyFolder } from "../constants/folders";
 import { VerticalAligner } from "../components/VerticalAligner";
 import { useQuery } from "../hooks/useQuery";
+import { useDebounce } from "../hooks/useDebounce";
 
-export function Login(): JSX.Element {
+export const Login: FunctionComponent = memo(() => {
     const history = useHistory();
-    const FORM_NAME = "keyfile-login-pasword";
     const query = useQuery();
-    const inputs = useSelector(selectInputStates);
-    const publicKey = query.get("key");
     const [loading, setLoading] = useState(false);
     const [errText, setErrText] = useState("");
-    const dispatch = useDispatch();
+
+    const publicKey = query.get("key");
+
+    const [debouncedVal, setDebounced] = useDebounce("", 1000);
+    const onChange = ({target: {value}}: ChangeEvent<HTMLInputElement>) => {
+        setDebounced(value);
+    }
 
     const unlockKey = () => {
-        const password = inputs[FORM_NAME];
+        if (debouncedVal == "") return
 
-        if (!password || password == "") {
-            return;
-        }
         setLoading(true);
-        dispatch(addInputState(FORM_NAME, ""));
+        setDebounced("");
+
         try {
-            gaurdian.load(keyFolder + "/" + publicKey, password);
+            gaurdian.load(keyFolder + "/" + publicKey, debouncedVal);
         } catch (err) {
             console.error(err);
             setErrText(err.toString());
             setLoading(false);
             return;
         }
+
         history.push(routes.HOME);
     };
 
@@ -52,12 +54,8 @@ export function Login(): JSX.Element {
                         className="input"
                         type="password"
                         placeholder="hunter2"
-                        value={inputs[FORM_NAME] || ""}
-                        onChange={(event) => {
-                            dispatch(
-                                addInputState(FORM_NAME, event.target.value)
-                            );
-                        }}
+                        value={debouncedVal}
+                        onChange={onChange}
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
                                 unlockKey();
@@ -81,4 +79,4 @@ export function Login(): JSX.Element {
             </div>
         </VerticalAligner>
     );
-}
+});
