@@ -10,7 +10,7 @@ export default function Settings(): JSX.Element {
     );
 
     return (
-        <VerticalAligner top={<BackButton route={routes.HOME} />}>
+        <VerticalAligner top={<BackButton />}>
             <div className="panel is-light">
                 <p className="panel-heading">Settings</p>
                 <div className="panel-block">
