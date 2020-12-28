@@ -27,6 +27,7 @@ jobs:
               
             - name: Prettier
               run: |
+                  yarn add prettier --dev
                   yarn prettier
 
             - name: Setup Cache
