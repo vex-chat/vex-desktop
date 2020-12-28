@@ -20,8 +20,6 @@ export function ChannelBar(props: { server: IServer }): JSX.Element {
     const permissions = useSelector(selectPermissions);
     const serverPermission = permissions[props.server.serverID];
 
-    console.log(serverPermission);
-
     return (
         <div className="sidebar">
             <div className="server-titlebar">

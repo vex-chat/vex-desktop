@@ -1,5 +1,5 @@
 import { IUser, Client } from "@vex-chat/libvex";
-import React, { useMemo, useState } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
 import { keyFolder, dbFolder } from "../constants/folders";
@@ -8,6 +8,9 @@ import fs from "fs";
 import Loading from "./Loading";
 import { Link } from "react-router-dom";
 import { VerticalAligner } from "./VerticalAligner";
+import { useQuery } from "../hooks/useQuery";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export function IdentityPicker(): JSX.Element {
     const pubkeyRegex = /[0-9a-f]{64}/;
@@ -17,11 +20,17 @@ export function IdentityPicker(): JSX.Element {
     // const [errText, setErrText] = useState("");
     const [accounts, setAccounts] = useState(initialState);
     const history = useHistory();
+    const query = useQuery();
+
+    const [deleteMarked, setDeleteMarked] = useState([] as string[]);
+
+    const manage = query.get("manage") === "on";
 
     useMemo(async () => {
         const keyFiles = fs.readdirSync(keyFolder);
         const tempClient = new Client(undefined, { dbFolder });
         const accs: Record<string, IUser> = {};
+
         for (const keyFile of keyFiles) {
             if (!pubkeyRegex.test(keyFile)) {
                 continue;
@@ -58,10 +67,63 @@ export function IdentityPicker(): JSX.Element {
                 {Object.keys(accounts).length > 0 &&
                     Object.keys(accounts).map((key) => (
                         <div key={key} className="panel-block identity-link">
+                            {manage ? (
+                                <Fragment>
+                                    <span
+                                        className={`icon identity-trash ${
+                                            deleteMarked.includes(key)
+                                                ? "has-text-danger"
+                                                : "has-text-dark"
+                                        }`}
+                                        onClick={() => {
+                                            const markedForDeletion = [
+                                                ...deleteMarked,
+                                            ];
+                                            if (
+                                                markedForDeletion.includes(key)
+                                            ) {
+                                                console.log(
+                                                    "deletarino " + key
+                                                );
+                                                fs.unlinkSync(
+                                                    keyFolder + "/" + key
+                                                );
+                                                fs.unlinkSync(
+                                                    dbFolder +
+                                                        "/" +
+                                                        key +
+                                                        ".sqlite"
+                                                );
+
+                                                // copy accounts
+                                                const accs = { ...accounts };
+                                                delete accs[key];
+                                                setAccounts(accs);
+                                            } else {
+                                                markedForDeletion.push(key);
+                                                setDeleteMarked(
+                                                    markedForDeletion
+                                                );
+                                            }
+                                        }}
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faTrash}
+                                            className="is-size-2"
+                                        />
+                                    </span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                </Fragment>
+                            ) : null}
+
                             <span
                                 className="identity-link"
                                 onClick={() => {
-                                    history.push(routes.LOGIN + "?key=" + key);
+                                    if (!manage) {
+                                        history.push(
+                                            routes.LOGIN + "?key=" + key
+                                        );
+                                    }
                                 }}
                             >
                                 {IconUsername(accounts[key])}
@@ -71,7 +133,18 @@ export function IdentityPicker(): JSX.Element {
             </div>
 
             <div className="buttons is-right">
-                <Link to={routes.REGISTER} className="button">
+                <Link
+                    to={routes.HOME + "?manage=" + (manage ? "off" : "on")}
+                    className="button"
+                    onClick={() => {
+                        if (manage) {
+                            setDeleteMarked([] as string[]);
+                        }
+                    }}
+                >
+                    {manage ? "Stop Managing" : "Manage"}
+                </Link>
+                <Link to={routes.REGISTER} className={`button`}>
                     New Identity
                 </Link>
             </div>
