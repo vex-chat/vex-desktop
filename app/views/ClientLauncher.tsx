@@ -17,14 +17,14 @@ import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
 import { setApp } from "../reducers/app";
 import { addFamiliar, setFamiliars } from "../reducers/familiars";
-import { addMessage } from "../reducers/messages";
+import { addMessage, serializeMessage } from "../reducers/messages";
 import { addSession, setSessions } from "../reducers/sessions";
 import { setUser } from "../reducers/user";
 import { EventEmitter } from "events";
 import log from "electron-log";
 import { selectServers, setServers } from "../reducers/servers";
 import { addChannels } from "../reducers/channels";
-import { addGroupMessage } from "../reducers/groupMessages";
+import { add } from "../reducers/groupMessages";
 import Loading from "../components/Loading";
 import { addPermission, setPermissions } from "../reducers/permissions";
 import fs from "fs";
@@ -45,7 +45,6 @@ for (const folder of folders) {
     }
 }
 
-// eslint-disable-next-line no-var
 let client: Client;
 
 const launchEvents = new EventEmitter();
@@ -189,8 +188,10 @@ export function ClientLauncher(): JSX.Element {
     };
 
     const messageHandler = async (message: IMessage) => {
-        if (message.group) {
-            dispatch(addGroupMessage(message));
+        const szMsg = serializeMessage(message);
+
+        if (szMsg.group) {
+            dispatch(add(szMsg));
         } else {
             dispatch(addMessage(message));
         }
@@ -252,8 +253,14 @@ export function ClientLauncher(): JSX.Element {
 
         for (const channelID of knownChannels) {
             const history = await client.messages.retrieveGroup(channelID);
+
             for (const message of history) {
-                dispatch(addGroupMessage(message));
+                const szMsg = serializeMessage(message);
+
+                if(szMsg.group){
+                    dispatch(add(szMsg));
+                }
+                
             }
         }
 

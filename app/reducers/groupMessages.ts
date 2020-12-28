@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IMessage } from "@vex-chat/libvex";
-import { AppThunk, RootState } from "../store";
-import { ISerializedMessage, serializeMessage } from "./messages";
+import { RootState } from "../store";
+import { IGroupSerializedMessage } from "./messages";
+
+type FailPayload = {message: IGroupSerializedMessage, errorString: string};
 
 const initialState: {
     [groupId: string]: {
-        [mailID: string]: ISerializedMessage
+        [mailID: string]: IGroupSerializedMessage
     }
 } = {};
 
@@ -14,11 +15,8 @@ const groupMessageSlice = createSlice({
     initialState,
     reducers: {
         reset: () => initialState,
-        add: (state, {payload}: PayloadAction<ISerializedMessage>) => {
+        add: (state, {payload}: PayloadAction<IGroupSerializedMessage>) => {
             const  { group, mailID } = payload;
-
-            //TODO: reducers are pure. should filter bad messages before reducer
-            if (!group) throw new Error("Message must contain a group, or use messages.add()");
 
             if (!state[group]) {
                 state[group] = {};
@@ -30,31 +28,23 @@ const groupMessageSlice = createSlice({
 
             return state;
         },
-        fail: (state, action) => {
-            const {
-                message,
-                errorString,
-            }: {
-                message: ISerializedMessage;
-                errorString: string;
-            } = action.payload;
-
-            const group = action.payload.message.group;
+        fail: (state, { payload: { message, errorString }}: PayloadAction<FailPayload>) => {
+            const { group, mailID }= message
 
             if (
                 state[group] === undefined ||
-                state[group][message.mailID] === undefined
+                state[group][mailID] === undefined
             ) {
                 // it doesn't exist, we are done
                 return state;
             }
 
-            const failedMessage = state[group][message.mailID];
+            const failedMessage = state[group][mailID];
 
             // mark it failed
             failedMessage.failed = true;
             failedMessage.failMessage = errorString;
-            state[group][message.mailID] = failedMessage;
+            state[group][mailID] = failedMessage;
 
             return state;
         },
@@ -63,26 +53,8 @@ const groupMessageSlice = createSlice({
 
 export const { add, reset, fail } = groupMessageSlice.actions;
 
-export const resetGroupMessages = (): AppThunk => (dispatch) => {
-    dispatch(reset());
-};
-
-export const failGroupMessage = (
-    message: IMessage,
-    errorString: string
-): AppThunk => (dispatch) => {
-    const szMsg = serializeMessage(message);
-    const payload = { message: szMsg, errorString };
-    dispatch(fail(payload));
-};
-
-export const addGroupMessage = (message: IMessage): AppThunk => (dispatch) => {
-    const szMsg = serializeMessage(message);
-    dispatch(add(szMsg));
-};
-
-export const selectGroupMessages = (
-    state: RootState
-): Record<string, Record<string, ISerializedMessage>> => state.groupMessages;
+export const makeGroupMessageSelector: (groupId: string) => (state: RootState) => Record<string, IGroupSerializedMessage> = (
+    groupId
+) => ({groupMessages}) => groupMessages[groupId];
 
 export default groupMessageSlice.reducer;
