@@ -1,4 +1,4 @@
-import { IUser } from "@vex-chat/vex";
+import { IUser } from "@vex-chat/libvex";
 import React, { createRef, Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";

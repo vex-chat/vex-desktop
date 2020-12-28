@@ -15,7 +15,7 @@
     },
     "license": "AGPL-3.0-or-later",
     "dependencies": {
-        "@vex-chat/vex": "^0.11.9",
+        "@vex-chat/libvex": "^0.11.10",
         "react-loading": "^2.0.3"
     }
 }
