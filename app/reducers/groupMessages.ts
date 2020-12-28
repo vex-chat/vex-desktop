@@ -1,38 +1,36 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IMessage } from "@vex-chat/libvex";
 import { AppThunk, RootState } from "../store";
 import { ISerializedMessage, serializeMessage } from "./messages";
 
+const initialState: {
+    [groupId: string]: {
+        [mailID: string]: ISerializedMessage
+    }
+} = {};
+
 const groupMessageSlice = createSlice({
     name: "groupMessages",
-    initialState: {},
+    initialState,
     reducers: {
-        reset: () => {
-            return {};
-        },
-        add: (
-            state: Record<string, Record<string, ISerializedMessage>>,
-            action
-        ) => {
-            const message = action.payload;
-            const group = message.group;
-            if (!group) {
-                throw new Error(
-                    "Message must contain a group, or use messages.add()"
-                );
-            }
+        reset: () => initialState,
+        add: (state, {payload}: PayloadAction<ISerializedMessage>) => {
+            const  { group, mailID } = payload;
+
+            //TODO: reducers are pure. should filter bad messages before reducer
+            if (!group) throw new Error("Message must contain a group, or use messages.add()");
+
             if (!state[group]) {
                 state[group] = {};
             }
-            if (!state[group][message.mailID]) {
-                state[group][message.mailID] = message;
+
+            if (!state[group][mailID]) {
+                state[group][mailID] = payload;
             }
+
             return state;
         },
-        fail: (
-            state: Record<string, Record<string, ISerializedMessage>>,
-            action
-        ) => {
+        fail: (state, action) => {
             const {
                 message,
                 errorString,
