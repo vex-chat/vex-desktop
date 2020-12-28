@@ -1,20 +1,19 @@
 import React, { useRef, useEffect, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router";
-import {
-    makeGroupMessageSelector,
-    fail,
-} from "../reducers/groupMessages";
+import { makeGroupMessageSelector, fail } from "../reducers/groupMessages";
 import { selectInputStates, addInputState } from "../reducers/inputs";
 import { chunkMessages } from "../utils/chunkMessages";
 import { IServerParams } from "../views/Server";
 import { MessageBox } from "./MessageBox";
 import * as uuid from "uuid";
-import { serializeMessage } from '../reducers/messages'
+import { serializeMessage } from "../reducers/messages";
 
 export function ServerPane(): JSX.Element {
     const params: IServerParams = useParams();
-    const threadMessages = useSelector(makeGroupMessageSelector(params.channelID));
+    const threadMessages = useSelector(
+        makeGroupMessageSelector(params.channelID)
+    );
     const inputs = useSelector(selectInputStates);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const dispatch = useDispatch();
@@ -67,13 +66,16 @@ export function ServerPane(): JSX.Element {
                                 );
                             } catch (err) {
                                 if (err.message) {
-
                                     const szMsg = serializeMessage(err.message);
 
-                                    if(szMsg.group) {
-                                        dispatch(fail({message: szMsg, errorString: err.error.error}))
+                                    if (szMsg.group) {
+                                        dispatch(
+                                            fail({
+                                                message: szMsg,
+                                                errorString: err.error.error,
+                                            })
+                                        );
                                     }
-
                                 }
                             }
                         }

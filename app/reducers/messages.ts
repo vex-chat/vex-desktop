@@ -23,7 +23,9 @@ export interface INonGroupSerializedMessage extends IBaseSerializedMessage {
     group: null;
 }
 
-export type ISerializedMessage = IGroupSerializedMessage | INonGroupSerializedMessage;
+export type ISerializedMessage =
+    | IGroupSerializedMessage
+    | INonGroupSerializedMessage;
 
 export function serializeMessage(message: IMessage): ISerializedMessage {
     const serialized: ISerializedMessage = {

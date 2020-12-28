@@ -2,13 +2,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { IGroupSerializedMessage } from "./messages";
 
-type FailPayload = {message: IGroupSerializedMessage, errorString: string};
-type AddManyPayload = {messages: IGroupSerializedMessage[], group: string};
+type FailPayload = { message: IGroupSerializedMessage; errorString: string };
+type AddManyPayload = { messages: IGroupSerializedMessage[]; group: string };
 
 const initialState: {
     [groupId: string]: {
-        [mailID: string]: IGroupSerializedMessage
-    }
+        [mailID: string]: IGroupSerializedMessage;
+    };
 } = {};
 
 const groupMessageSlice = createSlice({
@@ -16,8 +16,8 @@ const groupMessageSlice = createSlice({
     initialState,
     reducers: {
         reset: () => initialState,
-        add: (state, {payload}: PayloadAction<IGroupSerializedMessage>) => {
-            const  { group, mailID } = payload;
+        add: (state, { payload }: PayloadAction<IGroupSerializedMessage>) => {
+            const { group, mailID } = payload;
 
             if (!state[group]) {
                 state[group] = {};
@@ -29,21 +29,27 @@ const groupMessageSlice = createSlice({
 
             return state;
         },
-        addMany: (state, {payload: { group, messages }}: PayloadAction<AddManyPayload>) => {
+        addMany: (
+            state,
+            { payload: { group, messages } }: PayloadAction<AddManyPayload>
+        ) => {
             if (!state[group]) {
                 state[group] = {};
             }
-            
+
             messages.forEach((msg) => {
                 if (!state[group][msg.mailID]) {
                     state[group][msg.mailID] = msg;
-                }    
-            })
+                }
+            });
 
             return state;
         },
-        fail: (state, { payload: { message, errorString }}: PayloadAction<FailPayload>) => {
-            const { group, mailID }= message
+        fail: (
+            state,
+            { payload: { message, errorString } }: PayloadAction<FailPayload>
+        ) => {
+            const { group, mailID } = message;
 
             if (
                 state[group] === undefined ||
@@ -67,8 +73,10 @@ const groupMessageSlice = createSlice({
 
 export const { add, reset, fail, addMany } = groupMessageSlice.actions;
 
-export const makeGroupMessageSelector: (groupId: string) => (state: RootState) => Record<string, IGroupSerializedMessage> = (
+export const makeGroupMessageSelector: (
+    groupId: string
+) => (state: RootState) => Record<string, IGroupSerializedMessage> = (
     groupId
-) => ({groupMessages}) => groupMessages[groupId];
+) => ({ groupMessages }) => groupMessages[groupId];
 
 export default groupMessageSlice.reducer;
