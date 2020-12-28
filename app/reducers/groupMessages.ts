@@ -3,6 +3,7 @@ import { RootState } from "../store";
 import { IGroupSerializedMessage } from "./messages";
 
 type FailPayload = {message: IGroupSerializedMessage, errorString: string};
+type AddManyPayload = {messages: IGroupSerializedMessage[], group: string};
 
 const initialState: {
     [groupId: string]: {
@@ -25,6 +26,19 @@ const groupMessageSlice = createSlice({
             if (!state[group][mailID]) {
                 state[group][mailID] = payload;
             }
+
+            return state;
+        },
+        addMany: (state, {payload: { group, messages }}: PayloadAction<AddManyPayload>) => {
+            if (!state[group]) {
+                state[group] = {};
+            }
+            
+            messages.forEach((msg) => {
+                if (!state[group][msg.mailID]) {
+                    state[group][msg.mailID] = msg;
+                }    
+            })
 
             return state;
         },
@@ -51,7 +65,7 @@ const groupMessageSlice = createSlice({
     },
 });
 
-export const { add, reset, fail } = groupMessageSlice.actions;
+export const { add, reset, fail, addMany } = groupMessageSlice.actions;
 
 export const makeGroupMessageSelector: (groupId: string) => (state: RootState) => Record<string, IGroupSerializedMessage> = (
     groupId

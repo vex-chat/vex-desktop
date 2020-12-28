@@ -17,14 +17,14 @@ import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
 import { setApp } from "../reducers/app";
 import { addFamiliar, setFamiliars } from "../reducers/familiars";
-import { addMessage, serializeMessage } from "../reducers/messages";
+import { addMessage, serializeMessage, IGroupSerializedMessage } from "../reducers/messages";
 import { addSession, setSessions } from "../reducers/sessions";
 import { setUser } from "../reducers/user";
 import { EventEmitter } from "events";
 import log from "electron-log";
 import { selectServers, setServers } from "../reducers/servers";
 import { addChannels } from "../reducers/channels";
-import { add } from "../reducers/groupMessages";
+import { add, addMany } from "../reducers/groupMessages";
 import Loading from "../components/Loading";
 import { addPermission, setPermissions } from "../reducers/permissions";
 import fs from "fs";
@@ -254,14 +254,18 @@ export function ClientLauncher(): JSX.Element {
         for (const channelID of knownChannels) {
             const history = await client.messages.retrieveGroup(channelID);
 
-            for (const message of history) {
-                const szMsg = serializeMessage(message);
+            const groupSzMsgs = history.reduce<IGroupSerializedMessage[]>((acc, msg) => {
+                const szMsg = serializeMessage(msg);
 
                 if(szMsg.group){
-                    dispatch(add(szMsg));
+                    acc.push(szMsg)
                 }
-                
-            }
+
+                return acc;
+
+            }, [])
+
+            dispatch(addMany({messages: groupSzMsgs, group: channelID}))
         }
 
         const permissions = await client.permissions.retrieve();
