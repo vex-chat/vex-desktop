@@ -1,37 +1,46 @@
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState, ChangeEvent, FunctionComponent, memo } from "react";
+import React, { useState, FunctionComponent, memo, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-
 import { routes } from "../constants/routes";
+import { addInputState } from "../reducers/inputs";
 import { gaurdian } from "../views/Base";
 import { BackButton } from "../components/BackButton";
 import { keyFolder } from "../constants/folders";
 import { VerticalAligner } from "../components/VerticalAligner";
 import { useQuery } from "../hooks/useQuery";
 import { useDebounce } from "../hooks/useDebounce";
+import { RootState } from '../store'
+
+const FORM_NAME = "keyfile-login-pasword";
 
 export const Login: FunctionComponent = memo(() => {
     const history = useHistory();
+
     const query = useQuery();
+    const password = useSelector<RootState, string>(({inputs}) => inputs[FORM_NAME]);
+    const publicKey = query.get("key");
     const [loading, setLoading] = useState(false);
     const [errText, setErrText] = useState("");
+    const dispatch = useDispatch();
 
-    const publicKey = query.get("key");
+    const [inputVal, setInputVal] = useState("");
+    const debouncedInput = useDebounce(inputVal, 500);
 
-    const [debouncedVal, setDebounced] = useDebounce("", 1000);
-    const onChange = ({target: {value}}: ChangeEvent<HTMLInputElement>) => {
-        setDebounced(value);
-    }
+    useEffect(() => {
+        dispatch(addInputState(FORM_NAME, debouncedInput));
+    }, [debouncedInput]);
+
 
     const unlockKey = () => {
-        if (debouncedVal == "") return
+        if (password == "") return;
 
         setLoading(true);
-        setDebounced("");
+        setInputVal("")
 
         try {
-            gaurdian.load(keyFolder + "/" + publicKey, debouncedVal);
+            gaurdian.load(keyFolder + "/" + publicKey, password);
         } catch (err) {
             console.error(err);
             setErrText(err.toString());
@@ -54,8 +63,11 @@ export const Login: FunctionComponent = memo(() => {
                         className="input"
                         type="password"
                         placeholder="hunter2"
-                        value={debouncedVal}
-                        onChange={onChange}
+                        value={inputVal}
+                        onChange={({target: {value}}) => {
+                            setInputVal(value)
+                            
+                        }}
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
                                 unlockKey();
@@ -79,4 +91,4 @@ export const Login: FunctionComponent = memo(() => {
             </div>
         </VerticalAligner>
     );
-});
+})
