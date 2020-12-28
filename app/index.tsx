@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import React, { Fragment } from "react";
 import { render } from "react-dom";
 import { AppContainer as ReactHotAppContainer } from "react-hot-loader";

@@ -1,17 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../store";
 
+type InputState = Record<string, string>
+
+const initialState: InputState = {
+    "keyfile-login-pasword": ''
+}
+
 const inputSlice = createSlice({
     name: "inputs",
-    initialState: {},
+    initialState,
     reducers: {
-        add: (state: Record<string, string>, action) => {
+        add: (state, action) => {
             const { formID, input } = action.payload;
             state[formID] = input;
             return state;
         },
         reset: () => {
-            return {};
+            return initialState;
         },
     },
 });

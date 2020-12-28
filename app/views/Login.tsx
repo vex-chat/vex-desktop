@@ -1,34 +1,44 @@
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useState, FunctionComponent, memo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
-import { selectInputStates, addInputState } from "../reducers/inputs";
+import { addInputState } from "../reducers/inputs";
 import { gaurdian } from "../views/Base";
 import { BackButton } from "../components/BackButton";
 import { keyFolder } from "../constants/folders";
 import { VerticalAligner } from "../components/VerticalAligner";
 import { useQuery } from "../hooks/useQuery";
+import { useDebounce } from "../hooks/useDebounce";
+import { RootState } from '../store'
 
-export function Login(): JSX.Element {
+const FORM_NAME = "keyfile-login-pasword";
+
+export const Login: FunctionComponent = memo(() => {
     const history = useHistory();
-    const FORM_NAME = "keyfile-login-pasword";
+
     const query = useQuery();
-    const inputs = useSelector(selectInputStates);
+    const password = useSelector<RootState, string>(({inputs}) => inputs[FORM_NAME]);
     const publicKey = query.get("key");
     const [loading, setLoading] = useState(false);
     const [errText, setErrText] = useState("");
     const dispatch = useDispatch();
 
-    const unlockKey = () => {
-        const password = inputs[FORM_NAME];
+    const [inputVal, setInputVal] = useState("");
+    const debouncedInput = useDebounce(inputVal, 500);
 
-        if (!password || password == "") {
-            return;
-        }
+    useEffect(() => {
+        dispatch(addInputState(FORM_NAME, debouncedInput));
+    }, [debouncedInput]);
+
+
+    const unlockKey = () => {
+        if (password == "") return;
+
         setLoading(true);
-        dispatch(addInputState(FORM_NAME, ""));
+        setInputVal("")
+
         try {
             gaurdian.load(keyFolder + "/" + publicKey, password);
         } catch (err) {
@@ -37,6 +47,7 @@ export function Login(): JSX.Element {
             setLoading(false);
             return;
         }
+
         history.push(routes.HOME);
     };
 
@@ -52,11 +63,10 @@ export function Login(): JSX.Element {
                         className="input"
                         type="password"
                         placeholder="hunter2"
-                        value={inputs[FORM_NAME] || ""}
-                        onChange={(event) => {
-                            dispatch(
-                                addInputState(FORM_NAME, event.target.value)
-                            );
+                        value={inputVal}
+                        onChange={({target: {value}}) => {
+                            setInputVal(value)
+                            
                         }}
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
@@ -81,4 +91,4 @@ export function Login(): JSX.Element {
             </div>
         </VerticalAligner>
     );
-}
+})
