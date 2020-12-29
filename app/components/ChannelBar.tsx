@@ -28,7 +28,10 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
     // TODO: temp let until behavior is better known
     let location = useLocation();
     const serverChannels = useSelector(makeServerChannelsSelector(serverID));
-    const isPermitted = useSelector(makeIsPermittedSelector(serverID));
+
+    // TODO: uncomment when done with dev
+    // const isPermitted = useSelector(makeIsPermittedSelector(serverID));
+    const isPermitted = true;
 
     const channelIDs = Object.keys(serverChannels);
 
@@ -39,7 +42,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                     {name}
                     {isPermitted && (
                         <Link
-                            to={`${SERVERS}/${serverID}/${v4()}/add-user`}
+                            to={`${SERVERS}/${serverID}/${v4()}/add-channel`}
                             className="is-pulled-right button is-small"
                             style={{ border: "none" }}
                         >

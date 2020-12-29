@@ -11,6 +11,7 @@ import { makeServerChannelsSelector } from "../reducers/channels";
 import { selectServers } from "../reducers/servers";
 import { UserMenu } from "../components/UserMenu";
 import { AddUser } from "../components/ServerAddUser";
+import { AddChannel } from "../components/ServerAddChannel";
 import { ServerPane } from "../components/ServerPane";
 
 export interface IServerParams {
@@ -55,6 +56,11 @@ export function Server(): JSX.Element {
                         exact
                         path={routes.SERVERS + "/:serverID/:channelID/add-user"}
                         render={() => <AddUser />}
+                    />
+                    <Route
+                        exact
+                        path={routes.SERVERS + "/:serverID/:channelID/add-channel"}
+                        render={() => <AddChannel />}
                     />
                     <Route
                         exact
