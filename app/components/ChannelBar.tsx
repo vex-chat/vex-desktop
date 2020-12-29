@@ -1,4 +1,8 @@
-import { faHashtag, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+    faHashtag,
+    faUserPlus,
+    faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FunctionComponent } from "react";
 import { useSelector } from "react-redux";
@@ -31,7 +35,21 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
     return (
         <div className="sidebar">
             <div className="server-titlebar">
-                <h1 className="title is-size-4 server-title-text">{name} </h1>
+                <h1 className="title is-size-4 server-title-text">
+                    {name}
+                    {isPermitted && (
+                        <Link
+                            to={`${SERVERS}/${serverID}/${v4()}/add-user`}
+                            className="is-pulled-right button is-small"
+                            style={{ border: "none" }}
+                        >
+                            <FontAwesomeIcon
+                                className="has-text-dark"
+                                icon={faPlus}
+                            />
+                        </Link>
+                    )}
+                </h1>
             </div>
             {isPermitted && (
                 <Link
