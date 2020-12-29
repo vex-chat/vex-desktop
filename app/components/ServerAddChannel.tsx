@@ -23,7 +23,7 @@ export const AddChannel: FunctionComponent = () => {
 
     const [inputVal, setInputVal] = useState("");
 
-    const debouncedInput = useDebounce(inputVal, 250);
+    const debouncedInput = useDebounce(inputVal, 500);
 
     useEffect(() => {
         dispatch(addInputState(FORM_NAME, debouncedInput));
@@ -32,12 +32,12 @@ export const AddChannel: FunctionComponent = () => {
     const AddChannelPermission = async (enterChannel?: string) => {
         const client = window.vex;
 
-        const x = await client.channels.create(
+        const newChannel = await client.channels.create(
             enterChannel || channel,
             serverID
         );
 
-        dispatch(add(x));
+        dispatch(add(newChannel));
     };
 
     return (
