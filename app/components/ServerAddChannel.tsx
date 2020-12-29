@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 
 import { useDebounce } from "../hooks/useDebounce";
 import { selectServers } from "../reducers/servers";
+import { add } from "../reducers/channels";
 import { IServerParams } from "../views/Server";
 import { addInputState } from "../reducers/inputs";
 import { RootState } from "../store";
@@ -21,6 +22,7 @@ export const AddChannel: FunctionComponent = () => {
     );
 
     const [inputVal, setInputVal] = useState("");
+
     const debouncedInput = useDebounce(inputVal, 250);
 
     useEffect(() => {
@@ -35,7 +37,7 @@ export const AddChannel: FunctionComponent = () => {
             serverID
         );
 
-        console.log("x", x);
+        dispatch(add(x));
     };
 
     return (

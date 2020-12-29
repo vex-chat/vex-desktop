@@ -29,9 +29,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
     let location = useLocation();
     const serverChannels = useSelector(makeServerChannelsSelector(serverID));
 
-    // TODO: uncomment when done with dev
-    // const isPermitted = useSelector(makeIsPermittedSelector(serverID));
-    const isPermitted = true;
+    const isPermitted = useSelector(makeIsPermittedSelector(serverID));
 
     const channelIDs = Object.keys(serverChannels);
 
