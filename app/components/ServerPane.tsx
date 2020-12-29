@@ -10,9 +10,9 @@ import * as uuid from "uuid";
 import { serializeMessage } from "../reducers/messages";
 
 export function ServerPane(): JSX.Element {
-    const params: IServerParams = useParams();
+    const { channelID }  = useParams<IServerParams>();
     const threadMessages = useSelector(
-        makeGroupMessageSelector(params.channelID)
+        makeGroupMessageSelector(channelID)
     );
     const inputs = useSelector(selectInputStates);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -44,24 +44,24 @@ export function ServerPane(): JSX.Element {
 
             <div className="chat-input-wrapper">
                 <textarea
-                    value={inputs[params.channelID]}
+                    value={inputs[channelID]}
                     className="textarea chat-input has-fixed-size"
                     onChange={(event) => {
                         dispatch(
-                            addInputState(params.channelID, event.target.value)
+                            addInputState(channelID, event.target.value)
                         );
                     }}
                     onKeyDown={async (event) => {
                         if (event.key === "Enter" && !event.shiftKey) {
                             event.preventDefault();
 
-                            const messageText = inputs[params.channelID];
-                            dispatch(addInputState(params.channelID, ""));
+                            const messageText = inputs[channelID];
+                            dispatch(addInputState(channelID, ""));
 
                             const client = window.vex;
                             try {
                                 await client.messages.group(
-                                    params.channelID,
+                                    channelID,
                                     messageText
                                 );
                             } catch (err) {

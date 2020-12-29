@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Route, Switch, useParams } from "react-router";
+
 import { ChannelBar } from "../components/ChannelBar";
 import { ServerBar } from "../components/ServerBar";
 import { routes } from "../constants/routes";
@@ -22,9 +23,8 @@ export function Server(): JSX.Element {
     const servers = useSelector(selectServers);
     const channels = useSelector(selectChannels);
 
-    const params: { serverID: string; channelID: string } = useParams();
-    const { serverID, channelID } = params;
-
+    const { serverID, channelID } = useParams<{ serverID: string; channelID: string }>();
+ 
     const serverChannels = channels ? channels[serverID] || {} : {};
     const server = servers[serverID];
 
