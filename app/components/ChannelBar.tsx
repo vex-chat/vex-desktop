@@ -1,29 +1,32 @@
 import { faHashtag, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IServer } from "@vex-chat/libvex";
 import React, { FunctionComponent } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import { routes } from "../constants/routes";
-import { selectChannels } from "../reducers/channels";
 import { v4 } from "uuid";
-import { selectPermissions } from "../reducers/permissions";
+
+import { routes } from "../constants/routes";
+import { makeServerChannelsSelector } from "../reducers/channels";
+import { makeIsPermittedSelector } from "../reducers/permissions";
 
 const { SERVERS } = routes;
 
-export const ChannelBar: FunctionComponent<{ server: IServer }> = ({
-    server: { serverID, name },
+type ChannelBarProps = {
+    serverID: string;
+    name: string;
+};
+
+export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
+    serverID,
+    name,
 }) => {
     // TODO: temp let until behavior is better known
     let location = useLocation();
-    const _channels = useSelector(selectChannels);
+    const serverChannels = useSelector(makeServerChannelsSelector(serverID));
+    const isPermitted = useSelector(makeIsPermittedSelector(serverID));
 
-    const serverChannels = _channels[serverID];
-    const channelIDs = Object.keys(serverChannels || {});
-
-    const permissions = useSelector(selectPermissions);
-    const isPermitted = permissions[serverID]?.powerLevel > 50;
+    const channelIDs = Object.keys(serverChannels);
 
     return (
         <div className="sidebar">

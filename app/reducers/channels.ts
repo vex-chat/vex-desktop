@@ -34,8 +34,10 @@ export const addChannels = (channels: IChannel[]): AppThunk => (dispatch) => {
     }
 };
 
-export const selectChannels = (
-    state: RootState
-): Record<string, Record<string, IChannel>> => state.channels;
+export const makeServerChannelsSelector: (
+    serverID: string
+) => (state: RootState) => Record<string, IChannel> = (serverID) => ({
+    channels,
+}) => channels[serverID] || {};
 
 export default channelSlice.reducer;
