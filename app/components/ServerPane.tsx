@@ -10,10 +10,8 @@ import * as uuid from "uuid";
 import { serializeMessage } from "../reducers/messages";
 
 export function ServerPane(): JSX.Element {
-    const { channelID }  = useParams<IServerParams>();
-    const threadMessages = useSelector(
-        makeGroupMessageSelector(channelID)
-    );
+    const { channelID } = useParams<IServerParams>();
+    const threadMessages = useSelector(makeGroupMessageSelector(channelID));
     const inputs = useSelector(selectInputStates);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const dispatch = useDispatch();
@@ -47,9 +45,7 @@ export function ServerPane(): JSX.Element {
                     value={inputs[channelID]}
                     className="textarea chat-input has-fixed-size"
                     onChange={(event) => {
-                        dispatch(
-                            addInputState(channelID, event.target.value)
-                        );
+                        dispatch(addInputState(channelID, event.target.value));
                     }}
                     onKeyDown={async (event) => {
                         if (event.key === "Enter" && !event.shiftKey) {

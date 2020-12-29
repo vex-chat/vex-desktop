@@ -23,8 +23,11 @@ export function Server(): JSX.Element {
     const servers = useSelector(selectServers);
     const channels = useSelector(selectChannels);
 
-    const { serverID, channelID } = useParams<{ serverID: string; channelID: string }>();
- 
+    const { serverID, channelID } = useParams<{
+        serverID: string;
+        channelID: string;
+    }>();
+
     const serverChannels = channels ? channels[serverID] || {} : {};
     const server = servers[serverID];
 
