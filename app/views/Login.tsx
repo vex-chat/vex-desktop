@@ -28,7 +28,7 @@ export const Login: FunctionComponent = memo(() => {
     const dispatch = useDispatch();
 
     const [inputVal, setInputVal] = useState("");
-    const debouncedInput = useDebounce(inputVal, 500);
+    const debouncedInput = useDebounce(inputVal, 250);
 
     useEffect(() => {
         dispatch(addInputState(FORM_NAME, debouncedInput));

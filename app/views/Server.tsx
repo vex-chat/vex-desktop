@@ -59,7 +59,9 @@ export function Server(): JSX.Element {
                     />
                     <Route
                         exact
-                        path={routes.SERVERS + "/:serverID/:channelID/add-channel"}
+                        path={
+                            routes.SERVERS + "/:serverID/:channelID/add-channel"
+                        }
                         render={() => <AddChannel />}
                     />
                     <Route

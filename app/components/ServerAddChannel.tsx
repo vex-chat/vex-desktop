@@ -1,59 +1,64 @@
-import { IUser } from "@vex-chat/libvex";
-import React, { Fragment, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { FunctionComponent, useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router";
+
+import { useDebounce } from "../hooks/useDebounce";
 import { selectServers } from "../reducers/servers";
 import { IServerParams } from "../views/Server";
-import { IconUsername } from "./IconUsername";
-import { emptyUser } from "./MessagingBar";
-import { UserSearchBar } from "./UserSearchBar";
+import { addInputState } from "../reducers/inputs";
+import { RootState } from "../store";
 
-export function AddChannel(): JSX.Element {
+export const AddChannel: FunctionComponent = () => {
     const servers = useSelector(selectServers);
-    const params: IServerParams = useParams();
-    const [user, setUser] = useState(emptyUser);
-    const server = servers[params.serverID];
+    const { serverID } = useParams<IServerParams>();
+    const dispatch = useDispatch();
+    const { name } = servers[serverID];
 
-    const AddChannelPermission = async (user: IUser) => {
+    const FORM_NAME = `${serverID}/add-channel-form`;
+
+    const channel = useSelector<RootState, string>(
+        ({ inputs }) => inputs[FORM_NAME] || ""
+    );
+
+    const [inputVal, setInputVal] = useState("");
+    const debouncedInput = useDebounce(inputVal, 250);
+
+    useEffect(() => {
+        dispatch(addInputState(FORM_NAME, debouncedInput));
+    }, [debouncedInput]);
+
+    const AddChannelPermission = async (enterChannel?: string) => {
         const client = window.vex;
-        const { userID } = user;
-        await client.permissions.create({
-            userID,
-            resourceType: "server",
-            resourceID: params.serverID,
-        });
+
+        const x = await client.channels.create(
+            enterChannel || channel,
+            serverID
+        );
+
+        console.log("x", x);
     };
 
     return (
         <div className="pane-screen-wrapper">
             <div className="panel">
-                <div className="panel-heading">Add a channel to {server.name}</div>
+                <div className="panel-heading">Add a channel to {name}</div>
                 <div className="panel-block">
-                    <UserSearchBar
-                        formName={
-                            "server-user-serach-bar" +
-                            params.serverID +
-                            params.channelID
-                        }
-                        onFoundUser={async (user: IUser) => {
-                            setUser(user);
+                    <input
+                        className="input"
+                        type="text"
+                        placeholder="cool names go here"
+                        value={inputVal}
+                        onChange={({ target: { value } }) => {
+                            setInputVal(value);
+                        }}
+                        onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                                AddChannelPermission(inputVal);
+                            }
                         }}
                     />
                 </div>
-                {user !== emptyUser && (
-                    <Fragment>
-                        <div className="panel-block">{IconUsername(user)}</div>
-                        <div className="panel-block">
-                            <button
-                                className="button is-small"
-                                onClick={() => AddChannelPermission(user)}
-                            >
-                                Add Channel to {server.name}
-                            </button>
-                        </div>
-                    </Fragment>
-                )}
             </div>
         </div>
     );
-}
+};
