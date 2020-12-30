@@ -102,10 +102,10 @@
     pbkdf2 "^3.1.1"
     tweetnacl "^1.0.3"
 
-"@vex-chat/libvex@^0.11.11":
-  version "0.11.11"
-  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.11.11.tgz#d8cbc5ad6f432803c42a73144314d6f1bc952c78"
-  integrity sha512-V/vnxy2BdGxeXqKTrYSG2Ta8klf7zs0CBdulZ7J+ZQBfqQXJ/hHn3D1OMHL9xEokk56pWicA6cuEzB/CXFBtSA==
+"@vex-chat/libvex@^0.11.13":
+  version "0.11.13"
+  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.11.13.tgz#700ee10a761990b60c2341536f6f42b6828c433f"
+  integrity sha512-ADHmBsqHtcoQ2Ng+g7tu5yVf6QN5Ixyd9cl7nLraaEEey/ufMS7FVj3zWTKbCgd4TkGzwF69UugefIclA1/m0Q==
   dependencies:
     "@extrahash/sleep" "^1.0.0"
     "@types/create-hmac" "^1.1.0"

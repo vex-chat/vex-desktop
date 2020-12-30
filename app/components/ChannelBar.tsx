@@ -7,13 +7,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FunctionComponent, useState } from "react";
-import { useSelector } from "react-redux";
-import { useLocation } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import * as uuid from "uuid";
 
 import { routes } from "../constants/routes";
-import { makeServerChannelsSelector } from "../reducers/channels";
+import {
+    deleteChannel,
+    makeServerChannelsSelector,
+} from "../reducers/channels";
 import { makeIsPermittedSelector } from "../reducers/permissions";
 
 type ChannelBarProps = {
@@ -25,12 +28,13 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
     serverID,
     name,
 }) => {
-    const [deleteChannel, setDeleteChannel] = useState(false);
+    const [manageChannels, setManageChannels] = useState(false);
     const [markedChannels, setMarkedChannels] = useState([] as string[]);
     const [menuOpen, setMenuOpen] = useState(false);
     const { pathname } = useLocation();
     const serverChannels = useSelector(makeServerChannelsSelector(serverID));
-
+    const dispatch = useDispatch();
+    const history = useHistory();
     const isPermitted = useSelector(makeIsPermittedSelector(serverID));
 
     const channelIDs = Object.keys(serverChannels);
@@ -102,7 +106,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                         <a
                                             className="dropdown-item"
                                             onClick={() => {
-                                                setDeleteChannel(true);
+                                                setManageChannels(true);
                                             }}
                                         >
                                             <span className="icon">
@@ -137,7 +141,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                 >
                                     <FontAwesomeIcon icon={faHashtag} />
                                     &nbsp;&nbsp;{channel.name}
-                                    {deleteChannel && (
+                                    {manageChannels && (
                                         <span
                                             className={`icon is-pulled-right ${
                                                 markedChannels.includes(
@@ -146,7 +150,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                                     ? "has-text-danger"
                                                     : ""
                                             }`}
-                                            onClick={() => {
+                                            onClick={async () => {
                                                 if (
                                                     !markedChannels.includes(
                                                         channelID
@@ -162,8 +166,16 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                                         "Deletarino " +
                                                             channelID
                                                     );
+                                                    const client = window.vex;
+                                                    await client.channels.delete(
+                                                        channelID
+                                                    );
                                                     setMarkedChannels([]);
-                                                    setDeleteChannel(false);
+                                                    setManageChannels(false);
+                                                    dispatch(
+                                                        deleteChannel(channel)
+                                                    );
+                                                    history.goBack();
                                                 }
                                             }}
                                         >

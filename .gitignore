@@ -52,3 +52,7 @@ npm-debug.log.*
 *.scss.d.ts
 
 *.sqlite
+
+# this was screwing with my yarn command, wasn't properly
+# building native deps
+.yarnrc
