@@ -252,7 +252,7 @@ export default class MenuBuilder {
                               },
                               {
                                   label: "Relaunch",
-                                  accelerator: "Alt+Ctrl+F12",
+                                  accelerator: "Ctrl+F12",
                                   click: this.sendRelaunch,
                               },
                           ]

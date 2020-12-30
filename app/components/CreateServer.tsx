@@ -7,6 +7,7 @@ import { useHistory } from "react-router";
 import { routes } from "../constants/routes";
 import { addChannels } from "../reducers/channels";
 import { addInputState, selectInputStates } from "../reducers/inputs";
+import { setPermissions } from "../reducers/permissions";
 import { addServer } from "../reducers/servers";
 
 const FORM_NAME = "create-server";
@@ -73,12 +74,20 @@ export function CreateServer(): JSX.Element {
                                             const channels = await client.channels.retrieve(
                                                 server.serverID
                                             );
+
                                             dispatch(addServer(server));
                                             dispatch(addChannels(channels));
+
+                                            const newPermissions = await client.permissions.retrieve();
+                                            dispatch(
+                                                setPermissions(newPermissions)
+                                            );
+
                                             history.push(
                                                 routes.SERVERS +
                                                     "/" +
-                                                    server.serverID
+                                                    server.serverID +
+                                                    "/channels"
                                             );
                                         } catch (err) {
                                             console.error(err);

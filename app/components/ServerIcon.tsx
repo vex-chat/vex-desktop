@@ -13,7 +13,7 @@ export function ServerIcon(props: {
 
     const href = props.routeOverride
         ? props.routeOverride
-        : routes.SERVERS + "/" + props.server.serverID;
+        : routes.SERVERS + "/" + props.server.serverID + "/channels";
 
     const isActiveModifier = history.location.pathname.includes(href)
         ? "is-active"

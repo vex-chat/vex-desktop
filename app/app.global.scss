@@ -246,7 +246,6 @@ button {
     bottom: 0;
     background-image: linear-gradient(to top, $light, $white);
     left: 0;
-    z-index: -1;
 }
 
 
@@ -301,7 +300,6 @@ button {
     height: calc(100% - 22px);
     top: 22px;
     background-color: $white;
-    z-index: -1;
 }
 
 
@@ -311,7 +309,6 @@ button {
     bottom: 170px;
     height: calc(100vh - 176px);
     overflow-y:auto;
-    z-index: 0;
     padding: 1ch 4ch;
 }
 
@@ -324,7 +321,6 @@ button {
     right: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    z-index: 0;
     padding: 10px 20px;
     border-bottom: 1px solid $light;
 }

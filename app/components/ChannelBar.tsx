@@ -4,6 +4,7 @@ import {
     faCarrot,
     faPlus,
     faTrash,
+    faCog,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FunctionComponent, useState } from "react";
@@ -17,7 +18,7 @@ import {
     deleteChannel,
     makeServerChannelsSelector,
 } from "../reducers/channels";
-import { makeIsPermittedSelector } from "../reducers/permissions";
+import { selectPermission } from "../reducers/permissions";
 
 type ChannelBarProps = {
     serverID: string;
@@ -35,7 +36,8 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
     const serverChannels = useSelector(makeServerChannelsSelector(serverID));
     const dispatch = useDispatch();
     const history = useHistory();
-    const isPermitted = useSelector(makeIsPermittedSelector(serverID));
+    const permission = useSelector(selectPermission(serverID));
+    const isPermitted = permission?.powerLevel > 50 || false;
 
     const channelIDs = Object.keys(serverChannels);
 
@@ -106,17 +108,48 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                         <a
                                             className="dropdown-item"
                                             onClick={() => {
-                                                setManageChannels(true);
+                                                setManageChannels(
+                                                    !manageChannels
+                                                );
+                                                if (!manageChannels) {
+                                                    setMarkedChannels([]);
+                                                }
                                             }}
                                         >
                                             <span className="icon">
                                                 <FontAwesomeIcon
-                                                    className="has-text-dark"
+                                                    className={`${
+                                                        manageChannels
+                                                            ? "has-text-danger"
+                                                            : "has-text-dark"
+                                                    }`}
                                                     icon={faTrash}
                                                 />
                                             </span>
-                                            &nbsp; Delete Channel
+                                            &nbsp;{" "}
+                                            {manageChannels
+                                                ? "Cancel Delete"
+                                                : "Delete Channel"}
                                         </a>
+                                    )}
+                                    {isPermitted && (
+                                        <Link
+                                            to={
+                                                routes.SERVERS +
+                                                "/" +
+                                                serverID +
+                                                "/settings"
+                                            }
+                                            className="dropdown-item"
+                                        >
+                                            <span className="icon">
+                                                <FontAwesomeIcon
+                                                    className="has-text-dark"
+                                                    icon={faCog}
+                                                />
+                                            </span>
+                                            &nbsp; Server Settings
+                                        </Link>
                                     )}
                                 </div>
                             </div>
@@ -136,7 +169,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                         return (
                             <li key={channelID}>
                                 <Link
-                                    to={`${routes.SERVERS}/${serverID}/${channelID}`}
+                                    to={`${routes.SERVERS}/${serverID}/channels/${channelID}`}
                                     className={chLinkStyle}
                                 >
                                     <FontAwesomeIcon icon={faHashtag} />
@@ -162,10 +195,6 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                                     copy.push(channelID);
                                                     setMarkedChannels(copy);
                                                 } else {
-                                                    console.log(
-                                                        "Deletarino " +
-                                                            channelID
-                                                    );
                                                     const client = window.vex;
                                                     await client.channels.delete(
                                                         channelID

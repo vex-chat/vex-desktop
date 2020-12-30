@@ -289,6 +289,9 @@ export function ClientLauncher(): JSX.Element {
                     const newServers = await client.servers.retrieve();
                     dispatch(setServers(newServers));
 
+                    const newPermissions = await client.permissions.retrieve();
+                    dispatch(setPermissions(newPermissions));
+
                     for (const server of newServers) {
                         const channels = await client.channels.retrieve(
                             server.serverID
