@@ -175,7 +175,11 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                                     dispatch(
                                                         deleteChannel(channel)
                                                     );
-                                                    history.goBack();
+                                                    history.push(
+                                                        routes.SERVERS +
+                                                            "/" +
+                                                            serverID
+                                                    );
                                                 }
                                             }}
                                         >
