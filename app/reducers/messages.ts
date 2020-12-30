@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { IMessage } from "@vex-chat/libvex";
 import { AppThunk, RootState } from "../store";
 
-export interface ISerializedMessage {
+export interface IBaseSerializedMessage {
     mailID: string;
     message: string;
     nonce: string;
@@ -11,10 +11,21 @@ export interface ISerializedMessage {
     recipient: string;
     direction: "incoming" | "outgoing";
     decrypted: boolean;
-    group: string | null;
     failed: boolean;
     failMessage: string;
 }
+
+export interface IGroupSerializedMessage extends IBaseSerializedMessage {
+    group: string;
+}
+
+export interface INonGroupSerializedMessage extends IBaseSerializedMessage {
+    group: null;
+}
+
+export type ISerializedMessage =
+    | IGroupSerializedMessage
+    | INonGroupSerializedMessage;
 
 export function serializeMessage(message: IMessage): ISerializedMessage {
     const serialized: ISerializedMessage = {

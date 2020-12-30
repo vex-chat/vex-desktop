@@ -1,73 +1,83 @@
-import { faHashtag, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+    faHashtag,
+    faUserPlus,
+    faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IServer } from "@vex-chat/libvex";
-import React from "react";
+import React, { FunctionComponent } from "react";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router";
+import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import { routes } from "../constants/routes";
-import { selectChannels } from "../reducers/channels";
 import * as uuid from "uuid";
-import { selectPermissions } from "../reducers/permissions";
 
-export function ChannelBar(props: { server: IServer }): JSX.Element {
-    const history = useHistory();
-    const _channels = useSelector(selectChannels);
+import { routes } from "../constants/routes";
+import { makeServerChannelsSelector } from "../reducers/channels";
+import { makeIsPermittedSelector } from "../reducers/permissions";
 
-    const serverChannels = _channels[props.server.serverID];
-    const channelIDs = Object.keys(serverChannels || {});
+type ChannelBarProps = {
+    serverID: string;
+    name: string;
+};
 
-    const permissions = useSelector(selectPermissions);
-    const serverPermission = permissions[props.server.serverID];
+export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
+    serverID,
+    name,
+}) => {
+    const { pathname } = useLocation();
+    const serverChannels = useSelector(makeServerChannelsSelector(serverID));
+
+    const isPermitted = useSelector(makeIsPermittedSelector(serverID));
+
+    const channelIDs = Object.keys(serverChannels);
 
     return (
         <div className="sidebar">
             <div className="server-titlebar">
                 <h1 className="title is-size-4 server-title-text">
-                    {props.server.name}{" "}
-                    <Link
-                        to={
-                            routes.SERVERS +
-                            "/" +
-                            props.server.serverID +
-                            "/" +
-                            // accept channelID value for a later time
-                            uuid.v4() +
-                            "/add-user"
-                        }
-                    >
-                        {serverPermission?.powerLevel > 50 && (
-                            <span className="add-user-icon">
-                                <FontAwesomeIcon
-                                    className="has-text-dark"
-                                    icon={faUserPlus}
-                                />
-                            </span>
-                        )}
-                    </Link>
+                    {name}
+                    {isPermitted && (
+                        <Link
+                            to={`${
+                                routes.SERVERS
+                            }/${serverID}/${uuid.v4()}/add-channel`}
+                            className="is-pulled-right button is-small"
+                            style={{ border: "none" }}
+                        >
+                            <FontAwesomeIcon
+                                className="has-text-dark"
+                                icon={faPlus}
+                            />
+                        </Link>
+                    )}
                 </h1>
             </div>
+            {isPermitted && (
+                <Link
+                    to={`${routes.SERVERS}/${serverID}/${uuid.v4()}/add-user`}
+                    className={"button is-fullwidth is-small"}
+                >
+                    Invite
+                    <span className="add-user-icon ml-1">
+                        <FontAwesomeIcon
+                            className="has-text-dark"
+                            icon={faUserPlus}
+                        />
+                    </span>
+                </Link>
+            )}
             <aside className="menu">
                 <ul className="menu-list">
-                    {channelIDs.map((channelID) => {
-                        const channel = serverChannels[channelID];
+                    {channelIDs.map((id) => {
+                        const channel = serverChannels[id];
+                        const chLinkStyle = pathname.includes(id)
+                            ? "is-active"
+                            : "";
+
                         return (
-                            <li key={channel.channelID}>
+                            <li key={id}>
                                 <Link
-                                    to={
-                                        routes.SERVERS +
-                                        "/" +
-                                        props.server.serverID +
-                                        "/" +
-                                        channel.channelID
-                                    }
-                                    className={
-                                        history.location.pathname.includes(
-                                            channel.channelID
-                                        )
-                                            ? "is-active"
-                                            : ""
-                                    }
+                                    to={`${routes.SERVERS}/${serverID}/${id}`}
+                                    className={chLinkStyle}
                                 >
                                     <FontAwesomeIcon icon={faHashtag} />
                                     &nbsp;&nbsp;{channel.name}
@@ -79,4 +89,4 @@ export function ChannelBar(props: { server: IServer }): JSX.Element {
             </aside>
         </div>
     );
-}
+};

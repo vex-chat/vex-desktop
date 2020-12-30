@@ -1,90 +1,82 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { IMessage } from "@vex-chat/libvex";
-import { AppThunk, RootState } from "../store";
-import { ISerializedMessage, serializeMessage } from "./messages";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
+import { IGroupSerializedMessage } from "./messages";
+
+type FailPayload = { message: IGroupSerializedMessage; errorString: string };
+type AddManyPayload = { messages: IGroupSerializedMessage[]; group: string };
+
+const initialState: {
+    [groupId: string]: {
+        [mailID: string]: IGroupSerializedMessage;
+    };
+} = {};
 
 const groupMessageSlice = createSlice({
     name: "groupMessages",
-    initialState: {},
+    initialState,
     reducers: {
-        reset: () => {
-            return {};
-        },
-        add: (
-            state: Record<string, Record<string, ISerializedMessage>>,
-            action
-        ) => {
-            const message = action.payload;
-            const group = message.group;
-            if (!group) {
-                throw new Error(
-                    "Message must contain a group, or use messages.add()"
-                );
-            }
+        reset: () => initialState,
+        add: (state, { payload }: PayloadAction<IGroupSerializedMessage>) => {
+            const { group, mailID } = payload;
+
             if (!state[group]) {
                 state[group] = {};
             }
-            if (!state[group][message.mailID]) {
-                state[group][message.mailID] = message;
+
+            if (!state[group][mailID]) {
+                state[group][mailID] = payload;
             }
+
+            return state;
+        },
+        addMany: (
+            state,
+            { payload: { group, messages } }: PayloadAction<AddManyPayload>
+        ) => {
+            if (!state[group]) {
+                state[group] = {};
+            }
+
+            messages.forEach((msg) => {
+                if (!state[group][msg.mailID]) {
+                    state[group][msg.mailID] = msg;
+                }
+            });
+
             return state;
         },
         fail: (
-            state: Record<string, Record<string, ISerializedMessage>>,
-            action
+            state,
+            { payload: { message, errorString } }: PayloadAction<FailPayload>
         ) => {
-            const {
-                message,
-                errorString,
-            }: {
-                message: ISerializedMessage;
-                errorString: string;
-            } = action.payload;
-
-            const group = action.payload.message.group;
+            const { group, mailID } = message;
 
             if (
                 state[group] === undefined ||
-                state[group][message.mailID] === undefined
+                state[group][mailID] === undefined
             ) {
                 // it doesn't exist, we are done
                 return state;
             }
 
-            const failedMessage = state[group][message.mailID];
+            const failedMessage = state[group][mailID];
 
             // mark it failed
             failedMessage.failed = true;
             failedMessage.failMessage = errorString;
-            state[group][message.mailID] = failedMessage;
+            state[group][mailID] = failedMessage;
 
             return state;
         },
     },
 });
 
-export const { add, reset, fail } = groupMessageSlice.actions;
+export const { add, reset, fail, addMany } = groupMessageSlice.actions;
 
-export const resetGroupMessages = (): AppThunk => (dispatch) => {
-    dispatch(reset());
-};
-
-export const failGroupMessage = (
-    message: IMessage,
-    errorString: string
-): AppThunk => (dispatch) => {
-    const szMsg = serializeMessage(message);
-    const payload = { message: szMsg, errorString };
-    dispatch(fail(payload));
-};
-
-export const addGroupMessage = (message: IMessage): AppThunk => (dispatch) => {
-    const szMsg = serializeMessage(message);
-    dispatch(add(szMsg));
-};
-
-export const selectGroupMessages = (
-    state: RootState
-): Record<string, Record<string, ISerializedMessage>> => state.groupMessages;
+export const makeGroupMessageSelector: (
+    groupId: string
+) => (state: RootState) => Record<string, IGroupSerializedMessage> = (
+    groupId
+) => ({ groupMessages }) => groupMessages[groupId];
 
 export default groupMessageSlice.reducer;

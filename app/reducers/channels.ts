@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../store";
 import { IChannel } from "@vex-chat/libvex";
 
@@ -8,7 +8,7 @@ const channelSlice = createSlice({
     name: "channels",
     initialState,
     reducers: {
-        add: (state, action) => {
+        add: (state, action: PayloadAction<IChannel>) => {
             const { channelID, serverID } = action.payload;
             if (state[serverID] === undefined) {
                 state[serverID] = {};
@@ -34,8 +34,10 @@ export const addChannels = (channels: IChannel[]): AppThunk => (dispatch) => {
     }
 };
 
-export const selectChannels = (
-    state: RootState
-): Record<string, Record<string, IChannel>> => state.channels;
+export const makeServerChannelsSelector: (
+    serverID: string
+) => (state: RootState) => Record<string, IChannel> = (serverID) => ({
+    channels,
+}) => channels[serverID] || {};
 
 export default channelSlice.reducer;

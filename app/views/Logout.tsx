@@ -6,7 +6,7 @@ import { useQuery } from "../hooks/useQuery";
 import { resetApp } from "../reducers/app";
 import { resetChannels } from "../reducers/channels";
 import { resetFamiliars } from "../reducers/familiars";
-import { resetGroupMessages } from "../reducers/groupMessages";
+import { reset as resetGroupMessages } from "../reducers/groupMessages";
 import { resetInputStates } from "../reducers/inputs";
 import { resetMessages } from "../reducers/messages";
 import { resetPermissions } from "../reducers/permissions";

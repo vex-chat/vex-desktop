@@ -20,7 +20,7 @@ export const Login: FunctionComponent = memo(() => {
 
     const query = useQuery();
     const password = useSelector<RootState, string>(
-        ({ inputs }) => inputs[FORM_NAME]
+        ({ inputs }) => inputs[FORM_NAME] || ""
     );
     const publicKey = query.get("key");
     const [loading, setLoading] = useState(false);
@@ -34,14 +34,16 @@ export const Login: FunctionComponent = memo(() => {
         dispatch(addInputState(FORM_NAME, debouncedInput));
     }, [debouncedInput]);
 
-    const unlockKey = () => {
-        if (password == "") return;
+    const unlockKey = (enterPw?: string) => {
+        const sentPassword = enterPw || password;
+
+        if (sentPassword == "") return;
 
         setLoading(true);
         setInputVal("");
 
         try {
-            gaurdian.load(keyFolder + "/" + publicKey, password);
+            gaurdian.load(keyFolder + "/" + publicKey, sentPassword);
         } catch (err) {
             console.error(err);
             setErrText(err.toString());
@@ -70,7 +72,7 @@ export const Login: FunctionComponent = memo(() => {
                         }}
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
-                                unlockKey();
+                                unlockKey(inputVal);
                             }
                         }}
                     />
@@ -83,7 +85,9 @@ export const Login: FunctionComponent = memo(() => {
                         className={`button is-success ${
                             loading ? "is-loading" : ""
                         }`}
-                        onClick={unlockKey}
+                        onClick={() => {
+                            unlockKey();
+                        }}
                     >
                         Unlock
                     </button>
