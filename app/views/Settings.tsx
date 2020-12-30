@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { BackButton } from "../components/BackButton";
 import { VerticalAligner } from "../components/VerticalAligner";
-import { routes } from "../constants/routes";
 import { dataStore } from "./Base";
 
 export default function Settings(): JSX.Element {

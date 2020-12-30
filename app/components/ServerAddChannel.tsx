@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 
 import { useDebounce } from "../hooks/useDebounce";
 import { selectServers } from "../reducers/servers";
@@ -8,12 +8,14 @@ import { add } from "../reducers/channels";
 import { IServerParams } from "../views/Server";
 import { addInputState } from "../reducers/inputs";
 import { RootState } from "../store";
+import { routes } from "../constants/routes";
 
 export const AddChannel: FunctionComponent = () => {
+    const history = useHistory();
     const servers = useSelector(selectServers);
     const { serverID } = useParams<IServerParams>();
     const dispatch = useDispatch();
-    const { name } = servers[serverID];
+    const server = servers[serverID];
 
     const FORM_NAME = `${serverID}/add-channel-form`;
 
@@ -29,7 +31,7 @@ export const AddChannel: FunctionComponent = () => {
         dispatch(addInputState(FORM_NAME, debouncedInput));
     }, [debouncedInput]);
 
-    const AddChannelPermission = async (enterChannel?: string) => {
+    const addChannel = async (enterChannel?: string) => {
         const client = window.vex;
 
         const newChannel = await client.channels.create(
@@ -38,15 +40,24 @@ export const AddChannel: FunctionComponent = () => {
         );
 
         dispatch(add(newChannel));
+        history.push(
+            routes.SERVERS +
+                "/" +
+                newChannel.serverID +
+                "/" +
+                newChannel.channelID
+        );
     };
 
     return (
         <div className="pane-screen-wrapper">
             <div className="panel">
-                <div className="panel-heading">Add a channel to {name}</div>
+                <div className="panel-heading">
+                    Add a channel to {server.name}
+                </div>
                 <div className="panel-block">
                     <input
-                        className="input"
+                        className="input is-small"
                         type="text"
                         placeholder="cool names go here"
                         value={inputVal}
@@ -55,10 +66,22 @@ export const AddChannel: FunctionComponent = () => {
                         }}
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
-                                AddChannelPermission(inputVal);
+                                addChannel(inputVal);
+                                setInputVal("");
                             }
                         }}
                     />
+                </div>
+                <div className="panel-block">
+                    <button
+                        className="button is-small"
+                        onClick={() => {
+                            addChannel(inputVal);
+                            setInputVal("");
+                        }}
+                    >
+                        Add channel to {server.name}
+                    </button>
                 </div>
             </div>
         </div>
