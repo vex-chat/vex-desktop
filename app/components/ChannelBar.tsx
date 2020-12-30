@@ -11,7 +11,6 @@ import React, { FunctionComponent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import * as uuid from "uuid";
 
 import { routes } from "../constants/routes";
 import {
