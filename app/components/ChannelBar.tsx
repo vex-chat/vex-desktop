@@ -23,8 +23,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
     serverID,
     name,
 }) => {
-    // TODO: temp let until behavior is better known
-    let location = useLocation();
+    const { pathname } = useLocation();
     const serverChannels = useSelector(makeServerChannelsSelector(serverID));
 
     const isPermitted = useSelector(makeIsPermittedSelector(serverID));
@@ -70,15 +69,15 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                 <ul className="menu-list">
                     {channelIDs.map((id) => {
                         const channel = serverChannels[id];
-                        const isChannelActive = location.pathname.includes(id);
+                        const chLinkStyle = pathname.includes(id)
+                            ? "is-active"
+                            : "";
 
                         return (
                             <li key={id}>
                                 <Link
                                     to={`${routes.SERVERS}/${serverID}/${id}`}
-                                    className={
-                                        isChannelActive ? "is-active" : ""
-                                    }
+                                    className={chLinkStyle}
                                 >
                                     <FontAwesomeIcon icon={faHashtag} />
                                     &nbsp;&nbsp;{channel.name}
