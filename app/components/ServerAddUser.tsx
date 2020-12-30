@@ -1,7 +1,7 @@
 import { IUser } from "@vex-chat/libvex";
 import React, { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { selectServers } from "../reducers/servers";
 import { IServerParams } from "../views/Server";
 import { IconUsername } from "./IconUsername";
@@ -9,6 +9,7 @@ import { emptyUser } from "./MessagingBar";
 import { UserSearchBar } from "./UserSearchBar";
 
 export function AddUser(): JSX.Element {
+    const history = useHistory();
     const servers = useSelector(selectServers);
     const params: IServerParams = useParams();
     const [user, setUser] = useState(emptyUser);
@@ -22,6 +23,7 @@ export function AddUser(): JSX.Element {
             resourceType: "server",
             resourceID: params.serverID,
         });
+        history.goBack();
     };
 
     return (
@@ -38,6 +40,9 @@ export function AddUser(): JSX.Element {
                         onFoundUser={async (user: IUser) => {
                             setUser(user);
                         }}
+                        onSelectUser={async (user: IUser) =>
+                            addUserPermission(user)
+                        }
                     />
                 </div>
                 {user !== emptyUser && (

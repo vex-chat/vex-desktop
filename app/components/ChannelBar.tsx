@@ -1,10 +1,11 @@
 import {
     faHashtag,
     faUserPlus,
+    faCarrot,
     faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
@@ -23,6 +24,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
     serverID,
     name,
 }) => {
+    const [menuOpen, setMenuOpen] = useState(false);
     const { pathname } = useLocation();
     const serverChannels = useSelector(makeServerChannelsSelector(serverID));
 
@@ -35,36 +37,71 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
             <div className="server-titlebar">
                 <h1 className="title is-size-4 server-title-text">
                     {name}
+                    {/* For now, everything in here requires permissions, but eventually will contain
+                        non permissioned items. We can hide it until then. */}
                     {isPermitted && (
-                        <Link
-                            to={`${
-                                routes.SERVERS
-                            }/${serverID}/${uuid.v4()}/add-channel`}
-                            className="is-pulled-right button is-small"
-                            style={{ border: "none" }}
+                        <div
+                            className={`dropdown is-right is-pulled-right pointer ${
+                                menuOpen ? "is-active" : ""
+                            }`}
                         >
-                            <FontAwesomeIcon
-                                className="has-text-dark"
-                                icon={faPlus}
-                            />
-                        </Link>
+                            <div className="dropdown-trigger">
+                                <span
+                                    className="icon"
+                                    onClick={() => setMenuOpen(!menuOpen)}
+                                >
+                                    <FontAwesomeIcon
+                                        className="has-text-dark"
+                                        icon={faCarrot}
+                                    />
+                                </span>
+                            </div>
+                            <div
+                                className="dropdown-menu"
+                                id="dropdown-menu"
+                                role="menu"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                <div className="dropdown-content">
+                                    {isPermitted && (
+                                        <Link
+                                            to={`${
+                                                routes.SERVERS
+                                            }/${serverID}/${uuid.v4()}/add-user`}
+                                            className="dropdown-item"
+                                        >
+                                            <span className="icon">
+                                                <FontAwesomeIcon
+                                                    className="has-text-dark"
+                                                    icon={faUserPlus}
+                                                />
+                                            </span>
+                                            &nbsp; Add User
+                                        </Link>
+                                    )}
+                                    {isPermitted && (
+                                        <Link
+                                            to={`${
+                                                routes.SERVERS
+                                            }/${serverID}/${uuid.v4()}/add-channel`}
+                                            className="dropdown-item"
+                                        >
+                                            <span className="icon">
+                                                <FontAwesomeIcon
+                                                    className="has-text-dark"
+                                                    icon={faPlus}
+                                                />
+                                            </span>
+                                            &nbsp; Add Channel
+                                        </Link>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
                     )}
                 </h1>
             </div>
-            {isPermitted && (
-                <Link
-                    to={`${routes.SERVERS}/${serverID}/${uuid.v4()}/add-user`}
-                    className={"button is-fullwidth is-small"}
-                >
-                    Invite
-                    <span className="add-user-icon ml-1">
-                        <FontAwesomeIcon
-                            className="has-text-dark"
-                            icon={faUserPlus}
-                        />
-                    </span>
-                </Link>
-            )}
+
             <aside className="menu">
                 <ul className="menu-list">
                     {channelIDs.map((id) => {
