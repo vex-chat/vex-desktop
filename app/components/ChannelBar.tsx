@@ -73,9 +73,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                 <div className="dropdown-content">
                                     {isPermitted && (
                                         <Link
-                                            to={`${
-                                                routes.SERVERS
-                                            }/${serverID}/add-user`}
+                                            to={`${routes.SERVERS}/${serverID}/add-user`}
                                             className="dropdown-item"
                                         >
                                             <span className="icon">
@@ -89,9 +87,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                     )}
                                     {isPermitted && (
                                         <Link
-                                            to={`${
-                                                routes.SERVERS
-                                            }/${serverID}/add-channel`}
+                                            to={`${routes.SERVERS}/${serverID}/add-channel`}
                                             className="dropdown-item"
                                         >
                                             <span className="icon">
