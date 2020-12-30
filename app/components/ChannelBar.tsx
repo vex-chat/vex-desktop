@@ -3,6 +3,7 @@ import {
     faUserPlus,
     faCarrot,
     faPlus,
+    faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FunctionComponent, useState } from "react";
@@ -24,6 +25,8 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
     serverID,
     name,
 }) => {
+    const [deleteChannel, setDeleteChannel] = useState(false);
+    const [markedChannels, setMarkedChannels] = useState([] as string[]);
     const [menuOpen, setMenuOpen] = useState(false);
     const { pathname } = useLocation();
     const serverChannels = useSelector(makeServerChannelsSelector(serverID));
@@ -95,6 +98,22 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                             &nbsp; Add Channel
                                         </Link>
                                     )}
+                                    {isPermitted && (
+                                        <a
+                                            className="dropdown-item"
+                                            onClick={() => {
+                                                setDeleteChannel(true);
+                                            }}
+                                        >
+                                            <span className="icon">
+                                                <FontAwesomeIcon
+                                                    className="has-text-dark"
+                                                    icon={faTrash}
+                                                />
+                                            </span>
+                                            &nbsp; Delete Channel
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -104,20 +123,53 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
 
             <aside className="menu">
                 <ul className="menu-list">
-                    {channelIDs.map((id) => {
-                        const channel = serverChannels[id];
-                        const chLinkStyle = pathname.includes(id)
+                    {channelIDs.map((channelID) => {
+                        const channel = serverChannels[channelID];
+                        const chLinkStyle = pathname.includes(channelID)
                             ? "is-active"
                             : "";
 
                         return (
-                            <li key={id}>
+                            <li key={channelID}>
                                 <Link
-                                    to={`${routes.SERVERS}/${serverID}/${id}`}
+                                    to={`${routes.SERVERS}/${serverID}/${channelID}`}
                                     className={chLinkStyle}
                                 >
                                     <FontAwesomeIcon icon={faHashtag} />
                                     &nbsp;&nbsp;{channel.name}
+                                    {deleteChannel && (
+                                        <span
+                                            className={`icon is-pulled-right ${
+                                                markedChannels.includes(
+                                                    channelID
+                                                )
+                                                    ? "has-text-danger"
+                                                    : ""
+                                            }`}
+                                            onClick={() => {
+                                                if (
+                                                    !markedChannels.includes(
+                                                        channelID
+                                                    )
+                                                ) {
+                                                    const copy = [
+                                                        ...markedChannels,
+                                                    ];
+                                                    copy.push(channelID);
+                                                    setMarkedChannels(copy);
+                                                } else {
+                                                    console.log(
+                                                        "Deletarino " +
+                                                            channelID
+                                                    );
+                                                    setMarkedChannels([]);
+                                                    setDeleteChannel(false);
+                                                }
+                                            }}
+                                        >
+                                            <FontAwesomeIcon icon={faTrash} />
+                                        </span>
+                                    )}
                                 </Link>
                             </li>
                         );
