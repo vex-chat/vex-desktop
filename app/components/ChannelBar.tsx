@@ -76,7 +76,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                         <Link
                                             to={`${
                                                 routes.SERVERS
-                                            }/${serverID}/${uuid.v4()}/add-user`}
+                                            }/${serverID}/add-user`}
                                             className="dropdown-item"
                                         >
                                             <span className="icon">
@@ -92,7 +92,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                         <Link
                                             to={`${
                                                 routes.SERVERS
-                                            }/${serverID}/${uuid.v4()}/add-channel`}
+                                            }/${serverID}/add-channel`}
                                             className="dropdown-item"
                                         >
                                             <span className="icon">
