@@ -13,6 +13,7 @@ import { UserMenu } from "../components/UserMenu";
 import { AddUser } from "../components/ServerAddUser";
 import { AddChannel } from "../components/ServerAddChannel";
 import { ServerPane } from "../components/ServerPane";
+import { ServerSettings } from "../components/ServerSettings";
 
 export interface IServerParams {
     serverID: string;
@@ -54,19 +55,24 @@ export function Server(): JSX.Element {
                 <Switch>
                     <Route
                         exact
-                        path={routes.SERVERS + "/:serverID/:channelID/add-user"}
+                        path={routes.SERVERS + "/:serverID/add-user"}
                         render={() => <AddUser />}
                     />
                     <Route
                         exact
-                        path={
-                            routes.SERVERS + "/:serverID/:channelID/add-channel"
-                        }
+                        path={routes.SERVERS + "/:serverID/add-channel"}
                         render={() => <AddChannel />}
                     />
                     <Route
                         exact
-                        path={routes.SERVERS + "/:serverID/:channelID"}
+                        path={routes.SERVERS + "/:serverID/settings"}
+                        render={() => <ServerSettings />}
+                    />
+                    <Route
+                        exact
+                        path={
+                            routes.SERVERS + "/:serverID/channels/:channelID?"
+                        }
                         render={() => <ServerPane />}
                     />
                 </Switch>

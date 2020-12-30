@@ -13,13 +13,18 @@ const serverSlice = createSlice({
             state[server.serverID] = server;
             return state;
         },
+        del: (state, action) => {
+            const serverID: string = action.payload;
+            delete state[serverID];
+            return state;
+        },
         reset: () => {
             return {};
         },
     },
 });
 
-export const { add, reset } = serverSlice.actions;
+export const { add, del, reset } = serverSlice.actions;
 
 export const resetServers = (): AppThunk => (dispatch) => {
     dispatch(reset());
@@ -30,6 +35,10 @@ export const setServers = (servers: IServer[]): AppThunk => (dispatch) => {
     for (const server of servers) {
         dispatch(add(server));
     }
+};
+
+export const delServer = (serverID: string): AppThunk => (dispatch) => {
+    dispatch(del(serverID));
 };
 
 export const addServer = (server: IServer): AppThunk => (dispatch) => {

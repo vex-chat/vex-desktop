@@ -32,7 +32,7 @@
         "prettier": "prettier '**/*.{js,jsx,ts,tsx,json,md}' --tab-width 4 --trailing-comma es5 --ignore-path .gitignore  --arrow-parens always --write",
         "prettier-ci": "prettier '**/*.{js,jsx,ts,tsx,json,md}' --tab-width 4 --trailing-comma es5 --ignore-path .gitignore  --arrow-parens always --check",
         "release-upload": "ssh ender@vex.chat rm -rf ./release-staging/*; yarn package-all; rm -rf ./release/*.{yaml,blockmap,zip,yml}; rm -rf ./release/*unpacked; rm -rf ./release/mac; scp ./release/* ender@vex.chat:~/release-staging/; ssh ender@vex.chat",
-        "release-publish": "ssh ender@vex.chat 'mv ./rccelease-staging/* ./vex-release/'"
+        "release-publish": "ssh ender@vex.chat 'mv ./release-staging/* ./vex-release/'"
     },
     "build": {
         "productName": "Vex Desktop",

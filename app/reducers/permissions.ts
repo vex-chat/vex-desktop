@@ -43,9 +43,13 @@ export const resetPermissions = (): AppThunk => (dispatch) => {
     dispatch(reset());
 };
 
-export const makeIsPermittedSelector: (
-    serverID: string
-) => (state: RootState) => boolean = (serverID) => ({ permissions }) =>
-    permissions[serverID]?.powerLevel > 50;
+export const selectPermissions = (
+    state: RootState
+): Record<string, IPermission> => state.permissions;
+
+export const selectPermission: (
+    resourceID: string
+) => (state: RootState) => IPermission = (resourceID) => ({ permissions }) =>
+    permissions[resourceID];
 
 export default permissionSlice.reducer;
