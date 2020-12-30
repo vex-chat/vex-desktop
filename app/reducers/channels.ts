@@ -16,13 +16,18 @@ const channelSlice = createSlice({
             state[serverID][channelID] = action.payload;
             return state;
         },
+        del: (state, action: PayloadAction<IChannel>) => {
+            const { serverID, channelID } = action.payload;
+            delete state[serverID][channelID];
+            return state;
+        },
         reset: () => {
             return initialState;
         },
     },
 });
 
-export const { reset, add } = channelSlice.actions;
+export const { reset, del, add } = channelSlice.actions;
 
 export const resetChannels = (): AppThunk => (dispatch) => {
     dispatch(reset());
@@ -32,6 +37,10 @@ export const addChannels = (channels: IChannel[]): AppThunk => (dispatch) => {
     for (const channel of channels) {
         dispatch(add(channel));
     }
+};
+
+export const deleteChannel = (channel: IChannel): AppThunk => (dispatch) => {
+    dispatch(del(channel));
 };
 
 export const makeServerChannelsSelector: (

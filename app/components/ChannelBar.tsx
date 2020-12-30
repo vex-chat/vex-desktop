@@ -3,16 +3,20 @@ import {
     faUserPlus,
     faCarrot,
     faPlus,
+    faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FunctionComponent, useState } from "react";
-import { useSelector } from "react-redux";
-import { useLocation } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import * as uuid from "uuid";
 
 import { routes } from "../constants/routes";
-import { makeServerChannelsSelector } from "../reducers/channels";
+import {
+    deleteChannel,
+    makeServerChannelsSelector,
+} from "../reducers/channels";
 import { makeIsPermittedSelector } from "../reducers/permissions";
 
 type ChannelBarProps = {
@@ -24,10 +28,13 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
     serverID,
     name,
 }) => {
+    const [manageChannels, setManageChannels] = useState(false);
+    const [markedChannels, setMarkedChannels] = useState([] as string[]);
     const [menuOpen, setMenuOpen] = useState(false);
     const { pathname } = useLocation();
     const serverChannels = useSelector(makeServerChannelsSelector(serverID));
-
+    const dispatch = useDispatch();
+    const history = useHistory();
     const isPermitted = useSelector(makeIsPermittedSelector(serverID));
 
     const channelIDs = Object.keys(serverChannels);
@@ -95,6 +102,22 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                             &nbsp; Add Channel
                                         </Link>
                                     )}
+                                    {isPermitted && (
+                                        <a
+                                            className="dropdown-item"
+                                            onClick={() => {
+                                                setManageChannels(true);
+                                            }}
+                                        >
+                                            <span className="icon">
+                                                <FontAwesomeIcon
+                                                    className="has-text-dark"
+                                                    icon={faTrash}
+                                                />
+                                            </span>
+                                            &nbsp; Delete Channel
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -104,20 +127,61 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
 
             <aside className="menu">
                 <ul className="menu-list">
-                    {channelIDs.map((id) => {
-                        const channel = serverChannels[id];
-                        const chLinkStyle = pathname.includes(id)
+                    {channelIDs.map((channelID) => {
+                        const channel = serverChannels[channelID];
+                        const chLinkStyle = pathname.includes(channelID)
                             ? "is-active"
                             : "";
 
                         return (
-                            <li key={id}>
+                            <li key={channelID}>
                                 <Link
-                                    to={`${routes.SERVERS}/${serverID}/${id}`}
+                                    to={`${routes.SERVERS}/${serverID}/${channelID}`}
                                     className={chLinkStyle}
                                 >
                                     <FontAwesomeIcon icon={faHashtag} />
                                     &nbsp;&nbsp;{channel.name}
+                                    {manageChannels && (
+                                        <span
+                                            className={`icon is-pulled-right ${
+                                                markedChannels.includes(
+                                                    channelID
+                                                )
+                                                    ? "has-text-danger"
+                                                    : ""
+                                            }`}
+                                            onClick={async () => {
+                                                if (
+                                                    !markedChannels.includes(
+                                                        channelID
+                                                    )
+                                                ) {
+                                                    const copy = [
+                                                        ...markedChannels,
+                                                    ];
+                                                    copy.push(channelID);
+                                                    setMarkedChannels(copy);
+                                                } else {
+                                                    console.log(
+                                                        "Deletarino " +
+                                                            channelID
+                                                    );
+                                                    const client = window.vex;
+                                                    await client.channels.delete(
+                                                        channelID
+                                                    );
+                                                    setMarkedChannels([]);
+                                                    setManageChannels(false);
+                                                    dispatch(
+                                                        deleteChannel(channel)
+                                                    );
+                                                    history.goBack();
+                                                }
+                                            }}
+                                        >
+                                            <FontAwesomeIcon icon={faTrash} />
+                                        </span>
+                                    )}
                                 </Link>
                             </li>
                         );
