@@ -4,6 +4,7 @@ import {
     faCarrot,
     faPlus,
     faTrash,
+    faCog,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FunctionComponent, useState } from "react";
@@ -106,16 +107,41 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                         <a
                                             className="dropdown-item"
                                             onClick={() => {
+                                                setManageChannels(
+                                                    !manageChannels
+                                                );
+                                            }}
+                                        >
+                                            <span className="icon">
+                                                <FontAwesomeIcon
+                                                    className={`${
+                                                        manageChannels
+                                                            ? "has-text-danger"
+                                                            : "has-text-dark"
+                                                    }`}
+                                                    icon={faTrash}
+                                                />
+                                            </span>
+                                            &nbsp;{" "}
+                                            {manageChannels
+                                                ? "Cancel Delete"
+                                                : "Delete Channel"}
+                                        </a>
+                                    )}
+                                    {isPermitted && (
+                                        <a
+                                            className="dropdown-item"
+                                            onClick={() => {
                                                 setManageChannels(true);
                                             }}
                                         >
                                             <span className="icon">
                                                 <FontAwesomeIcon
                                                     className="has-text-dark"
-                                                    icon={faTrash}
+                                                    icon={faCog}
                                                 />
                                             </span>
-                                            &nbsp; Delete Channel
+                                            &nbsp; Server Settings
                                         </a>
                                     )}
                                 </div>
