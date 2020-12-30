@@ -8,13 +8,11 @@ import React, { FunctionComponent } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import { v4 } from "uuid";
+import * as uuid from "uuid";
 
 import { routes } from "../constants/routes";
 import { makeServerChannelsSelector } from "../reducers/channels";
 import { makeIsPermittedSelector } from "../reducers/permissions";
-
-const { SERVERS } = routes;
 
 type ChannelBarProps = {
     serverID: string;
@@ -40,7 +38,9 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                     {name}
                     {isPermitted && (
                         <Link
-                            to={`${SERVERS}/${serverID}/${v4()}/add-channel`}
+                            to={`${
+                                routes.SERVERS
+                            }/${serverID}/${uuid.v4()}/add-channel`}
                             className="is-pulled-right button is-small"
                             style={{ border: "none" }}
                         >
@@ -54,7 +54,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
             </div>
             {isPermitted && (
                 <Link
-                    to={`${SERVERS}/${serverID}/${v4()}/add-user`}
+                    to={`${routes.SERVERS}/${serverID}/${uuid.v4()}/add-user`}
                     className={"button is-fullwidth is-small"}
                 >
                     Invite
@@ -69,21 +69,19 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
             <aside className="menu">
                 <ul className="menu-list">
                     {channelIDs.map((id) => {
-                        const { name: chName, channelID } = serverChannels[id];
-                        const isChannelActive = location.pathname.includes(
-                            channelID
-                        );
+                        const channel = serverChannels[id];
+                        const isChannelActive = location.pathname.includes(id);
 
                         return (
-                            <li key={channelID}>
+                            <li key={id}>
                                 <Link
-                                    to={`${SERVERS}/${serverID}/${channelID}`}
+                                    to={`${routes.SERVERS}/${serverID}/${id}`}
                                     className={
                                         isChannelActive ? "is-active" : ""
                                     }
                                 >
                                     <FontAwesomeIcon icon={faHashtag} />
-                                    &nbsp;&nbsp;{chName}
+                                    &nbsp;&nbsp;{channel.name}
                                 </Link>
                             </li>
                         );
