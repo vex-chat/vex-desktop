@@ -253,23 +253,7 @@
     },
     "devEngines": {
         "node": ">=10.x",
-        "npm": ">=6.x",
         "yarn": ">=1.21.3"
-    },
-    "prettier": {
-        "overrides": [
-            {
-                "files": [
-                    ".prettierrc",
-                    ".babelrc",
-                    ".eslintrc"
-                ],
-                "options": {
-                    "parser": "json"
-                }
-            }
-        ],
-        "singleQuote": true
     },
     "husky": {
         "hooks": {
