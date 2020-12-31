@@ -28,7 +28,7 @@ jobs:
             - name: Check Style
               if: matrix.os == 'ubuntu-latest'
               run: |
-                  yarn add prettier --dev --silent
+                  yarn add prettier --dev --silent 2> >(grep -v warning 1>&2)
                   yarn prettier-ci
 
             - name: Setup Cache

@@ -234,7 +234,7 @@
         "node-sass": "^5.0.0",
         "opencollective-postinstall": "^2.0.3",
         "optimize-css-assets-webpack-plugin": "^5.0.3",
-        "prettier": "^2.0.5",
+        "prettier": "^2.2.1",
         "react-refresh": "^0.9.0",
         "react-test-renderer": "^17.0.1",
         "rimraf": "^3.0.0",
