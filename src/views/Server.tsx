@@ -24,10 +24,11 @@ export interface IServerParams {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Server(): JSX.Element {
-    const { serverID, channelID, pageType } = useParams<{
+    const { serverID, channelID, pageType, channelPage } = useParams<{
         serverID: string;
         channelID: string;
         pageType: string;
+        channelPage?: string;
     }>();
 
     const servers = useSelector(selectServers);
@@ -51,14 +52,14 @@ export function Server(): JSX.Element {
                         <h2 className="subtitle">
                             <FontAwesomeIcon icon={faHashtag} />
                             &nbsp;&nbsp;
-                            {serverChannels[channelID].name}
+                            {serverChannels[channelID].name} {channelPage ? capitalCase(channelPage) : ""}
                         </h2>
                     )}
                     {!serverChannels[channelID] && server !== undefined && (
                         <h2 className="subtitle">
                             <FontAwesomeIcon icon={faServer} />
                             &nbsp;&nbsp;
-                            {server.name} {capitalCase(pageType)}
+                            {server.name} {pageType !== "channels" ? capitalCase(pageType) : ""}
                         </h2>
                     )}
                 </div>
