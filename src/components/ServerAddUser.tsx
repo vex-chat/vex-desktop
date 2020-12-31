@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 import { selectServers } from '../reducers/servers';
 import { IconUsername } from './IconUsername';
-import { emptyUser } from './MessagingBar';
+import { emptyUser } from '../components/UserSearchBar';
 import { UserSearchBar } from './UserSearchBar';
 
 export function AddUser(): JSX.Element {
