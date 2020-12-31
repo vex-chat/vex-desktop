@@ -1,4 +1,4 @@
-import { ISerializedMessage } from '../reducers/messages';
+import { ISerializedMessage } from "../reducers/messages";
 
 /**
  * Chunks the messages into chunks of the same sender consecutively, so they can be displayed in

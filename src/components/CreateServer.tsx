@@ -1,16 +1,16 @@
-import { faServer } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Client, IServer } from '@vex-chat/libvex';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
-import { routes } from '../constants/routes';
-import { addChannels } from '../reducers/channels';
-import { addInputState, selectInputStates } from '../reducers/inputs';
-import { setPermissions } from '../reducers/permissions';
-import { addServer } from '../reducers/servers';
+import { faServer } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Client, IServer } from "@vex-chat/libvex";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
+import { routes } from "../constants/routes";
+import { addChannels } from "../reducers/channels";
+import { addInputState, selectInputStates } from "../reducers/inputs";
+import { setPermissions } from "../reducers/permissions";
+import { addServer } from "../reducers/servers";
 
-const FORM_NAME = 'create-server';
+const FORM_NAME = "create-server";
 
 export function CreateServer(): JSX.Element {
     const history = useHistory();
@@ -39,8 +39,8 @@ export function CreateServer(): JSX.Element {
                             <input
                                 className="servername-input input"
                                 type="username"
-                                placeholder={'My Cool Server'}
-                                value={inputStates[FORM_NAME] || ''}
+                                placeholder={"My Cool Server"}
+                                value={inputStates[FORM_NAME] || ""}
                                 onChange={(event) => {
                                     dispatch(
                                         addInputState(
@@ -62,7 +62,7 @@ export function CreateServer(): JSX.Element {
                                     onClick={async () => {
                                         if (
                                             !inputStates[FORM_NAME] ||
-                                            inputStates[FORM_NAME] === ''
+                                            inputStates[FORM_NAME] === ""
                                         ) {
                                             return;
                                         }
@@ -85,9 +85,9 @@ export function CreateServer(): JSX.Element {
 
                                             history.push(
                                                 routes.SERVERS +
-                                                    '/' +
+                                                    "/" +
                                                     server.serverID +
-                                                    '/channels'
+                                                    "/channels"
                                             );
                                         } catch (err) {
                                             console.error(err);

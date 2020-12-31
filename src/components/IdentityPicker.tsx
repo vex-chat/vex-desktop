@@ -1,16 +1,16 @@
-import { IUser, Client } from '@vex-chat/libvex';
-import React, { Fragment, useMemo, useState } from 'react';
-import { useHistory } from 'react-router';
-import { routes } from '../constants/routes';
-import { keyFolder, dbFolder } from '../constants/folders';
-import { IconUsername } from './IconUsername';
-import fs from 'fs';
-import Loading from './Loading';
-import { Link } from 'react-router-dom';
-import { VerticalAligner } from './VerticalAligner';
-import { useQuery } from '../hooks/useQuery';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { IUser, Client } from "@vex-chat/libvex";
+import React, { Fragment, useMemo, useState } from "react";
+import { useHistory } from "react-router";
+import { routes } from "../constants/routes";
+import { keyFolder, dbFolder } from "../constants/folders";
+import { IconUsername } from "./IconUsername";
+import fs from "fs";
+import Loading from "./Loading";
+import { Link } from "react-router-dom";
+import { VerticalAligner } from "./VerticalAligner";
+import { useQuery } from "../hooks/useQuery";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export function IdentityPicker(): JSX.Element {
     const pubkeyRegex = /[0-9a-f]{64}/;
@@ -24,7 +24,7 @@ export function IdentityPicker(): JSX.Element {
 
     const [deleteMarked, setDeleteMarked] = useState([] as string[]);
 
-    const manage = query.get('manage') === 'on';
+    const manage = query.get("manage") === "on";
 
     useMemo(async () => {
         const keyFiles = fs.readdirSync(keyFolder);
@@ -51,7 +51,7 @@ export function IdentityPicker(): JSX.Element {
     }, [history]);
 
     if (initialLoad) {
-        return <Loading size={256} animation={'cylon'} />;
+        return <Loading size={256} animation={"cylon"} />;
     }
 
     if (!initialLoad && Object.keys(accounts).length === 0) {
@@ -72,8 +72,8 @@ export function IdentityPicker(): JSX.Element {
                                     <span
                                         className={`icon identity-trash ${
                                             deleteMarked.includes(key)
-                                                ? 'has-text-danger'
-                                                : 'has-text-dark'
+                                                ? "has-text-danger"
+                                                : "has-text-dark"
                                         }`}
                                         onClick={() => {
                                             const markedForDeletion = [
@@ -83,16 +83,16 @@ export function IdentityPicker(): JSX.Element {
                                                 markedForDeletion.includes(key)
                                             ) {
                                                 console.log(
-                                                    'deletarino ' + key
+                                                    "deletarino " + key
                                                 );
                                                 fs.unlinkSync(
-                                                    keyFolder + '/' + key
+                                                    keyFolder + "/" + key
                                                 );
                                                 fs.unlinkSync(
                                                     dbFolder +
-                                                        '/' +
+                                                        "/" +
                                                         key +
-                                                        '.sqlite'
+                                                        ".sqlite"
                                                 );
 
                                                 // copy accounts
@@ -121,7 +121,7 @@ export function IdentityPicker(): JSX.Element {
                                 onClick={() => {
                                     if (!manage) {
                                         history.push(
-                                            routes.LOGIN + '?key=' + key
+                                            routes.LOGIN + "?key=" + key
                                         );
                                     }
                                 }}
@@ -134,7 +134,7 @@ export function IdentityPicker(): JSX.Element {
 
             <div className="buttons is-right">
                 <Link
-                    to={routes.HOME + '?manage=' + (manage ? 'off' : 'on')}
+                    to={routes.HOME + "?manage=" + (manage ? "off" : "on")}
                     className="button"
                     onClick={() => {
                         if (manage) {
@@ -142,7 +142,7 @@ export function IdentityPicker(): JSX.Element {
                         }
                     }}
                 >
-                    {manage ? 'Stop Managing' : 'Manage'}
+                    {manage ? "Stop Managing" : "Manage"}
                 </Link>
                 <Link to={routes.REGISTER} className={`button`}>
                     New Identity

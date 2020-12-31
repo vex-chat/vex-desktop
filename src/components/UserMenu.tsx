@@ -2,20 +2,20 @@ import {
     faCog,
     faUserAlt,
     faSignOutAlt,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { routes } from '../constants/routes';
-import { addInputState } from '../reducers/inputs';
-import { selectUser } from '../reducers/user';
-import { strToIcon } from '../utils/strToIcon';
-import { IconUsername } from './IconUsername';
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { routes } from "../constants/routes";
+import { addInputState } from "../reducers/inputs";
+import { selectUser } from "../reducers/user";
+import { strToIcon } from "../utils/strToIcon";
+import { IconUsername } from "./IconUsername";
 
 export function UserMenu(): JSX.Element {
     const user = useSelector(selectUser);
-    const [className, setClassName] = useState('');
+    const [className, setClassName] = useState("");
     const dispatch = useDispatch();
 
     return (
@@ -27,17 +27,17 @@ export function UserMenu(): JSX.Element {
                             <div
                                 className="dropdown-trigger pointer"
                                 onClick={() => {
-                                    if (className == '') {
-                                        setClassName('is-active');
+                                    if (className == "") {
+                                        setClassName("is-active");
                                     } else {
-                                        setClassName('');
+                                        setClassName("");
                                     }
                                 }}
                             >
                                 <img
                                     className="is-rounded"
                                     src={strToIcon(
-                                        user.username || ''.slice(0, 2)
+                                        user.username || "".slice(0, 2)
                                     )}
                                 />
                             </div>
@@ -49,7 +49,7 @@ export function UserMenu(): JSX.Element {
                             >
                                 <div className="dropdown-content user-dropdown">
                                     <div className="dropdown-item">
-                                        {IconUsername(user, 48, undefined, '')}
+                                        {IconUsername(user, 48, undefined, "")}
                                     </div>
                                     <Link
                                         to={routes.SETTINGS}
@@ -57,8 +57,8 @@ export function UserMenu(): JSX.Element {
                                         onClick={() => {
                                             dispatch(
                                                 addInputState(
-                                                    'own-user-icon-dropdown',
-                                                    ''
+                                                    "own-user-icon-dropdown",
+                                                    ""
                                                 )
                                             );
                                         }}
@@ -69,17 +69,17 @@ export function UserMenu(): JSX.Element {
                                     <Link
                                         to={
                                             routes.MESSAGING +
-                                            '/' +
+                                            "/" +
                                             user.userID +
-                                            '/info'
+                                            "/info"
                                         }
                                         className="dropdown-item"
                                         onClick={() => {
-                                            setClassName('');
+                                            setClassName("");
                                             dispatch(
                                                 addInputState(
-                                                    'own-user-icon-dropdown',
-                                                    ''
+                                                    "own-user-icon-dropdown",
+                                                    ""
                                                 )
                                             );
                                         }}

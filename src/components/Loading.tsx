@@ -1,17 +1,17 @@
-import React from 'react';
-import ReactLoading from 'react-loading';
+import React from "react";
+import ReactLoading from "react-loading";
 
 export default function Loading(props: {
     size: number;
     animation:
-        | 'blank'
-        | 'balls'
-        | 'bubbles'
-        | 'cubes'
-        | 'cylon'
-        | 'spin'
-        | 'spinningBubbles'
-        | 'spokes';
+        | "blank"
+        | "balls"
+        | "bubbles"
+        | "cubes"
+        | "cylon"
+        | "spin"
+        | "spinningBubbles"
+        | "spokes";
 }): JSX.Element {
     return (
         <div className="Aligner full-size">

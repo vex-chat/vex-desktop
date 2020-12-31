@@ -1,8 +1,8 @@
-import { IUser } from '@vex-chat/libvex';
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { routes } from '../constants/routes';
-import { IconUsername } from './IconUsername';
+import { IUser } from "@vex-chat/libvex";
+import React from "react";
+import { Link } from "react-router-dom";
+import { routes } from "../constants/routes";
+import { IconUsername } from "./IconUsername";
 
 type buttonProps = {
     user: IUser;
@@ -13,7 +13,7 @@ type buttonProps = {
 export function FamiliarButton({
     user,
     params,
-    subtitle = '',
+    subtitle = "",
 }: buttonProps): JSX.Element {
     if (!user) {
         return <div />;
@@ -22,11 +22,11 @@ export function FamiliarButton({
     return (
         <li
             className={`familiar-button${
-                user.userID === params.userID ? ' is-active' : ''
+                user.userID === params.userID ? " is-active" : ""
             }`}
             key={user.userID}
         >
-            <Link to={routes.MESSAGING + '/' + user.userID}>
+            <Link to={routes.MESSAGING + "/" + user.userID}>
                 {IconUsername(user, 48, undefined, subtitle)}
             </Link>
         </li>

@@ -1,5 +1,5 @@
-import React from 'react';
-import hljs from 'highlight.js'; // import hljs library
+import React from "react";
+import hljs from "highlight.js"; // import hljs library
 
 export function Highlighter(
     content: string,

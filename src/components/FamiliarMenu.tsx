@@ -1,9 +1,9 @@
-import { faFingerprint, faUserAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IUser } from '@vex-chat/libvex';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { routes } from '../constants/routes';
+import { faFingerprint, faUserAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IUser } from "@vex-chat/libvex";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { routes } from "../constants/routes";
 
 export function FamiliarMenu(props: {
     familiar: IUser;
@@ -12,7 +12,7 @@ export function FamiliarMenu(props: {
     const [active, setActive] = useState(false);
 
     return (
-        <div className={`dropdown ${active ? 'is-active' : ''}`}>
+        <div className={`dropdown ${active ? "is-active" : ""}`}>
             <div
                 className="dropdown-trigger pointer"
                 onClick={() => {
@@ -26,9 +26,9 @@ export function FamiliarMenu(props: {
                     <Link
                         to={
                             routes.MESSAGING +
-                            '/' +
+                            "/" +
                             props.familiar.userID +
-                            '/info'
+                            "/info"
                         }
                         className="dropdown-item"
                         onClick={() => {
@@ -41,9 +41,9 @@ export function FamiliarMenu(props: {
                     <Link
                         to={
                             routes.MESSAGING +
-                            '/' +
+                            "/" +
                             props.familiar.userID +
-                            '/verify'
+                            "/verify"
                         }
                         className="dropdown-item"
                         onClick={() => {

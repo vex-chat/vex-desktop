@@ -1,17 +1,17 @@
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { Fragment } from 'react';
-import { useSelector } from 'react-redux';
-import { allowedHighlighterTypes } from '../constants/allowedHighlighterTypes';
-import { selectFamiliars } from '../reducers/familiars';
-import { ISerializedMessage } from '../reducers/messages';
-import { strToIcon } from '../utils/strToIcon';
-import { Highlighter } from './Highlighter';
-import * as uuid from 'uuid';
-import nacl from 'tweetnacl';
-import { XUtils } from '@vex-chat/crypto';
-import { format } from 'date-fns';
-import { FamiliarMenu } from './FamiliarMenu';
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { Fragment } from "react";
+import { useSelector } from "react-redux";
+import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
+import { selectFamiliars } from "../reducers/familiars";
+import { ISerializedMessage } from "../reducers/messages";
+import { strToIcon } from "../utils/strToIcon";
+import { Highlighter } from "./Highlighter";
+import * as uuid from "uuid";
+import nacl from "tweetnacl";
+import { XUtils } from "@vex-chat/crypto";
+import { format } from "date-fns";
+import { FamiliarMenu } from "./FamiliarMenu";
 
 export function MessageBox(props: {
     messages: ISerializedMessage[];
@@ -47,10 +47,10 @@ export function MessageBox(props: {
             </figure>
             <div className="media-content">
                 <div className="content message-wrapper">
-                    <strong>{sender.username || 'Unknown User'}</strong>
+                    <strong>{sender.username || "Unknown User"}</strong>
                     &nbsp;&nbsp;
                     <small className="has-text-dark">
-                        {format(new Date(props.messages[0].timestamp), 'kk:mm')}
+                        {format(new Date(props.messages[0].timestamp), "kk:mm")}
                     </small>
                     &nbsp;&nbsp;
                     <br />
@@ -60,8 +60,8 @@ export function MessageBox(props: {
                         if (isCode) {
                             // removing ```
                             const languageInput = message.message
-                                .replace(/```/g, '')
-                                .split('\n')[0]
+                                .replace(/```/g, "")
+                                .split("\n")[0]
                                 .trim();
 
                             if (
@@ -74,8 +74,8 @@ export function MessageBox(props: {
                                     >
                                         {Highlighter(
                                             message.message
-                                                .replace(/```/g, '')
-                                                .replace(languageInput, '')
+                                                .replace(/```/g, "")
+                                                .replace(languageInput, "")
                                                 .trim(),
                                             languageInput,
                                             message.nonce
@@ -91,7 +91,7 @@ export function MessageBox(props: {
                                 >
                                     {Highlighter(
                                         message.message
-                                            .replace(/```/g, '')
+                                            .replace(/```/g, "")
                                             .trim(),
                                         null
                                     )}
@@ -113,9 +113,9 @@ export function MessageBox(props: {
                                         <span
                                             className={`${
                                                 message.message.charAt(0) ===
-                                                '>'
-                                                    ? 'has-text-success has-text-weight-bold'
-                                                    : ''
+                                                ">"
+                                                    ? "has-text-success has-text-weight-bold"
+                                                    : ""
                                             }`}
                                         >
                                             {message.message}
@@ -126,8 +126,8 @@ export function MessageBox(props: {
                                         <span className="help has-text-danger">
                                             <FontAwesomeIcon
                                                 icon={faExclamationTriangle}
-                                            />{' '}
-                                            Failed: {message.failMessage}{' '}
+                                            />{" "}
+                                            Failed: {message.failMessage}{" "}
                                         </span>
                                     )}
                                 </p>
