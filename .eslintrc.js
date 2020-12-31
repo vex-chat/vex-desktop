@@ -13,7 +13,7 @@ module.exports = {
         "plugin:prettier/recommended",
         "prettier/@typescript-eslint",
     ],
-    plugins: ['import'],
+    plugins: ['import', "simple-import-sort"],
     parserOptions: {
         ecmaVersion: 12,
         project: './tsconfig.json',
@@ -33,6 +33,13 @@ module.exports = {
         '@typescript-eslint/no-unsafe-return': 0,
         // CYCLICAL DEPENDENCIES BREAK LOCAL
         'import/no-cycle': 2,
+        // SIMPLE SORT
+        "simple-import-sort/imports": 2,
+        "simple-import-sort/exports": 2,
+        "sort-imports": 0,
+        "import/first": 2,
+        "import/newline-after-import": 2,
+        "import/no-duplicates": 2,
     },
 
     overrides: [
