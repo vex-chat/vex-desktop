@@ -8,7 +8,8 @@ import { ISerializedMessage } from '../reducers/messages';
 import { strToIcon } from '../utils/strToIcon';
 import { Highlighter } from './Highlighter';
 import * as uuid from 'uuid';
-import crypto from 'crypto';
+import nacl from 'tweetnacl';
+import { XUtils } from '@vex-chat/crypto';
 import { format } from 'date-fns';
 import { FamiliarMenu } from './FamiliarMenu';
 
@@ -26,7 +27,7 @@ export function MessageBox(props: {
     }
 
     if (props.messages.length == 0) {
-        return <span key={crypto.randomBytes(16).toString('hex')} />;
+        return <span key={XUtils.encodeHex(nacl.randomBytes(16))} />;
     }
 
     return (

@@ -261,6 +261,7 @@
         "@fortawesome/free-solid-svg-icons": "^5.15.1",
         "@fortawesome/react-fontawesome": "^0.1.14",
         "@reduxjs/toolkit": "^1.5.0",
+        "@vex-chat/crypto": "^0.7.12",
         "@vex-chat/libvex": "^0.11.16",
         "bulma": "^0.9.1",
         "change-case": "^4.1.2",
@@ -276,7 +277,8 @@
         "react-router-dom": "^5.2.0",
         "redux-logger": "^3.0.6",
         "regenerator-runtime": "^0.13.5",
-        "source-map-support": "^0.5.19"
+        "source-map-support": "^0.5.19",
+        "tweetnacl": "^1.0.3"
     },
     "devEngines": {
         "node": ">=10.x",

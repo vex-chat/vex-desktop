@@ -22,7 +22,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { routes } from '../constants/routes';
 import { selectUser } from '../reducers/user';
-import crypto from 'crypto';
+import nacl from 'tweetnacl';
+import { XUtils } from '@vex-chat/crypto';
 import { Highlighter } from './Highlighter';
 import { chunkMessages } from '../utils/chunkMessages';
 import { MessageBox } from './MessageBox';
@@ -391,7 +392,7 @@ export default function MessagingPane(): JSX.Element {
                                 sender: user.userID,
                                 recipient: user.userID,
                                 direction: 'incoming',
-                                nonce: crypto.randomBytes(24).toString('hex'),
+                                nonce: XUtils.encodeHex(nacl.randomBytes(24)),
                                 message: 'Welcome to vex messenger!',
                                 decrypted: true,
                                 mailID: uuid.v4(),
@@ -404,7 +405,7 @@ export default function MessagingPane(): JSX.Element {
                                 sender: user.userID,
                                 recipient: user.userID,
                                 direction: 'incoming',
-                                nonce: crypto.randomBytes(24).toString('hex'),
+                                nonce: XUtils.encodeHex(nacl.randomBytes(24)),
                                 message:
                                     "This is a personal thread for taking notes, or whatever you'd like.",
                                 decrypted: true,
