@@ -1,9 +1,10 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 import { routes } from '../constants/routes';
+import { selectPermission } from '../reducers/permissions';
 import { delServer, selectServers } from '../reducers/servers';
 import { IServerParams } from '../views/Server';
 import { Highlighter } from './Highlighter';
@@ -11,6 +12,8 @@ import { Highlighter } from './Highlighter';
 export function ServerSettings(): JSX.Element {
     const servers = useSelector(selectServers);
     const params: IServerParams = useParams();
+    const permission = useSelector(selectPermission(params.serverID));
+    const isPermitted = permission?.powerLevel > 50 || false;
     const history = useHistory();
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
     const dispatch = useDispatch();
@@ -22,24 +25,28 @@ export function ServerSettings(): JSX.Element {
 
     return (
         <div className="pane-screen-wrapper">
-            <h1 className="title">Server Settings</h1>
+            <label className="label is-small">Details:</label>
             {Highlighter(JSON.stringify(server, null, 4), 'json')}
             <br />
-            <h2 className="subtitle">
-                <FontAwesomeIcon
-                    className="has-text-danger"
-                    icon={faExclamationTriangle}
-                />{' '}
-                Danger Zone
-            </h2>
-            <button
-                className="button is-danger"
-                onClick={() => {
-                    setConfirmDeleteOpen(true);
-                }}
-            >
-                Delete Server
-            </button>
+            {isPermitted && (
+                <Fragment>
+                    <h2 className="subtitle">
+                        <FontAwesomeIcon
+                            className="has-text-danger"
+                            icon={faExclamationTriangle}
+                        />{' '}
+                        Danger Zone
+                    </h2>
+                    <button
+                        className="button is-danger"
+                        onClick={() => {
+                            setConfirmDeleteOpen(true);
+                        }}
+                    >
+                        Delete Server
+                    </button>
+                </Fragment>
+            )}
 
             <div className={`modal ${confirmDeleteOpen ? 'is-active' : ''}`}>
                 <div

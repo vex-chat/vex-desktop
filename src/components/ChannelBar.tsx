@@ -42,111 +42,103 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
             <div className="server-titlebar">
                 <h1 className="title is-size-4 server-title-text">
                     {name}
-                    {/* For now, everything in here requires permissions, but eventually will contain
-                        non permissioned items. We can hide it until then. */}
-                    {isPermitted && (
-                        <div
-                            className={`dropdown is-right is-pulled-right pointer ${
-                                menuOpen ? 'is-active' : ''
-                            }`}
-                        >
-                            <div className="dropdown-trigger">
-                                <span
-                                    className="icon"
-                                    onClick={() => setMenuOpen(!menuOpen)}
-                                >
-                                    <FontAwesomeIcon
-                                        className="has-text-dark"
-                                        icon={faCarrot}
-                                    />
-                                </span>
-                            </div>
-                            <div
-                                className="dropdown-menu"
-                                id="dropdown-menu"
-                                role="menu"
-                                onClick={() => setMenuOpen(false)}
+                    <div
+                        className={`dropdown is-right is-pulled-right pointer ${
+                            menuOpen ? 'is-active' : ''
+                        }`}
+                    >
+                        <div className="dropdown-trigger">
+                            <span
+                                className="icon"
+                                onClick={() => setMenuOpen(!menuOpen)}
                             >
-                                <div className="dropdown-content">
-                                    {isPermitted && (
-                                        <Link
-                                            to={`${routes.SERVERS}/${serverID}/add-user`}
-                                            className="dropdown-item"
-                                        >
-                                            <span className="icon">
-                                                <FontAwesomeIcon
-                                                    className="has-text-dark"
-                                                    icon={faUserPlus}
-                                                />
-                                            </span>
-                                            &nbsp; Add User
-                                        </Link>
-                                    )}
-                                    {isPermitted && (
-                                        <Link
-                                            to={`${routes.SERVERS}/${serverID}/add-channel`}
-                                            className="dropdown-item"
-                                        >
-                                            <span className="icon">
-                                                <FontAwesomeIcon
-                                                    className="has-text-dark"
-                                                    icon={faPlus}
-                                                />
-                                            </span>
-                                            &nbsp; Add Channel
-                                        </Link>
-                                    )}
-                                    {isPermitted && (
-                                        <a
-                                            className="dropdown-item"
-                                            onClick={() => {
-                                                setManageChannels(
-                                                    !manageChannels
-                                                );
-                                                if (!manageChannels) {
-                                                    setMarkedChannels([]);
-                                                }
-                                            }}
-                                        >
-                                            <span className="icon">
-                                                <FontAwesomeIcon
-                                                    className={`${
-                                                        manageChannels
-                                                            ? 'has-text-danger'
-                                                            : 'has-text-dark'
-                                                    }`}
-                                                    icon={faTrash}
-                                                />
-                                            </span>
-                                            &nbsp;{' '}
-                                            {manageChannels
-                                                ? 'Cancel Delete'
-                                                : 'Delete Channel'}
-                                        </a>
-                                    )}
-                                    {isPermitted && (
-                                        <Link
-                                            to={
-                                                routes.SERVERS +
-                                                '/' +
-                                                serverID +
-                                                '/settings'
+                                <FontAwesomeIcon
+                                    className="has-text-dark"
+                                    icon={faCarrot}
+                                />
+                            </span>
+                        </div>
+                        <div
+                            className="dropdown-menu"
+                            id="dropdown-menu"
+                            role="menu"
+                            onClick={() => setMenuOpen(false)}
+                        >
+                            <div className="dropdown-content">
+                                {isPermitted && (
+                                    <Link
+                                        to={`${routes.SERVERS}/${serverID}/add-user`}
+                                        className="dropdown-item"
+                                    >
+                                        <span className="icon">
+                                            <FontAwesomeIcon
+                                                className="has-text-dark"
+                                                icon={faUserPlus}
+                                            />
+                                        </span>
+                                        &nbsp; Add User
+                                    </Link>
+                                )}
+                                {isPermitted && (
+                                    <Link
+                                        to={`${routes.SERVERS}/${serverID}/add-channel`}
+                                        className="dropdown-item"
+                                    >
+                                        <span className="icon">
+                                            <FontAwesomeIcon
+                                                className="has-text-dark"
+                                                icon={faPlus}
+                                            />
+                                        </span>
+                                        &nbsp; Add Channel
+                                    </Link>
+                                )}
+                                {isPermitted && (
+                                    <a
+                                        className="dropdown-item"
+                                        onClick={() => {
+                                            setManageChannels(!manageChannels);
+                                            if (!manageChannels) {
+                                                setMarkedChannels([]);
                                             }
-                                            className="dropdown-item"
-                                        >
-                                            <span className="icon">
-                                                <FontAwesomeIcon
-                                                    className="has-text-dark"
-                                                    icon={faCog}
-                                                />
-                                            </span>
-                                            &nbsp; Server Settings
-                                        </Link>
-                                    )}
-                                </div>
+                                        }}
+                                    >
+                                        <span className="icon">
+                                            <FontAwesomeIcon
+                                                className={`${
+                                                    manageChannels
+                                                        ? 'has-text-danger'
+                                                        : 'has-text-dark'
+                                                }`}
+                                                icon={faTrash}
+                                            />
+                                        </span>
+                                        &nbsp;{' '}
+                                        {manageChannels
+                                            ? 'Cancel Delete'
+                                            : 'Delete Channel'}
+                                    </a>
+                                )}
+                                <Link
+                                    to={
+                                        routes.SERVERS +
+                                        '/' +
+                                        serverID +
+                                        '/settings'
+                                    }
+                                    className="dropdown-item"
+                                >
+                                    <span className="icon">
+                                        <FontAwesomeIcon
+                                            className="has-text-dark"
+                                            icon={faCog}
+                                        />
+                                    </span>
+                                    &nbsp; Server Settings
+                                </Link>
                             </div>
                         </div>
-                    )}
+                    </div>
                 </h1>
             </div>
 
@@ -173,7 +165,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                                     channelID
                                                 )
                                                     ? 'has-text-danger'
-                                                    : ''
+                                                    : 'has-text-grey'
                                             }`}
                                             onClick={async () => {
                                                 if (
@@ -217,7 +209,10 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                             );
                                         }}
                                     >
-                                        <FontAwesomeIcon icon={faCog} />
+                                        <FontAwesomeIcon
+                                            icon={faCog}
+                                            className="has-text-grey"
+                                        />
                                     </span>
                                 </Link>
                             </li>

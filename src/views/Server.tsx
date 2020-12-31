@@ -1,4 +1,4 @@
-import { faHashtag } from '@fortawesome/free-solid-svg-icons';
+import { faHashtag, faServer } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -15,6 +15,7 @@ import { AddChannel } from '../components/ServerAddChannel';
 import { ServerPane } from '../components/ServerPane';
 import { ServerSettings } from '../components/ServerSettings';
 import { ChannelSettings } from '../components/ChannelSettings';
+import { capitalCase } from 'change-case';
 
 export interface IServerParams {
     serverID: string;
@@ -23,9 +24,10 @@ export interface IServerParams {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Server(): JSX.Element {
-    const { serverID, channelID } = useParams<{
+    const { serverID, channelID, pageType } = useParams<{
         serverID: string;
         channelID: string;
+        pageType: string;
     }>();
 
     const servers = useSelector(selectServers);
@@ -50,6 +52,13 @@ export function Server(): JSX.Element {
                             <FontAwesomeIcon icon={faHashtag} />
                             &nbsp;&nbsp;
                             {serverChannels[channelID].name}
+                        </h2>
+                    )}
+                    {!serverChannels[channelID] && server !== undefined && (
+                        <h2 className="subtitle">
+                            <FontAwesomeIcon icon={faServer} />
+                            &nbsp;&nbsp;
+                            {server.name} {capitalCase(pageType)}
                         </h2>
                     )}
                 </div>

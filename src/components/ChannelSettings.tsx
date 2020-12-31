@@ -11,7 +11,7 @@ export function ChannelSettings(): JSX.Element {
 
     return (
         <div className="pane-screen-wrapper">
-            <h1 className="title">Channel Settings</h1>
+            <label className="label is-small">Details:</label>
             {Highlighter(
                 JSON.stringify(channels[params.channelID] || {}, null, 4),
                 'json'
