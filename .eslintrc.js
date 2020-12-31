@@ -4,20 +4,30 @@ module.exports = {
         browser: true,
         es2021: true,
     },
-    parser: '@typescript-eslint/parser',
     extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "plugin:eslint-comments/recommended"
     ],
     parserOptions: {
         ecmaVersion: 12,
-        sourceType: 'module',
+        project: './tsconfig.json'
     },
     settings: {
         react: {
           version: "detect"
         }
+    },
+    rules: {
+        // TURN OFF ALL FAILING RULES FOR STRICER TS ESLINT
+        "@typescript-eslint/no-floating-promises": 0,
+        "@typescript-eslint/require-await": 0,
+        "@typescript-eslint/no-misused-promises": 0,
+        "@typescript-eslint/no-unsafe-member-access": 0,
+        "@typescript-eslint/no-unsafe-call": 0,
+        "@typescript-eslint/no-unsafe-assignment": 0,
+        "@typescript-eslint/no-unsafe-return": 0
     },
     plugins: [],
     overrides: [

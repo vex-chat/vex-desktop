@@ -37,13 +37,13 @@ export const Login: FunctionComponent = memo(() => {
     const unlockKey = (enterPw?: string) => {
         const sentPassword = enterPw || password;
 
-        if (sentPassword == '') return;
+        if (sentPassword == '' || publicKey == null) return;
 
         setLoading(true);
         setInputVal('');
 
         try {
-            gaurdian.load(keyFolder + '/' + publicKey, sentPassword);
+            gaurdian.load(`${keyFolder}/${publicKey}`, sentPassword);
         } catch (err) {
             console.error(err);
             setErrText(err.toString());

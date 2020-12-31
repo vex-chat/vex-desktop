@@ -82,9 +82,9 @@ export default function Register(): JSX.Element {
                         );
                     }
                 } catch (err) {
-                    setErrorText(
-                        'Failed to save the keyfile to disk: ' + err.toString()
-                    );
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    const errText = `Failed to save the keyfile to disk: ${err.toString()}`
+                    setErrorText(errText);
                     return;
                 }
 
@@ -255,7 +255,7 @@ export default function Register(): JSX.Element {
                     </label>
                     <input
                         className={`password-input input ${
-                            password !== passConfirm && 'is-danger'
+                            password !== passConfirm ? 'is-danger' : ''
                         }`}
                         type="password"
                         value={passConfirm}

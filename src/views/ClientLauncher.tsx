@@ -72,26 +72,25 @@ export async function initClient(): Promise<void> {
     client.on('ready', async () => {
         const [, err] = await client.users.retrieve(client.getKeys().public);
 
-        if (err !== null) {
-            if (err.response) {
-                log.warn(
-                    'Server responded to users.retrieve() with ' +
-                        err.response.status
-                );
+        if (err !== null && err.response) {
+            log.warn(
+                `Server responded to users.retrieve() with ${err.response.status}`
+            );
 
-                switch (err.response.status) {
-                    case 404:
-                        launchEvents.emit('needs-register');
-                        break;
-                    default:
-                        await client.close();
-                        await sleep(1000 * 10);
-                        launchEvents.emit('retry');
-                }
+            switch (err.response.status) {
+                case 404:
+                    launchEvents.emit('needs-register');
+                    break;
+                default:
+                    await client.close();
+                    await sleep(1000 * 10);
+                    launchEvents.emit('retry');
             }
         }
+
         await client.login();
     });
+    
     client.init();
 }
 
