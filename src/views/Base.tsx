@@ -7,17 +7,12 @@ import Settings from './Settings';
 import { ClientLauncher } from './ClientLauncher';
 import Messaging from './Messaging';
 import { Server } from './Server';
-import { KeyGaurdian } from '../utils/KeyGaurdian';
-import Store from 'electron-store';
 import { Logout } from './Logout';
 import { Login } from './Login';
 import { TitleBar } from '../components/TitleBar';
 import { Create } from './Create';
 import { Home } from './Home';
 
-export const gaurdian = new KeyGaurdian();
-
-export const dataStore = new Store();
 
 export default function Base(): JSX.Element {
     return (

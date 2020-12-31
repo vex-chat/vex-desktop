@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
+
 import { routes } from '../constants/routes';
 import { useQuery } from '../hooks/useQuery';
 import { resetApp } from '../reducers/app';
@@ -13,7 +14,7 @@ import { resetPermissions } from '../reducers/permissions';
 import { resetServers } from '../reducers/servers';
 import { resetSessions } from '../reducers/sessions';
 import { resetUser } from '../reducers/user';
-import { gaurdian } from './Base';
+import gaurdian from '../utils/KeyGaurdian'
 
 export function Logout(): JSX.Element {
     const dispatch = useDispatch();

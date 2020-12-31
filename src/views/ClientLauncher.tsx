@@ -30,8 +30,9 @@ import { add, addMany } from '../reducers/groupMessages';
 import Loading from '../components/Loading';
 import { addPermission, setPermissions } from '../reducers/permissions';
 import fs from 'fs';
-import { dataStore, gaurdian } from './Base';
 import { dbFolder, keyFolder, progFolder } from '../constants/folders';
+import store from '../utils/DataStore';
+import gaurdian from '../utils/KeyGaurdian';
 
 declare global {
     interface Window {
@@ -117,7 +118,7 @@ export function ClientLauncher(): JSX.Element {
 
     const notification = async (message: IMessage) => {
         if (
-            dataStore.get('settings.notifications') &&
+            store.get('settings.notifications') &&
             message.direction === 'incoming'
         ) {
             if (remote.getCurrentWindow().isFocused()) {

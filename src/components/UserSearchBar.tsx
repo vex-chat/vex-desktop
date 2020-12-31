@@ -4,7 +4,14 @@ import { IUser } from '@vex-chat/libvex';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addInputState, selectInputStates } from '../reducers/inputs';
-import { emptyUser } from './MessagingBar';
+
+export const emptyUser: IUser = {
+    userID: '',
+    signKey: '',
+    username: '',
+    lastSeen: new Date(Date.now()),
+    avatar: null,
+};
 
 export function UserSearchBar(props: {
     formName: string;
