@@ -1,5 +1,7 @@
 # vex-desktop
 
+![build](https://github.com/vex-chat/vex-desktop/workflows/build/badge.svg)
+
 BETA software, this is still a work in progress
 
 desktop client for vex
@@ -8,12 +10,8 @@ desktop client for vex
 
 Make sure you have the dependencies:
 
--   g++
--   gcc
--   make
--   python (python2)
-
-temporary icon by FreePik at FlatIcon
+-   nodejs
+-   yarn
 
 ## Cryptography Notice
 
