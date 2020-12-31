@@ -1,5 +1,7 @@
 # vex-desktop
 
+![build](https://github.com/vex-chat/vex-desktop/workflows/build/badge.svg)
+
 BETA software, this is still a work in progress
 
 desktop client for vex
