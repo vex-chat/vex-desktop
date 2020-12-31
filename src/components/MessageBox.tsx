@@ -2,39 +2,24 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
 import { allowedHighlighterTypes } from '../constants/allowedHighlighterTypes';
-import { routes } from '../constants/routes';
 import { selectFamiliars } from '../reducers/familiars';
 import { ISerializedMessage } from '../reducers/messages';
-import { selectSessions } from '../reducers/sessions';
-import { selectUser } from '../reducers/user';
 import { strToIcon } from '../utils/strToIcon';
 import { Highlighter } from './Highlighter';
 import * as uuid from 'uuid';
 import crypto from 'crypto';
 import { format } from 'date-fns';
+import { FamiliarMenu } from './FamiliarMenu';
 
 export function MessageBox(props: {
     messages: ISerializedMessage[];
 }): JSX.Element {
-    const user = useSelector(selectUser);
     const familiars = useSelector(selectFamiliars);
-    const history = useHistory();
 
     // don't match no characters of any length
     const regex = /(```[^]+```)/;
     const sender = familiars[props.messages[0]?.sender] || null;
-
-    const sessions = useSelector(selectSessions);
-
-    const sessionIDs = Object.keys(sessions[sender?.userID] || {});
-    let hasUnverifiedSession = false;
-    for (const sessionID of sessionIDs) {
-        if (!sessions[sender.userID][sessionID].verified) {
-            hasUnverifiedSession = true;
-        }
-    }
 
     if (!sender) {
         return <span key={uuid.v4()} />;
@@ -47,12 +32,17 @@ export function MessageBox(props: {
     return (
         <article className="chat-message media" key={props.messages[0].nonce}>
             <figure className="media-left">
-                <p className="image is-48x48">
-                    <img
-                        className="is-rounded"
-                        src={strToIcon(sender.username)}
-                    />
-                </p>
+                <FamiliarMenu
+                    trigger={
+                        <p className="image is-48x48">
+                            <img
+                                className="is-rounded"
+                                src={strToIcon(sender.username)}
+                            />
+                        </p>
+                    }
+                    familiar={sender}
+                />
             </figure>
             <div className="media-content">
                 <div className="content message-wrapper">
@@ -62,25 +52,6 @@ export function MessageBox(props: {
                         {format(new Date(props.messages[0].timestamp), 'kk:mm')}
                     </small>
                     &nbsp;&nbsp;
-                    {hasUnverifiedSession && sender.userID !== user.userID && (
-                        <span
-                            className="icon is-small pointer"
-                            onClick={() => {
-                                history.push(
-                                    routes.MESSAGING +
-                                        '/' +
-                                        sender.userID +
-                                        '/verify?forward=' +
-                                        history.location.pathname
-                                );
-                            }}
-                        >
-                            <FontAwesomeIcon
-                                icon={faExclamationTriangle}
-                                className={'has-text-danger'}
-                            />
-                        </span>
-                    )}
                     <br />
                     {props.messages.map((message) => {
                         const isCode = regex.test(message.message);

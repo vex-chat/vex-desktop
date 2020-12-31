@@ -1,9 +1,8 @@
 import { IUser } from '@vex-chat/libvex';
-import React, { createRef, Fragment, useEffect, useRef, useState } from 'react';
+import React, { createRef, Fragment, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useHistory, useParams } from 'react-router';
 import { selectFamiliars } from '../reducers/familiars';
-import { IconUsername } from './IconUsername';
 import { selectInputStates, addInputState } from '../reducers/inputs';
 import { failMessage, ISerializedMessage } from '../reducers/messages';
 import { selectMessages } from '../reducers/messages';
@@ -14,29 +13,28 @@ import {
     faAt,
     faCheckCircle,
     faEnvelopeOpenText,
-    faExclamation,
+    faExclamationCircle,
     faExclamationTriangle,
     faLock,
     faSkull,
     faTimes,
     faUnlock,
-    faUserAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { routes } from '../constants/routes';
-import { Link } from 'react-router-dom';
 import { selectUser } from '../reducers/user';
 import crypto from 'crypto';
 import { Highlighter } from './Highlighter';
 import { chunkMessages } from '../utils/chunkMessages';
 import { MessageBox } from './MessageBox';
 import { useQuery } from '../hooks/useQuery';
+import { FamiliarMenu } from './FamiliarMenu';
+import { IconUsername } from './IconUsername';
 
 export default function MessagingPane(): JSX.Element {
     // state
     const dispatch = useDispatch();
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const inputValues: Record<string, string> = useSelector(selectInputStates);
-    const [className, setClassName] = useState('');
     const history = useHistory();
     // url parameters
     const params: { userID: string } = useParams();
@@ -64,8 +62,6 @@ export default function MessagingPane(): JSX.Element {
         scrollToBottom();
     });
 
-    const allVerified = !hasUnverifiedSession && sessionIDs.length > 0;
-
     const familiar: IUser | undefined = familiars[params.userID];
     const inputValue: string = inputValues[params.userID] || '';
 
@@ -77,7 +73,6 @@ export default function MessagingPane(): JSX.Element {
 
     const messagesEndRef = useRef(null);
 
-    const messageOneRef = createRef();
     const messageTwoRef = createRef();
     const messageThreeRef = createRef();
 
@@ -99,83 +94,11 @@ export default function MessagingPane(): JSX.Element {
                 <div className="columns">
                     <div className="column is-narrow">
                         <div className="pane-topbar-content">
-                            <div className={`dropdown ${className}`}>
-                                <div
-                                    className="dropdown-trigger pointer"
-                                    onClick={() => {
-                                        if (className == '') {
-                                            setClassName('is-active');
-                                        } else {
-                                            setClassName('');
-                                        }
-                                    }}
-                                >
-                                    {IconUsername(familiar, 32, faAt)}
-                                </div>
-                                <div
-                                    className="dropdown-menu"
-                                    id="dropdown-menu2"
-                                    role="menu"
-                                >
-                                    <div className="dropdown-content">
-                                        <Link
-                                            to={
-                                                routes.MESSAGING +
-                                                '/' +
-                                                familiar.userID +
-                                                '/info'
-                                            }
-                                            className="dropdown-item"
-                                            onClick={async () => {
-                                                setClassName('');
-                                            }}
-                                        >
-                                            <FontAwesomeIcon icon={faUserAlt} />
-                                            &nbsp; User Info
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
+                            <FamiliarMenu
+                                familiar={familiar}
+                                trigger={IconUsername(familiar, 32, faAt)}
+                            />
                         </div>
-                    </div>
-                    <div className="column is-narrow">
-                        {familiar.userID !== user.userID &&
-                            hasUnverifiedSession && (
-                                <Link
-                                    to={
-                                        routes.MESSAGING +
-                                        '/' +
-                                        params.userID +
-                                        '/verify'
-                                    }
-                                    className="has-text-danger pointer help"
-                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                    ref={messageOneRef as any}
-                                >
-                                    <span className="icon">
-                                        <FontAwesomeIcon
-                                            icon={faExclamationTriangle}
-                                        />
-                                    </span>
-                                    Unverified
-                                </Link>
-                            )}
-                        {allVerified && (
-                            <Link
-                                to={
-                                    routes.MESSAGING +
-                                    '/' +
-                                    params.userID +
-                                    '/verify'
-                                }
-                                className="has-text-success pointer help"
-                            >
-                                <span className="icon">
-                                    <FontAwesomeIcon icon={faCheckCircle} />
-                                </span>
-                                Verified
-                            </Link>
-                        )}
                     </div>
                 </div>
             </div>
@@ -215,8 +138,8 @@ export default function MessagingPane(): JSX.Element {
                                         <span className="icon">
                                             {' '}
                                             <FontAwesomeIcon
-                                                icon={faExclamation}
-                                                className="has-text-danger"
+                                                icon={faExclamationCircle}
+                                                className="has-text-warning"
                                             />{' '}
                                         </span>
                                         <span className="help">
