@@ -39,7 +39,7 @@ export default function Register(): JSX.Element {
         }
     });
 
-    const registerUser = async () => {
+    const registerUser = () => {
         if (password.length === 0) {
             return;
         }
@@ -55,6 +55,7 @@ export default function Register(): JSX.Element {
         const tempClient = new Client(PK, {
             dbFolder,
         });
+
         tempClient.on('ready', async () => {
             // eslint-disable-next-line prefer-const
             const [user, err] = await tempClient.register(username);
@@ -160,7 +161,7 @@ export default function Register(): JSX.Element {
                             className="servername-input input"
                             type="username"
                             value={username}
-                            onKeyDown={async (event) => {
+                            onKeyDown={(event) => {
                                 if (event.key === 'Enter') {
                                     registerUser();
                                 }
@@ -228,7 +229,7 @@ export default function Register(): JSX.Element {
                         className="password-input input"
                         type="password"
                         value={password}
-                        onKeyDown={async (event) => {
+                        onKeyDown={(event) => {
                             if (event.key === 'Enter') {
                                 registerUser();
                             }
@@ -259,7 +260,7 @@ export default function Register(): JSX.Element {
                         }`}
                         type="password"
                         value={passConfirm}
-                        onKeyDown={async (event) => {
+                        onKeyDown={(event) => {
                             if (event.key === 'Enter') {
                                 registerUser();
                             }

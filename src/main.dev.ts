@@ -38,7 +38,7 @@ if (
     require('electron-debug')();
 }
 
-const createWindow = async () => {
+const createWindow = () => {
     const RESOURCES_PATH = app.isPackaged
         ? path.join(process.resourcesPath, 'resources')
         : path.join(__dirname, '../resources');

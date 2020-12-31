@@ -22,7 +22,6 @@ module.exports = {
     rules: {
         // TURN OFF ALL FAILING RULES FOR STRICER TS ESLINT
         "@typescript-eslint/no-floating-promises": 0,
-        "@typescript-eslint/require-await": 0,
         "@typescript-eslint/no-misused-promises": 0,
         "@typescript-eslint/no-unsafe-member-access": 0,
         "@typescript-eslint/no-unsafe-call": 0,

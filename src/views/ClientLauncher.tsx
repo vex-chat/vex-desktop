@@ -201,7 +201,7 @@ export function ClientLauncher(): JSX.Element {
         }
     };
 
-    const messageHandler = async (message: IMessage) => {
+    const messageHandler = (message: IMessage) => {
         const szMsg = serializeMessage(message);
 
         if (szMsg.group) {
@@ -229,7 +229,7 @@ export function ClientLauncher(): JSX.Element {
         history.push(routes.LOGOUT + '?clear=off');
     };
 
-    const sessionHandler = async (session: ISession, user: IUser) => {
+    const sessionHandler = (session: ISession, user: IUser) => {
         dispatch(addSession(session));
         dispatch(addFamiliar(user));
     };

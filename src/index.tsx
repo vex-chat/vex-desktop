@@ -9,7 +9,7 @@ import Base from './views/Base';
 
 const store = configuredStore();
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     render(
         <Provider store={store}>
             <Router>

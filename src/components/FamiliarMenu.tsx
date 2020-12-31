@@ -31,7 +31,7 @@ export function FamiliarMenu(props: {
                             '/info'
                         }
                         className="dropdown-item"
-                        onClick={async () => {
+                        onClick={() => {
                             setActive(false);
                         }}
                     >
@@ -46,7 +46,7 @@ export function FamiliarMenu(props: {
                             '/verify'
                         }
                         className="dropdown-item"
-                        onClick={async () => {
+                        onClick={() => {
                             setActive(false);
                         }}
                     >

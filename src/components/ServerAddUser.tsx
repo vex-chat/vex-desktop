@@ -37,7 +37,7 @@ export function AddUser(): JSX.Element {
                             params.serverID +
                             params.channelID
                         }
-                        onFoundUser={async (user: IUser) => {
+                        onFoundUser={(user: IUser) => {
                             setUser(user);
                         }}
                         onSelectUser={async (user: IUser) =>

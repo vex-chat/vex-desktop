@@ -24,7 +24,7 @@ export function UserSearchBar(props: {
                 type="text"
                 placeholder="Search for user"
                 value={inputs[props.formName] || ''}
-                onKeyDown={async (event) => {
+                onKeyDown={(event) => {
                     if (event.key === 'Enter') {
                         if (foundUser.userID !== '') {
                             dispatch(addInputState(props.formName, ''));
