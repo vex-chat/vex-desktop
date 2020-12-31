@@ -3,6 +3,7 @@
 ![build](https://github.com/vex-chat/vex-desktop/workflows/build/badge.svg)
 
 BETA software, this is still a work in progress
+DO NOT attempt to use this for a reliable form of communication yet
 
 desktop client for vex
 
