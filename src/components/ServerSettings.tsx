@@ -1,12 +1,12 @@
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useParams } from "react-router";
-import { routes } from "../constants/routes";
-import { delServer, selectServers } from "../reducers/servers";
-import { IServerParams } from "../views/Server";
-import { Highlighter } from "./Highlighter";
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router';
+import { routes } from '../constants/routes';
+import { delServer, selectServers } from '../reducers/servers';
+import { IServerParams } from '../views/Server';
+import { Highlighter } from './Highlighter';
 
 export function ServerSettings(): JSX.Element {
     const servers = useSelector(selectServers);
@@ -23,13 +23,13 @@ export function ServerSettings(): JSX.Element {
     return (
         <div className="pane-screen-wrapper">
             <h1 className="title">Server Settings</h1>
-            {Highlighter(JSON.stringify(server, null, 4), "json")}
+            {Highlighter(JSON.stringify(server, null, 4), 'json')}
             <br />
             <h2 className="subtitle">
                 <FontAwesomeIcon
                     className="has-text-danger"
                     icon={faExclamationTriangle}
-                />{" "}
+                />{' '}
                 Danger Zone
             </h2>
             <button
@@ -41,7 +41,7 @@ export function ServerSettings(): JSX.Element {
                 Delete Server
             </button>
 
-            <div className={`modal ${confirmDeleteOpen ? "is-active" : ""}`}>
+            <div className={`modal ${confirmDeleteOpen ? 'is-active' : ''}`}>
                 <div
                     className="modal-background"
                     onClick={() => {
@@ -51,7 +51,7 @@ export function ServerSettings(): JSX.Element {
                 <div className="modal-content">
                     <div className="box">
                         <h1 className="title">Caution!</h1>
-                        You are about to delete the server{" "}
+                        You are about to delete the server{' '}
                         <strong>{server.name}</strong> permanently. This cannot
                         be undone. Are you certain you wish to continue?
                         <br />

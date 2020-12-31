@@ -5,19 +5,19 @@ import {
     faPlus,
     faTrash,
     faCog,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { FunctionComponent, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation } from "react-router";
-import { Link } from "react-router-dom";
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { FunctionComponent, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router';
+import { Link } from 'react-router-dom';
 
-import { routes } from "../constants/routes";
+import { routes } from '../constants/routes';
 import {
     deleteChannel,
     makeServerChannelsSelector,
-} from "../reducers/channels";
-import { selectPermission } from "../reducers/permissions";
+} from '../reducers/channels';
+import { selectPermission } from '../reducers/permissions';
 
 type ChannelBarProps = {
     serverID: string;
@@ -50,7 +50,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                     {isPermitted && (
                         <div
                             className={`dropdown is-right is-pulled-right pointer ${
-                                menuOpen ? "is-active" : ""
+                                menuOpen ? 'is-active' : ''
                             }`}
                         >
                             <div className="dropdown-trigger">
@@ -115,25 +115,25 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                                 <FontAwesomeIcon
                                                     className={`${
                                                         manageChannels
-                                                            ? "has-text-danger"
-                                                            : "has-text-dark"
+                                                            ? 'has-text-danger'
+                                                            : 'has-text-dark'
                                                     }`}
                                                     icon={faTrash}
                                                 />
                                             </span>
-                                            &nbsp;{" "}
+                                            &nbsp;{' '}
                                             {manageChannels
-                                                ? "Cancel Delete"
-                                                : "Delete Channel"}
+                                                ? 'Cancel Delete'
+                                                : 'Delete Channel'}
                                         </a>
                                     )}
                                     {isPermitted && (
                                         <Link
                                             to={
                                                 routes.SERVERS +
-                                                "/" +
+                                                '/' +
                                                 serverID +
-                                                "/settings"
+                                                '/settings'
                                             }
                                             className="dropdown-item"
                                         >
@@ -158,8 +158,8 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                     {channelIDs.map((channelID) => {
                         const channel = serverChannels[channelID];
                         const chLinkStyle = pathname.includes(channelID)
-                            ? "is-active"
-                            : "";
+                            ? 'is-active'
+                            : '';
 
                         return (
                             <li key={channelID}>
@@ -175,8 +175,8 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                                 markedChannels.includes(
                                                     channelID
                                                 )
-                                                    ? "has-text-danger"
-                                                    : ""
+                                                    ? 'has-text-danger'
+                                                    : ''
                                             }`}
                                             onClick={async () => {
                                                 if (
@@ -201,7 +201,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                                     );
                                                     history.push(
                                                         routes.SERVERS +
-                                                            "/" +
+                                                            '/' +
                                                             serverID
                                                     );
                                                 }

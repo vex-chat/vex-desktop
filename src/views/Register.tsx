@@ -1,19 +1,19 @@
-import { faCheck, faTimes, faUserAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Client } from "@vex-chat/libvex";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addInputState, selectInputStates } from "../reducers/inputs";
-import { gaurdian } from "./Base";
-import { useHistory } from "react-router";
-import { dbFolder, keyFolder } from "../constants/folders";
-import { routes } from "../constants/routes";
-import { BackButton } from "../components/BackButton";
-import { VerticalAligner } from "../components/VerticalAligner";
+import { faCheck, faTimes, faUserAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Client } from '@vex-chat/libvex';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addInputState, selectInputStates } from '../reducers/inputs';
+import { gaurdian } from './Base';
+import { useHistory } from 'react-router';
+import { dbFolder, keyFolder } from '../constants/folders';
+import { routes } from '../constants/routes';
+import { BackButton } from '../components/BackButton';
+import { VerticalAligner } from '../components/VerticalAligner';
 
-const USERNAME_INPUT_NAME = "register_username";
-const PASSWORD_INPUT_NAME = "register_password";
-const CONFIRM_INPUT_NAME = "register_confirmpass";
+const USERNAME_INPUT_NAME = 'register_username';
+const PASSWORD_INPUT_NAME = 'register_password';
+const CONFIRM_INPUT_NAME = 'register_confirmpass';
 
 export default function Register(): JSX.Element {
     const dispatch = useDispatch();
@@ -24,12 +24,12 @@ export default function Register(): JSX.Element {
 
     const inputs = useSelector(selectInputStates);
 
-    const username = inputs[USERNAME_INPUT_NAME] || "";
-    const password = inputs[PASSWORD_INPUT_NAME] || "";
-    const passConfirm = inputs[CONFIRM_INPUT_NAME] || "";
+    const username = inputs[USERNAME_INPUT_NAME] || '';
+    const password = inputs[PASSWORD_INPUT_NAME] || '';
+    const passConfirm = inputs[CONFIRM_INPUT_NAME] || '';
 
     const [waiting, setWaiting] = useState(false);
-    const [errorText, setErrorText] = useState("");
+    const [errorText, setErrorText] = useState('');
 
     useEffect(() => {
         if (username.length > 2 && username.length < 20) {
@@ -55,7 +55,7 @@ export default function Register(): JSX.Element {
         const tempClient = new Client(PK, {
             dbFolder,
         });
-        tempClient.on("ready", async () => {
+        tempClient.on('ready', async () => {
             // eslint-disable-next-line prefer-const
             const [user, err] = await tempClient.register(username);
 
@@ -64,13 +64,13 @@ export default function Register(): JSX.Element {
             if (err !== null) {
                 // errorFX.play();
                 setWaiting(false);
-                console.warn("registration failed.", err);
+                console.warn('registration failed.', err);
                 setErrorText(err.toString());
             }
 
             if (user !== null) {
                 setWaiting(false);
-                const keyPath = keyFolder + "/" + user.signKey;
+                const keyPath = keyFolder + '/' + user.signKey;
                 Client.saveKeyFile(keyPath, password, PK);
 
                 try {
@@ -78,12 +78,12 @@ export default function Register(): JSX.Element {
                     if (confirm !== PK) {
                         console.log(confirm, PK);
                         throw new Error(
-                            "Key file that was written to disk is corrupt."
+                            'Key file that was written to disk is corrupt.'
                         );
                     }
                 } catch (err) {
                     setErrorText(
-                        "Failed to save the keyfile to disk: " + err.toString()
+                        'Failed to save the keyfile to disk: ' + err.toString()
                     );
                     return;
                 }
@@ -103,7 +103,7 @@ export default function Register(): JSX.Element {
                         Pick a username: &nbsp;&nbsp;
                         <a
                             onClick={async () => {
-                                setErrorText("");
+                                setErrorText('');
                                 setTaken(false);
                                 setValid(false);
 
@@ -113,7 +113,9 @@ export default function Register(): JSX.Element {
                                     addInputState(USERNAME_INPUT_NAME, username)
                                 );
 
-                                const tempClient = new Client(undefined, { dbFolder });
+                                const tempClient = new Client(undefined, {
+                                    dbFolder,
+                                });
 
                                 const [
                                     serverResults,
@@ -159,12 +161,12 @@ export default function Register(): JSX.Element {
                             type="username"
                             value={username}
                             onKeyDown={async (event) => {
-                                if (event.key === "Enter") {
+                                if (event.key === 'Enter') {
                                     registerUser();
                                 }
                             }}
                             onChange={async (event) => {
-                                setErrorText("");
+                                setErrorText('');
                                 setTaken(false);
                                 setValid(false);
 
@@ -203,16 +205,16 @@ export default function Register(): JSX.Element {
                         <span
                             className={`icon is-small is-right${
                                 taken
-                                    ? " has-text-danger"
+                                    ? ' has-text-danger'
                                     : valid
-                                    ? " has-text-success"
-                                    : ""
+                                    ? ' has-text-success'
+                                    : ''
                             }`}
                         >
                             <FontAwesomeIcon icon={taken ? faTimes : faCheck} />
                         </span>
                     </div>
-                    {errorText !== "" && (
+                    {errorText !== '' && (
                         <span className="help has-text-white has-text-bold notification is-danger has-delete">
                             {errorText}
                         </span>
@@ -227,7 +229,7 @@ export default function Register(): JSX.Element {
                         type="password"
                         value={password}
                         onKeyDown={async (event) => {
-                            if (event.key === "Enter") {
+                            if (event.key === 'Enter') {
                                 registerUser();
                             }
                         }}
@@ -244,7 +246,7 @@ export default function Register(): JSX.Element {
                 <br />
                 <div className="field">
                     <label className="label is-small">
-                        Confirm password:{" "}
+                        Confirm password:{' '}
                         {password !== passConfirm && (
                             <span className="has-text-danger">
                                 Does not match!
@@ -253,12 +255,12 @@ export default function Register(): JSX.Element {
                     </label>
                     <input
                         className={`password-input input ${
-                            password !== passConfirm && "is-danger"
+                            password !== passConfirm && 'is-danger'
                         }`}
                         type="password"
                         value={passConfirm}
                         onKeyDown={async (event) => {
-                            if (event.key === "Enter") {
+                            if (event.key === 'Enter') {
                                 registerUser();
                             }
                         }}
@@ -279,7 +281,7 @@ export default function Register(): JSX.Element {
                     <div className="buttons register-form-buttons is-right">
                         <button
                             className={`button is-success${
-                                waiting ? " is-loading" : ""
+                                waiting ? ' is-loading' : ''
                             } `}
                             disabled={
                                 password !== passConfirm || password.length < 3

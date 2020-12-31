@@ -1,19 +1,19 @@
-import { faHashtag } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import { useSelector } from "react-redux";
-import { Route, Switch, useParams } from "react-router";
+import { faHashtag } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Route, Switch, useParams } from 'react-router';
 
-import { ChannelBar } from "../components/ChannelBar";
-import { ServerBar } from "../components/ServerBar";
-import { routes } from "../constants/routes";
-import { makeServerChannelsSelector } from "../reducers/channels";
-import { selectServers } from "../reducers/servers";
-import { UserMenu } from "../components/UserMenu";
-import { AddUser } from "../components/ServerAddUser";
-import { AddChannel } from "../components/ServerAddChannel";
-import { ServerPane } from "../components/ServerPane";
-import { ServerSettings } from "../components/ServerSettings";
+import { ChannelBar } from '../components/ChannelBar';
+import { ServerBar } from '../components/ServerBar';
+import { routes } from '../constants/routes';
+import { makeServerChannelsSelector } from '../reducers/channels';
+import { selectServers } from '../reducers/servers';
+import { UserMenu } from '../components/UserMenu';
+import { AddUser } from '../components/ServerAddUser';
+import { AddChannel } from '../components/ServerAddChannel';
+import { ServerPane } from '../components/ServerPane';
+import { ServerSettings } from '../components/ServerSettings';
 
 export interface IServerParams {
     serverID: string;
@@ -55,23 +55,23 @@ export function Server(): JSX.Element {
                 <Switch>
                     <Route
                         exact
-                        path={routes.SERVERS + "/:serverID/add-user"}
+                        path={routes.SERVERS + '/:serverID/add-user'}
                         render={() => <AddUser />}
                     />
                     <Route
                         exact
-                        path={routes.SERVERS + "/:serverID/add-channel"}
+                        path={routes.SERVERS + '/:serverID/add-channel'}
                         render={() => <AddChannel />}
                     />
                     <Route
                         exact
-                        path={routes.SERVERS + "/:serverID/settings"}
+                        path={routes.SERVERS + '/:serverID/settings'}
                         render={() => <ServerSettings />}
                     />
                     <Route
                         exact
                         path={
-                            routes.SERVERS + "/:serverID/channels/:channelID?"
+                            routes.SERVERS + '/:serverID/channels/:channelID?'
                         }
                         render={() => <ServerPane />}
                     />

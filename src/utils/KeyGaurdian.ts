@@ -1,4 +1,4 @@
-import { Client } from "@vex-chat/libvex";
+import { Client } from '@vex-chat/libvex';
 
 export class KeyGaurdian {
     private SK: string | null = null;
@@ -9,7 +9,7 @@ export class KeyGaurdian {
 
     public getKey(): string {
         if (!this.SK) {
-            throw new Error("Must call load() before using this function.");
+            throw new Error('Must call load() before using this function.');
         }
         return this.SK;
     }

@@ -1,19 +1,19 @@
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { Fragment } from "react";
-import { useSelector } from "react-redux";
-import { useHistory } from "react-router";
-import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
-import { routes } from "../constants/routes";
-import { selectFamiliars } from "../reducers/familiars";
-import { ISerializedMessage } from "../reducers/messages";
-import { selectSessions } from "../reducers/sessions";
-import { selectUser } from "../reducers/user";
-import { strToIcon } from "../utils/strToIcon";
-import { Highlighter } from "./Highlighter";
-import * as uuid from "uuid";
-import crypto from "crypto";
-import { format } from "date-fns";
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { Fragment } from 'react';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
+import { allowedHighlighterTypes } from '../constants/allowedHighlighterTypes';
+import { routes } from '../constants/routes';
+import { selectFamiliars } from '../reducers/familiars';
+import { ISerializedMessage } from '../reducers/messages';
+import { selectSessions } from '../reducers/sessions';
+import { selectUser } from '../reducers/user';
+import { strToIcon } from '../utils/strToIcon';
+import { Highlighter } from './Highlighter';
+import * as uuid from 'uuid';
+import crypto from 'crypto';
+import { format } from 'date-fns';
 
 export function MessageBox(props: {
     messages: ISerializedMessage[];
@@ -41,7 +41,7 @@ export function MessageBox(props: {
     }
 
     if (props.messages.length == 0) {
-        return <span key={crypto.randomBytes(16).toString("hex")} />;
+        return <span key={crypto.randomBytes(16).toString('hex')} />;
     }
 
     return (
@@ -56,10 +56,10 @@ export function MessageBox(props: {
             </figure>
             <div className="media-content">
                 <div className="content message-wrapper">
-                    <strong>{sender.username || "Unknown User"}</strong>
+                    <strong>{sender.username || 'Unknown User'}</strong>
                     &nbsp;&nbsp;
                     <small className="has-text-dark">
-                        {format(new Date(props.messages[0].timestamp), "kk:mm")}
+                        {format(new Date(props.messages[0].timestamp), 'kk:mm')}
                     </small>
                     &nbsp;&nbsp;
                     {hasUnverifiedSession && sender.userID !== user.userID && (
@@ -68,16 +68,16 @@ export function MessageBox(props: {
                             onClick={() => {
                                 history.push(
                                     routes.MESSAGING +
-                                        "/" +
+                                        '/' +
                                         sender.userID +
-                                        "/verify?forward=" +
+                                        '/verify?forward=' +
                                         history.location.pathname
                                 );
                             }}
                         >
                             <FontAwesomeIcon
                                 icon={faExclamationTriangle}
-                                className={"has-text-danger"}
+                                className={'has-text-danger'}
                             />
                         </span>
                     )}
@@ -88,8 +88,8 @@ export function MessageBox(props: {
                         if (isCode) {
                             // removing ```
                             const languageInput = message.message
-                                .replace(/```/g, "")
-                                .split("\n")[0]
+                                .replace(/```/g, '')
+                                .split('\n')[0]
                                 .trim();
 
                             if (
@@ -102,8 +102,8 @@ export function MessageBox(props: {
                                     >
                                         {Highlighter(
                                             message.message
-                                                .replace(/```/g, "")
-                                                .replace(languageInput, "")
+                                                .replace(/```/g, '')
+                                                .replace(languageInput, '')
                                                 .trim(),
                                             languageInput,
                                             message.nonce
@@ -119,7 +119,7 @@ export function MessageBox(props: {
                                 >
                                     {Highlighter(
                                         message.message
-                                            .replace(/```/g, "")
+                                            .replace(/```/g, '')
                                             .trim(),
                                         null
                                     )}
@@ -141,9 +141,9 @@ export function MessageBox(props: {
                                         <span
                                             className={`${
                                                 message.message.charAt(0) ===
-                                                ">"
-                                                    ? "has-text-success has-text-weight-bold"
-                                                    : ""
+                                                '>'
+                                                    ? 'has-text-success has-text-weight-bold'
+                                                    : ''
                                             }`}
                                         >
                                             {message.message}
@@ -154,8 +154,8 @@ export function MessageBox(props: {
                                         <span className="help has-text-danger">
                                             <FontAwesomeIcon
                                                 icon={faExclamationTriangle}
-                                            />{" "}
-                                            Failed: {message.failMessage}{" "}
+                                            />{' '}
+                                            Failed: {message.failMessage}{' '}
                                         </span>
                                     )}
                                 </p>

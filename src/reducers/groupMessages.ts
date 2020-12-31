@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store";
-import { IGroupSerializedMessage } from "./messages";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../store';
+import { IGroupSerializedMessage } from './messages';
 
 type FailPayload = { message: IGroupSerializedMessage; errorString: string };
 type AddManyPayload = { messages: IGroupSerializedMessage[]; group: string };
@@ -12,7 +12,7 @@ const initialState: {
 } = {};
 
 const groupMessageSlice = createSlice({
-    name: "groupMessages",
+    name: 'groupMessages',
     initialState,
     reducers: {
         reset: () => initialState,

@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { AppThunk, RootState } from "../store";
-import { ISession } from "@vex-chat/libvex";
+import { createSlice } from '@reduxjs/toolkit';
+import { AppThunk, RootState } from '../store';
+import { ISession } from '@vex-chat/libvex';
 
 interface ISerializedSession {
     sessionID: string;
     userID: string;
-    mode: "initiator" | "receiver";
+    mode: 'initiator' | 'receiver';
     SK: string;
     publicKey: string;
     fingerprint: string;
@@ -40,7 +40,7 @@ export const serializeSession = (session: ISession): ISerializedSession => {
 };
 
 const sessionSlice = createSlice({
-    name: "sessions",
+    name: 'sessions',
     initialState: {},
     reducers: {
         mark: (

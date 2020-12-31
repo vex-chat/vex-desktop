@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { IPermission } from "@vex-chat/libvex";
-import { AppThunk, RootState } from "../store";
+import { createSlice } from '@reduxjs/toolkit';
+import { IPermission } from '@vex-chat/libvex';
+import { AppThunk, RootState } from '../store';
 
 const initialState: Record<string, IPermission> = {};
 
 const permissionSlice = createSlice({
-    name: "permissions",
+    name: 'permissions',
     initialState,
     reducers: {
         set: (_state, action) => {

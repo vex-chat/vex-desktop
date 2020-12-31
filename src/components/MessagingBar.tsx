@@ -1,24 +1,24 @@
-import { ISession, IUser } from "@vex-chat/libvex";
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useParams } from "react-router-dom";
-import { selectSessions, stubSession } from "../reducers/sessions";
-import { addFamiliar, selectFamiliars } from "../reducers/familiars";
-import { selectUser } from "../reducers/user";
-import { routes } from "../constants/routes";
-import { FamiliarButton } from "./FamiliarButton";
-import { UserSearchBar } from "./UserSearchBar";
+import { ISession, IUser } from '@vex-chat/libvex';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
+import { selectSessions, stubSession } from '../reducers/sessions';
+import { addFamiliar, selectFamiliars } from '../reducers/familiars';
+import { selectUser } from '../reducers/user';
+import { routes } from '../constants/routes';
+import { FamiliarButton } from './FamiliarButton';
+import { UserSearchBar } from './UserSearchBar';
 
 export const emptyUser: IUser = {
-    userID: "",
-    signKey: "",
-    username: "",
+    userID: '',
+    signKey: '',
+    username: '',
     lastSeen: new Date(Date.now()),
     avatar: null,
 };
 
 export default function MessagingBar(): JSX.Element {
-    const FORM_NAME = "dm-search-input";
+    const FORM_NAME = 'dm-search-input';
 
     const user: IUser = useSelector(selectUser);
     const history = useHistory();
@@ -35,7 +35,7 @@ export default function MessagingBar(): JSX.Element {
         dispatch(addFamiliar(user));
         dispatch(stubSession(user.userID));
 
-        history.push(routes.MESSAGING + "/" + user.userID);
+        history.push(routes.MESSAGING + '/' + user.userID);
     };
 
     return (
@@ -56,7 +56,7 @@ export default function MessagingBar(): JSX.Element {
                     {FamiliarButton({
                         user: familiars[user.userID],
                         params,
-                        subtitle: "Me",
+                        subtitle: 'Me',
                     })}
 
                     {Object.keys(sessions).map((userID) => {
@@ -71,7 +71,7 @@ export default function MessagingBar(): JSX.Element {
                         return FamiliarButton({
                             user: familiars[userID],
                             params,
-                            subtitle: "",
+                            subtitle: '',
                         });
                     })}
                 </ul>

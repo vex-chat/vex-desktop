@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { AppThunk, RootState } from "../store";
-import { IServer } from "@vex-chat/libvex";
+import { createSlice } from '@reduxjs/toolkit';
+import { AppThunk, RootState } from '../store';
+import { IServer } from '@vex-chat/libvex';
 
 const initialState: Record<string, IServer> = {};
 
 const serverSlice = createSlice({
-    name: "servers",
+    name: 'servers',
     initialState,
     reducers: {
         add: (state, action) => {

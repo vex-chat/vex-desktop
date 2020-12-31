@@ -1,11 +1,11 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppThunk, RootState } from "../store";
-import { IChannel } from "@vex-chat/libvex";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AppThunk, RootState } from '../store';
+import { IChannel } from '@vex-chat/libvex';
 
 const initialState: Record<string, Record<string, IChannel>> = {};
 
 const channelSlice = createSlice({
-    name: "channels",
+    name: 'channels',
     initialState,
     reducers: {
         add: (state, action: PayloadAction<IChannel>) => {

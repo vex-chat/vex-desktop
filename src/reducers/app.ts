@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { AppThunk, RootState } from "../store";
+import { createSlice } from '@reduxjs/toolkit';
+import { AppThunk, RootState } from '../store';
 
 const initialState: Record<string, boolean | string | number> = {
     initialLoad: true,
@@ -7,7 +7,7 @@ const initialState: Record<string, boolean | string | number> = {
 };
 
 const appSlice = createSlice({
-    name: "app",
+    name: 'app',
     initialState,
     reducers: {
         reset: () => {

@@ -1,10 +1,10 @@
-import { faCheck, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IUser } from "@vex-chat/libvex";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addInputState, selectInputStates } from "../reducers/inputs";
-import { emptyUser } from "./MessagingBar";
+import { faCheck, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IUser } from '@vex-chat/libvex';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addInputState, selectInputStates } from '../reducers/inputs';
+import { emptyUser } from './MessagingBar';
 
 export function UserSearchBar(props: {
     formName: string;
@@ -19,15 +19,15 @@ export function UserSearchBar(props: {
         <div className="control has-icons-left">
             <input
                 className={`input has-icons-right is-grey is-small is-rounded search-bar${
-                    foundUser.userID !== "" ? " is-success" : ""
+                    foundUser.userID !== '' ? ' is-success' : ''
                 }`}
                 type="text"
                 placeholder="Search for user"
-                value={inputs[props.formName] || ""}
+                value={inputs[props.formName] || ''}
                 onKeyDown={async (event) => {
-                    if (event.key === "Enter") {
-                        if (foundUser.userID !== "") {
-                            dispatch(addInputState(props.formName, ""));
+                    if (event.key === 'Enter') {
+                        if (foundUser.userID !== '') {
+                            dispatch(addInputState(props.formName, ''));
                             setFoundUser(emptyUser);
                             if (props.onSelectUser) {
                                 props.onSelectUser(foundUser);

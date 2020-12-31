@@ -1,33 +1,33 @@
-import { faLock } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState, FunctionComponent, memo, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router";
-import { routes } from "../constants/routes";
-import { addInputState } from "../reducers/inputs";
-import { gaurdian } from "./Base";
-import { BackButton } from "../components/BackButton";
-import { keyFolder } from "../constants/folders";
-import { VerticalAligner } from "../components/VerticalAligner";
-import { useQuery } from "../hooks/useQuery";
-import { useDebounce } from "../hooks/useDebounce";
-import { RootState } from "../store";
+import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState, FunctionComponent, memo, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
+import { routes } from '../constants/routes';
+import { addInputState } from '../reducers/inputs';
+import { gaurdian } from './Base';
+import { BackButton } from '../components/BackButton';
+import { keyFolder } from '../constants/folders';
+import { VerticalAligner } from '../components/VerticalAligner';
+import { useQuery } from '../hooks/useQuery';
+import { useDebounce } from '../hooks/useDebounce';
+import { RootState } from '../store';
 
-const FORM_NAME = "keyfile-login-pasword";
+const FORM_NAME = 'keyfile-login-pasword';
 
 export const Login: FunctionComponent = memo(() => {
     const history = useHistory();
 
     const query = useQuery();
     const password = useSelector<RootState, string>(
-        ({ inputs }) => inputs[FORM_NAME] || ""
+        ({ inputs }) => inputs[FORM_NAME] || ''
     );
-    const publicKey = query.get("key");
+    const publicKey = query.get('key');
     const [loading, setLoading] = useState(false);
-    const [errText, setErrText] = useState("");
+    const [errText, setErrText] = useState('');
     const dispatch = useDispatch();
 
-    const [inputVal, setInputVal] = useState("");
+    const [inputVal, setInputVal] = useState('');
     const debouncedInput = useDebounce(inputVal, 500);
 
     useEffect(() => {
@@ -37,13 +37,13 @@ export const Login: FunctionComponent = memo(() => {
     const unlockKey = (enterPw?: string) => {
         const sentPassword = enterPw || password;
 
-        if (sentPassword == "") return;
+        if (sentPassword == '') return;
 
         setLoading(true);
-        setInputVal("");
+        setInputVal('');
 
         try {
-            gaurdian.load(keyFolder + "/" + publicKey, sentPassword);
+            gaurdian.load(keyFolder + '/' + publicKey, sentPassword);
         } catch (err) {
             console.error(err);
             setErrText(err.toString());
@@ -57,7 +57,7 @@ export const Login: FunctionComponent = memo(() => {
     return (
         <VerticalAligner top={<BackButton route={routes.HOME} />}>
             <div className="box">
-                {errText !== "" && (
+                {errText !== '' && (
                     <div className="notification is-danger">{errText}</div>
                 )}
                 <label className="label is-small">Password:</label>
@@ -71,7 +71,7 @@ export const Login: FunctionComponent = memo(() => {
                             setInputVal(value);
                         }}
                         onKeyDown={(event) => {
-                            if (event.key === "Enter") {
+                            if (event.key === 'Enter') {
                                 unlockKey(inputVal);
                             }
                         }}
@@ -83,7 +83,7 @@ export const Login: FunctionComponent = memo(() => {
                 <div className="buttons is-right">
                     <button
                         className={`button is-success ${
-                            loading ? "is-loading" : ""
+                            loading ? 'is-loading' : ''
                         }`}
                         onClick={() => {
                             unlockKey();
