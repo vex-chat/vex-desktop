@@ -91,7 +91,7 @@ export async function initClient(): Promise<void> {
 
         await client.login();
     });
-    
+
     client.init();
 }
 
@@ -162,8 +162,8 @@ export function ClientLauncher(): JSX.Element {
                 ? channelRecords[message.group]
                 : null;
             const serverRecord = message.group
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                ? serverRecords[channelRecord!.serverID]
+                ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  serverRecords[channelRecord!.serverID]
                 : null;
 
             if (message.group === null) {

@@ -13,10 +13,9 @@ import { keyFolder } from '../constants/folders';
 import { VerticalAligner } from '../components/VerticalAligner';
 import { useQuery } from '../hooks/useQuery';
 import { useDebounce } from '../hooks/useDebounce';
-import gaurdian from '../utils/KeyGaurdian'
+import gaurdian from '../utils/KeyGaurdian';
 
 const FORM_NAME = 'keyfile-login-pasword';
-
 
 export const Login: FunctionComponent = memo(() => {
     const history = useHistory();

@@ -13,7 +13,6 @@ import { TitleBar } from '../components/TitleBar';
 import { Create } from './Create';
 import { Home } from './Home';
 
-
 export default function Base(): JSX.Element {
     return (
         <App>

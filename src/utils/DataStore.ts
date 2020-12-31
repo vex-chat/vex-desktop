@@ -2,9 +2,9 @@ import Store from 'electron-store';
 
 class DataStore extends Store {
     private static instance: DataStore;
-    
-    private constructor() { 
-        super()
+
+    private constructor() {
+        super();
     }
 
     public static getInstance(): DataStore {
@@ -14,9 +14,8 @@ class DataStore extends Store {
 
         return DataStore.instance;
     }
-
 }
 
-const store = DataStore.getInstance()
+const store = DataStore.getInstance();
 
-export default store
+export default store;

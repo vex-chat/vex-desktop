@@ -14,7 +14,7 @@ import { resetPermissions } from '../reducers/permissions';
 import { resetServers } from '../reducers/servers';
 import { resetSessions } from '../reducers/sessions';
 import { resetUser } from '../reducers/user';
-import gaurdian from '../utils/KeyGaurdian'
+import gaurdian from '../utils/KeyGaurdian';
 
 export function Logout(): JSX.Element {
     const dispatch = useDispatch();

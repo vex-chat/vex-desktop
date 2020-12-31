@@ -10,7 +10,6 @@ import channelReducer from './reducers/channels';
 import permissionsReducer from './reducers/permissions';
 import groupMessageReducer from './reducers/groupMessages';
 
-
 export default combineReducers({
     user: userReducer,
     familiars: familiarsReducer,

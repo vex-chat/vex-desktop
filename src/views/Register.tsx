@@ -10,7 +10,7 @@ import { dbFolder, keyFolder } from '../constants/folders';
 import { routes } from '../constants/routes';
 import { BackButton } from '../components/BackButton';
 import { VerticalAligner } from '../components/VerticalAligner';
-import gaurdian from '../utils/KeyGaurdian'
+import gaurdian from '../utils/KeyGaurdian';
 
 const USERNAME_INPUT_NAME = 'register_username';
 const PASSWORD_INPUT_NAME = 'register_password';
@@ -85,7 +85,7 @@ export default function Register(): JSX.Element {
                     }
                 } catch (err) {
                     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    const errText = `Failed to save the keyfile to disk: ${err.toString()}`
+                    const errText = `Failed to save the keyfile to disk: ${err.toString()}`;
                     setErrorText(errText);
                     return;
                 }

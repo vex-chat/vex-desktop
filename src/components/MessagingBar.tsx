@@ -9,7 +9,6 @@ import { routes } from '../constants/routes';
 import { FamiliarButton } from './FamiliarButton';
 import { UserSearchBar } from './UserSearchBar';
 
-
 export default function MessagingBar(): JSX.Element {
     const FORM_NAME = 'dm-search-input';
 

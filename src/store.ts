@@ -1,4 +1,3 @@
-
 import type { RootState } from '~Types';
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import rootReducer from './rootReducer';
@@ -31,4 +30,3 @@ export const configuredStore = (initialState?: RootState) => {
 };
 
 export type Store = ReturnType<typeof configuredStore>;
-

@@ -6,44 +6,42 @@ module.exports = {
     },
     extends: [
         'eslint:recommended',
-        "plugin:import/typescript",
+        'plugin:import/typescript',
         'plugin:@typescript-eslint/recommended',
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:eslint-comments/recommended"
+        'plugin:@typescript-eslint/recommended-requiring-type-checking',
+        'plugin:eslint-comments/recommended',
     ],
     plugins: ['import'],
     parserOptions: {
         ecmaVersion: 12,
-        project: './tsconfig.json'
+        project: './tsconfig.json',
     },
     settings: {
         react: {
-          version: "detect"
-        }
+            version: 'detect',
+        },
     },
     rules: {
         // TURN OFF ALL FAILING RULES FOR STRICER TS ESLINT
-        "@typescript-eslint/no-floating-promises": 0,
-        "@typescript-eslint/no-misused-promises": 0,
-        "@typescript-eslint/no-unsafe-member-access": 0,
-        "@typescript-eslint/no-unsafe-call": 0,
-        "@typescript-eslint/no-unsafe-assignment": 0,
-        "@typescript-eslint/no-unsafe-return": 0,
+        '@typescript-eslint/no-floating-promises': 0,
+        '@typescript-eslint/no-misused-promises': 0,
+        '@typescript-eslint/no-unsafe-member-access': 0,
+        '@typescript-eslint/no-unsafe-call': 0,
+        '@typescript-eslint/no-unsafe-assignment': 0,
+        '@typescript-eslint/no-unsafe-return': 0,
         // CYCLICAL DEPENDENCIES BREAK LOCAL
-        "import/no-cycle": 2,
+        'import/no-cycle': 2,
     },
 
     overrides: [
         // REACT OVERRIDES
         {
-            files: ["*.tsx"],
-            extends: [
-                'plugin:react/recommended',
-            ],
+            files: ['*.tsx'],
+            extends: ['plugin:react/recommended'],
             rules: {
-                "react/prop-types": 0,
-                "react/display-name": 0,
+                'react/prop-types': 0,
+                'react/display-name': 0,
             },
-        }
+        },
     ],
 };

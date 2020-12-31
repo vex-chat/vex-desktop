@@ -1,12 +1,12 @@
-import { Client } from "@vex-chat/libvex";
+import { Client } from '@vex-chat/libvex';
 class KeyGaurdian {
     private static instance: KeyGaurdian;
-    
+
     private SK: string | null = null;
 
     // The constructor is empty because we need to make it private.
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    private constructor() { }
+    private constructor() {}
 
     public static getInstance(): KeyGaurdian {
         if (!KeyGaurdian.instance) {
@@ -22,7 +22,7 @@ class KeyGaurdian {
 
     public getKey(): string {
         if (!this.SK) {
-            throw new Error("Must call load() before using this function.");
+            throw new Error('Must call load() before using this function.');
         }
         return this.SK;
     }
@@ -37,6 +37,6 @@ class KeyGaurdian {
     }
 }
 
-const guardian = KeyGaurdian.getInstance()
+const guardian = KeyGaurdian.getInstance();
 
-export default guardian
+export default guardian;

@@ -52,7 +52,7 @@ export default function MessagingPane(): JSX.Element {
         }
     }
 
-    const messagesEndRef = useRef<HTMLDivElement>(null)
+    const messagesEndRef = useRef<HTMLDivElement>(null);
     const messageTwoRef = createRef<HTMLDivElement>();
     const messageThreeRef = createRef<HTMLButtonElement>();
 
@@ -74,8 +74,6 @@ export default function MessagingPane(): JSX.Element {
 
     const messageIDs = Object.keys(threadMessages || {});
     const user = useSelector(selectUser);
-
-
 
     if (!familiar) {
         return (
@@ -344,14 +342,18 @@ export default function MessagingPane(): JSX.Element {
                                                 data-event={'disabled'}
                                                 data-multiline={true}
                                                 onClick={() => {
-                                                    const { sessionID } = match.params;
+                                                    const {
+                                                        sessionID,
+                                                    } = match.params;
 
-                                                    client.sessions.markVerified(sessionID);
+                                                    client.sessions.markVerified(
+                                                        sessionID
+                                                    );
                                                     const action = markSession(
                                                         params.userID,
                                                         sessionID,
                                                         true
-                                                    )
+                                                    );
 
                                                     dispatch(action);
 
