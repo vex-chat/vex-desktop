@@ -1,4 +1,4 @@
-import { configureStore, getDefaultMiddleware, Action, applyMiddleware } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware, Action,  } from "@reduxjs/toolkit";
 import { ThunkAction } from "redux-thunk";
 import createRootReducer from "./rootReducer";
 import logger from "redux-logger";
@@ -8,6 +8,7 @@ export type RootState = ReturnType<typeof rootReducer>;
 
 const middleware = [...getDefaultMiddleware(), logger];
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const configuredStore = (initialState?: RootState) => {
     // Create Store
     const store = configureStore({
