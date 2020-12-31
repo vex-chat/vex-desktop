@@ -1,16 +1,16 @@
-import { IUser } from "@vex-chat/libvex";
-import React from "react";
-import { strToIcon } from "../utils/strToIcon";
-import { IconDefinition } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IUser } from '@vex-chat/libvex';
+import React from 'react';
+import { strToIcon } from '../utils/strToIcon';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export function IconUsername(
     user: IUser,
     iconSize = 48 | 32,
     icon?: IconDefinition,
-    subtitle = ""
+    subtitle = ''
 ): JSX.Element {
-    const size = iconSize.toString() + "x" + iconSize.toString();
+    const size = iconSize.toString() + 'x' + iconSize.toString();
 
     return (
         <span className="media">
@@ -29,12 +29,12 @@ export function IconUsername(
             <span className="media-content">
                 <p
                     className={`title is-6 username-text-${size} ${
-                        subtitle !== "" ? "has-subtitle" : ""
+                        subtitle !== '' ? 'has-subtitle' : ''
                     }`}
                 >
                     {user.username}
                 </p>
-                <p className={"help subtitle is-7"}>{subtitle}</p>
+                <p className={'help subtitle is-7'}>{subtitle}</p>
             </span>
         </span>
     );

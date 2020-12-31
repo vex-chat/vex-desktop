@@ -1,15 +1,15 @@
-import type { RootState, AppThunk } from "~Types";
+import type { RootState, AppThunk } from '~Types';
 
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 type InputState = Record<string, string>;
 
 const initialState: InputState = {
-    "keyfile-login-pasword": "",
+    'keyfile-login-pasword': '',
 };
 
 const inputSlice = createSlice({
-    name: "inputs",
+    name: 'inputs',
     initialState,
     reducers: {
         add: (state, action) => {

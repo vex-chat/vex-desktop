@@ -1,14 +1,14 @@
-import { IUser } from "@vex-chat/libvex";
-import React, { createRef, Fragment, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Route, Switch, useHistory, useParams } from "react-router";
-import { selectFamiliars } from "../reducers/familiars";
-import { selectInputStates, addInputState } from "../reducers/inputs";
-import { failMessage, ISerializedMessage } from "../reducers/messages";
-import { selectMessages } from "../reducers/messages";
-import { markSession, selectSessions } from "../reducers/sessions";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import * as uuid from "uuid";
+import { IUser } from '@vex-chat/libvex';
+import React, { createRef, Fragment, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, Switch, useHistory, useParams } from 'react-router';
+import { selectFamiliars } from '../reducers/familiars';
+import { selectInputStates, addInputState } from '../reducers/inputs';
+import { failMessage, ISerializedMessage } from '../reducers/messages';
+import { selectMessages } from '../reducers/messages';
+import { markSession, selectSessions } from '../reducers/sessions';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as uuid from 'uuid';
 import {
     faAt,
     faCheckCircle,
@@ -19,17 +19,17 @@ import {
     faSkull,
     faTimes,
     faUnlock,
-} from "@fortawesome/free-solid-svg-icons";
-import { routes } from "../constants/routes";
-import { selectUser } from "../reducers/user";
-import nacl from "tweetnacl";
-import { XUtils } from "@vex-chat/crypto";
-import { Highlighter } from "./Highlighter";
-import { chunkMessages } from "../utils/chunkMessages";
-import { MessageBox } from "./MessageBox";
-import { useQuery } from "../hooks/useQuery";
-import { FamiliarMenu } from "./FamiliarMenu";
-import { IconUsername } from "./IconUsername";
+} from '@fortawesome/free-solid-svg-icons';
+import { routes } from '../constants/routes';
+import { selectUser } from '../reducers/user';
+import nacl from 'tweetnacl';
+import { XUtils } from '@vex-chat/crypto';
+import { Highlighter } from './Highlighter';
+import { chunkMessages } from '../utils/chunkMessages';
+import { MessageBox } from './MessageBox';
+import { useQuery } from '../hooks/useQuery';
+import { FamiliarMenu } from './FamiliarMenu';
+import { IconUsername } from './IconUsername';
 
 export default function MessagingPane(): JSX.Element {
     // state
@@ -67,7 +67,7 @@ export default function MessagingPane(): JSX.Element {
     });
 
     const familiar: IUser | undefined = familiars[params.userID];
-    const inputValue: string = inputValues[params.userID] || "";
+    const inputValue: string = inputValues[params.userID] || '';
 
     const allMessages = useSelector(selectMessages);
     const threadMessages = allMessages[params.userID];
@@ -105,7 +105,7 @@ export default function MessagingPane(): JSX.Element {
             <Switch>
                 <Route
                     exact
-                    path={routes.MESSAGING + "/:userID/info"}
+                    path={routes.MESSAGING + '/:userID/info'}
                     render={() => {
                         return (
                             <div className="pane-screen-wrapper">
@@ -115,7 +115,7 @@ export default function MessagingPane(): JSX.Element {
                                     </label>
                                     {Highlighter(
                                         JSON.stringify(familiar, null, 4),
-                                        "json"
+                                        'json'
                                     )}
                                     <button
                                         className="button is-small t-12"
@@ -130,7 +130,7 @@ export default function MessagingPane(): JSX.Element {
                 />
                 <Route
                     exact
-                    path={routes.MESSAGING + "/:userID/verify"}
+                    path={routes.MESSAGING + '/:userID/verify'}
                     render={() => (
                         <div className="pane-screen-wrapper">
                             <div className="panel">
@@ -138,11 +138,11 @@ export default function MessagingPane(): JSX.Element {
                                 {hasUnverifiedSession && (
                                     <div className="panel-block">
                                         <span className="icon">
-                                            {" "}
+                                            {' '}
                                             <FontAwesomeIcon
                                                 icon={faExclamationCircle}
                                                 className="has-text-warning"
-                                            />{" "}
+                                            />{' '}
                                         </span>
                                         <span className="help">
                                             This user has unverified sessions.
@@ -170,7 +170,7 @@ export default function MessagingPane(): JSX.Element {
                                                             />
                                                         </th>
                                                         <th>
-                                                            {" "}
+                                                            {' '}
                                                             <code>
                                                                 {sessionID}
                                                             </code>
@@ -180,7 +180,7 @@ export default function MessagingPane(): JSX.Element {
                                                             {!session.verified && (
                                                                 <div
                                                                     data-event={
-                                                                        "disabled"
+                                                                        'disabled'
                                                                     }
                                                                     ref={
                                                                         messageTwoRef
@@ -190,20 +190,20 @@ export default function MessagingPane(): JSX.Element {
                                                                         className="button is-danger is-small"
                                                                         onClick={() => {
                                                                             const forwardPath = query.get(
-                                                                                "forward"
+                                                                                'forward'
                                                                             );
 
                                                                             history.push(
                                                                                 history
                                                                                     .location
                                                                                     .pathname +
-                                                                                    "/" +
+                                                                                    '/' +
                                                                                     session.sessionID +
                                                                                     (forwardPath !==
                                                                                     null
-                                                                                        ? "?forward=" +
+                                                                                        ? '?forward=' +
                                                                                           forwardPath
-                                                                                        : "")
+                                                                                        : '')
                                                                             );
                                                                         }}
                                                                     >
@@ -244,7 +244,7 @@ export default function MessagingPane(): JSX.Element {
                 />
                 <Route
                     exact
-                    path={routes.MESSAGING + "/:userID/verify/:sessionID"}
+                    path={routes.MESSAGING + '/:userID/verify/:sessionID'}
                     render={({ match }) => {
                         const session =
                             sessions[match.params.userID][
@@ -339,7 +339,7 @@ export default function MessagingPane(): JSX.Element {
                                             <button
                                                 className="button is-success is-right"
                                                 ref={messageThreeRef}
-                                                data-event={"disabled"}
+                                                data-event={'disabled'}
                                                 data-multiline={true}
                                                 onClick={() => {
                                                     const {
@@ -358,7 +358,7 @@ export default function MessagingPane(): JSX.Element {
                                                     dispatch(action);
 
                                                     const forwardPath = query.get(
-                                                        "forward"
+                                                        'forward'
                                                     );
 
                                                     if (forwardPath) {
@@ -369,7 +369,7 @@ export default function MessagingPane(): JSX.Element {
                                                     }
                                                     history.push(
                                                         routes.MESSAGING +
-                                                            "/" +
+                                                            '/' +
                                                             params.userID
                                                     );
                                                 }}
@@ -385,27 +385,27 @@ export default function MessagingPane(): JSX.Element {
                 />
                 <Route
                     exact
-                    path={routes.MESSAGING + "/:userID"}
+                    path={routes.MESSAGING + '/:userID'}
                     render={() => {
                         const startMessages: ISerializedMessage[] = [
                             {
                                 timestamp: new Date(Date.now()).toString(),
                                 sender: user.userID,
                                 recipient: user.userID,
-                                direction: "incoming",
+                                direction: 'incoming',
                                 nonce: XUtils.encodeHex(nacl.randomBytes(24)),
-                                message: "Welcome to vex messenger!",
+                                message: 'Welcome to vex messenger!',
                                 decrypted: true,
                                 mailID: uuid.v4(),
                                 group: null,
                                 failed: false,
-                                failMessage: "",
+                                failMessage: '',
                             },
                             {
                                 timestamp: new Date(Date.now()).toString(),
                                 sender: user.userID,
                                 recipient: user.userID,
-                                direction: "incoming",
+                                direction: 'incoming',
                                 nonce: XUtils.encodeHex(nacl.randomBytes(24)),
                                 message:
                                     "This is a personal thread for taking notes, or whatever you'd like.",
@@ -413,7 +413,7 @@ export default function MessagingPane(): JSX.Element {
                                 mailID: uuid.v4(),
                                 group: null,
                                 failed: false,
-                                failMessage: "",
+                                failMessage: '',
                             },
                         ];
 
@@ -457,7 +457,7 @@ export default function MessagingPane(): JSX.Element {
                                         }}
                                         onKeyDown={async (event) => {
                                             if (
-                                                event.key === "Enter" &&
+                                                event.key === 'Enter' &&
                                                 !event.shiftKey
                                             ) {
                                                 event.preventDefault();
@@ -466,7 +466,7 @@ export default function MessagingPane(): JSX.Element {
                                                 dispatch(
                                                     addInputState(
                                                         params.userID,
-                                                        ""
+                                                        ''
                                                     )
                                                 );
 

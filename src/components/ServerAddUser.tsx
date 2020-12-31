@@ -1,13 +1,13 @@
-import type { IServerParams } from "~Types";
+import type { IServerParams } from '~Types';
 
-import { IUser } from "@vex-chat/libvex";
-import React, { Fragment, useState } from "react";
-import { useSelector } from "react-redux";
-import { useHistory, useParams } from "react-router";
-import { selectServers } from "../reducers/servers";
-import { IconUsername } from "./IconUsername";
-import { emptyUser } from "../components/UserSearchBar";
-import { UserSearchBar } from "./UserSearchBar";
+import { IUser } from '@vex-chat/libvex';
+import React, { Fragment, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router';
+import { selectServers } from '../reducers/servers';
+import { IconUsername } from './IconUsername';
+import { emptyUser } from '../components/UserSearchBar';
+import { UserSearchBar } from './UserSearchBar';
 
 export function AddUser(): JSX.Element {
     const history = useHistory();
@@ -21,7 +21,7 @@ export function AddUser(): JSX.Element {
         const { userID } = user;
         await client.permissions.create({
             userID,
-            resourceType: "server",
+            resourceType: 'server',
             resourceID: params.serverID,
         });
         history.goBack();
@@ -34,7 +34,7 @@ export function AddUser(): JSX.Element {
                 <div className="panel-block">
                     <UserSearchBar
                         formName={
-                            "server-user-serach-bar" +
+                            'server-user-serach-bar' +
                             params.serverID +
                             params.channelID
                         }
