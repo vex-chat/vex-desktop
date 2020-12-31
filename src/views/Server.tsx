@@ -17,11 +17,6 @@ import { ServerSettings } from '../components/ServerSettings';
 import { ChannelSettings } from '../components/ChannelSettings';
 import { capitalCase } from 'change-case';
 
-export interface IServerParams {
-    serverID: string;
-    channelID: string;
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Server(): JSX.Element {
     const { serverID, channelID, pageType, channelPage } = useParams<{

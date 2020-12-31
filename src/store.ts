@@ -1,15 +1,13 @@
-import { configureStore, getDefaultMiddleware, Action } from '@reduxjs/toolkit';
-import { ThunkAction } from 'redux-thunk';
-import createRootReducer from './rootReducer';
+
+import type { RootState } from '~Types';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import rootReducer from './rootReducer';
 import { createLogger } from 'redux-logger';
 
 const logger = createLogger({
     collapsed: true,
     duration: true,
 });
-
-const rootReducer = createRootReducer();
-export type RootState = ReturnType<typeof rootReducer>;
 
 const middleware = [...getDefaultMiddleware(), logger];
 
@@ -33,4 +31,4 @@ export const configuredStore = (initialState?: RootState) => {
 };
 
 export type Store = ReturnType<typeof configuredStore>;
-export type AppThunk = ThunkAction<void, RootState, unknown, Action<string>>;
+

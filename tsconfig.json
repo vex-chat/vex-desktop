@@ -20,7 +20,11 @@
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "resolveJsonModule": true,
-        "allowJs": true
+        "allowJs": true,
+        "baseUrl": "src",
+        "paths": {
+            "~Types": ["./types.d.ts"]
+        }
     },
     "exclude": [
         "test",

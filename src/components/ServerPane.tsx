@@ -1,10 +1,11 @@
+import type { IServerParams } from '~Types';
+
 import React, { useRef, useEffect, Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { makeGroupMessageSelector, fail } from '../reducers/groupMessages';
 import { selectInputStates, addInputState } from '../reducers/inputs';
 import { chunkMessages } from '../utils/chunkMessages';
-import { IServerParams } from '../views/Server';
 import { MessageBox } from './MessageBox';
 import * as uuid from 'uuid';
 import { serializeMessage } from '../reducers/messages';

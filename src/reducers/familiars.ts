@@ -1,6 +1,8 @@
+import type { RootState, AppThunk } from '~Types';
+
 import { createSlice } from '@reduxjs/toolkit';
 import { IUser } from '@vex-chat/libvex';
-import { AppThunk, RootState } from '../store';
+
 import { ISerializableUser, deserializeUser, serializeUser } from './user';
 
 function serializeUserList(list: IUser[]): Record<string, ISerializableUser> {

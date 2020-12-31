@@ -1,5 +1,6 @@
+import type { RootState, AppThunk } from '~Types';
+
 import { createSlice } from '@reduxjs/toolkit';
-import { AppThunk, RootState } from '../store';
 import { ISession } from '@vex-chat/libvex';
 
 interface ISerializedSession {

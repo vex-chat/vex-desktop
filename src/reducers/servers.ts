@@ -1,5 +1,6 @@
+import type { RootState, AppThunk } from '~Types';
+
 import { createSlice } from '@reduxjs/toolkit';
-import { AppThunk, RootState } from '../store';
 import { IServer } from '@vex-chat/libvex';
 
 const initialState: Record<string, IServer> = {};

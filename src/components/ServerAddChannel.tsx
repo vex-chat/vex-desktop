@@ -1,3 +1,5 @@
+import type { RootState, IServerParams } from '~Types';
+
 import React, { FunctionComponent, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
@@ -5,9 +7,7 @@ import { useHistory, useParams } from 'react-router';
 import { useDebounce } from '../hooks/useDebounce';
 import { selectServers } from '../reducers/servers';
 import { add } from '../reducers/channels';
-import { IServerParams } from '../views/Server';
 import { addInputState } from '../reducers/inputs';
-import { RootState } from '../store';
 import { routes } from '../constants/routes';
 
 export const AddChannel: FunctionComponent = () => {

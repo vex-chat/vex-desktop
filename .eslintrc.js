@@ -6,10 +6,12 @@ module.exports = {
     },
     extends: [
         'eslint:recommended',
+        "plugin:import/typescript",
         'plugin:@typescript-eslint/recommended',
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "plugin:eslint-comments/recommended"
     ],
+    plugins: ['import'],
     parserOptions: {
         ecmaVersion: 12,
         project: './tsconfig.json'
@@ -26,9 +28,11 @@ module.exports = {
         "@typescript-eslint/no-unsafe-member-access": 0,
         "@typescript-eslint/no-unsafe-call": 0,
         "@typescript-eslint/no-unsafe-assignment": 0,
-        "@typescript-eslint/no-unsafe-return": 0
+        "@typescript-eslint/no-unsafe-return": 0,
+        // CYCLICAL DEPENDENCIES BREAK LOCAL
+        "import/no-cycle": 2,
     },
-    plugins: [],
+
     overrides: [
         // REACT OVERRIDES
         {
