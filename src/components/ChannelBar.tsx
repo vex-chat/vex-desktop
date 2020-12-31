@@ -13,10 +13,7 @@ import { useHistory, useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import { routes } from '../constants/routes';
-import {
-    deleteChannel,
-    makeServerChannelsSelector,
-} from '../reducers/channels';
+import { deleteChannel, selectChannels } from '../reducers/channels';
 import { selectPermission } from '../reducers/permissions';
 
 type ChannelBarProps = {
@@ -32,7 +29,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
     const [markedChannels, setMarkedChannels] = useState([] as string[]);
     const [menuOpen, setMenuOpen] = useState(false);
     const { pathname } = useLocation();
-    const serverChannels = useSelector(makeServerChannelsSelector(serverID));
+    const serverChannels = useSelector(selectChannels(serverID));
     const dispatch = useDispatch();
     const history = useHistory();
     const permission = useSelector(selectPermission(serverID));
@@ -212,11 +209,13 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                         </span>
                                     )}
                                     <span
-                                        className={`icon is-pulled-right ${
-                                            markedChannels.includes(channelID)
-                                                ? 'has-text-danger'
-                                                : ''
-                                        }`}
+                                        className={`icon is-pulled-right`}
+                                        onClick={(event) => {
+                                            event.preventDefault();
+                                            history.push(
+                                                `${routes.SERVERS}/${serverID}/channels/${channelID}/settings`
+                                            );
+                                        }}
                                     >
                                         <FontAwesomeIcon icon={faCog} />
                                     </span>

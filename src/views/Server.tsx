@@ -7,13 +7,14 @@ import { Route, Switch, useParams } from 'react-router';
 import { ChannelBar } from '../components/ChannelBar';
 import { ServerBar } from '../components/ServerBar';
 import { routes } from '../constants/routes';
-import { makeServerChannelsSelector } from '../reducers/channels';
+import { selectChannels } from '../reducers/channels';
 import { selectServers } from '../reducers/servers';
 import { UserMenu } from '../components/UserMenu';
 import { AddUser } from '../components/ServerAddUser';
 import { AddChannel } from '../components/ServerAddChannel';
 import { ServerPane } from '../components/ServerPane';
 import { ServerSettings } from '../components/ServerSettings';
+import { ChannelSettings } from '../components/ChannelSettings';
 
 export interface IServerParams {
     serverID: string;
@@ -28,7 +29,7 @@ export function Server(): JSX.Element {
     }>();
 
     const servers = useSelector(selectServers);
-    const serverChannels = useSelector(makeServerChannelsSelector(serverID));
+    const serverChannels = useSelector(selectChannels(serverID));
 
     const server = servers[serverID];
 
@@ -74,6 +75,14 @@ export function Server(): JSX.Element {
                             routes.SERVERS + '/:serverID/channels/:channelID?'
                         }
                         render={() => <ServerPane />}
+                    />
+                    <Route
+                        exact
+                        path={
+                            routes.SERVERS +
+                            '/:serverID/channels/:channelID?/:channelPage?'
+                        }
+                        render={() => <ChannelSettings />}
                     />
                 </Switch>
             </div>

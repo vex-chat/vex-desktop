@@ -43,7 +43,7 @@ export const deleteChannel = (channel: IChannel): AppThunk => (dispatch) => {
     dispatch(del(channel));
 };
 
-export const makeServerChannelsSelector: (
+export const selectChannels: (
     serverID: string
 ) => (state: RootState) => Record<string, IChannel> = (serverID) => ({
     channels,

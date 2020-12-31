@@ -29,7 +29,10 @@ export default function Base(): JSX.Element {
                     render={() => <Messaging />}
                 />
                 <Route
-                    path={routes.SERVERS + '/:serverID?/:pageType/:channelID?'}
+                    path={
+                        routes.SERVERS +
+                        '/:serverID?/:pageType/:channelID?/:channelPage?'
+                    }
                     render={() => <Server />}
                 />
                 <Route path={routes.REGISTER} render={() => <Register />} />
