@@ -190,6 +190,7 @@ export function ClientLauncher(): JSX.Element {
                         routes.SERVERS +
                             '/' +
                             serverRecord!.serverID +
+                            '/channels' +
                             '/' +
                             channelRecord!.channelID
                     );

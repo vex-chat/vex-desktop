@@ -202,7 +202,8 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                                     history.push(
                                                         routes.SERVERS +
                                                             '/' +
-                                                            serverID
+                                                            serverID +
+                                                            '/channels'
                                                     );
                                                 }
                                             }}
@@ -210,6 +211,15 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                             <FontAwesomeIcon icon={faTrash} />
                                         </span>
                                     )}
+                                    <span
+                                        className={`icon is-pulled-right ${
+                                            markedChannels.includes(channelID)
+                                                ? 'has-text-danger'
+                                                : ''
+                                        }`}
+                                    >
+                                        <FontAwesomeIcon icon={faCog} />
+                                    </span>
                                 </Link>
                             </li>
                         );
