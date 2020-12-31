@@ -1,7 +1,12 @@
 import { configureStore, getDefaultMiddleware, Action,  } from "@reduxjs/toolkit";
 import { ThunkAction } from "redux-thunk";
 import createRootReducer from "./rootReducer";
-import logger from "redux-logger";
+import {createLogger} from "redux-logger";
+
+const logger = createLogger({
+    collapsed: true,
+    duration: true,
+})
 
 const rootReducer = createRootReducer();
 export type RootState = ReturnType<typeof rootReducer>;
