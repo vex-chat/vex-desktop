@@ -10,7 +10,6 @@ import { dbFolder, keyFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
 import { BackButton } from "../components/BackButton";
 import { VerticalAligner } from "../components/VerticalAligner";
-import { errorFX, switchFX } from "../constants/sounds";
 
 const USERNAME_INPUT_NAME = "register_username";
 const PASSWORD_INPUT_NAME = "register_password";
@@ -49,7 +48,7 @@ export default function Register(): JSX.Element {
             return;
         }
 
-        switchFX.play();
+        // switchFX.play();
         setWaiting(true);
 
         const PK = Client.generateSecretKey();
@@ -63,7 +62,7 @@ export default function Register(): JSX.Element {
             await tempClient.close();
 
             if (err !== null) {
-                errorFX.play();
+                // errorFX.play();
                 setWaiting(false);
                 console.warn("registration failed.", err);
                 setErrorText(err.toString());
@@ -114,12 +113,12 @@ export default function Register(): JSX.Element {
                                     addInputState(USERNAME_INPUT_NAME, username)
                                 );
 
-                                const client = window.vex;
+                                const tempClient = new Client(undefined, { dbFolder });
 
                                 const [
                                     serverResults,
                                     err,
-                                ] = await client.users.retrieve(username);
+                                ] = await tempClient.users.retrieve(username);
 
                                 if (
                                     err &&

@@ -5,7 +5,6 @@ import { useHistory, useParams } from "react-router-dom";
 import { selectSessions, stubSession } from "../reducers/sessions";
 import { addFamiliar, selectFamiliars } from "../reducers/familiars";
 import { selectUser } from "../reducers/user";
-import { switchFX } from "../constants/sounds";
 import { routes } from "../constants/routes";
 import { FamiliarButton } from "./FamiliarButton";
 import { UserSearchBar } from "./UserSearchBar";
@@ -32,7 +31,7 @@ export default function MessagingBar(): JSX.Element {
     );
 
     const newConversation = (user: IUser) => {
-        switchFX.play();
+        // switchFX.play();
         dispatch(addFamiliar(user));
         dispatch(stubSession(user.userID));
 

@@ -1,5 +1,3 @@
-/* eslint global-require: off, no-console: off */
-
 /**
  * This module executes inside of electron's main process. You can start
  * electron renderer process from here and communicate with the other processes
@@ -50,9 +48,11 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
+    titleBarStyle: "hidden",
+    frame: false,
     show: false,
-    width: 1024,
-    height: 728,
+    width: 1200,
+    height: 900,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,

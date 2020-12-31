@@ -1,11 +1,12 @@
-import { configureStore, getDefaultMiddleware, Action } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware, Action, applyMiddleware } from "@reduxjs/toolkit";
 import { ThunkAction } from "redux-thunk";
 import createRootReducer from "./rootReducer";
+import logger from "redux-logger";
 
 const rootReducer = createRootReducer();
 export type RootState = ReturnType<typeof rootReducer>;
 
-const middleware = [...getDefaultMiddleware()];
+const middleware = [...getDefaultMiddleware(), logger];
 
 export const configuredStore = (initialState?: RootState) => {
     // Create Store
