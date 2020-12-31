@@ -29,5 +29,3 @@ jobs:
             tag_name: nightly
             release_name: nightly
             body: nightly build commit=${{ github.ref }}
-            prerelease: true
-
