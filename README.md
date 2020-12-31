@@ -15,6 +15,8 @@ Make sure you have the dependencies:
 -   nodejs
 -   yarn
 
+you may also be interested in taking a look at our [javascript library](https://github.com/vex-chat/libvex-js)
+
 ## Cryptography Notice
 
 This distribution includes cryptographic software. The country in which you currently reside may have restrictions on the import, possession, use, and/or re-export to another country, of encryption software.
