@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable no-case-declarations */
 import {
     Client,
     IChannel,
@@ -164,6 +162,7 @@ export function ClientLauncher(): JSX.Element {
                 ? channelRecords[message.group]
                 : null;
             const serverRecord = message.group
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 ? serverRecords[channelRecord!.serverID]
                 : null;
 
@@ -179,8 +178,10 @@ export function ClientLauncher(): JSX.Element {
                 const msgNotification = new Notification(
                     userRecord.username +
                         ' in ' +
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         serverRecord!.name +
                         '/' +
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         channelRecord!.name,
                     { body: message.message }
                 );
@@ -189,9 +190,11 @@ export function ClientLauncher(): JSX.Element {
                     history.push(
                         routes.SERVERS +
                             '/' +
+                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                             serverRecord!.serverID +
                             '/channels' +
                             '/' +
+                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                             channelRecord!.channelID
                     );
                 };
