@@ -52,14 +52,18 @@ export function Server(): JSX.Element {
                         <h2 className="subtitle">
                             <FontAwesomeIcon icon={faHashtag} />
                             &nbsp;&nbsp;
-                            {serverChannels[channelID].name} {channelPage ? capitalCase(channelPage) : ""}
+                            {serverChannels[channelID].name}{' '}
+                            {channelPage ? capitalCase(channelPage) : ''}
                         </h2>
                     )}
                     {!serverChannels[channelID] && server !== undefined && (
                         <h2 className="subtitle">
                             <FontAwesomeIcon icon={faServer} />
                             &nbsp;&nbsp;
-                            {server.name} {pageType !== "channels" ? capitalCase(pageType) : ""}
+                            {server.name}{' '}
+                            {pageType !== 'channels'
+                                ? capitalCase(pageType)
+                                : ''}
                         </h2>
                     )}
                 </div>

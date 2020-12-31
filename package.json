@@ -1,7 +1,8 @@
 {
-    "name": "electron-react-boilerplate",
-    "productName": "ElectronReact",
-    "description": "Electron application boilerplate based on React, React Router, Webpack, React Fast Refresh for rapid application development",
+    "name": "vex-desktop",
+    "productName": "vex desktop",
+    "license": "AGPL-3.0-or-later",
+    "description": "Encrypted group chat that collects as little dat as possible and isn't run by commies.",
     "scripts": {
         "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
         "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.main.prod.babel.js",
@@ -14,7 +15,7 @@
         "package-mac": "yarn build && electron-builder build --mac",
         "package-linux": "yarn build && electron-builder build --linux",
         "package-win": "yarn build && electron-builder build --win --x64",
-        "postinstall": "node -r @babel/register .erb/scripts/CheckNativeDep.js && electron-builder install-app-deps && yarn cross-env NODE_ENV=development webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.babel.js && opencollective-postinstall && yarn-deduplicate yarn.lock",
+        "postinstall": "node -r @babel/register .erb/scripts/CheckNativeDep.js && electron-builder install-app-deps && yarn cross-env NODE_ENV=development webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.babel.js && yarn-deduplicate yarn.lock",
         "start": "node -r @babel/register ./.erb/scripts/CheckPortInUse.js && cross-env yarn start:renderer",
         "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
         "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.babel.js",
@@ -37,8 +38,8 @@
         ]
     },
     "build": {
-        "productName": "ElectronReact",
-        "appId": "org.erb.ElectronReact",
+        "productName": "vex desktop",
+        "appId": "vex.chat.desktop",
         "files": [
             "dist/",
             "node_modules/",
@@ -82,7 +83,7 @@
                 "AppImage",
                 "deb"
             ],
-            "category": "Development"
+            "category": "Communication"
         },
         "directories": {
             "app": "src",
@@ -91,50 +92,29 @@
         },
         "extraResources": [
             "./assets/**"
-        ],
-        "publish": {
-            "provider": "github",
-            "owner": "electron-react-boilerplate",
-            "repo": "electron-react-boilerplate"
-        }
+        ]
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/electron-react-boilerplate/electron-react-boilerplate.git"
+        "url": "git+https://github.com/vex-chat/vex-desktop.git"
     },
     "author": {
-        "name": "Electron React Boilerplate Maintainers",
-        "email": "electronreactboilerplate@gmail.com",
-        "url": "https://electron-react-boilerplate.js.org"
+        "name": "LogicBite LLC",
+        "email": "hello@logicbite.org",
+        "url": "https://logicbite.org"
     },
-    "contributors": [
-        {
-            "name": "Amila Welihinda",
-            "email": "amilajack@gmail.com",
-            "url": "https://github.com/amilajack"
-        },
-        {
-            "name": "John Tran",
-            "email": "jptran318@gmail.com",
-            "url": "https://github.com/jooohhn"
-        }
-    ],
-    "license": "MIT",
     "bugs": {
-        "url": "https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues"
+        "url": "https://github.com/vex-chat/vex-desktop/issues"
     },
     "keywords": [
-        "electron",
-        "boilerplate",
-        "react",
-        "typescript",
-        "ts",
-        "sass",
-        "webpack",
-        "hot",
-        "reload"
+        "vex",
+        "chat",
+        "encryption",
+        "encrypted",
+        "group",
+        "messenger"
     ],
-    "homepage": "https://github.com/electron-react-boilerplate/electron-react-boilerplate#readme",
+    "homepage": "https://github.com/vex-chat/vex-desktop#readme",
     "jest": {
         "testURL": "http://localhost/",
         "moduleNameMapper": {
@@ -238,7 +218,6 @@
         "lint-staged": "^10.2.11",
         "mini-css-extract-plugin": "^1.3.1",
         "node-sass": "^5.0.0",
-        "opencollective-postinstall": "^2.0.3",
         "optimize-css-assets-webpack-plugin": "^5.0.3",
         "prettier": "^2.2.1",
         "react-refresh": "^0.9.0",
@@ -284,9 +263,6 @@
         "node": ">=10.x",
         "npm": ">=6.x",
         "yarn": ">=1.21.3"
-    },
-    "collective": {
-        "url": "https://opencollective.com/electron-react-boilerplate-594"
     },
     "browserslist": [],
     "prettier": {

@@ -112,6 +112,9 @@ export default function MessagingPane(): JSX.Element {
                         return (
                             <div className="pane-screen-wrapper">
                                 <div className="verify-mnemonic-wrapper">
+                                    <label className="label is-small">
+                                        Details:
+                                    </label>
                                     {Highlighter(
                                         JSON.stringify(familiar, null, 4),
                                         'json'
@@ -200,9 +203,10 @@ export default function MessagingPane(): JSX.Element {
                                                                                     '/' +
                                                                                     session.sessionID +
                                                                                     (forwardPath !==
-                                                                                        null &&
-                                                                                        '?forward=' +
-                                                                                            forwardPath)
+                                                                                    null
+                                                                                        ? '?forward=' +
+                                                                                          forwardPath
+                                                                                        : '')
                                                                             );
                                                                         }}
                                                                     >
@@ -244,143 +248,142 @@ export default function MessagingPane(): JSX.Element {
                 <Route
                     exact
                     path={routes.MESSAGING + '/:userID/verify/:sessionID'}
-                    render={() => (
-                        <div className="pane-screen-wrapper">
-                            {sessionIDs.map((sessionID) => {
-                                const session =
-                                    sessions[params.userID][sessionID];
+                    render={({ match }) => {
+                        const session =
+                            sessions[match.params.userID][
+                                match.params.sessionID
+                            ];
 
-                                const client = window.vex;
-                                const mnemonic = client.sessions.verify(
-                                    session
-                                );
+                        if (session === undefined) {
+                            return <span />;
+                        }
 
-                                return (
-                                    <div
-                                        className="panel is-danger"
-                                        key={session.sessionID}
-                                    >
-                                        <p className="panel-heading">
-                                            Verify Session with{' '}
-                                            {familiar.username}
+                        const client = window.vex;
+                        const mnemonic = client.sessions.verify(session);
+
+                        return (
+                            <div className="pane-screen-wrapper">
+                                <div
+                                    className="panel is-danger"
+                                    key={session.sessionID}
+                                >
+                                    <p className="panel-heading">
+                                        Verify Session with {familiar.username}
+                                    </p>
+                                    <div className="panel-block">
+                                        <code
+                                            key={session.sessionID}
+                                            className="verify-mnemonic"
+                                        >
+                                            <label className="label is-small is-family-primary">
+                                                Safety Words:
+                                            </label>
+                                            <p>{mnemonic}</p>
+                                        </code>
+                                    </div>
+                                    <div className="panel-block">
+                                        <p>
+                                            <span className="icon">
+                                                <FontAwesomeIcon
+                                                    icon={faExclamationTriangle}
+                                                    className="has-text-danger"
+                                                />
+                                            </span>
+                                            &nbsp;
+                                            {familiar.username} is using an
+                                            unverified session.
                                         </p>
-                                        <div className="panel-block">
-                                            <code
-                                                key={session.sessionID}
-                                                className="verify-mnemonic"
+                                    </div>
+                                    <div className="panel-block">
+                                        <p>
+                                            <span className="icon">
+                                                <FontAwesomeIcon
+                                                    icon={faCheckCircle}
+                                                    className="has-text-success"
+                                                />
+                                            </span>
+                                            &nbsp; Verify with the other user
+                                            that the words match.
+                                        </p>
+                                    </div>
+                                    <div className="panel-block">
+                                        <p>
+                                            <span className="icon">
+                                                <FontAwesomeIcon
+                                                    icon={faTimes}
+                                                    className="has-text-danger"
+                                                />
+                                            </span>
+                                            &nbsp; DON&apos;T use vex to
+                                            communicate the words.
+                                        </p>
+                                    </div>
+                                    <div className="panel-block">
+                                        <p>
+                                            <span className="icon">
+                                                <FontAwesomeIcon
+                                                    icon={faSkull}
+                                                />
+                                            </span>
+                                            &nbsp; If they don&apos;t match, you
+                                            could be getting pwned. &nbsp;
+                                        </p>
+                                    </div>
+                                    <div className="panel-block">
+                                        <div className="buttons is-right">
+                                            <button
+                                                className="button is-right"
+                                                onClick={() => {
+                                                    history.goBack();
+                                                }}
                                             >
-                                                <label className="label is-small is-family-primary">
-                                                    Safety Words:
-                                                </label>
-                                                <p>{mnemonic}</p>
-                                            </code>
-                                        </div>
-                                        <div className="panel-block">
-                                            <p>
-                                                <span className="icon">
-                                                    <FontAwesomeIcon
-                                                        icon={
-                                                            faExclamationTriangle
-                                                        }
-                                                        className="has-text-danger"
-                                                    />
-                                                </span>
-                                                &nbsp;
-                                                {familiar.username} is using an
-                                                unverified session.
-                                            </p>
-                                        </div>
-                                        <div className="panel-block">
-                                            <p>
-                                                <span className="icon">
-                                                    <FontAwesomeIcon
-                                                        icon={faCheckCircle}
-                                                        className="has-text-success"
-                                                    />
-                                                </span>
-                                                &nbsp; Verify with the other
-                                                user that the words match.
-                                            </p>
-                                        </div>
-                                        <div className="panel-block">
-                                            <p>
-                                                <span className="icon">
-                                                    <FontAwesomeIcon
-                                                        icon={faTimes}
-                                                        className="has-text-danger"
-                                                    />
-                                                </span>
-                                                &nbsp; DON&apos;T use vex to
-                                                communicate the words.
-                                            </p>
-                                        </div>
-                                        <div className="panel-block">
-                                            <p>
-                                                <span className="icon">
-                                                    <FontAwesomeIcon
-                                                        icon={faSkull}
-                                                    />
-                                                </span>
-                                                &nbsp; If they don&apos;t match,
-                                                you could be getting pwned.
-                                                &nbsp;
-                                            </p>
-                                        </div>
-                                        <div className="panel-block">
-                                            <div className="buttons is-right">
-                                                <button
-                                                    className="button is-right"
-                                                    onClick={() => {
-                                                        history.goBack();
-                                                    }}
-                                                >
-                                                    Go Back
-                                                </button>
-                                                <button
-                                                    className="button is-success is-right"
-                                                    ref={
-                                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                        messageThreeRef as any
-                                                    }
-                                                    data-event={'disabled'}
-                                                    data-multiline={true}
-                                                    onClick={async () => {
-                                                        await client.sessions.markVerified(
-                                                            sessionID
-                                                        );
-                                                        dispatch(
-                                                            markSession(
-                                                                params.userID,
-                                                                sessionID,
-                                                                true
-                                                            )
-                                                        );
+                                                Go Back
+                                            </button>
+                                            <button
+                                                className="button is-success is-right"
+                                                ref={
+                                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                    messageThreeRef as any
+                                                }
+                                                data-event={'disabled'}
+                                                data-multiline={true}
+                                                onClick={async () => {
+                                                    await client.sessions.markVerified(
+                                                        match.params.sessionID
+                                                    );
+                                                    dispatch(
+                                                        markSession(
+                                                            params.userID,
+                                                            match.params
+                                                                .sessionID,
+                                                            true
+                                                        )
+                                                    );
 
-                                                        const forwardPath = query.get(
-                                                            'forward'
-                                                        );
-                                                        if (forwardPath) {
-                                                            history.push(
-                                                                forwardPath
-                                                            );
-                                                            return;
-                                                        }
+                                                    const forwardPath = query.get(
+                                                        'forward'
+                                                    );
+                                                    if (forwardPath) {
                                                         history.push(
-                                                            routes.MESSAGING +
-                                                                '/' +
-                                                                params.userID
+                                                            forwardPath
                                                         );
-                                                    }}
-                                                >
-                                                    They Match
-                                                </button>
-                                            </div>
+                                                        return;
+                                                    }
+                                                    history.push(
+                                                        routes.MESSAGING +
+                                                            '/' +
+                                                            params.userID
+                                                    );
+                                                }}
+                                            >
+                                                They Match
+                                            </button>
                                         </div>
                                     </div>
-                                );
-                            })}
-                        </div>
-                    )}
+                                </div>
+                            </div>
+                        );
+                    }}
                 />
                 <Route
                     exact
