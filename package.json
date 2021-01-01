@@ -16,7 +16,7 @@
         "package-linux": "yarn build && electron-builder build --linux",
         "package-win": "yarn build && electron-builder build --win --x64",
         "postinstall": "node ./.erb/scripts/CheckNativeDep.js && electron-builder install-app-deps && yarn cross-env NODE_ENV=development webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.js && yarn-deduplicate yarn.lock",
-        "start": "node -r @babel/register ./.erb/scripts/CheckPortInUse.js && cross-env yarn start:renderer",
+        "start": "node ./.erb/scripts/CheckPortInUse.js && cross-env yarn start:renderer",
         "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
         "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.js",
         "test": "jest",
