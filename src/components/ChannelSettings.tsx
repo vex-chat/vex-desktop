@@ -1,7 +1,8 @@
+import type { IServerParams } from '~Types';
+
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { IServerParams } from '../views/Server';
 import { Highlighter } from './Highlighter';
 import { selectChannels } from '../reducers/channels';
 

@@ -38,7 +38,7 @@ if (
     require('electron-debug')();
 }
 
-const createWindow = async () => {
+const createWindow = () => {
     const RESOURCES_PATH = app.isPackaged
         ? path.join(process.resourcesPath, 'resources')
         : path.join(__dirname, '../resources');
@@ -90,7 +90,6 @@ const createWindow = async () => {
     });
 
     // Remove this if your app does not use auto updates
-    // eslint-disable-next-line
     new AppUpdater();
 };
 

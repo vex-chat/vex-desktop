@@ -1,3 +1,5 @@
+import type { RootState } from '~Types';
+
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, FunctionComponent, memo, useEffect } from 'react';
@@ -5,13 +7,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { routes } from '../constants/routes';
 import { addInputState } from '../reducers/inputs';
-import { gaurdian } from './Base';
+
 import { BackButton } from '../components/BackButton';
 import { keyFolder } from '../constants/folders';
 import { VerticalAligner } from '../components/VerticalAligner';
 import { useQuery } from '../hooks/useQuery';
 import { useDebounce } from '../hooks/useDebounce';
-import { RootState } from '../store';
+import gaurdian from '../utils/KeyGaurdian';
 
 const FORM_NAME = 'keyfile-login-pasword';
 
@@ -37,13 +39,13 @@ export const Login: FunctionComponent = memo(() => {
     const unlockKey = (enterPw?: string) => {
         const sentPassword = enterPw || password;
 
-        if (sentPassword == '') return;
+        if (sentPassword == '' || publicKey == null) return;
 
         setLoading(true);
         setInputVal('');
 
         try {
-            gaurdian.load(keyFolder + '/' + publicKey, sentPassword);
+            gaurdian.load(`${keyFolder}/${publicKey}`, sentPassword);
         } catch (err) {
             console.error(err);
             setErrText(err.toString());

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable no-case-declarations */
 import {
     Client,
     IChannel,
@@ -32,8 +30,9 @@ import { add, addMany } from '../reducers/groupMessages';
 import Loading from '../components/Loading';
 import { addPermission, setPermissions } from '../reducers/permissions';
 import fs from 'fs';
-import { dataStore, gaurdian } from './Base';
 import { dbFolder, keyFolder, progFolder } from '../constants/folders';
+import store from '../utils/DataStore';
+import gaurdian from '../utils/KeyGaurdian';
 
 declare global {
     interface Window {
@@ -74,26 +73,25 @@ export async function initClient(): Promise<void> {
     client.on('ready', async () => {
         const [, err] = await client.users.retrieve(client.getKeys().public);
 
-        if (err !== null) {
-            if (err.response) {
-                log.warn(
-                    'Server responded to users.retrieve() with ' +
-                        err.response.status
-                );
+        if (err !== null && err.response) {
+            log.warn(
+                `Server responded to users.retrieve() with ${err.response.status}`
+            );
 
-                switch (err.response.status) {
-                    case 404:
-                        launchEvents.emit('needs-register');
-                        break;
-                    default:
-                        await client.close();
-                        await sleep(1000 * 10);
-                        launchEvents.emit('retry');
-                }
+            switch (err.response.status) {
+                case 404:
+                    launchEvents.emit('needs-register');
+                    break;
+                default:
+                    await client.close();
+                    await sleep(1000 * 10);
+                    launchEvents.emit('retry');
             }
         }
+
         await client.login();
     });
+
     client.init();
 }
 
@@ -120,7 +118,7 @@ export function ClientLauncher(): JSX.Element {
 
     const notification = async (message: IMessage) => {
         if (
-            dataStore.get('settings.notifications') &&
+            store.get('settings.notifications') &&
             message.direction === 'incoming'
         ) {
             if (remote.getCurrentWindow().isFocused()) {
@@ -164,7 +162,8 @@ export function ClientLauncher(): JSX.Element {
                 ? channelRecords[message.group]
                 : null;
             const serverRecord = message.group
-                ? serverRecords[channelRecord!.serverID]
+                ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  serverRecords[channelRecord!.serverID]
                 : null;
 
             if (message.group === null) {
@@ -179,8 +178,10 @@ export function ClientLauncher(): JSX.Element {
                 const msgNotification = new Notification(
                     userRecord.username +
                         ' in ' +
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         serverRecord!.name +
                         '/' +
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         channelRecord!.name,
                     { body: message.message }
                 );
@@ -189,9 +190,11 @@ export function ClientLauncher(): JSX.Element {
                     history.push(
                         routes.SERVERS +
                             '/' +
+                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                             serverRecord!.serverID +
                             '/channels' +
                             '/' +
+                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                             channelRecord!.channelID
                     );
                 };
@@ -199,7 +202,7 @@ export function ClientLauncher(): JSX.Element {
         }
     };
 
-    const messageHandler = async (message: IMessage) => {
+    const messageHandler = (message: IMessage) => {
         const szMsg = serializeMessage(message);
 
         if (szMsg.group) {
@@ -227,7 +230,7 @@ export function ClientLauncher(): JSX.Element {
         history.push(routes.LOGOUT + '?clear=off');
     };
 
-    const sessionHandler = async (session: ISession, user: IUser) => {
+    const sessionHandler = (session: ISession, user: IUser) => {
         dispatch(addSession(session));
         dispatch(addFamiliar(user));
     };

@@ -1,5 +1,5 @@
+import type { RootState, AppThunk } from '~Types';
 import { createSlice } from '@reduxjs/toolkit';
-import { AppThunk, RootState } from '../store';
 import { IUser } from '@vex-chat/libvex';
 
 export interface ISerializableUser {

@@ -4,12 +4,13 @@ import { Client } from '@vex-chat/libvex';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addInputState, selectInputStates } from '../reducers/inputs';
-import { gaurdian } from './Base';
+
 import { useHistory } from 'react-router';
 import { dbFolder, keyFolder } from '../constants/folders';
 import { routes } from '../constants/routes';
 import { BackButton } from '../components/BackButton';
 import { VerticalAligner } from '../components/VerticalAligner';
+import gaurdian from '../utils/KeyGaurdian';
 
 const USERNAME_INPUT_NAME = 'register_username';
 const PASSWORD_INPUT_NAME = 'register_password';
@@ -39,7 +40,7 @@ export default function Register(): JSX.Element {
         }
     });
 
-    const registerUser = async () => {
+    const registerUser = () => {
         if (password.length === 0) {
             return;
         }
@@ -55,6 +56,7 @@ export default function Register(): JSX.Element {
         const tempClient = new Client(PK, {
             dbFolder,
         });
+
         tempClient.on('ready', async () => {
             // eslint-disable-next-line prefer-const
             const [user, err] = await tempClient.register(username);
@@ -82,9 +84,9 @@ export default function Register(): JSX.Element {
                         );
                     }
                 } catch (err) {
-                    setErrorText(
-                        'Failed to save the keyfile to disk: ' + err.toString()
-                    );
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    const errText = `Failed to save the keyfile to disk: ${err.toString()}`;
+                    setErrorText(errText);
                     return;
                 }
 
@@ -160,7 +162,7 @@ export default function Register(): JSX.Element {
                             className="servername-input input"
                             type="username"
                             value={username}
-                            onKeyDown={async (event) => {
+                            onKeyDown={(event) => {
                                 if (event.key === 'Enter') {
                                     registerUser();
                                 }
@@ -228,7 +230,7 @@ export default function Register(): JSX.Element {
                         className="password-input input"
                         type="password"
                         value={password}
-                        onKeyDown={async (event) => {
+                        onKeyDown={(event) => {
                             if (event.key === 'Enter') {
                                 registerUser();
                             }
@@ -255,11 +257,11 @@ export default function Register(): JSX.Element {
                     </label>
                     <input
                         className={`password-input input ${
-                            password !== passConfirm && 'is-danger'
+                            password !== passConfirm ? 'is-danger' : ''
                         }`}
                         type="password"
                         value={passConfirm}
-                        onKeyDown={async (event) => {
+                        onKeyDown={(event) => {
                             if (event.key === 'Enter') {
                                 registerUser();
                             }

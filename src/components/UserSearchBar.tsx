@@ -4,7 +4,14 @@ import { IUser } from '@vex-chat/libvex';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addInputState, selectInputStates } from '../reducers/inputs';
-import { emptyUser } from './MessagingBar';
+
+export const emptyUser: IUser = {
+    userID: '',
+    signKey: '',
+    username: '',
+    lastSeen: new Date(Date.now()),
+    avatar: null,
+};
 
 export function UserSearchBar(props: {
     formName: string;
@@ -24,7 +31,7 @@ export function UserSearchBar(props: {
                 type="text"
                 placeholder="Search for user"
                 value={inputs[props.formName] || ''}
-                onKeyDown={async (event) => {
+                onKeyDown={(event) => {
                     if (event.key === 'Enter') {
                         if (foundUser.userID !== '') {
                             dispatch(addInputState(props.formName, ''));

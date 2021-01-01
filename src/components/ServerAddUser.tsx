@@ -1,12 +1,12 @@
+import type { IServerParams } from '~Types';
+
 import { IUser } from '@vex-chat/libvex';
 import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 import { selectServers } from '../reducers/servers';
-import { IServerParams } from '../views/Server';
 import { IconUsername } from './IconUsername';
-import { emptyUser } from './MessagingBar';
-import { UserSearchBar } from './UserSearchBar';
+import { UserSearchBar, emptyUser  } from './UserSearchBar';
 
 export function AddUser(): JSX.Element {
     const history = useHistory();
@@ -37,7 +37,7 @@ export function AddUser(): JSX.Element {
                             params.serverID +
                             params.channelID
                         }
-                        onFoundUser={async (user: IUser) => {
+                        onFoundUser={(user: IUser) => {
                             setUser(user);
                         }}
                         onSelectUser={async (user: IUser) =>

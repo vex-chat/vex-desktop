@@ -74,7 +74,7 @@ export function UserMenu(): JSX.Element {
                                             '/info'
                                         }
                                         className="dropdown-item"
-                                        onClick={async () => {
+                                        onClick={() => {
                                             setClassName('');
                                             dispatch(
                                                 addInputState(

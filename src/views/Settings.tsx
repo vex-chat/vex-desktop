@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { BackButton } from '../components/BackButton';
 import { VerticalAligner } from '../components/VerticalAligner';
-import { dataStore } from './Base';
+import store from '../utils/DataStore';
 
 export default function Settings(): JSX.Element {
     const [notification, setNotifications] = useState(
-        dataStore.get('settings.notifications') as boolean
+        store.get('settings.notifications') as boolean
     );
 
     return (
@@ -16,7 +16,7 @@ export default function Settings(): JSX.Element {
                     <label className="checkbox settings-box">
                         <input
                             onChange={() => {
-                                dataStore.set(
+                                store.set(
                                     'settings.notifications',
                                     !notification
                                 );

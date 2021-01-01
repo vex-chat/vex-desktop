@@ -9,14 +9,6 @@ import { routes } from '../constants/routes';
 import { FamiliarButton } from './FamiliarButton';
 import { UserSearchBar } from './UserSearchBar';
 
-export const emptyUser: IUser = {
-    userID: '',
-    signKey: '',
-    username: '',
-    lastSeen: new Date(Date.now()),
-    avatar: null,
-};
-
 export default function MessagingBar(): JSX.Element {
     const FORM_NAME = 'dm-search-input';
 

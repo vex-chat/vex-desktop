@@ -1,5 +1,6 @@
+import type { RootState, AppThunk } from '~Types';
+
 import { createSlice } from '@reduxjs/toolkit';
-import { AppThunk, RootState } from '../store';
 import { ISession } from '@vex-chat/libvex';
 
 interface ISerializedSession {
@@ -79,10 +80,8 @@ const sessionSlice = createSlice({
         ) => {
             const payload: ISerializedSession = action.payload;
 
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            if (state[payload.userID!] === undefined) {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                state[payload.userID!] = {};
+            if (state[payload.userID] === undefined) {
+                state[payload.userID] = {};
             }
 
             state[payload.userID][payload.sessionID] = payload;

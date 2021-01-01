@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useHistory, useParams } from 'react-router';
 import { selectFamiliars } from '../reducers/familiars';
 import { selectInputStates, addInputState } from '../reducers/inputs';
-import { failMessage, ISerializedMessage } from '../reducers/messages';
-import { selectMessages } from '../reducers/messages';
+import { failMessage, selectMessages, ISerializedMessage } from '../reducers/messages';
 import { markSession, selectSessions } from '../reducers/sessions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as uuid from 'uuid';
@@ -52,10 +51,13 @@ export default function MessagingPane(): JSX.Element {
         }
     }
 
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const messageTwoRef = createRef<HTMLDivElement>();
+    const messageThreeRef = createRef<HTMLButtonElement>();
+
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (messagesEndRef.current as any).scrollIntoView();
+            messagesEndRef.current.scrollIntoView();
         }
     };
 
@@ -71,11 +73,6 @@ export default function MessagingPane(): JSX.Element {
 
     const messageIDs = Object.keys(threadMessages || {});
     const user = useSelector(selectUser);
-
-    const messagesEndRef = useRef(null);
-
-    const messageTwoRef = createRef();
-    const messageThreeRef = createRef();
 
     if (!familiar) {
         return (
@@ -185,8 +182,7 @@ export default function MessagingPane(): JSX.Element {
                                                                         'disabled'
                                                                     }
                                                                     ref={
-                                                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                                        messageTwoRef as any
+                                                                        messageTwoRef
                                                                     }
                                                                 >
                                                                     <button
@@ -341,28 +337,29 @@ export default function MessagingPane(): JSX.Element {
                                             </button>
                                             <button
                                                 className="button is-success is-right"
-                                                ref={
-                                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                    messageThreeRef as any
-                                                }
+                                                ref={messageThreeRef}
                                                 data-event={'disabled'}
                                                 data-multiline={true}
-                                                onClick={async () => {
-                                                    await client.sessions.markVerified(
-                                                        match.params.sessionID
+                                                onClick={() => {
+                                                    const {
+                                                        sessionID,
+                                                    } = match.params;
+
+                                                    client.sessions.markVerified(
+                                                        sessionID
                                                     );
-                                                    dispatch(
-                                                        markSession(
-                                                            params.userID,
-                                                            match.params
-                                                                .sessionID,
-                                                            true
-                                                        )
+                                                    const action = markSession(
+                                                        params.userID,
+                                                        sessionID,
+                                                        true
                                                     );
+
+                                                    dispatch(action);
 
                                                     const forwardPath = query.get(
                                                         'forward'
                                                     );
+
                                                     if (forwardPath) {
                                                         history.push(
                                                             forwardPath
