@@ -21,7 +21,7 @@
         "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.babel.js",
         "test": "jest",
         "prettier:node": "prettier './.erb/**/*.{js,jsx,json,md}' --ignore-path .gitignore",
-        "prettier-ci": "concurrently \"yarn prettier:node -- -c\" \"yarn lint\""
+        "prettier-ci": "concurrently \"yarn prettier:node -c\" \"yarn lint\""
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx}": ["cross-env NODE_ENV=development eslint --cache"],
