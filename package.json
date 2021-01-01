@@ -8,7 +8,7 @@
         "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.main.prod.babel.js",
         "build:renderer": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.renderer.prod.babel.js",
         "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir src",
-        "lint": "cross-env NODE_ENV=development eslint . --cache --ext .js,.jsx,.ts,.tsx",
+        "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
         "package": "yarn build && electron-builder build --publish never",
         "package-all": "rm -rf ./release; yarn build && electron-builder build -mwl --publish never; shasum -a 256 release/*.{exe,dmg,deb,AppImage} >> ./release/sha256.txt",
         "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
@@ -20,22 +20,16 @@
         "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
         "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.babel.js",
         "test": "jest",
-        "prettier": "prettier '**/*.{js,jsx,ts,tsx,json,md}' --tab-width 4 --trailing-comma es5 --ignore-path .gitignore  --arrow-parens always --write",
-        "prettier-ci": "prettier '**/*.{js,jsx,ts,tsx,json,md}' --tab-width 4 --trailing-comma es5 --ignore-path .gitignore  --arrow-parens always --check"
+        "prettier:node": "prettier './.erb/**/*.{js,jsx,json,md}' --ignore-path .gitignore",
+        "prettier-ci": "concurrently \"yarn prettier:node -- -c\" \"yarn lint\""
     },
     "lint-staged": {
-        "*.{js,jsx,ts,tsx}": [
-            "cross-env NODE_ENV=development eslint --cache"
-        ],
+        "*.{js,jsx,ts,tsx}": ["cross-env NODE_ENV=development eslint --cache"],
         "{*.json,.{babelrc,eslintrc,prettierrc}}": [
             "prettier --ignore-path .eslintignore --parser json --write"
         ],
-        "*.{css,scss}": [
-            "prettier --ignore-path .eslintignore --write"
-        ],
-        "*.{html,md,yml}": [
-            "prettier --ignore-path .eslintignore --write"
-        ]
+        "*.{css,scss}": ["prettier --ignore-path .eslintignore --write"],
+        "*.{html,md,yml}": ["prettier --ignore-path .eslintignore --write"]
     },
     "build": {
         "productName": "vex desktop",
@@ -50,9 +44,7 @@
         ],
         "afterSign": ".erb/scripts/Notarize.js",
         "mac": {
-            "target": [
-                "dmg"
-            ],
+            "target": ["dmg"],
             "type": "distribution",
             "hardenedRuntime": true,
             "entitlements": "assets/entitlements.mac.plist",
@@ -74,15 +66,10 @@
             ]
         },
         "win": {
-            "target": [
-                "nsis"
-            ]
+            "target": ["nsis"]
         },
         "linux": {
-            "target": [
-                "AppImage",
-                "deb"
-            ],
+            "target": ["AppImage", "deb"],
             "category": "Communication"
         },
         "directories": {
@@ -90,9 +77,7 @@
             "buildResources": "assets",
             "output": "release"
         },
-        "extraResources": [
-            "./assets/**"
-        ]
+        "extraResources": ["./assets/**"]
     },
     "repository": {
         "type": "git",
@@ -121,20 +106,9 @@
             "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
             "\\.(css|less|sass|scss)$": "identity-obj-proxy"
         },
-        "moduleFileExtensions": [
-            "js",
-            "jsx",
-            "ts",
-            "tsx",
-            "json"
-        ],
-        "moduleDirectories": [
-            "node_modules",
-            "src/node_modules"
-        ],
-        "setupFiles": [
-            "./.erb/scripts/CheckBuildsExist.js"
-        ]
+        "moduleFileExtensions": ["js", "jsx", "ts", "tsx", "json"],
+        "moduleDirectories": ["node_modules", "src/node_modules"],
+        "setupFiles": ["./.erb/scripts/CheckBuildsExist.js"]
     },
     "devDependencies": {
         "@babel/core": "^7.12.9",
