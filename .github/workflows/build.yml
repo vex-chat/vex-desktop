@@ -30,12 +30,13 @@ jobs:
               run: |
                   yarn add prettier --dev --silent 2> >(grep -v warning 1>&2)
                   yarn prettier-ci
-
+                  
             - name: Setup Cache
-              uses: actions/cache@v1
+              uses: actions/cache@v2
               with:
-                  path: node_modules
-                  key: vex-desktop-deps
+                path: |
+                  node_modules
+                key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
             - name: Install Dependencies
               run: yarn --network-concurrency 1
