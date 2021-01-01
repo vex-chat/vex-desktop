@@ -15,10 +15,10 @@
         "package-mac": "yarn build && electron-builder build --mac",
         "package-linux": "yarn build && electron-builder build --linux",
         "package-win": "yarn build && electron-builder build --win --x64",
-        "postinstall": "node -r @babel/register .erb/scripts/CheckNativeDep.js && electron-builder install-app-deps && yarn cross-env NODE_ENV=development webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.babel.js && yarn-deduplicate yarn.lock",
+        "postinstall": "node ./.erb/scripts/CheckNativeDep.js && electron-builder install-app-deps && yarn cross-env NODE_ENV=development webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.js && yarn-deduplicate yarn.lock",
         "start": "node -r @babel/register ./.erb/scripts/CheckPortInUse.js && cross-env yarn start:renderer",
         "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
-        "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.babel.js",
+        "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.js",
         "test": "jest",
         "prettier:node": "prettier './.erb/**/*.{js,jsx,json,md}' --ignore-path .gitignore",
         "prettier-ci": "concurrently \"yarn prettier:node -c\" \"yarn lint\""
