@@ -1,4 +1,5 @@
 import { Client } from '@vex-chat/libvex';
+
 class KeyGaurdian {
     private static instance: KeyGaurdian;
 

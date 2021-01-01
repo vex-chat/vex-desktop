@@ -34,8 +34,9 @@ module.exports = {
         // CYCLICAL DEPENDENCIES BREAK LOCAL
         'import/no-cycle': 2,
         // SIMPLE SORT
-        "simple-import-sort/imports": 2,
-        "simple-import-sort/exports": 2,
+        // "simple-import-sort/imports": 2,
+        // "simple-import-sort/exports": 2,
+        "prettier/prettier": 0,
         "sort-imports": 0,
         "import/first": 2,
         "import/newline-after-import": 2,
