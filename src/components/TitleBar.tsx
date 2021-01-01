@@ -1,12 +1,13 @@
 import {
-    faWindowMinimize,
-    faWindowMaximize,
     faTimes,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { remote } from 'electron';
-import React from 'react';
-import { version } from '../package.json';
+    faWindowMaximize,
+    faWindowMinimize,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { remote } from "electron";
+import React from "react";
+
+import { version } from "../package.json";
 
 export function TitleBar(): JSX.Element {
     function closeWindow() {
@@ -15,7 +16,7 @@ export function TitleBar(): JSX.Element {
     }
 
     function minimizeWindow() {
-        console.log('reached');
+        console.log("reached");
         const window = remote.getCurrentWindow();
         window.minimize();
     }
@@ -35,7 +36,7 @@ export function TitleBar(): JSX.Element {
             <div className="title-bar-grabber has-text-centered is-size-7">
                 vex desktop {version}
             </div>
-            {process.platform !== 'darwin' && (
+            {process.platform !== "darwin" && (
                 <div className="window-buttons">
                     <span
                         onClick={() => minimizeWindow()}

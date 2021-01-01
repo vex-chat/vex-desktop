@@ -1,5 +1,5 @@
-import React from 'react';
-import { useHistory } from 'react-router';
+import React from "react";
+import { useHistory } from "react-router";
 
 export function BackButton(props: { route?: string }): JSX.Element {
     const history = useHistory();

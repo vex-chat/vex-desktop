@@ -1,9 +1,10 @@
-import { IServer } from '@vex-chat/libvex';
-import React from 'react';
-import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
-import { routes } from '../constants/routes';
-import { strToIcon } from '../utils/strToIcon';
+import { IServer } from "@vex-chat/libvex";
+import React from "react";
+import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
+
+import { routes } from "../constants/routes";
+import { strToIcon } from "../utils/strToIcon";
 
 export function ServerIcon(props: {
     server: IServer;
@@ -13,11 +14,11 @@ export function ServerIcon(props: {
 
     const href = props.routeOverride
         ? props.routeOverride
-        : routes.SERVERS + '/' + props.server.serverID + '/channels';
+        : routes.SERVERS + "/" + props.server.serverID + "/channels";
 
     const isActiveModifier = history.location.pathname.includes(href)
-        ? 'is-active'
-        : '';
+        ? "is-active"
+        : "";
 
     return (
         <div

@@ -1,21 +1,21 @@
-import { faHashtag, faServer } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { Route, Switch, useParams } from 'react-router';
+import { faHashtag, faServer } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { capitalCase } from "change-case";
+import React from "react";
+import { useSelector } from "react-redux";
+import { Route, Switch, useParams } from "react-router";
 
-import { ChannelBar } from '../components/ChannelBar';
-import { ServerBar } from '../components/ServerBar';
-import { routes } from '../constants/routes';
-import { selectChannels } from '../reducers/channels';
-import { selectServers } from '../reducers/servers';
-import { UserMenu } from '../components/UserMenu';
-import { AddUser } from '../components/ServerAddUser';
-import { AddChannel } from '../components/ServerAddChannel';
-import { ServerPane } from '../components/ServerPane';
-import { ServerSettings } from '../components/ServerSettings';
-import { ChannelSettings } from '../components/ChannelSettings';
-import { capitalCase } from 'change-case';
+import { ChannelBar } from "../components/ChannelBar";
+import { ChannelSettings } from "../components/ChannelSettings";
+import { AddChannel } from "../components/ServerAddChannel";
+import { AddUser } from "../components/ServerAddUser";
+import { ServerBar } from "../components/ServerBar";
+import { ServerPane } from "../components/ServerPane";
+import { ServerSettings } from "../components/ServerSettings";
+import { UserMenu } from "../components/UserMenu";
+import { routes } from "../constants/routes";
+import { selectChannels } from "../reducers/channels";
+import { selectServers } from "../reducers/servers";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Server(): JSX.Element {
@@ -47,41 +47,41 @@ export function Server(): JSX.Element {
                         <h2 className="subtitle">
                             <FontAwesomeIcon icon={faHashtag} />
                             &nbsp;&nbsp;
-                            {serverChannels[channelID].name}{' '}
-                            {channelPage ? capitalCase(channelPage) : ''}
+                            {serverChannels[channelID].name}{" "}
+                            {channelPage ? capitalCase(channelPage) : ""}
                         </h2>
                     )}
                     {!serverChannels[channelID] && server !== undefined && (
                         <h2 className="subtitle">
                             <FontAwesomeIcon icon={faServer} />
                             &nbsp;&nbsp;
-                            {server.name}{' '}
-                            {pageType !== 'channels'
+                            {server.name}{" "}
+                            {pageType !== "channels"
                                 ? capitalCase(pageType)
-                                : ''}
+                                : ""}
                         </h2>
                     )}
                 </div>
                 <Switch>
                     <Route
                         exact
-                        path={routes.SERVERS + '/:serverID/add-user'}
+                        path={routes.SERVERS + "/:serverID/add-user"}
                         render={() => <AddUser />}
                     />
                     <Route
                         exact
-                        path={routes.SERVERS + '/:serverID/add-channel'}
+                        path={routes.SERVERS + "/:serverID/add-channel"}
                         render={() => <AddChannel />}
                     />
                     <Route
                         exact
-                        path={routes.SERVERS + '/:serverID/settings'}
+                        path={routes.SERVERS + "/:serverID/settings"}
                         render={() => <ServerSettings />}
                     />
                     <Route
                         exact
                         path={
-                            routes.SERVERS + '/:serverID/channels/:channelID?'
+                            routes.SERVERS + "/:serverID/channels/:channelID?"
                         }
                         render={() => <ServerPane />}
                     />
@@ -89,7 +89,7 @@ export function Server(): JSX.Element {
                         exact
                         path={
                             routes.SERVERS +
-                            '/:serverID/channels/:channelID?/:channelPage?'
+                            "/:serverID/channels/:channelID?/:channelPage?"
                         }
                         render={() => <ChannelSettings />}
                     />

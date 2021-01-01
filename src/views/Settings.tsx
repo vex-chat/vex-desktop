@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { BackButton } from '../components/BackButton';
-import { VerticalAligner } from '../components/VerticalAligner';
-import store from '../utils/DataStore';
+import React, { useState } from "react";
+
+import { BackButton } from "../components/BackButton";
+import { VerticalAligner } from "../components/VerticalAligner";
+import store from "../utils/DataStore";
 
 export default function Settings(): JSX.Element {
     const [notification, setNotifications] = useState(
-        store.get('settings.notifications') as boolean
+        store.get("settings.notifications") as boolean
     );
 
     return (
@@ -17,7 +18,7 @@ export default function Settings(): JSX.Element {
                         <input
                             onChange={() => {
                                 store.set(
-                                    'settings.notifications',
+                                    "settings.notifications",
                                     !notification
                                 );
                                 setNotifications(!notification);

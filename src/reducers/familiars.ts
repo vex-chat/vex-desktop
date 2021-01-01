@@ -1,9 +1,9 @@
-import type { RootState, AppThunk } from '~Types';
+import { createSlice } from "@reduxjs/toolkit";
+import { IUser } from "@vex-chat/libvex";
 
-import { createSlice } from '@reduxjs/toolkit';
-import { IUser } from '@vex-chat/libvex';
+import type { AppThunk, RootState } from "~Types";
 
-import { ISerializableUser, deserializeUser, serializeUser } from './user';
+import { deserializeUser, ISerializableUser, serializeUser } from "./user";
 
 function serializeUserList(list: IUser[]): Record<string, ISerializableUser> {
     const serialized: Record<string, ISerializableUser> = {};
@@ -28,7 +28,7 @@ function deserializeUserList(
 }
 
 const counterSlice = createSlice({
-    name: 'familiars',
+    name: "familiars",
     initialState: {},
     reducers: {
         set: (_state, action) => {

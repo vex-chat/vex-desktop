@@ -1,7 +1,7 @@
-import type { RootState } from '~Types';
+import { createSlice } from "@reduxjs/toolkit";
+import { IMessage } from "@vex-chat/libvex";
 
-import { createSlice } from '@reduxjs/toolkit';
-import { IMessage } from '@vex-chat/libvex';
+import type { RootState } from "~Types";
 
 export interface IBaseSerializedMessage {
     mailID: string;
@@ -10,7 +10,7 @@ export interface IBaseSerializedMessage {
     timestamp: string;
     sender: string;
     recipient: string;
-    direction: 'incoming' | 'outgoing';
+    direction: "incoming" | "outgoing";
     decrypted: boolean;
     failed: boolean;
     failMessage: string;
@@ -40,13 +40,13 @@ export function serializeMessage(message: IMessage): ISerializedMessage {
         direction: message.direction,
         group: message.group,
         failed: false,
-        failMessage: '',
+        failMessage: "",
     };
     return serialized;
 }
 
 const messageSlice = createSlice({
-    name: 'messages',
+    name: "messages",
     initialState: {},
     reducers: {
         reset: () => {
@@ -57,7 +57,7 @@ const messageSlice = createSlice({
             action
         ) => {
             const thread =
-                action.payload.direction === 'outgoing'
+                action.payload.direction === "outgoing"
                     ? action.payload.recipient
                     : action.payload.sender;
             const message = action.payload;
@@ -85,7 +85,7 @@ const messageSlice = createSlice({
             } = action.payload;
 
             const thread =
-                action.payload.message.direction === 'outgoing'
+                action.payload.message.direction === "outgoing"
                     ? action.payload.message.recipient
                     : action.payload.message.sender;
 

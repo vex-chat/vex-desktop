@@ -1,6 +1,6 @@
-import type { RootState } from '~Types';
+import { createSlice } from "@reduxjs/toolkit";
 
-import { createSlice } from '@reduxjs/toolkit';
+import type { RootState } from "~Types";
 
 const initialState: Record<string, boolean | string | number> = {
     initialLoad: true,
@@ -8,7 +8,7 @@ const initialState: Record<string, boolean | string | number> = {
 };
 
 const appSlice = createSlice({
-    name: 'app',
+    name: "app",
     initialState,
     reducers: {
         reset: () => {
