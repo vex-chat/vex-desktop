@@ -11,13 +11,13 @@ interface IRoutes {
 }
 
 export const routes: IRoutes = {
-    HOME: '/',
-    MESSAGING: '/messaging',
-    REGISTER: '/register',
-    SETTINGS: '/settings',
-    LAUNCH: '/launch',
-    SERVERS: '/server',
-    CREATE: '/create',
-    LOGIN: '/login',
-    LOGOUT: '/logout',
+    HOME: "/",
+    MESSAGING: "/messaging",
+    REGISTER: "/register",
+    SETTINGS: "/settings",
+    LAUNCH: "/launch",
+    SERVERS: "/server",
+    CREATE: "/create",
+    LOGIN: "/login",
+    LOGOUT: "/logout",
 };

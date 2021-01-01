@@ -1,12 +1,12 @@
-import type { RootState, AppThunk } from '~Types';
+import { createSlice } from "@reduxjs/toolkit";
+import { IServer } from "@vex-chat/libvex";
 
-import { createSlice } from '@reduxjs/toolkit';
-import { IServer } from '@vex-chat/libvex';
+import type { AppThunk, RootState } from "~Types";
 
 const initialState: Record<string, IServer> = {};
 
 const serverSlice = createSlice({
-    name: 'servers',
+    name: "servers",
     initialState,
     reducers: {
         add: (state, action) => {

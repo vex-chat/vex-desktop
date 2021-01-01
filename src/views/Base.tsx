@@ -1,17 +1,18 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import { routes } from '../constants/routes';
-import App from './App';
-import Register from './Register';
-import Settings from './Settings';
-import { ClientLauncher } from './ClientLauncher';
-import Messaging from './Messaging';
-import { Server } from './Server';
-import { Logout } from './Logout';
-import { Login } from './Login';
-import { TitleBar } from '../components/TitleBar';
-import { Create } from './Create';
-import { Home } from './Home';
+import React from "react";
+import { Route, Switch } from "react-router-dom";
+
+import { TitleBar } from "../components/TitleBar";
+import { routes } from "../constants/routes";
+import App from "./App";
+import { ClientLauncher } from "./ClientLauncher";
+import { Create } from "./Create";
+import { Home } from "./Home";
+import { Login } from "./Login";
+import { Logout } from "./Logout";
+import Messaging from "./Messaging";
+import Register from "./Register";
+import { Server } from "./Server";
+import Settings from "./Settings";
 
 export default function Base(): JSX.Element {
     return (
@@ -19,13 +20,13 @@ export default function Base(): JSX.Element {
             <TitleBar />
             <Switch>
                 <Route
-                    path={routes.MESSAGING + '/:userID?/:page?/:sessionID?'}
+                    path={routes.MESSAGING + "/:userID?/:page?/:sessionID?"}
                     render={() => <Messaging />}
                 />
                 <Route
                     path={
                         routes.SERVERS +
-                        '/:serverID?/:pageType/:channelID?/:channelPage?'
+                        "/:serverID?/:pageType/:channelID?/:channelPage?"
                     }
                     render={() => <Server />}
                 />
@@ -33,7 +34,7 @@ export default function Base(): JSX.Element {
                 <Route path={routes.SETTINGS} render={() => <Settings />} />
                 <Route path={routes.LAUNCH} render={() => <ClientLauncher />} />
                 <Route
-                    path={routes.CREATE + '/:resourceType?'}
+                    path={routes.CREATE + "/:resourceType?"}
                     render={() => <Create />}
                 />
                 <Route path={routes.LOGIN} render={() => <Login />} />

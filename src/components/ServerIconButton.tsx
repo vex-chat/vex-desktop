@@ -1,7 +1,7 @@
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
+import { Link } from "react-router-dom";
 
 export function ServerIconButton(props: {
     linkTo: string;
@@ -13,7 +13,7 @@ export function ServerIconButton(props: {
             <Link to={props.linkTo}>
                 <button
                     className={`button is-medium server-button${
-                        props.active ? ' is-active' : ''
+                        props.active ? " is-active" : ""
                     }`}
                 >
                     <span className="icon is-medium">

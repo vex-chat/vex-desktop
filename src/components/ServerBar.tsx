@@ -1,11 +1,12 @@
-import React from 'react';
-import { routes } from '../constants/routes';
-import { useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectServers } from '../reducers/servers';
-import { faEnvelopeOpenText, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { ServerIcon } from './ServerIcon';
-import { ServerIconButton } from './ServerIconButton';
+import { faEnvelopeOpenText, faPlus } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+
+import { routes } from "../constants/routes";
+import { selectServers } from "../reducers/servers";
+import { ServerIcon } from "./ServerIcon";
+import { ServerIconButton } from "./ServerIconButton";
 
 export function ServerBar(): JSX.Element {
     const servers = useSelector(selectServers);
@@ -23,7 +24,7 @@ export function ServerBar(): JSX.Element {
                 <ServerIcon key={serverID} server={servers[serverID]} />
             ))}
             <ServerIconButton
-                linkTo={routes.CREATE + '/server'}
+                linkTo={routes.CREATE + "/server"}
                 icon={faPlus}
                 active={false}
             />

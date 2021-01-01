@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export function VerticalAligner(props: {
     top?: JSX.Element;

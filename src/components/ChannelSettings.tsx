@@ -1,10 +1,11 @@
-import type { IServerParams } from '~Types';
+import React from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { Highlighter } from './Highlighter';
-import { selectChannels } from '../reducers/channels';
+import type { IServerParams } from "~Types";
+
+import { selectChannels } from "../reducers/channels";
+import { Highlighter } from "./Highlighter";
 
 export function ChannelSettings(): JSX.Element {
     const params: IServerParams = useParams();
@@ -15,7 +16,7 @@ export function ChannelSettings(): JSX.Element {
             <label className="label is-small">Details:</label>
             {Highlighter(
                 JSON.stringify(channels[params.channelID] || {}, null, 4),
-                'json'
+                "json"
             )}
         </div>
     );

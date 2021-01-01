@@ -1,14 +1,15 @@
-import { combineReducers } from 'redux';
-import userReducer from './reducers/user';
-import familiarsReducer from './reducers/familiars';
-import inputsReducer from './reducers/inputs';
-import messageReducer from './reducers/messages';
-import sessionReducer from './reducers/sessions';
-import appReducer from './reducers/app';
-import serverReducer from './reducers/servers';
-import channelReducer from './reducers/channels';
-import permissionsReducer from './reducers/permissions';
-import groupMessageReducer from './reducers/groupMessages';
+import { combineReducers } from "redux";
+
+import appReducer from "./reducers/app";
+import channelReducer from "./reducers/channels";
+import familiarsReducer from "./reducers/familiars";
+import groupMessageReducer from "./reducers/groupMessages";
+import inputsReducer from "./reducers/inputs";
+import messageReducer from "./reducers/messages";
+import permissionsReducer from "./reducers/permissions";
+import serverReducer from "./reducers/servers";
+import sessionReducer from "./reducers/sessions";
+import userReducer from "./reducers/user";
 
 export default combineReducers({
     user: userReducer,

@@ -1,6 +1,7 @@
-import type { RootState, AppThunk } from '~Types';
-import { createSlice } from '@reduxjs/toolkit';
-import { IUser } from '@vex-chat/libvex';
+import { createSlice } from "@reduxjs/toolkit";
+import { IUser } from "@vex-chat/libvex";
+
+import type { AppThunk, RootState } from "~Types";
 
 export interface ISerializableUser {
     userID: string;
@@ -28,14 +29,14 @@ export function serializeUser(user: IUser): ISerializableUser {
 }
 
 const emptyUser: ISerializableUser = {
-    userID: '',
-    username: '',
-    signKey: '',
+    userID: "",
+    username: "",
+    signKey: "",
     lastSeen: new Date(Date.now()).toString(),
 };
 
 const userSlice = createSlice({
-    name: 'user',
+    name: "user",
     initialState: emptyUser,
     reducers: {
         reset: () => {
