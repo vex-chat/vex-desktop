@@ -18,7 +18,6 @@ export function IdentityPicker(): JSX.Element {
 
     const initialState: Record<string, IUser> = {};
     const [initialLoad, setInitialLoad] = useState(true);
-    // const [errText, setErrText] = useState("");
     const [accounts, setAccounts] = useState(initialState);
     const history = useHistory();
     const query = useQuery();
@@ -27,7 +26,7 @@ export function IdentityPicker(): JSX.Element {
 
     const manage = query.get("manage") === "on";
 
-    useMemo(async () => {
+    void useMemo(async () => {
         const keyFiles = fs.readdirSync(keyFolder);
         const tempClient = new Client(undefined, { dbFolder });
         const accs: Record<string, IUser> = {};

@@ -57,6 +57,8 @@ export default function Register(): JSX.Element {
             dbFolder,
         });
 
+        // TODO: high priority needs to be a saga. Suspect using client somewhere else without it being a singleton
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         tempClient.on("ready", async () => {
             // eslint-disable-next-line prefer-const
             const [user, err] = await tempClient.register(username);
@@ -94,7 +96,8 @@ export default function Register(): JSX.Element {
                 history.push(routes.HOME);
             }
         });
-        tempClient.init();
+
+        void tempClient.init();
     };
 
     return (

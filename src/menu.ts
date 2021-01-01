@@ -1,16 +1,10 @@
-import {
-    app,
-    BrowserWindow,
-    Menu,
-    MenuItemConstructorOptions,
-    shell,
-} from "electron";
+import type { MenuItemConstructorOptions } from "electron";
+import { app, BrowserWindow, Menu, shell } from "electron";
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
     selector?: string;
     submenu?: DarwinMenuItemConstructorOptions[] | Menu;
 }
-
 export default class MenuBuilder {
     mainWindow: BrowserWindow;
 
@@ -37,7 +31,9 @@ export default class MenuBuilder {
         return menu;
     }
 
-    sendRelaunch = (): void => this.mainWindow.webContents.send("relaunch");
+    sendRelaunch = (): void => {
+        this.mainWindow.webContents.send("relaunch");
+    };
 
     setupDevelopmentEnvironment(): void {
         this.mainWindow.webContents.on("context-menu", (_, props) => {
@@ -143,20 +139,6 @@ export default class MenuBuilder {
                 },
             ],
         };
-        // const subMenuViewProd: MenuItemConstructorOptions = {
-        //     label: "View",
-        //     submenu: [
-        //         {
-        //             label: "Toggle Full Screen",
-        //             accelerator: "Ctrl+Command+F",
-        //             click: () => {
-        //                 this.mainWindow.setFullScreen(
-        //                     !this.mainWindow.isFullScreen()
-        //                 );
-        //             },
-        //         },
-        //     ],
-        // };
         const subMenuWindow: DarwinMenuItemConstructorOptions = {
             label: "Window",
             submenu: [
@@ -181,7 +163,7 @@ export default class MenuBuilder {
                 {
                     label: "Learn More",
                     click() {
-                        shell.openExternal("https://vex.chat");
+                        void shell.openExternal("https://vex.chat");
                     },
                 },
             ],
@@ -202,8 +184,7 @@ export default class MenuBuilder {
         ];
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    buildDefaultTemplate() {
+    buildDefaultTemplate(): MenuItemConstructorOptions[] {
         const templateDefault = [
             {
                 label: "&File",
@@ -273,8 +254,8 @@ export default class MenuBuilder {
                 submenu: [
                     {
                         label: "Learn More",
-                        click() {
-                            shell.openExternal("https://vex.chat");
+                        click: () => {
+                            void shell.openExternal("https://vex.chat");
                         },
                     },
                 ],

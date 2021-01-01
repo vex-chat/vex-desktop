@@ -15,12 +15,6 @@ export function TitleBar(): JSX.Element {
         window.close();
     }
 
-    function minimizeWindow() {
-        console.log("reached");
-        const window = remote.getCurrentWindow();
-        window.minimize();
-    }
-
     function maximizeWindow() {
         const window = remote.getCurrentWindow();
 
@@ -39,19 +33,21 @@ export function TitleBar(): JSX.Element {
             {process.platform !== "darwin" && (
                 <div className="window-buttons">
                     <span
-                        onClick={() => minimizeWindow()}
+                        onClick={() => {
+                            remote.getCurrentWindow().minimize();
+                        }}
                         className="pointer icon is-small minimize-button "
                     >
                         <FontAwesomeIcon icon={faWindowMinimize} />
                     </span>
                     <span
-                        onClick={() => maximizeWindow()}
+                        onClick={maximizeWindow}
                         className="icon maximize-button is-small pointer"
                     >
                         <FontAwesomeIcon icon={faWindowMaximize} />
                     </span>
                     <span
-                        onClick={() => closeWindow()}
+                        onClick={closeWindow}
                         className="icon close-button has-text-danger is-small pointer"
                     >
                         <FontAwesomeIcon icon={faTimes} />

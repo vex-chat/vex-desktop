@@ -123,7 +123,9 @@ export default function MessagingPane(): JSX.Element {
                                     )}
                                     <button
                                         className="button is-small t-12"
-                                        onClick={() => history.goBack()}
+                                        onClick={() => {
+                                            history.goBack();
+                                        }}
                                     >
                                         Go Back
                                     </button>
@@ -237,7 +239,9 @@ export default function MessagingPane(): JSX.Element {
                                 <div className="panel-block">
                                     <button
                                         className="button is-small"
-                                        onClick={() => history.goBack()}
+                                        onClick={() => {
+                                            history.goBack();
+                                        }}
                                     >
                                         Go Back
                                     </button>

@@ -47,7 +47,7 @@ export function Logout(): JSX.Element {
         history.push(query.get("forward") || routes.HOME);
     };
 
-    useMemo(() => logout(), []);
+    void useMemo(() => logout(), []);
 
     return <div />;
 }

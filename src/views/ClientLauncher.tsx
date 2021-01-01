@@ -51,14 +51,34 @@ for (const folder of folders) {
 
 let client: Client;
 
+const onReadyCallback = async () => {
+    const [, err] = await client.users.retrieve(client.getKeys().public);
+
+    if (err !== null && err.response) {
+        log.warn(
+            `Server responded to users.retrieve() with ${err.response.status}`
+        );
+
+        switch (err.response.status) {
+            case 404:
+                launchEvents.emit("needs-register");
+                break;
+            default:
+                await client.close();
+                await sleep(1000 * 10);
+                launchEvents.emit("retry");
+        }
+    }
+
+    await client.login();
+};
+
 const launchEvents = new EventEmitter();
 
 export async function initClient(): Promise<void> {
     if (window.vex && window.vex.hasInit) {
         await window.vex.close();
     }
-
-    console.log("call init client");
 
     const PK = gaurdian.getKey();
 
@@ -67,33 +87,11 @@ export async function initClient(): Promise<void> {
         logLevel: "info",
     });
 
-    console.log("PK", PK);
-
     window.vex = client;
 
-    client.on("ready", async () => {
-        const [, err] = await client.users.retrieve(client.getKeys().public);
+    client.on("ready", () => void onReadyCallback());
 
-        if (err !== null && err.response) {
-            log.warn(
-                `Server responded to users.retrieve() with ${err.response.status}`
-            );
-
-            switch (err.response.status) {
-                case 404:
-                    launchEvents.emit("needs-register");
-                    break;
-                default:
-                    await client.close();
-                    await sleep(1000 * 10);
-                    launchEvents.emit("retry");
-            }
-        }
-
-        await client.login();
-    });
-
-    client.init();
+    void client.init();
 }
 
 function objifySessions(sessions: ISession[]): Record<string, ISession[]> {
@@ -212,7 +210,7 @@ export function ClientLauncher(): JSX.Element {
             dispatch(addMessage(message));
         }
 
-        notification(message);
+        void notification(message);
     };
 
     const needsRegisterHandler = () => {
@@ -222,11 +220,14 @@ export function ClientLauncher(): JSX.Element {
     const relaunch = async () => {
         await client.close();
 
-        client.off("authed", authedHandler);
-        client.off("disconnect", relaunch);
+        client.off("authed", () => void authedHandler());
+        client.off("disconnect", () => void relaunch());
         client.off("session", sessionHandler);
         client.off("message", messageHandler);
-        client.off("permission", permissionHandler);
+        client.off(
+            "permission",
+            (permission: IPermission) => void permissionHandler(permission)
+        );
 
         history.push(routes.LOGOUT + "?clear=off");
     };
@@ -325,23 +326,26 @@ export function ClientLauncher(): JSX.Element {
     /* giving useMemo an empty set of dependencies
     so that this only happens once */
     useMemo(() => {
-        ipcRenderer.on("relaunch", relaunch);
-        initClient();
+        ipcRenderer.on("relaunch", () => void relaunch());
+        void initClient();
     }, []);
 
     useEffect(() => {
         launchEvents.on("needs-register", needsRegisterHandler);
-        launchEvents.on("retry", relaunch);
+        launchEvents.on("retry", () => void relaunch());
 
-        client.on("authed", authedHandler);
-        client.on("disconnect", relaunch);
+        client.on("authed", () => void authedHandler());
+        client.on("disconnect", () => void relaunch());
         client.on("session", sessionHandler);
         client.on("message", messageHandler);
-        client.on("permission", permissionHandler);
+        client.on(
+            "permission",
+            (permission: IPermission) => void permissionHandler(permission)
+        );
 
         return () => {
             launchEvents.off("needs-register", needsRegisterHandler);
-            launchEvents.off("retry", relaunch);
+            launchEvents.off("retry", () => void relaunch());
         };
     });
     return <Loading size={256} animation={"cylon"} />;

@@ -66,7 +66,7 @@ export const AddChannel: FunctionComponent = () => {
                         }}
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
-                                addChannel(inputVal);
+                                void addChannel(inputVal);
                                 setInputVal("");
                             }
                         }}
@@ -76,8 +76,8 @@ export const AddChannel: FunctionComponent = () => {
                     <button
                         className="button is-small"
                         onClick={() => {
-                            addChannel(inputVal);
                             setInputVal("");
+                            void addChannel();
                         }}
                     >
                         Add channel to {server.name}

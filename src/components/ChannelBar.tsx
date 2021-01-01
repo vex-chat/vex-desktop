@@ -50,7 +50,9 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                         <div className="dropdown-trigger">
                             <span
                                 className="icon"
-                                onClick={() => setMenuOpen(!menuOpen)}
+                                onClick={() => {
+                                    setMenuOpen(!menuOpen);
+                                }}
                             >
                                 <FontAwesomeIcon
                                     className="has-text-dark"
@@ -62,7 +64,9 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                             className="dropdown-menu"
                             id="dropdown-menu"
                             role="menu"
-                            onClick={() => setMenuOpen(false)}
+                            onClick={() => {
+                                setMenuOpen(false);
+                            }}
                         >
                             <div className="dropdown-content">
                                 {isPermitted && (
