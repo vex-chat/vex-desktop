@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 
 import { routes } from "../constants/routes";
 import { selectServers } from "../reducers/servers";
+
 import { ServerIcon } from "./ServerIcon";
 import { ServerIconButton } from "./ServerIconButton";
 

@@ -1,3 +1,5 @@
+import type { FunctionComponent } from "react";
+
 import {
     faCarrot,
     faCog,
@@ -7,7 +9,6 @@ import {
     faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { FunctionComponent } from "react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router";

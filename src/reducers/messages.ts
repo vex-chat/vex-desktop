@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
 import type { IMessage } from "@vex-chat/libvex";
-
 import type { AppThunk, RootState } from "~Types";
+
+import { createSlice } from "@reduxjs/toolkit";
 
 export interface IBaseSerializedMessage {
     mailID: string;

@@ -1,3 +1,8 @@
+import type { IUser } from "@vex-chat/libvex";
+import type { ISerializedMessage } from "../reducers/messages";
+
+import { XUtils } from "@vex-chat/crypto";
+
 import {
     faAt,
     faCheckCircle,
@@ -10,8 +15,6 @@ import {
     faUnlock,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { XUtils } from "@vex-chat/crypto";
-import type { IUser } from "@vex-chat/libvex";
 import React, { createRef, Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
@@ -22,11 +25,11 @@ import { routes } from "../constants/routes";
 import { useQuery } from "../hooks/useQuery";
 import { selectFamiliars } from "../reducers/familiars";
 import { addInputState, selectInputStates } from "../reducers/inputs";
-import type { ISerializedMessage } from "../reducers/messages";
 import { failMessage, selectMessages } from "../reducers/messages";
 import { markSession, selectSessions } from "../reducers/sessions";
 import { selectUser } from "../reducers/user";
 import { chunkMessages } from "../utils/chunkMessages";
+
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
 import { IconUsername } from "./IconUsername";

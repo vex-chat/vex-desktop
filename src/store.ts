@@ -1,8 +1,8 @@
 import type { EnhancedStore } from "@reduxjs/toolkit";
+import type { RootState } from "~Types";
+
 import { configureStore } from "@reduxjs/toolkit";
 import { createLogger } from "redux-logger";
-
-import type { RootState } from "~Types";
 
 import reducer from "./rootReducer";
 

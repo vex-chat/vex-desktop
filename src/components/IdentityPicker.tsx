@@ -1,7 +1,9 @@
+import type { IUser } from "@vex-chat/libvex";
+
+import { Client } from "@vex-chat/libvex";
+
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { IUser } from "@vex-chat/libvex";
-import { Client } from "@vex-chat/libvex";
 import fs from "fs";
 import React, { Fragment, useMemo, useState } from "react";
 import { useHistory } from "react-router";
@@ -10,6 +12,7 @@ import { Link } from "react-router-dom";
 import { dbFolder, keyFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
 import { useQuery } from "../hooks/useQuery";
+
 import { IconUsername } from "./IconUsername";
 import Loading from "./Loading";
 import { VerticalAligner } from "./VerticalAligner";

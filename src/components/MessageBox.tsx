@@ -1,6 +1,9 @@
+import type { ISerializedMessage } from "../reducers/messages";
+
+import { XUtils } from "@vex-chat/crypto";
+
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { XUtils } from "@vex-chat/crypto";
 import { format } from "date-fns";
 import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
@@ -9,8 +12,8 @@ import * as uuid from "uuid";
 
 import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 import { selectFamiliars } from "../reducers/familiars";
-import type { ISerializedMessage } from "../reducers/messages";
 import { strToIcon } from "../utils/strToIcon";
+
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
 

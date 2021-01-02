@@ -1,4 +1,5 @@
 import type { ISession, IUser } from "@vex-chat/libvex";
+
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
@@ -7,6 +8,7 @@ import { routes } from "../constants/routes";
 import { addFamiliar, selectFamiliars } from "../reducers/familiars";
 import { selectSessions, stubSession } from "../reducers/sessions";
 import { selectUser } from "../reducers/user";
+
 import { FamiliarButton } from "./FamiliarButton";
 import { UserSearchBar } from "./UserSearchBar";
 

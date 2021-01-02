@@ -1,6 +1,7 @@
 import type { IconDefinition } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IUser } from "@vex-chat/libvex";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 import { strToIcon } from "../utils/strToIcon";

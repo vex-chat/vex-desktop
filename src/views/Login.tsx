@@ -1,11 +1,11 @@
+import type { FunctionComponent } from "react";
+import type { RootState } from "~Types";
+
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { FunctionComponent } from "react";
 import React, { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-
-import type { RootState } from "~Types";
 
 import { BackButton } from "../components/BackButton";
 import { VerticalAligner } from "../components/VerticalAligner";

@@ -12,6 +12,7 @@ import { routes } from "../constants/routes";
 import { addInputState } from "../reducers/inputs";
 import { selectUser } from "../reducers/user";
 import { strToIcon } from "../utils/strToIcon";
+
 import { IconUsername } from "./IconUsername";
 
 export function UserMenu(): JSX.Element {

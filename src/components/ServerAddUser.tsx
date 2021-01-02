@@ -1,11 +1,12 @@
 import type { IUser } from "@vex-chat/libvex";
+import type { IServerParams } from "~Types";
+
 import React, { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 
-import type { IServerParams } from "~Types";
-
 import { selectServers } from "../reducers/servers";
+
 import { IconUsername } from "./IconUsername";
 import { emptyUser, UserSearchBar } from "./UserSearchBar";
 
