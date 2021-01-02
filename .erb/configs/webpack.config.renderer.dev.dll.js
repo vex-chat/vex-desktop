@@ -68,6 +68,6 @@ module.exports = {
     ],
     resolve: {
         extensions: [".js", ".jsx", ".json", ".ts", ".tsx"], // BASE
-        modules: [join(__dirname, "../src"), "node_modules"] // BASE
+        modules: [join(__dirname, "../src"), "node_modules"], // BASE
     },
 };

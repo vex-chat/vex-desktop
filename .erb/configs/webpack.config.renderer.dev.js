@@ -1,10 +1,15 @@
 const { spawn, execSync } = require("child_process");
 const { existsSync } = require("fs");
-const { join, resolve  } = require("path");
+const { join, resolve } = require("path");
 
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const chalk = require("chalk");
-const { LoaderOptionsPlugin, DllReferencePlugin, NoEmitOnErrorsPlugin, EnvironmentPlugin } = require("webpack");
+const {
+    LoaderOptionsPlugin,
+    DllReferencePlugin,
+    NoEmitOnErrorsPlugin,
+    EnvironmentPlugin,
+} = require("webpack");
 
 const CheckNodeEnv = require("../scripts/CheckNodeEnv");
 const srcPackage = require("../../src/package.json");
@@ -26,10 +31,7 @@ const requiredByDLLConfig = module.parent.filename.includes(
 /**
  * Warn if the DLL is not built
  */
-if (
-    !requiredByDLLConfig &&
-    !(existsSync(dllDir) && existsSync(manifest))
-) {
+if (!requiredByDLLConfig && !(existsSync(dllDir) && existsSync(manifest))) {
     console.log(
         chalk.black.bgYellow.bold(
             'The DLL files are missing. Sit back while we build them for you with "yarn build-dll"'
@@ -39,14 +41,10 @@ if (
 }
 
 module.exports = {
-    devtool: "inline-source-map",
+    devtool: "eval-source-map",
     mode: "development",
     target: "electron-renderer",
-    entry: [
-        "core-js",
-        "regenerator-runtime/runtime",
-        require.resolve("../../src/index.tsx"),
-    ],
+    entry: [require.resolve("../../src/index.tsx")],
     output: {
         path: join(__dirname, "../../src"), // BASE
         libraryTarget: "commonjs2", // BASE  | https://github.com/webpack/webpack/issues/1114
@@ -273,6 +271,6 @@ module.exports = {
     externals: Object.keys(srcPackage.dependencies || {}), // BASE,
     resolve: {
         extensions: [".js", ".jsx", ".json", ".ts", ".tsx"], // BASE
-        modules: [join(__dirname, "../src"), "node_modules"] // BASE
+        modules: [join(__dirname, "../src"), "node_modules"], // BASE
     },
 };

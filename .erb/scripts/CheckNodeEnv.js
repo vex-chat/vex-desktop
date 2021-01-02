@@ -13,4 +13,4 @@ module.exports = function (expectedEnv) {
         );
         process.exit(2);
     }
-}
+};
