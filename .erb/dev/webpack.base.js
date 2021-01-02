@@ -19,11 +19,6 @@ module.exports = {
                 use: [
                     {
                         loader: require.resolve("babel-loader"),
-                        options: {
-                            plugins: [
-                                require.resolve("react-refresh/babel"),
-                            ].filter(Boolean),
-                        },
                     },
                 ],
             },

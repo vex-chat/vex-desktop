@@ -1,6 +1,6 @@
 const developmentEnvironments = ["development", "test"];
 
-const developmentPlugins = [];
+const developmentPlugins = [require("react-refresh/babel")];
 
 const productionPlugins = [
     require("babel-plugin-dev-expression"),

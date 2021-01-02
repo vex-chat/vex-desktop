@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import type { RootState } from "~Types";
+import type { AppThunk, RootState } from "~Types";
 
 const initialState: Record<string, boolean | string | number> = {
     initialLoad: true,
