@@ -8,37 +8,22 @@
         "eslint:recommended",
         "plugin:import/typescript",
         "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "plugin:eslint-comments/recommended",
         "plugin:prettier/recommended",
         "prettier/@typescript-eslint"
     ],
     "plugins": ["import", "simple-import-sort"],
     "parserOptions": {
-        "ecmaVersion": 12,
-        "project": "./tsconfig.json"
+        "ecmaVersion": 12
     },
     "settings": {
         "react": {
             "version": "detect"
-        },
-        "import/resolver": {
-            "typescript": {
-                "project": "./tsconfig.json"
-            }
         }
     },
     "rules": {
-        // TURN OFF ALL FAILING RULES FOR STRICER TS ESLINT
-        "@typescript-eslint/no-unsafe-member-access": 0,
-        "@typescript-eslint/no-unsafe-call": 0,
-        "@typescript-eslint/no-unsafe-assignment": 0,
-        "@typescript-eslint/no-unsafe-return": 0,
-        // TURN ON EXTRA TS RULES
-        "@typescript-eslint/no-confusing-void-expression": 2,
         // IMPORT RULES
         "import/no-cycle": 2,
-        "import/no-unresolved": 2,
         // SIMPLE SORT
         "simple-import-sort/imports": 2,
         "simple-import-sort/exports": 2,
