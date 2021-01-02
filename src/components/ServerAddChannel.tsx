@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import type { FunctionComponent } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 

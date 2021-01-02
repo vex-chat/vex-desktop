@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IUser } from "@vex-chat/libvex";
+import type { IUser } from "@vex-chat/libvex";
 
 import type { AppThunk, RootState } from "~Types";
 
-import { deserializeUser, ISerializableUser, serializeUser } from "./user";
+import type { ISerializableUser } from "./user";
+import { deserializeUser, serializeUser } from "./user";
 
 function serializeUserList(list: IUser[]): Record<string, ISerializableUser> {
     const serialized: Record<string, ISerializableUser> = {};

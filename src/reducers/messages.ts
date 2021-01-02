@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IMessage } from "@vex-chat/libvex";
+import type { IMessage } from "@vex-chat/libvex";
 
 import type { AppThunk, RootState } from "~Types";
 

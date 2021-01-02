@@ -1,6 +1,5 @@
 import { sleep } from "@extrahash/sleep";
-import {
-    Client,
+import type {
     IChannel,
     IMessage,
     IPermission,
@@ -8,6 +7,7 @@ import {
     ISession,
     IUser,
 } from "@vex-chat/libvex";
+import { Client } from "@vex-chat/libvex";
 import { ipcRenderer, remote } from "electron";
 import log from "electron-log";
 import { EventEmitter } from "events";
@@ -23,11 +23,8 @@ import { setApp } from "../reducers/app";
 import { addChannels } from "../reducers/channels";
 import { addFamiliar, setFamiliars } from "../reducers/familiars";
 import { add, addMany } from "../reducers/groupMessages";
-import {
-    addMessage,
-    IGroupSerializedMessage,
-    serializeMessage,
-} from "../reducers/messages";
+import type { IGroupSerializedMessage } from "../reducers/messages";
+import { addMessage, serializeMessage } from "../reducers/messages";
 import { addPermission, setPermissions } from "../reducers/permissions";
 import { selectServers, setServers } from "../reducers/servers";
 import { addSession, setSessions } from "../reducers/sessions";

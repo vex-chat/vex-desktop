@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IChannel } from "@vex-chat/libvex";
+import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import type { IChannel } from "@vex-chat/libvex";
 
 import type { AppThunk, RootState } from "~Types";
 

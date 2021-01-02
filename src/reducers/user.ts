@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IUser } from "@vex-chat/libvex";
+import type { IUser } from "@vex-chat/libvex";
 
 import type { AppThunk, RootState } from "~Types";
 

@@ -1,4 +1,4 @@
-import { IUser } from "@vex-chat/libvex";
+import type { IUser } from "@vex-chat/libvex";
 import React, { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";

@@ -1,6 +1,7 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Client, IUser } from "@vex-chat/libvex";
+import type { IUser } from "@vex-chat/libvex";
+import { Client } from "@vex-chat/libvex";
 import fs from "fs";
 import React, { Fragment, useMemo, useState } from "react";
 import { useHistory } from "react-router";

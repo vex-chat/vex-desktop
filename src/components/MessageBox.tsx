@@ -9,7 +9,7 @@ import * as uuid from "uuid";
 
 import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 import { selectFamiliars } from "../reducers/familiars";
-import { ISerializedMessage } from "../reducers/messages";
+import type { ISerializedMessage } from "../reducers/messages";
 import { strToIcon } from "../utils/strToIcon";
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
