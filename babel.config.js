@@ -17,7 +17,7 @@ module.exports = (api) => {
 
     return {
         presets: [
-            [require("@babel/preset-env"), { debug: true }],
+            [require("@babel/preset-env"), { debug: false }],
             [require("@babel/preset-react"), { development }],
             require("@babel/preset-typescript"),
         ],

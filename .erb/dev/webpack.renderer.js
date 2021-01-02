@@ -2,6 +2,7 @@ const { spawn } = require("child_process");
 const { join, resolve } = require("path");
 
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const {
     LoaderOptionsPlugin,
     DllReferencePlugin,
@@ -35,6 +36,7 @@ const renderer = {
             debug: true,
         }),
         new ReactRefreshWebpackPlugin(),
+        new ForkTsCheckerWebpackPlugin(),
     ],
     node: {
         __dirname: false,

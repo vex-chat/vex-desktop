@@ -60,7 +60,7 @@
         },
         // NODE OVERRIDES
         {
-            "files": ["babel.config.js"],
+            "files": ["babel.config.js", "fork-ts-checker.config.js"],
             "env": {
                 "node": true,
                 "browser": false
