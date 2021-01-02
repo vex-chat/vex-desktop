@@ -7,21 +7,17 @@ const { DllPlugin, LoaderOptionsPlugin } = require("webpack");
 const { merge } = require("webpack-merge");
 
 const CheckNodeEnv = require("../scripts/CheckNodeEnv");
-const rootPackage = require("../../package.json");
-
-const base = require("./webpack.base");
-
 CheckNodeEnv("development");
 
 const dist = join(__dirname, "../dll");
 
-module.exports = merge(base, {
+/** @type {import('webpack').Configuration} */
+const dll = {
     context: join(__dirname, "../.."),
     devtool: "eval",
     externals: ["fsevents", "crypto-browserify"],
-    module: require("./webpack.renderer.js").module,
     entry: {
-        renderer: Object.keys(rootPackage.dependencies || {}),
+        renderer: Object.keys(require("../../package.json").dependencies || {}),
     },
     output: {
         path: dist,
@@ -29,7 +25,6 @@ module.exports = merge(base, {
         library: "renderer",
         filename: "[name].dev.dll.js",
     },
-
     plugins: [
         new DllPlugin({
             path: join(dist, "[name].json"),
@@ -45,4 +40,6 @@ module.exports = merge(base, {
             },
         }),
     ],
-});
+};
+
+module.exports = merge(require("./webpack.base"), dll);
