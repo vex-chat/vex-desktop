@@ -8,24 +8,17 @@ const {
     LoaderOptionsPlugin,
     DllReferencePlugin,
     NoEmitOnErrorsPlugin,
-    EnvironmentPlugin,
 } = require("webpack");
+const { merge } = require("webpack-merge");
 
-const CheckNodeEnv = require("../scripts/CheckNodeEnv");
-const srcPackage = require("../../src/package.json");
-
-// When an ESLint server is running, we can't set the NODE_ENV so we'll check if it's
-// at the dev webpack config is not accidentally run in a production environment
-if (process.env.NODE_ENV === "production") {
-    CheckNodeEnv("development");
-}
+const base = require("./webpack.base");
 
 const port = process.env.PORT || 1212;
 const publicPath = `http://localhost:${port}/dist`;
 const dllDir = join(__dirname, "../dll");
 const manifest = resolve(dllDir, "renderer.json");
 const requiredByDLLConfig = module.parent.filename.includes(
-    "webpack.config.renderer.dev.dll"
+    "webpack.renderer.dll"
 );
 
 /**
@@ -40,14 +33,12 @@ if (!requiredByDLLConfig && !(existsSync(dllDir) && existsSync(manifest))) {
     execSync("yarn build-dll");
 }
 
-module.exports = {
+module.exports = merge(base, {
     devtool: "eval-source-map",
-    mode: "development",
-    target: "electron-renderer",
     entry: [require.resolve("../../src/index.tsx")],
     output: {
-        path: join(__dirname, "../../src"), // BASE
-        libraryTarget: "commonjs2", // BASE  | https://github.com/webpack/webpack/issues/1114
+        path: join(__dirname, "../../src"),
+        libraryTarget: "commonjs2",
         publicPath: `http://localhost:${port}/dist/`,
         filename: "renderer.dev.js",
     },
@@ -210,23 +201,6 @@ module.exports = {
               }),
 
         new NoEmitOnErrorsPlugin(),
-
-        /**
-         * Create global constants which can be configured at compile time.
-         *
-         * Useful for allowing different behaviour between development builds and
-         * release builds
-         *
-         * NODE_ENV should be production so that modules do not perform certain
-         * development checks
-         *
-         * By default, use 'development' as NODE_ENV. This can be overriden with
-         * 'staging', for example, by changing the ENV variables in the npm scripts
-         */
-        new EnvironmentPlugin({
-            NODE_ENV: "development",
-        }),
-
         new LoaderOptionsPlugin({
             debug: true,
         }),
@@ -268,9 +242,4 @@ module.exports = {
                 .on("error", (spawnError) => console.error(spawnError));
         },
     },
-    externals: Object.keys(srcPackage.dependencies || {}), // BASE,
-    resolve: {
-        extensions: [".js", ".jsx", ".json", ".ts", ".tsx"], // BASE
-        modules: [join(__dirname, "../src"), "node_modules"], // BASE
-    },
-};
+});
