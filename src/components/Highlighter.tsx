@@ -1,5 +1,4 @@
 import hljs from "highlight.js"; // import hljs library
-import React from "react";
 
 export function Highlighter(
     content: string,

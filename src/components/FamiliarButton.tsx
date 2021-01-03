@@ -1,8 +1,9 @@
-import { IUser } from "@vex-chat/libvex";
-import React from "react";
+import type { IUser } from "@vex-chat/libvex";
+
 import { Link } from "react-router-dom";
 
 import { routes } from "../constants/routes";
+
 import { IconUsername } from "./IconUsername";
 
 type buttonProps = {

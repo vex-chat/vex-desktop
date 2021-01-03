@@ -4,7 +4,7 @@ import {
     faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -12,6 +12,7 @@ import { routes } from "../constants/routes";
 import { addInputState } from "../reducers/inputs";
 import { selectUser } from "../reducers/user";
 import { strToIcon } from "../utils/strToIcon";
+
 import { IconUsername } from "./IconUsername";
 
 export function UserMenu(): JSX.Element {

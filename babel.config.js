@@ -1,15 +1,8 @@
 const developmentEnvironments = ["development", "test"];
 
-const developmentPlugins = [require("@babel/plugin-transform-runtime")];
+const developmentPlugins = [require("react-refresh/babel")];
 
-const productionPlugins = [
-    require("babel-plugin-dev-expression"),
-
-    // babel-preset-react-optimize
-    require("@babel/plugin-transform-react-constant-elements"),
-    require("@babel/plugin-transform-react-inline-elements"),
-    require("babel-plugin-transform-react-remove-prop-types"),
-];
+const productionPlugins = [require("babel-plugin-dev-expression")];
 
 module.exports = (api) => {
     // See docs about api at https://babeljs.io/docs/en/config-files#apicache
@@ -18,49 +11,25 @@ module.exports = (api) => {
 
     return {
         presets: [
-            // @babel/preset-env will automatically target our browserslist targets
-            require("@babel/preset-env"),
-            require("@babel/preset-typescript"),
-            [require("@babel/preset-react"), { development }],
+            [
+                require("@babel/preset-env"),
+                {
+                    debug: false,
+                    bugfixes: true,
+                    shippedProposals: true,
+                    useBuiltIns: "usage",
+                    corejs: { version: 3 },
+                },
+            ],
+            [
+                require("@babel/preset-react"),
+                { development, runtime: "automatic" },
+            ],
+            [
+                require("@babel/preset-typescript"),
+                { onlyRemoveTypeImports: true },
+            ],
         ],
-        plugins: [
-            // Stage 0
-            require("@babel/plugin-proposal-function-bind"),
-
-            // Stage 1
-            require("@babel/plugin-proposal-export-default-from"),
-            require("@babel/plugin-proposal-logical-assignment-operators"),
-            [
-                require("@babel/plugin-proposal-optional-chaining"),
-                { loose: false },
-            ],
-            [
-                require("@babel/plugin-proposal-pipeline-operator"),
-                { proposal: "minimal" },
-            ],
-            [
-                require("@babel/plugin-proposal-nullish-coalescing-operator"),
-                { loose: false },
-            ],
-            require("@babel/plugin-proposal-do-expressions"),
-
-            // Stage 2
-            [require("@babel/plugin-proposal-decorators"), { legacy: true }],
-            require("@babel/plugin-proposal-function-sent"),
-            require("@babel/plugin-proposal-export-namespace-from"),
-            require("@babel/plugin-proposal-numeric-separator"),
-            require("@babel/plugin-proposal-throw-expressions"),
-
-            // Stage 3
-            require("@babel/plugin-syntax-dynamic-import"),
-            require("@babel/plugin-syntax-import-meta"),
-            [
-                require("@babel/plugin-proposal-class-properties"),
-                { loose: true },
-            ],
-            require("@babel/plugin-proposal-json-strings"),
-
-            ...(development ? developmentPlugins : productionPlugins),
-        ],
+        plugins: [...(development ? developmentPlugins : productionPlugins)],
     };
 };

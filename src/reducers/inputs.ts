@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-
 import type { AppThunk, RootState } from "~Types";
+
+import { createSlice } from "@reduxjs/toolkit";
 
 type InputState = Record<string, string>;
 

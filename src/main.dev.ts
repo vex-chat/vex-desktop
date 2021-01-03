@@ -6,9 +6,6 @@
  * When running `yarn build` or `yarn build-main`, this file is compiled to
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
-import "core-js/stable";
-import "regenerator-runtime/runtime";
-
 import { app, BrowserWindow, shell } from "electron";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
@@ -20,7 +17,7 @@ export default class AppUpdater {
     constructor() {
         log.transports.file.level = "info";
         autoUpdater.logger = log;
-        autoUpdater.checkForUpdatesAndNotify();
+        void autoUpdater.checkForUpdatesAndNotify();
     }
 }
 
@@ -40,7 +37,7 @@ if (
     require("electron-debug")();
 }
 
-const createWindow = () => {
+const createWindow = async () => {
     const RESOURCES_PATH = app.isPackaged
         ? path.join(process.resourcesPath, "resources")
         : path.join(__dirname, "../resources");
@@ -62,7 +59,7 @@ const createWindow = () => {
         },
     });
 
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
+    // DEFINE EVENT HANDLERS BEFORE LOADING THE APP
 
     // @TODO: Use 'ready-to-show' event
     //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -70,6 +67,7 @@ const createWindow = () => {
         if (!mainWindow) {
             throw new Error('"mainWindow" is not defined');
         }
+
         if (process.env.START_MINIMIZED) {
             mainWindow.minimize();
         } else {
@@ -82,14 +80,16 @@ const createWindow = () => {
         mainWindow = null;
     });
 
-    const menuBuilder = new MenuBuilder(mainWindow);
-    menuBuilder.buildMenu();
-
     // Open urls in the user's browser
     mainWindow.webContents.on("new-window", (event, url) => {
         event.preventDefault();
-        shell.openExternal(url);
+        void shell.openExternal(url);
     });
+
+    const menuBuilder = new MenuBuilder(mainWindow);
+    menuBuilder.buildMenu();
+
+    await mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Remove this if your app does not use auto updates
     new AppUpdater();
@@ -112,5 +112,7 @@ app.whenReady().then(createWindow).catch(console.log);
 app.on("activate", () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (mainWindow === null) createWindow();
+    if (mainWindow === null) {
+        void createWindow();
+    }
 });

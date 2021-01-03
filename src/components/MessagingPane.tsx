@@ -1,3 +1,8 @@
+import type { IFile, IUser } from "@vex-chat/libvex";
+import type { ISerializedMessage } from "../reducers/messages";
+
+import { XUtils } from "@vex-chat/crypto";
+
 import {
     faAt,
     faCheckCircle,
@@ -10,10 +15,8 @@ import {
     faUnlock,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { XUtils } from "@vex-chat/crypto";
-import { IUser } from "@vex-chat/libvex";
 import fs from "fs";
-import React, { createRef, Fragment, useEffect, useRef } from "react";
+import { createRef, Fragment, useEffect, useRef } from "react";
 import Dropzone from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
@@ -24,14 +27,11 @@ import { routes } from "../constants/routes";
 import { useQuery } from "../hooks/useQuery";
 import { selectFamiliars } from "../reducers/familiars";
 import { addInputState, selectInputStates } from "../reducers/inputs";
-import {
-    failMessage,
-    ISerializedMessage,
-    selectMessages,
-} from "../reducers/messages";
+import { failMessage, selectMessages } from "../reducers/messages";
 import { markSession, selectSessions } from "../reducers/sessions";
 import { selectUser } from "../reducers/user";
 import { chunkMessages } from "../utils/chunkMessages";
+
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
 import { IconUsername } from "./IconUsername";
@@ -125,7 +125,9 @@ export default function MessagingPane(): JSX.Element {
                                     )}
                                     <button
                                         className="button is-small t-12"
-                                        onClick={() => history.goBack()}
+                                        onClick={() => {
+                                            history.goBack();
+                                        }}
                                     >
                                         Go Back
                                     </button>
@@ -239,7 +241,9 @@ export default function MessagingPane(): JSX.Element {
                                 <div className="panel-block">
                                     <button
                                         className="button is-small"
-                                        onClick={() => history.goBack()}
+                                        onClick={() => {
+                                            history.goBack();
+                                        }}
                                     >
                                         Go Back
                                     </button>
@@ -352,6 +356,8 @@ export default function MessagingPane(): JSX.Element {
                                                         sessionID,
                                                     } = match.params;
 
+                                                    // TODO now that this is a promise decide on whether to await or void it
+                                                    // eslint-disable-next-line @typescript-eslint/no-floating-promises
                                                     client.sessions.markVerified(
                                                         sessionID
                                                     );
@@ -450,84 +456,121 @@ export default function MessagingPane(): JSX.Element {
                                     <div ref={messagesEndRef} />
                                 </div>
                                 <div className="chat-input-wrapper">
+                                    <Dropzone
+                                        noClick
+                                        onDrop={(acceptedFiles) => {
+                                            const fileDetails =
+                                                acceptedFiles[0];
 
-                                <Dropzone noClick onDrop={ (acceptedFiles) => {
-                                    const fileDetails = acceptedFiles[0];
-                                    fs.readFile(fileDetails.path, async (err, buf) => {
-                                        if (err) {
-                                            console.warn(err);
-                                            return;
-                                        }
-                                        const client = window.vex;
-                                        const [file, key] = await client.files.create(buf)
-                                        console.log(file, key);
-                                    })
-
-                                }}>
-                                    {({getRootProps, getInputProps, isDragActive}) => (
-                                        <div {...getRootProps()}>
-                                        <input {...getInputProps()} />
-
-                                        <textarea
-                                        value={inputValue}
-                                        className={`textarea has-fixed-size ${isDragActive ? "is-warning is-focused" : ""}`}
-                                        onChange={(event) => {
-                                            dispatch(
-                                                addInputState(
-                                                    params.userID,
-                                                    event.target.value
-                                                )
+                                            fs.readFile(
+                                                fileDetails.path,
+                                                async (
+                                                    err: NodeJS.ErrnoException | null,
+                                                    buf: Buffer
+                                                ) => {
+                                                    if (err) {
+                                                        console.warn(err);
+                                                        return;
+                                                    }
+                                                    const client = window.vex;
+                                                    const [
+                                                        file,
+                                                        key,
+                                                    ] = await client.files.create(
+                                                        buf
+                                                    );
+                                                    console.log(
+                                                        fileToString(file, key)
+                                                    );
+                                                }
                                             );
                                         }}
-                                        onKeyDown={async (event) => {
-                                            if (
-                                                event.key === "Enter" &&
-                                                !event.shiftKey
-                                            ) {
-                                                event.preventDefault();
+                                    >
+                                        {({
+                                            getRootProps,
+                                            getInputProps,
+                                            isDragActive,
+                                        }) => (
+                                            <div {...getRootProps()}>
+                                                <input {...getInputProps()} />
 
-                                                const messageText = inputValue;
-                                                dispatch(
-                                                    addInputState(
-                                                        params.userID,
-                                                        ""
-                                                    )
-                                                );
-                                                if (messageText.trim() === "") {
-                                                    return;
-                                                }
-
-                                                const client = window.vex;
-                                                try {
-                                                    await client.messages.send(
-                                                        familiar.userID,
-                                                        messageText
-                                                    );
-                                                } catch (err) {
-                                                    console.log(err);
-                                                    if (err.message) {
-                                                        console.log(err);
+                                                <textarea
+                                                    value={inputValue}
+                                                    className={`textarea has-fixed-size ${
+                                                        isDragActive
+                                                            ? "is-warning is-focused"
+                                                            : ""
+                                                    }`}
+                                                    onChange={(event) => {
                                                         dispatch(
-                                                            failMessage(
-                                                                err.message,
-                                                                err.error.error
+                                                            addInputState(
+                                                                params.userID,
+                                                                event.target
+                                                                    .value
                                                             )
                                                         );
-                                                    } else {
-                                                        console.warn(err);
-                                                    }
-                                                }
-                                            }
-                                        }}
-                                    />
+                                                    }}
+                                                    onKeyDown={async (
+                                                        event
+                                                    ) => {
+                                                        if (
+                                                            event.key ===
+                                                                "Enter" &&
+                                                            !event.shiftKey
+                                                        ) {
+                                                            event.preventDefault();
 
+                                                            const messageText = inputValue;
+                                                            dispatch(
+                                                                addInputState(
+                                                                    params.userID,
+                                                                    ""
+                                                                )
+                                                            );
+                                                            if (
+                                                                messageText.trim() ===
+                                                                ""
+                                                            ) {
+                                                                return;
+                                                            }
 
-                                        </div>
-                                    )}
+                                                            const client =
+                                                                window.vex;
+                                                            try {
+                                                                await client.messages.send(
+                                                                    familiar.userID,
+                                                                    messageText
+                                                                );
+                                                            } catch (err) {
+                                                                console.log(
+                                                                    err
+                                                                );
+                                                                if (
+                                                                    err.message
+                                                                ) {
+                                                                    console.log(
+                                                                        err
+                                                                    );
+                                                                    dispatch(
+                                                                        failMessage(
+                                                                            err.message,
+                                                                            err
+                                                                                .error
+                                                                                .error
+                                                                        )
+                                                                    );
+                                                                } else {
+                                                                    console.warn(
+                                                                        err
+                                                                    );
+                                                                }
+                                                            }
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
                                     </Dropzone>
-
-
-
                                 </div>
                             </Fragment>
                         );
@@ -537,3 +580,7 @@ export default function MessagingPane(): JSX.Element {
         </div>
     );
 }
+
+const fileToString = (file: IFile, key: string) => {
+    return `{{file:${file.fileID}:${key}}}`;
+};

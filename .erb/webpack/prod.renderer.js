@@ -2,46 +2,28 @@
  * Build config for electron renderer process
  */
 
-import path from "path";
-import webpack from "webpack";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import OptimizeCSSAssetsPlugin from "optimize-css-assets-webpack-plugin";
-import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
-import { merge } from "webpack-merge";
-import TerserPlugin from "terser-webpack-plugin";
-import baseConfig from "./webpack.config.base";
-import CheckNodeEnv from "../scripts/CheckNodeEnv";
-import DeleteSourceMaps from "../scripts/DeleteSourceMaps";
+const path = require("path");
+
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { EnvironmentPlugin } = require("webpack");
+const { merge } = require("webpack-merge");
+
+const CheckNodeEnv = require("../scripts/CheckNodeEnv");
+const DeleteSourceMaps = require("../scripts/DeleteSourceMaps");
 
 CheckNodeEnv("production");
 DeleteSourceMaps();
 
-const devtoolsConfig =
-    process.env.DEBUG_PROD === "true"
-        ? {
-              devtool: "source-map",
-          }
-        : {};
-
-export default merge(baseConfig, {
-    ...devtoolsConfig,
-
-    mode: "production",
-
+/** @type {import('webpack').Configuration} */
+const renderer = {
     target: "electron-renderer",
-
-    entry: [
-        "core-js",
-        "regenerator-runtime/runtime",
-        path.join(__dirname, "../../src/index.tsx"),
-    ],
-
+    entry: [path.join(__dirname, "../../src/index.tsx")],
     output: {
         path: path.join(__dirname, "../../src/dist"),
         publicPath: "./dist/",
         filename: "renderer.prod.js",
     },
-
     module: {
         rules: [
             // Extract all .global.css to style.css as is
@@ -182,46 +164,23 @@ export default merge(baseConfig, {
             },
         ],
     },
-
     optimization: {
         minimizer: [
-            new TerserPlugin({
-                parallel: true,
-            }),
-            new OptimizeCSSAssetsPlugin({
-                cssProcessorOptions: {
-                    map: {
-                        inline: false,
-                        annotation: true,
-                    },
-                },
-            }),
+            // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
+            `...`,
+            new CssMinimizerPlugin(),
         ],
     },
 
     plugins: [
-        /**
-         * Create global constants which can be configured at compile time.
-         *
-         * Useful for allowing different behaviour between development builds and
-         * release builds
-         *
-         * NODE_ENV should be production so that modules do not perform certain
-         * development checks
-         */
-        new webpack.EnvironmentPlugin({
+        new EnvironmentPlugin({
             NODE_ENV: "production",
             DEBUG_PROD: false,
         }),
-
         new MiniCssExtractPlugin({
             filename: "style.css",
         }),
-
-        new BundleAnalyzerPlugin({
-            analyzerMode:
-                process.env.OPEN_ANALYZER === "true" ? "server" : "disabled",
-            openAnalyzer: process.env.OPEN_ANALYZER === "true",
-        }),
     ],
-});
+};
+
+module.exports = merge(require("./prod.base"), renderer);

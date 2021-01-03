@@ -1,3 +1,5 @@
+import type { FunctionComponent } from "react";
+
 import {
     faCarrot,
     faCog,
@@ -7,7 +9,7 @@ import {
     faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { FunctionComponent, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router";
 import { Link } from "react-router-dom";
@@ -50,7 +52,9 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                         <div className="dropdown-trigger">
                             <span
                                 className="icon"
-                                onClick={() => setMenuOpen(!menuOpen)}
+                                onClick={() => {
+                                    setMenuOpen(!menuOpen);
+                                }}
                             >
                                 <FontAwesomeIcon
                                     className="has-text-dark"
@@ -62,7 +66,9 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                             className="dropdown-menu"
                             id="dropdown-menu"
                             role="menu"
-                            onClick={() => setMenuOpen(false)}
+                            onClick={() => {
+                                setMenuOpen(false);
+                            }}
                         >
                             <div className="dropdown-content">
                                 {isPermitted && (

@@ -1,14 +1,15 @@
+import type { IServerParams } from "~Types";
+
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { Fragment, useState } from "react";
+import { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
-
-import type { IServerParams } from "~Types";
 
 import { routes } from "../constants/routes";
 import { selectPermission } from "../reducers/permissions";
 import { delServer, selectServers } from "../reducers/servers";
+
 import { Highlighter } from "./Highlighter";
 
 export function ServerSettings(): JSX.Element {

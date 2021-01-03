@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -47,7 +47,7 @@ export function Logout(): JSX.Element {
         history.push(query.get("forward") || routes.HOME);
     };
 
-    useMemo(() => logout(), []);
+    void useMemo(() => logout(), []);
 
     return <div />;
 }

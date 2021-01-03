@@ -1,7 +1,8 @@
+import { Client } from "@vex-chat/libvex";
+
 import { faCheck, faTimes, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Client } from "@vex-chat/libvex";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -57,6 +58,8 @@ export default function Register(): JSX.Element {
             dbFolder,
         });
 
+        // TODO: high priority needs to be a saga. Suspect using client somewhere else without it being a singleton
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         tempClient.on("ready", async () => {
             // eslint-disable-next-line prefer-const
             const [user, err] = await tempClient.register(username);
@@ -94,7 +97,8 @@ export default function Register(): JSX.Element {
                 history.push(routes.HOME);
             }
         });
-        tempClient.init();
+
+        void tempClient.init();
     };
 
     return (

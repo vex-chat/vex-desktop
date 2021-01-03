@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { IUser } from "@vex-chat/libvex";
-
+import type { IUser } from "@vex-chat/libvex";
 import type { AppThunk, RootState } from "~Types";
+
+import { createSlice } from "@reduxjs/toolkit";
 
 export interface ISerializableUser {
     userID: string;
@@ -10,7 +10,9 @@ export interface ISerializableUser {
     lastSeen: string;
 }
 
+//TODO: update this function to return return the updated IUser from Lib
 export function deserializeUser(user: ISerializableUser): IUser {
+    // @ts-expect-error this function return an old IUser that is missing avatar.
     return {
         userID: user.userID,
         username: user.username,

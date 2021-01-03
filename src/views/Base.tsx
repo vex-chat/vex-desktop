@@ -1,8 +1,8 @@
-import React from "react";
 import { Route, Switch } from "react-router-dom";
 
 import { TitleBar } from "../components/TitleBar";
 import { routes } from "../constants/routes";
+
 import App from "./App";
 import { ClientLauncher } from "./ClientLauncher";
 import { Create } from "./Create";
