@@ -9,6 +9,7 @@
         "build:renderer": "cross-env NODE_ENV=production webpack --config ./.erb/webpack/prod.renderer.js",
         "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir src",
         "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
+        "lint:ci": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx --rule \"prettier/prettier: 2\"",
         "package": "yarn build && electron-builder build --publish never",
         "package-all": "rm -rf ./release; yarn build && electron-builder build -mwl --publish never; shasum -a 256 release/*.{exe,dmg,deb,AppImage} >> ./release/sha256.txt",
         "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
@@ -21,10 +22,12 @@
         "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/webpack/renderer.js",
         "test": "jest",
         "prettier:node": "prettier './.erb/**/*.{js,jsx,json,md}' --ignore-path .gitignore",
-        "prettier-ci": "concurrently \"yarn prettier:node -c\" \"yarn lint\""
+        "prettier-ci": "concurrently \"yarn prettier:node -c\" \"yarn lint:ci\""
     },
     "lint-staged": {
-        "*.{js,jsx,ts,tsx}": ["cross-env NODE_ENV=development eslint --cache"],
+        "*.{js,jsx,ts,tsx}": [
+            "cross-env NODE_ENV=development eslint --cache --rule \"prettier/prettier: 2\""
+        ],
         "{*.json,.{babelrc,eslintrc,prettierrc}}": [
             "prettier --ignore-path .eslintignore --parser json --write"
         ],

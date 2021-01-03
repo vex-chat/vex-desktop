@@ -25,6 +25,8 @@
         // EXTRA TYPESCRIPT RULES THAT ARE NOT TYPE AWARE
         "@typescript-eslint/prefer-ts-expect-error": 2,
         "@typescript-eslint/consistent-type-imports": 2,
+        // TURN OFF PRETTIER FOR EDITOR/DEV
+        "prettier/prettier": 0,
         // IMPORT RULES
         "sort-imports": 0,
         "import/no-cycle": 2,
