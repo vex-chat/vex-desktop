@@ -39,7 +39,8 @@
         "sort-imports": 0,
         "import/first": 2,
         "import/newline-after-import": 2,
-        "import/no-duplicates": 2
+        "import/no-duplicates": 2,
+        "prettier/prettier": 0
     },
     "overrides": [
         // REACT OVERRIDES

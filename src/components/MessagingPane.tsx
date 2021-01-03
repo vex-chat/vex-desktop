@@ -473,6 +473,9 @@ export default function MessagingPane(): JSX.Element {
                                                         ""
                                                     )
                                                 );
+                                                if (messageText.trim() === "") {
+                                                    return;
+                                                }
 
                                                 const client = window.vex;
                                                 try {

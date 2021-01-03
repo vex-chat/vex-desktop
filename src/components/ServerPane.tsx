@@ -42,44 +42,55 @@ export function ServerPane(): JSX.Element {
                 <div ref={messagesEndRef} />
             </div>
 
-            <div className="chat-input-wrapper">
-                <textarea
-                    value={inputs[channelID]}
-                    className="textarea chat-input has-fixed-size"
-                    onChange={(event) => {
-                        dispatch(addInputState(channelID, event.target.value));
-                    }}
-                    onKeyDown={async (event) => {
-                        if (event.key === "Enter" && !event.shiftKey) {
-                            event.preventDefault();
+            {channelID && (
+                <div className="chat-input-wrapper">
+                    <textarea
+                        value={inputs[channelID]}
+                        className="textarea chat-input has-fixed-size"
+                        onChange={(event) => {
+                            dispatch(
+                                addInputState(channelID, event.target.value)
+                            );
+                        }}
+                        onKeyDown={async (event) => {
+                            if (event.key === "Enter" && !event.shiftKey) {
+                                event.preventDefault();
 
-                            const messageText = inputs[channelID];
-                            dispatch(addInputState(channelID, ""));
+                                const messageText = inputs[channelID];
+                                if (messageText.trim() === "") {
+                                    return;
+                                }
 
-                            const client = window.vex;
-                            try {
-                                await client.messages.group(
-                                    channelID,
-                                    messageText
-                                );
-                            } catch (err) {
-                                if (err.message) {
-                                    const szMsg = serializeMessage(err.message);
+                                dispatch(addInputState(channelID, ""));
 
-                                    if (szMsg.group) {
-                                        dispatch(
-                                            fail({
-                                                message: szMsg,
-                                                errorString: err.error.error,
-                                            })
+                                const client = window.vex;
+                                try {
+                                    await client.messages.group(
+                                        channelID,
+                                        messageText
+                                    );
+                                } catch (err) {
+                                    if (err.message) {
+                                        const szMsg = serializeMessage(
+                                            err.message
                                         );
+
+                                        if (szMsg.group) {
+                                            dispatch(
+                                                fail({
+                                                    message: szMsg,
+                                                    errorString:
+                                                        err.error.error,
+                                                })
+                                            );
+                                        }
                                     }
                                 }
                             }
-                        }
-                    }}
-                />
-            </div>
+                        }}
+                    />
+                </div>
+            )}
         </Fragment>
     );
 }
