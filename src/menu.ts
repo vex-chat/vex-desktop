@@ -136,7 +136,7 @@ export default class MenuBuilder {
                 {
                     label: "Relaunch",
                     accelerator: "Command+F12",
-                    click: this.sendRelaunch,
+                    click: this.sendRelaunch.bind(this),
                 },
             ],
         };
@@ -235,7 +235,7 @@ export default class MenuBuilder {
                               {
                                   label: "Relaunch",
                                   accelerator: "Ctrl+F12",
-                                  click: this.sendRelaunch,
+                                  click: this.sendRelaunch.bind(this),
                               },
                           ]
                         : [
