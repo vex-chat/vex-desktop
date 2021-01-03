@@ -75,4 +75,4 @@ const renderer = {
     },
 };
 
-module.exports = merge(require("./webpack.base"), renderer);
+module.exports = merge(require("./dev.base"), renderer);

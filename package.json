@@ -5,8 +5,8 @@
     "description": "Encrypted group chat that collects as little dat as possible and isn't run by commies.",
     "scripts": {
         "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
-        "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/prod/webpack.main.js",
-        "build:renderer": "cross-env NODE_ENV=production webpack --config ./.erb/prod/webpack.renderer.js",
+        "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/webpack/main.js",
+        "build:renderer": "cross-env NODE_ENV=production webpack --config ./.erb/webpack/prod.renderer.js",
         "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir src",
         "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
         "package": "yarn build && electron-builder build --publish never",
@@ -15,10 +15,10 @@
         "package-mac": "yarn build && electron-builder build --mac",
         "package-linux": "yarn build && electron-builder build --linux",
         "package-win": "yarn build && electron-builder build --win --x64",
-        "postinstall": "node ./.erb/scripts/CheckNativeDep.js && electron-builder install-app-deps && yarn cross-env NODE_ENV=development webpack --config ./.erb/dev/webpack.renderer.dll.js && yarn-deduplicate yarn.lock",
+        "postinstall": "node ./.erb/scripts/CheckNativeDep.js && electron-builder install-app-deps && yarn cross-env NODE_ENV=development webpack --config ./.erb/webpack/renderer.dll.js && yarn-deduplicate yarn.lock",
         "start": "node ./.erb/scripts/CheckPortInUse.js && cross-env yarn start:renderer",
         "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
-        "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/dev/webpack.renderer.js",
+        "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/webpack/renderer.js",
         "test": "jest",
         "prettier:node": "prettier './.erb/**/*.{js,jsx,json,md}' --ignore-path .gitignore",
         "prettier-ci": "concurrently \"yarn prettier:node -c\" \"yarn lint\""

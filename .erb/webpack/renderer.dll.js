@@ -42,4 +42,4 @@ const dll = {
     ],
 };
 
-module.exports = merge(require("./webpack.base"), dll);
+module.exports = merge(require("./dev.base"), dll);

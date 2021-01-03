@@ -3,6 +3,7 @@
  */
 
 const path = require("path");
+
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
@@ -195,4 +196,4 @@ const renderer = {
     ],
 };
 
-module.exports = merge(require("./webpack.base"), renderer);
+module.exports = merge(require("./prod.base"), renderer);
