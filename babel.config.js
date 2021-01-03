@@ -2,13 +2,7 @@ const developmentEnvironments = ["development", "test"];
 
 const developmentPlugins = [require("react-refresh/babel")];
 
-const productionPlugins = [
-    require("babel-plugin-dev-expression"),
-
-    // babel-preset-react-optimize
-    require("@babel/plugin-transform-react-constant-elements"),
-    require("@babel/plugin-transform-react-inline-elements"),
-];
+const productionPlugins = [require("babel-plugin-dev-expression")];
 
 module.exports = (api) => {
     // See docs about api at https://babeljs.io/docs/en/config-files#apicache
