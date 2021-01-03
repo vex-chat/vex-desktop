@@ -1,4 +1,4 @@
-import type { IFile, IUser } from "@vex-chat/libvex";
+import type { IUser } from "@vex-chat/libvex";
 import type { ISerializedMessage } from "../reducers/messages";
 
 import { XUtils } from "@vex-chat/crypto";
@@ -15,9 +15,7 @@ import {
     faUnlock,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import fs from "fs";
 import { createRef, Fragment, useEffect, useRef } from "react";
-import Dropzone from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
 import nacl from "tweetnacl";
@@ -26,12 +24,12 @@ import * as uuid from "uuid";
 import { routes } from "../constants/routes";
 import { useQuery } from "../hooks/useQuery";
 import { selectFamiliars } from "../reducers/familiars";
-import { addInputState, selectInputStates } from "../reducers/inputs";
-import { failMessage, selectMessages } from "../reducers/messages";
+import { selectMessages } from "../reducers/messages";
 import { markSession, selectSessions } from "../reducers/sessions";
 import { selectUser } from "../reducers/user";
 import { chunkMessages } from "../utils/chunkMessages";
 
+import { ChatInput } from "./ChatInput";
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
 import { IconUsername } from "./IconUsername";
@@ -41,7 +39,6 @@ export default function MessagingPane(): JSX.Element {
     // state
     const dispatch = useDispatch();
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
-    const inputValues: Record<string, string> = useSelector(selectInputStates);
     const history = useHistory();
     // url parameters
     const params: { userID: string } = useParams();
@@ -73,7 +70,6 @@ export default function MessagingPane(): JSX.Element {
     });
 
     const familiar: IUser | undefined = familiars[params.userID];
-    const inputValue: string = inputValues[params.userID] || "";
 
     const allMessages = useSelector(selectMessages);
     const threadMessages = allMessages[params.userID];
@@ -455,123 +451,7 @@ export default function MessagingPane(): JSX.Element {
                                     )}
                                     <div ref={messagesEndRef} />
                                 </div>
-                                <div className="chat-input-wrapper">
-                                    <Dropzone
-                                        noClick
-                                        onDrop={(acceptedFiles) => {
-                                            const fileDetails =
-                                                acceptedFiles[0];
-
-                                            fs.readFile(
-                                                fileDetails.path,
-                                                async (
-                                                    err: NodeJS.ErrnoException | null,
-                                                    buf: Buffer
-                                                ) => {
-                                                    if (err) {
-                                                        console.warn(err);
-                                                        return;
-                                                    }
-                                                    const client = window.vex;
-                                                    const [
-                                                        file,
-                                                        key,
-                                                    ] = await client.files.create(
-                                                        buf
-                                                    );
-                                                    console.log(
-                                                        fileToString(file, key)
-                                                    );
-                                                }
-                                            );
-                                        }}
-                                    >
-                                        {({
-                                            getRootProps,
-                                            getInputProps,
-                                            isDragActive,
-                                        }) => (
-                                            <div {...getRootProps()}>
-                                                <input {...getInputProps()} />
-
-                                                <textarea
-                                                    value={inputValue}
-                                                    className={`textarea has-fixed-size ${
-                                                        isDragActive
-                                                            ? "is-warning is-focused"
-                                                            : ""
-                                                    }`}
-                                                    onChange={(event) => {
-                                                        dispatch(
-                                                            addInputState(
-                                                                params.userID,
-                                                                event.target
-                                                                    .value
-                                                            )
-                                                        );
-                                                    }}
-                                                    onKeyDown={async (
-                                                        event
-                                                    ) => {
-                                                        if (
-                                                            event.key ===
-                                                                "Enter" &&
-                                                            !event.shiftKey
-                                                        ) {
-                                                            event.preventDefault();
-
-                                                            const messageText = inputValue;
-                                                            dispatch(
-                                                                addInputState(
-                                                                    params.userID,
-                                                                    ""
-                                                                )
-                                                            );
-                                                            if (
-                                                                messageText.trim() ===
-                                                                ""
-                                                            ) {
-                                                                return;
-                                                            }
-
-                                                            const client =
-                                                                window.vex;
-                                                            try {
-                                                                await client.messages.send(
-                                                                    familiar.userID,
-                                                                    messageText
-                                                                );
-                                                            } catch (err) {
-                                                                console.log(
-                                                                    err
-                                                                );
-                                                                if (
-                                                                    err.message
-                                                                ) {
-                                                                    console.log(
-                                                                        err
-                                                                    );
-                                                                    dispatch(
-                                                                        failMessage(
-                                                                            err.message,
-                                                                            err
-                                                                                .error
-                                                                                .error
-                                                                        )
-                                                                    );
-                                                                } else {
-                                                                    console.warn(
-                                                                        err
-                                                                    );
-                                                                }
-                                                            }
-                                                        }
-                                                    }}
-                                                />
-                                            </div>
-                                        )}
-                                    </Dropzone>
-                                </div>
+                                <ChatInput />
                             </Fragment>
                         );
                     }}
@@ -580,7 +460,3 @@ export default function MessagingPane(): JSX.Element {
         </div>
     );
 }
-
-const fileToString = (file: IFile, key: string) => {
-    return `{{file:${file.fileID}:${key}}}`;
-};

@@ -54,7 +54,10 @@ export function MessageBox(props: {
                     <strong>{sender.username || "Unknown User"}</strong>
                     &nbsp;&nbsp;
                     <small className="has-text-dark">
-                        {format(new Date(props.messages[0].timestamp), "kk:mm")}
+                        {format(
+                            new Date(props.messages[0].timestamp),
+                            "kk:mm MM/dd/yyyy"
+                        )}
                     </small>
                     &nbsp;&nbsp;
                     <br />
@@ -122,7 +125,12 @@ export function MessageBox(props: {
                                                     : ""
                                             }`}
                                         >
-                                            {message.message}
+                                            {message.message} &nbsp; &nbsp;
+                                            &nbsp; &nbsp;{" "}
+                                            {format(
+                                                new Date(message.timestamp),
+                                                "kk:mm MM/dd/yyyy"
+                                            )}
                                         </span>
                                     )}
                                     &nbsp;&nbsp;

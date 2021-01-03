@@ -1,7 +1,10 @@
+import type { PayloadAction } from "@reduxjs/toolkit";
 import type { IMessage } from "@vex-chat/libvex";
 import type { AppThunk, RootState } from "~Types";
 
 import { createSlice } from "@reduxjs/toolkit";
+
+type AddManyPayload = { messages: ISerializedMessage[]; userID: string };
 
 export interface IBaseSerializedMessage {
     mailID: string;
@@ -72,6 +75,22 @@ const messageSlice = createSlice({
 
             return state;
         },
+        addMany: (
+            state: Record<string, Record<string, ISerializedMessage>>,
+            { payload: { userID, messages } }: PayloadAction<AddManyPayload>
+        ) => {
+            if (!state[userID]) {
+                state[userID] = {};
+            }
+
+            messages.forEach((msg) => {
+                if (!state[userID][msg.mailID]) {
+                    state[userID][msg.mailID] = msg;
+                }
+            });
+
+            return state;
+        },
         fail: (
             state: Record<string, Record<string, ISerializedMessage>>,
             action
@@ -109,7 +128,7 @@ const messageSlice = createSlice({
     },
 });
 
-export const { add, reset, fail } = messageSlice.actions;
+export const { add, reset, fail, addMany } = messageSlice.actions;
 
 export const resetMessages = (): AppThunk => (dispatch) => {
     dispatch(reset());

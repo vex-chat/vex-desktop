@@ -6,7 +6,10 @@ import type {
     ISession,
     IUser,
 } from "@vex-chat/libvex";
-import type { IGroupSerializedMessage } from "../reducers/messages";
+import type {
+    IGroupSerializedMessage,
+    ISerializedMessage,
+} from "../reducers/messages";
 
 import { Client } from "@vex-chat/libvex";
 
@@ -25,8 +28,15 @@ import { routes } from "../constants/routes";
 import { setApp } from "../reducers/app";
 import { addChannels } from "../reducers/channels";
 import { addFamiliar, setFamiliars } from "../reducers/familiars";
-import { add, addMany } from "../reducers/groupMessages";
-import { addMessage, serializeMessage } from "../reducers/messages";
+import {
+    add as groupAdd,
+    addMany as groupAddMany,
+} from "../reducers/groupMessages";
+import {
+    add as dmAdd,
+    addMany as dmAddMany,
+    serializeMessage,
+} from "../reducers/messages";
 import { addPermission, setPermissions } from "../reducers/permissions";
 import { selectServers, setServers } from "../reducers/servers";
 import { addSession, setSessions } from "../reducers/sessions";
@@ -83,7 +93,8 @@ export async function initClient(): Promise<void> {
 
     client = new Client(PK, {
         dbFolder,
-        logLevel: "info",
+        logLevel: "warn",
+        dbLogLevel: "warn",
     });
 
     window.vex = client;
@@ -208,9 +219,9 @@ export function ClientLauncher(): JSX.Element {
         const szMsg = serializeMessage(message);
 
         if (szMsg.group) {
-            dispatch(add(szMsg));
+            dispatch(groupAdd(szMsg));
         } else {
-            dispatch(addMessage(message));
+            dispatch(dmAdd(szMsg));
         }
 
         void notification(message);
@@ -254,8 +265,24 @@ export function ClientLauncher(): JSX.Element {
         dispatch(setFamiliars(familiars));
         for (const user of familiars) {
             const history = await client.messages.retrieve(user.userID);
-            for (const message of history) {
-                dispatch(addMessage(message));
+
+            const szHistory = history.reduce<ISerializedMessage[]>(
+                (acc, msg) => {
+                    const szMsg = serializeMessage(msg);
+                    if (!szMsg.group) {
+                        acc.push(szMsg);
+                    } else {
+                        log.warn("Group messages found in dm history.");
+                    }
+                    return acc;
+                },
+                []
+            );
+
+            if (szHistory.length > 0) {
+                dispatch(
+                    dmAddMany({ messages: szHistory, userID: user.userID })
+                );
             }
         }
 
@@ -280,6 +307,8 @@ export function ClientLauncher(): JSX.Element {
 
                     if (szMsg.group) {
                         acc.push(szMsg);
+                    } else {
+                        log.warn("Non group messages found in group history.");
                     }
 
                     return acc;
@@ -287,7 +316,12 @@ export function ClientLauncher(): JSX.Element {
                 []
             );
 
-            dispatch(addMany({ messages: groupSzMsgs, group: channelID }));
+            if (groupSzMsgs.length > 0) {
+                dispatch(
+                    groupAddMany({ messages: groupSzMsgs, group: channelID })
+                );
+            }
+            dispatch(groupAddMany({ messages: groupSzMsgs, group: channelID }));
         }
 
         const permissions = await client.permissions.retrieve();
