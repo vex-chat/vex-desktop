@@ -12,7 +12,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { XUtils } from "@vex-chat/crypto";
 import { IUser } from "@vex-chat/libvex";
+import fs from "fs";
 import React, { createRef, Fragment, useEffect, useRef } from "react";
+import Dropzone from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
 import nacl from "tweetnacl";
@@ -448,9 +450,27 @@ export default function MessagingPane(): JSX.Element {
                                     <div ref={messagesEndRef} />
                                 </div>
                                 <div className="chat-input-wrapper">
-                                    <textarea
+
+                                <Dropzone noClick onDrop={ (acceptedFiles) => {
+                                    const fileDetails = acceptedFiles[0];
+                                    fs.readFile(fileDetails.path, async (err, buf) => {
+                                        if (err) {
+                                            console.warn(err);
+                                            return;
+                                        }
+                                        const client = window.vex;
+                                        const [file, key] = await client.files.create(buf)
+                                        console.log(file, key);
+                                    })
+
+                                }}>
+                                    {({getRootProps, getInputProps, isDragActive}) => (
+                                        <div {...getRootProps()}>
+                                        <input {...getInputProps()} />
+
+                                        <textarea
                                         value={inputValue}
-                                        className="textarea chat-input has-fixed-size is-focused"
+                                        className={`textarea has-fixed-size ${isDragActive ? "is-warning is-focused" : ""}`}
                                         onChange={(event) => {
                                             dispatch(
                                                 addInputState(
@@ -500,6 +520,14 @@ export default function MessagingPane(): JSX.Element {
                                             }
                                         }}
                                     />
+
+
+                                        </div>
+                                    )}
+                                    </Dropzone>
+
+
+
                                 </div>
                             </Fragment>
                         );
