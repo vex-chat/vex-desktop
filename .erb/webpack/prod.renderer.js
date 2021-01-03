@@ -4,11 +4,10 @@
 
 const path = require("path");
 
-const webpack = require("webpack");
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const { EnvironmentPlugin } = require("webpack");
 const { merge } = require("webpack-merge");
-const TerserPlugin = require("terser-webpack-plugin");
 
 const CheckNodeEnv = require("../scripts/CheckNodeEnv");
 const DeleteSourceMaps = require("../scripts/DeleteSourceMaps");
@@ -169,22 +168,14 @@ const renderer = {
     },
     optimization: {
         minimizer: [
-            new TerserPlugin({
-                parallel: true,
-            }),
-            new OptimizeCSSAssetsPlugin({
-                cssProcessorOptions: {
-                    map: {
-                        inline: false,
-                        annotation: true,
-                    },
-                },
-            }),
+            // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
+            `...`,
+            new CssMinimizerPlugin(),
         ],
     },
 
     plugins: [
-        new webpack.EnvironmentPlugin({
+        new EnvironmentPlugin({
             NODE_ENV: "production",
             DEBUG_PROD: false,
         }),

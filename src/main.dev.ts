@@ -6,9 +6,6 @@
  * When running `yarn build` or `yarn build-main`, this file is compiled to
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
-// import "core-js/stable";
-// import "regenerator-runtime/runtime";
-
 import { app, BrowserWindow, shell } from "electron";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
@@ -37,7 +34,7 @@ if (
     process.env.DEBUG_PROD === "true"
 ) {
     // eslint-disable-next-line  @typescript-eslint/no-var-requires
-    // require("electron-debug")();
+    require("electron-debug")();
 }
 
 const createWindow = async () => {
