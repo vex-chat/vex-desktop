@@ -15,7 +15,7 @@ import { ipcRenderer, remote } from "electron";
 import log from "electron-log";
 import { EventEmitter } from "events";
 import fs from "fs";
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 

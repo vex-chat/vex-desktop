@@ -1,7 +1,6 @@
 import { faHashtag, faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { capitalCase } from "change-case";
-import React from "react";
 import { useSelector } from "react-redux";
 import { Route, Switch, useParams } from "react-router";
 

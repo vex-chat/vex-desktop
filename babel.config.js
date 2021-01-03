@@ -13,7 +13,13 @@ module.exports = (api) => {
         presets: [
             [
                 require("@babel/preset-env"),
-                { debug: true, bugfixes: true, shippedProposals: true },
+                {
+                    debug: false,
+                    bugfixes: true,
+                    shippedProposals: true,
+                    useBuiltIns: "usage",
+                    corejs: { version: 3 },
+                },
             ],
             [
                 require("@babel/preset-react"),

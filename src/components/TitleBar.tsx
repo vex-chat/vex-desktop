@@ -5,7 +5,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { remote } from "electron";
-import React from "react";
 
 import pjson from "../package.json";
 

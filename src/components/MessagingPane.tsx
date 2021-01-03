@@ -15,7 +15,7 @@ import {
     faUnlock,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { createRef, Fragment, useEffect, useRef } from "react";
+import { createRef, Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
 import nacl from "tweetnacl";

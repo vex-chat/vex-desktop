@@ -5,7 +5,7 @@ import { XUtils } from "@vex-chat/crypto";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { format } from "date-fns";
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import nacl from "tweetnacl";
 import * as uuid from "uuid";

@@ -3,11 +3,11 @@ import { Client } from "@vex-chat/libvex";
 class KeyGaurdian {
     private static instance: KeyGaurdian;
 
-    private SK: string | null = null;
+    private SK: string | null;
 
-    // The constructor is empty because we need to make it private.
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    private constructor() {}
+    private constructor() {
+        this.SK = null;
+    }
 
     public static getInstance(): KeyGaurdian {
         if (!KeyGaurdian.instance) {

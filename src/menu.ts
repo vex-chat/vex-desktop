@@ -32,9 +32,9 @@ export default class MenuBuilder {
         return menu;
     }
 
-    sendRelaunch = (): void => {
+    sendRelaunch(): void {
         this.mainWindow.webContents.send("relaunch");
-    };
+    }
 
     setupDevelopmentEnvironment(): void {
         this.mainWindow.webContents.on("context-menu", (_, props) => {

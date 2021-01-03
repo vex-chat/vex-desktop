@@ -2,7 +2,7 @@ import type { IUser } from "@vex-chat/libvex";
 
 import { faFingerprint, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { routes } from "../constants/routes";

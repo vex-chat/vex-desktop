@@ -1,7 +1,7 @@
 import type { FunctionComponent } from "react";
 import type { IServerParams, RootState } from "~Types";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 

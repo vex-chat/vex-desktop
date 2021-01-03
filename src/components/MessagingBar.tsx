@@ -1,6 +1,5 @@
 import type { ISession, IUser } from "@vex-chat/libvex";
 
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 
