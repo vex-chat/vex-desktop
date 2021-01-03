@@ -173,14 +173,18 @@ export function ClientLauncher(): JSX.Element {
                     history.push(routes.MESSAGING + "/" + message.sender);
                 };
             } else {
+                if (!serverRecord || !channelRecord) {
+                    return;
+                }
+
                 const msgNotification = new Notification(
                     userRecord.username +
                         " in " +
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        serverRecord!.name +
+                        serverRecord.name +
                         "/" +
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        channelRecord!.name,
+                        channelRecord.name,
                     { body: message.message }
                 );
                 msgNotification.onclick = () => {
@@ -189,11 +193,11 @@ export function ClientLauncher(): JSX.Element {
                         routes.SERVERS +
                             "/" +
                             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                            serverRecord!.serverID +
+                            serverRecord.serverID +
                             "/channels" +
                             "/" +
                             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                            channelRecord!.channelID
+                            channelRecord.channelID
                     );
                 };
             }
