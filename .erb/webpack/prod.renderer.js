@@ -4,7 +4,7 @@
 
 const path = require("path");
 
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { EnvironmentPlugin } = require("webpack");
 const { merge } = require("webpack-merge");
@@ -18,9 +18,7 @@ DeleteSourceMaps();
 /** @type {import('webpack').Configuration} */
 const renderer = {
     target: "electron-renderer",
-    entry: [
-        path.join(__dirname, "../../src/index.tsx"),
-    ],
+    entry: [path.join(__dirname, "../../src/index.tsx")],
     output: {
         path: path.join(__dirname, "../../src/dist"),
         publicPath: "./dist/",
