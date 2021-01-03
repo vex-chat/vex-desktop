@@ -5,8 +5,8 @@
     "description": "Encrypted group chat that collects as little dat as possible and isn't run by commies.",
     "scripts": {
         "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
-        "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.main.prod.babel.js",
-        "build:renderer": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.renderer.prod.babel.js",
+        "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/prod/webpack.main.js",
+        "build:renderer": "cross-env NODE_ENV=production webpack --config ./.erb/prod/webpack.renderer.js",
         "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir src",
         "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
         "package": "yarn build && electron-builder build --publish never",
