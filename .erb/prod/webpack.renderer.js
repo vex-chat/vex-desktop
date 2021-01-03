@@ -6,42 +6,28 @@ const path = require("path");
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const { merge } = require("webpack-merge");
 const TerserPlugin = require("terser-webpack-plugin");
-const baseConfig = require("./webpack.base");
+
 const CheckNodeEnv = require("../scripts/CheckNodeEnv");
 const DeleteSourceMaps = require("../scripts/DeleteSourceMaps");
 
 CheckNodeEnv("production");
 DeleteSourceMaps();
 
-const devtoolsConfig =
-    process.env.DEBUG_PROD === "true"
-        ? {
-              devtool: "source-map",
-          }
-        : {};
-
-module.exports = merge(baseConfig, {
-    ...devtoolsConfig,
-
-    mode: "production",
-
+/** @type {import('webpack').Configuration} */
+const renderer = {
     target: "electron-renderer",
-
     entry: [
         "core-js",
         "regenerator-runtime/runtime",
         path.join(__dirname, "../../src/index.tsx"),
     ],
-
     output: {
         path: path.join(__dirname, "../../src/dist"),
         publicPath: "./dist/",
         filename: "renderer.prod.js",
     },
-
     module: {
         rules: [
             // Extract all .global.css to style.css as is
@@ -182,7 +168,6 @@ module.exports = merge(baseConfig, {
             },
         ],
     },
-
     optimization: {
         minimizer: [
             new TerserPlugin({
@@ -200,28 +185,14 @@ module.exports = merge(baseConfig, {
     },
 
     plugins: [
-        /**
-         * Create global constants which can be configured at compile time.
-         *
-         * Useful for allowing different behaviour between development builds and
-         * release builds
-         *
-         * NODE_ENV should be production so that modules do not perform certain
-         * development checks
-         */
         new webpack.EnvironmentPlugin({
             NODE_ENV: "production",
             DEBUG_PROD: false,
         }),
-
         new MiniCssExtractPlugin({
             filename: "style.css",
         }),
-
-        new BundleAnalyzerPlugin({
-            analyzerMode:
-                process.env.OPEN_ANALYZER === "true" ? "server" : "disabled",
-            openAnalyzer: process.env.OPEN_ANALYZER === "true",
-        }),
     ],
-});
+};
+
+module.exports = merge(require("./webpack.base"), renderer);

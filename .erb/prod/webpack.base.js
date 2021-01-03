@@ -1,45 +1,47 @@
 /**
- * Base webpack config used across other specific configs
+ * Base webpack config used across prod configs
  */
 const path = require("path");
-const webpack = require("webpack");
+
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+
 const { dependencies } = require("../../src/package.json");
 
-module.exports = {
-    externals: [...Object.keys(dependencies || {})],
+const devtoolsConfig =
+    process.env.DEBUG_PROD === "true"
+        ? {
+              devtool: "source-map",
+          }
+        : {};
 
+/** @type {import('webpack').Configuration} */
+module.exports = {
+    ...devtoolsConfig,
+    mode: "production",
+    externals: [...Object.keys(dependencies || {})],
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: "babel-loader",
-                    options: {
-                        cacheDirectory: true,
-                    },
+                    loader: "babel-loader"
                 },
             },
         ],
     },
-
+    plugins: [
+        new BundleAnalyzerPlugin({
+            analyzerMode:
+                process.env.OPEN_ANALYZER === "true" ? "server" : "disabled",
+            openAnalyzer: process.env.OPEN_ANALYZER === "true",
+        }),
+    ],
     output: {
-        path: path.join(__dirname, "../../src"),
-        // https://github.com/webpack/webpack/issues/1114
         libraryTarget: "commonjs2",
     },
-
-    /**
-     * Determine the array of extensions that should be used to resolve modules.
-     */
     resolve: {
         extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
         modules: [path.join(__dirname, "../src"), "node_modules"],
     },
-
-    plugins: [
-        new webpack.EnvironmentPlugin({
-            NODE_ENV: "production",
-        }),
-    ],
 };
