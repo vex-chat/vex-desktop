@@ -1,8 +1,9 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import type { FunctionComponent } from "react";
+import type { IServerParams, RootState } from "~Types";
+
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
-
-import type { IServerParams, RootState } from "~Types";
 
 import { routes } from "../constants/routes";
 import { useDebounce } from "../hooks/useDebounce";
@@ -66,7 +67,7 @@ export const AddChannel: FunctionComponent = () => {
                         }}
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
-                                addChannel(inputVal);
+                                void addChannel(inputVal);
                                 setInputVal("");
                             }
                         }}
@@ -76,8 +77,8 @@ export const AddChannel: FunctionComponent = () => {
                     <button
                         className="button is-small"
                         onClick={() => {
-                            addChannel(inputVal);
                             setInputVal("");
+                            void addChannel();
                         }}
                     >
                         Add channel to {server.name}

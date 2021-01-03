@@ -1,10 +1,10 @@
 import { faEnvelopeOpenText, faPlus } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import { routes } from "../constants/routes";
 import { selectServers } from "../reducers/servers";
+
 import { ServerIcon } from "./ServerIcon";
 import { ServerIconButton } from "./ServerIconButton";
 

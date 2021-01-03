@@ -1,3 +1,8 @@
+import type { IUser } from "@vex-chat/libvex";
+import type { ISerializedMessage } from "../reducers/messages";
+
+import { XUtils } from "@vex-chat/crypto";
+
 import {
     faAt,
     faCheckCircle,
@@ -10,9 +15,7 @@ import {
     faUnlock,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { XUtils } from "@vex-chat/crypto";
-import { IUser } from "@vex-chat/libvex";
-import React, { createRef, Fragment, useEffect, useRef } from "react";
+import { createRef, Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
 import nacl from "tweetnacl";
@@ -22,14 +25,11 @@ import { routes } from "../constants/routes";
 import { useQuery } from "../hooks/useQuery";
 import { selectFamiliars } from "../reducers/familiars";
 import { addInputState, selectInputStates } from "../reducers/inputs";
-import {
-    failMessage,
-    ISerializedMessage,
-    selectMessages,
-} from "../reducers/messages";
+import { failMessage, selectMessages } from "../reducers/messages";
 import { markSession, selectSessions } from "../reducers/sessions";
 import { selectUser } from "../reducers/user";
 import { chunkMessages } from "../utils/chunkMessages";
+
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
 import { IconUsername } from "./IconUsername";
@@ -123,7 +123,9 @@ export default function MessagingPane(): JSX.Element {
                                     )}
                                     <button
                                         className="button is-small t-12"
-                                        onClick={() => history.goBack()}
+                                        onClick={() => {
+                                            history.goBack();
+                                        }}
                                     >
                                         Go Back
                                     </button>
@@ -237,7 +239,9 @@ export default function MessagingPane(): JSX.Element {
                                 <div className="panel-block">
                                     <button
                                         className="button is-small"
-                                        onClick={() => history.goBack()}
+                                        onClick={() => {
+                                            history.goBack();
+                                        }}
                                     >
                                         Go Back
                                     </button>
@@ -350,6 +354,8 @@ export default function MessagingPane(): JSX.Element {
                                                         sessionID,
                                                     } = match.params;
 
+                                                    // TODO now that this is a promise decide on whether to await or void it
+                                                    // eslint-disable-next-line @typescript-eslint/no-floating-promises
                                                     client.sessions.markVerified(
                                                         sessionID
                                                     );

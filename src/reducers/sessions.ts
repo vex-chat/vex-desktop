@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { ISession } from "@vex-chat/libvex";
-
+import type { ISession } from "@vex-chat/libvex";
 import type { AppThunk, RootState } from "~Types";
+
+import { createSlice } from "@reduxjs/toolkit";
 
 interface ISerializedSession {
     sessionID: string;

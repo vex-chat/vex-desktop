@@ -1,14 +1,18 @@
+import type { IUser } from "@vex-chat/libvex";
+
+import { Client } from "@vex-chat/libvex";
+
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Client, IUser } from "@vex-chat/libvex";
 import fs from "fs";
-import React, { Fragment, useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 
 import { dbFolder, keyFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
 import { useQuery } from "../hooks/useQuery";
+
 import { IconUsername } from "./IconUsername";
 import Loading from "./Loading";
 import { VerticalAligner } from "./VerticalAligner";
@@ -18,7 +22,6 @@ export function IdentityPicker(): JSX.Element {
 
     const initialState: Record<string, IUser> = {};
     const [initialLoad, setInitialLoad] = useState(true);
-    // const [errText, setErrText] = useState("");
     const [accounts, setAccounts] = useState(initialState);
     const history = useHistory();
     const query = useQuery();
@@ -27,7 +30,7 @@ export function IdentityPicker(): JSX.Element {
 
     const manage = query.get("manage") === "on";
 
-    useMemo(async () => {
+    void useMemo(async () => {
         const keyFiles = fs.readdirSync(keyFolder);
         const tempClient = new Client(undefined, { dbFolder });
         const accs: Record<string, IUser> = {};

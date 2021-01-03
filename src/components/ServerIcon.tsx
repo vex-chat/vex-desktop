@@ -1,5 +1,5 @@
-import { IServer } from "@vex-chat/libvex";
-import React from "react";
+import type { IServer } from "@vex-chat/libvex";
+
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 

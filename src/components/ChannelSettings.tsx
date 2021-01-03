@@ -1,10 +1,10 @@
-import React from "react";
+import type { IServerParams } from "~Types";
+
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import type { IServerParams } from "~Types";
-
 import { selectChannels } from "../reducers/channels";
+
 import { Highlighter } from "./Highlighter";
 
 export function ChannelSettings(): JSX.Element {

@@ -8,15 +8,13 @@
         "eslint:recommended",
         "plugin:import/typescript",
         "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "plugin:eslint-comments/recommended",
         "plugin:prettier/recommended",
         "prettier/@typescript-eslint"
     ],
     "plugins": ["import", "simple-import-sort"],
     "parserOptions": {
-        "ecmaVersion": 12,
-        "project": "./tsconfig.json"
+        "ecmaVersion": 12
     },
     "settings": {
         "react": {
@@ -24,23 +22,40 @@
         }
     },
     "rules": {
-        // TURN OFF ALL FAILING RULES FOR STRICER TS ESLINT
-        "@typescript-eslint/no-floating-promises": 0,
-        "@typescript-eslint/no-misused-promises": 0,
-        "@typescript-eslint/no-unsafe-member-access": 0,
-        "@typescript-eslint/no-unsafe-call": 0,
-        "@typescript-eslint/no-unsafe-assignment": 0,
-        "@typescript-eslint/no-unsafe-return": 0,
-        // CYCLICAL DEPENDENCIES BREAK LOCAL
-        "import/no-cycle": 2,
-        // SIMPLE SORT
-        "simple-import-sort/imports": 2,
-        "simple-import-sort/exports": 2,
+        // EXTRA TYPESCRIPT RULES THAT ARE NOT TYPE AWARE
+        "@typescript-eslint/prefer-ts-expect-error": 2,
+        "@typescript-eslint/consistent-type-imports": 2,
+        // TURN OFF PRETTIER FOR EDITOR/DEV
+        "prettier/prettier": 0,
+        // IMPORT RULES
         "sort-imports": 0,
+        "import/no-cycle": 2,
         "import/first": 2,
         "import/newline-after-import": 2,
         "import/no-duplicates": 2,
-        "prettier/prettier": 0
+        // SIMPLE SORT
+        "simple-import-sort/imports": [
+            2,
+            {
+                "groups": [
+                    // Type Imports
+                    ["^@?\\w.*\\u0000$", "^[^.].*\\u0000$", "^\\..*\\u0000$"],
+                    // Side Effects
+                    ["^\\u0000"],
+                    // Org packages.
+                    ["^(@vex-chat)(/.*|$)"],
+                    // Third Party Packages
+                    ["^@?\\w"],
+                    // Relative imports.
+                    ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+                    // Same-folder imports
+                    ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+                    // Style imports.
+                    ["^.+\\.s?css$"]
+                ]
+            }
+        ],
+        "simple-import-sort/exports": 2
     },
     "overrides": [
         // REACT OVERRIDES
@@ -49,12 +64,15 @@
             "extends": ["plugin:react/recommended", "prettier/react"],
             "rules": {
                 "react/prop-types": 0,
-                "react/display-name": 0
+                "react/display-name": 0,
+                // TURN THESE RULES OFF FOR AUTOMATIC RUNTIME
+                "react/jsx-uses-react": 0,
+                "react/react-in-jsx-scope": 0
             }
         },
         // NODE OVERRIDES
         {
-            "files": ["babel.config.js"],
+            "files": ["babel.config.js", "fork-ts-checker.config.js"],
             "env": {
                 "node": true,
                 "browser": false

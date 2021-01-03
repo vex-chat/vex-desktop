@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "~Types";
+import type { IGroupSerializedMessage } from "./messages";
 
-import { IGroupSerializedMessage } from "./messages";
+import { createSlice } from "@reduxjs/toolkit";
 
 type FailPayload = { message: IGroupSerializedMessage; errorString: string };
 type AddManyPayload = { messages: IGroupSerializedMessage[]; group: string };

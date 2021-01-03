@@ -1,14 +1,15 @@
-import React, { Fragment, useEffect, useRef } from "react";
+import type { IServerParams } from "~Types";
+
+import { Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import * as uuid from "uuid";
-
-import type { IServerParams } from "~Types";
 
 import { fail, makeGroupMessageSelector } from "../reducers/groupMessages";
 import { addInputState, selectInputStates } from "../reducers/inputs";
 import { serializeMessage } from "../reducers/messages";
 import { chunkMessages } from "../utils/chunkMessages";
+
 import { MessageBox } from "./MessageBox";
 
 export function ServerPane(): JSX.Element {

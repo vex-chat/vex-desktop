@@ -1,7 +1,6 @@
 import { faHashtag, faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { capitalCase } from "change-case";
-import React from "react";
 import { useSelector } from "react-redux";
 import { Route, Switch, useParams } from "react-router";
 
@@ -17,7 +16,6 @@ import { routes } from "../constants/routes";
 import { selectChannels } from "../reducers/channels";
 import { selectServers } from "../reducers/servers";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Server(): JSX.Element {
     const { serverID, channelID, pageType, channelPage } = useParams<{
         serverID: string;
