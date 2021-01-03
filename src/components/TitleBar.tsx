@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { remote } from "electron";
 import React from "react";
 
-import { version } from "../package.json";
+import pjson from "../package.json";
 
 export function TitleBar(): JSX.Element {
     function closeWindow() {
@@ -28,7 +28,7 @@ export function TitleBar(): JSX.Element {
     return (
         <div className="title-bar" onDoubleClick={maximizeWindow}>
             <div className="title-bar-grabber has-text-centered is-size-7">
-                vex desktop {version}
+                vex desktop {pjson.version}
             </div>
             {process.platform !== "darwin" && (
                 <div className="window-buttons">

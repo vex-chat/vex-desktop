@@ -11,16 +11,19 @@ module.exports = (api) => {
 
     return {
         presets: [
-            [require("@babel/preset-env"), { debug: false }],
-            [require("@babel/preset-react"), { development }],
-            require("@babel/preset-typescript"),
-        ],
-        plugins: [
             [
-                require("@babel/plugin-proposal-class-properties"),
-                { loose: true },
+                require("@babel/preset-env"),
+                { debug: true, bugfixes: true, shippedProposals: true },
             ],
-            ...(development ? developmentPlugins : productionPlugins),
+            [
+                require("@babel/preset-react"),
+                { development, runtime: "automatic" },
+            ],
+            [
+                require("@babel/preset-typescript"),
+                { onlyRemoveTypeImports: true },
+            ],
         ],
+        plugins: [...(development ? developmentPlugins : productionPlugins)],
     };
 };

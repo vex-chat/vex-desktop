@@ -62,7 +62,10 @@
             "extends": ["plugin:react/recommended", "prettier/react"],
             "rules": {
                 "react/prop-types": 0,
-                "react/display-name": 0
+                "react/display-name": 0,
+                // TURN THESE RULES OFF FOR AUTOMATIC RUNTIME
+                "react/jsx-uses-react": 0,
+                "react/react-in-jsx-scope": 0
             }
         },
         // NODE OVERRIDES

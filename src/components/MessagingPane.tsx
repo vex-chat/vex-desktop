@@ -354,6 +354,8 @@ export default function MessagingPane(): JSX.Element {
                                                         sessionID,
                                                     } = match.params;
 
+                                                    // TODO now that this is a promise decide on whether to await or void it
+                                                    // eslint-disable-next-line @typescript-eslint/no-floating-promises
                                                     client.sessions.markVerified(
                                                         sessionID
                                                     );
