@@ -39,8 +39,8 @@ if (
 
 const createWindow = async () => {
     const RESOURCES_PATH = app.isPackaged
-        ? path.join(process.resourcesPath, "resources")
-        : path.join(__dirname, "../resources");
+        ? path.join(process.resourcesPath, "assets")
+        : path.join(__dirname, "../assets");
 
     const getAssetPath = (...paths: string[]): string => {
         return path.join(RESOURCES_PATH, ...paths);
@@ -52,7 +52,7 @@ const createWindow = async () => {
         show: false,
         width: 1200,
         height: 900,
-        icon: getAssetPath("icon.png"),
+        icon: getAssetPath("icon.iconset/icon_512x512.png"),
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,
