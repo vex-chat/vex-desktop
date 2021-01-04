@@ -158,10 +158,10 @@
     ts-jest "^26.4.4"
     tweetnacl "^1.0.3"
 
-"@vex-chat/libvex@0.12.8":
-  version "0.12.8"
-  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.12.8.tgz#ead1c88d082653c46c82c014c085bc13cf4c5df8"
-  integrity sha512-hlbGA/jF4ln53hr4GDFowwkESOJ1iClQmSgfDXIk2jruXaqQOIhySn9+ebMwHrRO6hXDIHK5I06I4K3aNzIdow==
+"@vex-chat/libvex@0.12.10":
+  version "0.12.10"
+  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.12.10.tgz#20f2b4c2e2d11325c4e33803abb4a5f9349701df"
+  integrity sha512-D7JQivnpRf9Y55/LKbPgttHIvwWPiWcIc3AeVSU4ygGLY2/g9Ec+293Z3uY3WofWH6XwNeWfaJM6TaJfmBMW6w==
   dependencies:
     "@extrahash/sleep" "^1.0.0"
     "@types/create-hmac" "^1.1.0"
