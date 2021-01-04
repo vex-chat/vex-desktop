@@ -62,29 +62,30 @@ export function ChatInput(props: {
                             const client = window.vex;
 
                             const t0 = performance.now();
+
+                            const onProgress = (progress: IFileProgress) => {
+                                setProgress(
+                                    progress.progress < 100
+                                        ? zeroPad(progress.progress, 2)
+                                        : zeroPad(99, 2)
+                                );
+                                setLoaded(progress.loaded);
+                                setTotal(progress.total);
+                                const timeElapsed =
+                                    (performance.now() - t0) / 1000;
+                                const speed = progress.loaded / timeElapsed;
+                                setSpeed(formatBytes(speed));
+                            };
+
                             setUploading(true);
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            client.on(
-                                "fileProgress",
-                                (progress: IFileProgress) => {
-                                    setProgress(
-                                        progress.progress < 100
-                                            ? zeroPad(progress.progress, 2)
-                                            : zeroPad(99, 2)
-                                    );
-                                    setLoaded(progress.loaded);
-                                    setTotal(progress.total);
-                                    const timeElapsed =
-                                        t0 - performance.now() / 1000;
-                                    const speed = progress.loaded / timeElapsed;
-                                    setSpeed(formatBytes(speed));
-                                }
-                            );
+                            client.on("fileProgress", onProgress);
 
                             const [file, key] = await client.files.create(buf);
 
                             setUploading(false);
                             setProgress("00");
+                            client.off("fileProgress", onProgress);
 
                             const fileStr = fileToString(name, file, key, type);
                             if (props.group) {
