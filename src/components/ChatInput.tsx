@@ -1,21 +1,20 @@
-import type { IFile, IUser } from "@vex-chat/libvex";
+import type { IFile } from "@vex-chat/libvex";
 
 import fs from "fs";
 import Dropzone from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 
-import { selectFamiliars } from "../reducers/familiars";
+import { fail as failGroup } from "../reducers/groupMessages";
 import { addInputState, selectInputStates } from "../reducers/inputs";
 import { failMessage } from "../reducers/messages";
 
-export function ChatInput(): JSX.Element {
-    const params: { userID: string } = useParams();
-    const familiars = useSelector(selectFamiliars);
+export function ChatInput(props: {
+    targetID: string;
+    group?: boolean;
+}): JSX.Element {
     const dispatch = useDispatch();
     const inputValues: Record<string, string> = useSelector(selectInputStates);
-    const familiar: IUser | undefined = familiars[params.userID];
-    const inputValue: string = inputValues[params.userID] || "";
+    const inputValue: string = inputValues[props.targetID];
 
     return (
         <div className="chat-input-wrapper">
@@ -23,7 +22,9 @@ export function ChatInput(): JSX.Element {
                 noClick
                 onDrop={(acceptedFiles) => {
                     const fileDetails = acceptedFiles[0];
+                    const { name, type } = fileDetails;
 
+                    console.log(fileDetails);
                     fs.readFile(
                         fileDetails.path,
                         async (
@@ -35,11 +36,22 @@ export function ChatInput(): JSX.Element {
                                 return;
                             }
                             const client = window.vex;
+
+                            console.log(Buffer.byteLength(buf));
+
                             const [file, key] = await client.files.create(buf);
-                            await client.messages.send(
-                                familiar.userID,
-                                fileToString(file, key)
-                            );
+                            const fileStr = fileToString(name, file, key, type);
+                            if (props.group) {
+                                await client.messages.group(
+                                    props.targetID,
+                                    fileStr
+                                );
+                            } else {
+                                await client.messages.send(
+                                    props.targetID,
+                                    fileStr
+                                );
+                            }
                         }
                     );
                 }}
@@ -56,7 +68,7 @@ export function ChatInput(): JSX.Element {
                             onChange={(event) => {
                                 dispatch(
                                     addInputState(
-                                        params.userID,
+                                        props.targetID,
                                         event.target.value
                                     )
                                 );
@@ -64,29 +76,41 @@ export function ChatInput(): JSX.Element {
                             onKeyDown={async (event) => {
                                 if (event.key === "Enter" && !event.shiftKey) {
                                     event.preventDefault();
+                                    dispatch(addInputState(props.targetID, ""));
 
                                     const messageText = inputValue;
-                                    dispatch(addInputState(params.userID, ""));
                                     if (messageText.trim() === "") {
                                         return;
                                     }
-
                                     const client = window.vex;
                                     try {
-                                        await client.messages.send(
-                                            familiar.userID,
-                                            messageText
-                                        );
+                                        if (props.group) {
+                                            await client.messages.group(
+                                                props.targetID,
+                                                messageText
+                                            );
+                                        } else {
+                                            await client.messages.send(
+                                                props.targetID,
+                                                messageText
+                                            );
+                                        }
                                     } catch (err) {
                                         console.log(err);
                                         if (err.message) {
                                             console.log(err);
-                                            dispatch(
-                                                failMessage(
-                                                    err.message,
-                                                    err.error.error
-                                                )
-                                            );
+                                            if (props.group) {
+                                                dispatch(
+                                                    failGroup(err.message)
+                                                );
+                                            } else {
+                                                dispatch(
+                                                    failMessage(
+                                                        err.message,
+                                                        err.error.error
+                                                    )
+                                                );
+                                            }
                                         } else {
                                             console.warn(err);
                                         }
@@ -101,6 +125,6 @@ export function ChatInput(): JSX.Element {
     );
 }
 
-const fileToString = (file: IFile, key: string) => {
-    return `{{file:${file.fileID}:${key}}}`;
+const fileToString = (name: string, file: IFile, key: string, type: string) => {
+    return `{{${name}:${file.fileID}:${key}:${type}}}`;
 };

@@ -451,7 +451,7 @@ export default function MessagingPane(): JSX.Element {
                                     )}
                                     <div ref={messagesEndRef} />
                                 </div>
-                                <ChatInput />
+                                <ChatInput targetID={familiar.userID} />
                             </Fragment>
                         );
                     }}

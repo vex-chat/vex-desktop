@@ -1,8 +1,11 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "~Types";
+import type { IMessage } from "@vex-chat/libvex";
+import type { AppThunk, RootState } from "~Types";
 import type { IGroupSerializedMessage } from "./messages";
 
 import { createSlice } from "@reduxjs/toolkit";
+
+import { serializeMessage } from "./messages";
 
 type FailPayload = { message: IGroupSerializedMessage; errorString: string };
 type AddManyPayload = { messages: IGroupSerializedMessage[]; group: string };
@@ -73,9 +76,20 @@ const groupMessageSlice = createSlice({
     },
 });
 
+export const failGroupMessage = (
+    message: IMessage,
+    errorString: string
+): AppThunk => (dispatch) => {
+    const szMsg: IGroupSerializedMessage = serializeMessage(
+        message
+    ) as IGroupSerializedMessage;
+    const payload: FailPayload = { message: szMsg, errorString };
+    dispatch(fail(payload));
+};
+
 export const { add, reset, fail, addMany } = groupMessageSlice.actions;
 
-export const makeGroupMessageSelector: (
+export const selectGroup: (
     groupId: string
 ) => (state: RootState) => Record<string, IGroupSerializedMessage> = (
     groupId
