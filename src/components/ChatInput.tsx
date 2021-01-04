@@ -35,7 +35,7 @@ export function ChatInput(props: {
                         color={"hsl(0, 0%, 71%)"}
                         className={"chat-file-spinner"}
                     />
-                    <span className="is-family-monospace">
+                    <span className="is-family-monospace help">
                         {Number(progress) > 0 && progress}% Uploaded:{" "}
                         {formatBytes(loaded)}/{formatBytes(total)} at {speed}
                         /second
@@ -77,7 +77,6 @@ export function ChatInput(props: {
                                     const timeElapsed =
                                         t0 - performance.now() / 1000;
                                     const speed = progress.loaded / timeElapsed;
-                                    console.log(timeElapsed, speed);
                                     setSpeed(formatBytes(speed));
                                 }
                             );
