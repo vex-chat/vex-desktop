@@ -44,6 +44,13 @@ module.exports = {
                 "@typescript-eslint/no-unsafe-return": 0,
                 // TURN ON EXTRA TS TYPEAWARE RULES
                 "@typescript-eslint/no-confusing-void-expression": 2,
+                // TURN OFF SOME ANNOYING RULES
+                "@typescript-eslint/no-misused-promises": [
+                    "error",
+                    {
+                        checksVoidReturn: false,
+                    },
+                ],
             },
         },
     },

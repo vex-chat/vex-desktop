@@ -13,45 +13,47 @@ export function chunkMessages(
 ): ISerializedMessage[][] {
     const messageIDs = Object.keys(threadMessages);
 
+    const unsortedMessages = messageIDs.map((id) => threadMessages[id]);
+    const sortedMessages = unsortedMessages.sort(function (a, b) {
+        const keyA = new Date(a.timestamp);
+        const keyB = new Date(b.timestamp);
+        // Compare the 2 dates
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+    });
+
     const chunkedMessages: ISerializedMessage[][] = [[]];
-    for (let i = 0; i < messageIDs.length; i++) {
+    for (const message of sortedMessages) {
         if (chunkedMessages[0] === undefined) {
             chunkedMessages.push([]);
         }
 
-        const currentMessage = threadMessages[messageIDs[i]];
-
         if (chunkedMessages[chunkedMessages.length - 1].length === 0) {
-            chunkedMessages[chunkedMessages.length - 1].push(currentMessage);
+            chunkedMessages[chunkedMessages.length - 1].push(message);
         } else {
             if (
                 chunkedMessages[chunkedMessages.length - 1][0].sender ===
-                currentMessage.sender
+                message.sender
             ) {
                 const firstMessageTime = new Date(
                     chunkedMessages[chunkedMessages.length - 1][0].timestamp
                 );
-                const thisMessageTime = new Date(currentMessage.timestamp);
+                const thisMessageTime = new Date(message.timestamp);
                 const chunkTimeLength =
                     thisMessageTime.getTime() - firstMessageTime.getTime();
 
                 // three minutes
                 if (chunkTimeLength < 1000 * 60 * 3) {
-                    chunkedMessages[chunkedMessages.length - 1].push(
-                        currentMessage
-                    );
+                    chunkedMessages[chunkedMessages.length - 1].push(message);
                     // start a new chunk if the chunk is too old
                 } else {
                     chunkedMessages.push([]);
-                    chunkedMessages[chunkedMessages.length - 1].push(
-                        currentMessage
-                    );
+                    chunkedMessages[chunkedMessages.length - 1].push(message);
                 }
             } else {
                 chunkedMessages.push([]);
-                chunkedMessages[chunkedMessages.length - 1].push(
-                    currentMessage
-                );
+                chunkedMessages[chunkedMessages.length - 1].push(message);
             }
         }
     }

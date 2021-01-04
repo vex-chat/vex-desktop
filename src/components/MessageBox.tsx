@@ -2,9 +2,15 @@ import type { ISerializedMessage } from "../reducers/messages";
 
 import { XUtils } from "@vex-chat/crypto";
 
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import {
+    faExclamationTriangle,
+    faPaperclip,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { format } from "date-fns";
+import { remote } from "electron";
+import log from "electron-log";
+import fs from "fs";
 import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import nacl from "tweetnacl";
@@ -23,7 +29,8 @@ export function MessageBox(props: {
     const familiars = useSelector(selectFamiliars);
 
     // don't match no characters of any length
-    const regex = /(```[^]+```)/;
+    const codeRegex = /(```[^]+```)/;
+    const fileRegex = /{{[^]+}}/;
     const sender = familiars[props.messages[0]?.sender] || null;
 
     if (!sender) {
@@ -54,12 +61,16 @@ export function MessageBox(props: {
                     <strong>{sender.username || "Unknown User"}</strong>
                     &nbsp;&nbsp;
                     <small className="has-text-dark">
-                        {format(new Date(props.messages[0].timestamp), "kk:mm")}
+                        {format(
+                            new Date(props.messages[0].timestamp),
+                            "kk:mm MM/dd/yyyy"
+                        )}
                     </small>
                     &nbsp;&nbsp;
                     <br />
                     {props.messages.map((message) => {
-                        const isCode = regex.test(message.message);
+                        const isCode = codeRegex.test(message.message);
+                        const isFile = fileRegex.test(message.message);
 
                         if (isCode) {
                             // removing ```
@@ -100,6 +111,67 @@ export function MessageBox(props: {
                                         null
                                     )}
                                 </div>
+                            );
+                        }
+
+                        if (isFile) {
+                            const {
+                                name,
+                                fileID,
+                                key,
+                                type,
+                            } = parseFileMessage(message.message);
+                            return (
+                                <p className="message-text" key={message.nonce}>
+                                    <span
+                                        className="tag pointer"
+                                        onClick={async () => {
+                                            const client = window.vex;
+                                            const file = await client.files.retrieve(
+                                                fileID,
+                                                key
+                                            );
+
+                                            const dialogRes = await remote.dialog.showSaveDialog(
+                                                remote.getCurrentWindow(),
+                                                {
+                                                    title:
+                                                        "Save Decrypted File",
+                                                    buttonLabel: "Save",
+                                                    defaultPath: name,
+                                                }
+                                            );
+                                            const {
+                                                canceled,
+                                                filePath,
+                                            } = dialogRes;
+                                            if (
+                                                canceled ||
+                                                !file ||
+                                                !filePath
+                                            ) {
+                                                return;
+                                            }
+                                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                            fs.writeFile(
+                                                filePath,
+                                                file.data,
+                                                () => {
+                                                    log.debug(
+                                                        `File downloaded to ${filePath}`
+                                                    );
+                                                }
+                                            );
+                                        }}
+                                    >
+                                        <span className="icon">
+                                            <FontAwesomeIcon
+                                                icon={faPaperclip}
+                                            />
+                                        </span>
+                                        {name}&nbsp;&nbsp;{type}
+                                    </span>
+                                </p>
                             );
                         }
 
@@ -144,3 +216,18 @@ export function MessageBox(props: {
         </article>
     );
 }
+
+interface IParsedFile {
+    name: string;
+    fileID: string;
+    key: string;
+    type: string;
+}
+
+const parseFileMessage = (fileStr: string): IParsedFile => {
+    const innerStr = fileStr.replace(/[{{{}}}]/g, "");
+    const strParts = innerStr.split(":");
+
+    const [name, fileID, key, type] = strParts;
+    return { name, fileID, key, type };
+};

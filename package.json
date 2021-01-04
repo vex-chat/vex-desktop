@@ -2,7 +2,7 @@
     "name": "vex-desktop",
     "productName": "vex desktop",
     "license": "AGPL-3.0-or-later",
-    "description": "Encrypted group chat that collects as little dat as possible and isn't run by commies.",
+    "description": "Encrypted group chat that collects as little data as possible and isn't run by commies.",
     "scripts": {
         "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
         "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/webpack/prod.main.js",
@@ -20,8 +20,9 @@
         "start": "node ./.erb/scripts/CheckPortInUse.js && cross-env yarn start:renderer",
         "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
         "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/webpack/renderer.js",
-        "test": "jest",
-        "prettier:node": "prettier './.erb/**/*.{js,jsx,json,md}' --ignore-path .gitignore",
+        "test": "npx jest",
+        "prettier:node": "npx prettier '**/*.{js,jsx,json,md,ts,tsx,json,md}' --ignore-path .gitignore",
+        "prettier": "npx prettier '**/*.{js,jsx,json,md,ts,tsx,json,md}' --ignore-path .gitignore --write",
         "prettier-ci": "concurrently \"yarn prettier:node -c\" \"yarn lint:ci\""
     },
     "lint-staged": {
@@ -201,6 +202,7 @@
         "history": "^5.0.0",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
+        "react-dropzone": "^11.2.4",
         "react-redux": "^7.2.2",
         "react-router-dom": "^5.2.0",
         "redux-logger": "^3.0.6",
