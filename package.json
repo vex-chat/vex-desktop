@@ -11,6 +11,7 @@
         "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
         "lint:ci": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx --rule \"prettier/prettier: 2\"",
         "package": "yarn build && electron-builder build --publish never",
+        "package-fast": "yarn build && electron-builder build --dir --publish never",
         "package-all": "rm -rf ./release; yarn build && electron-builder build -mwl --publish never; shasum -a 256 release/*.{exe,dmg,deb,AppImage} >> ./release/sha256.txt",
         "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
         "package-mac": "yarn build && electron-builder build --mac",
