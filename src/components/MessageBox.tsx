@@ -194,7 +194,8 @@ export function MessageBox(props: {
                                                     : ""
                                             }`}
                                         >
-                                            {message.message}
+                                            {message.decrypted &&
+                                                message.message}
                                         </span>
                                     )}
                                     &nbsp;&nbsp;
