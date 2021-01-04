@@ -11,15 +11,17 @@ export default function Loading(props: {
         | "spin"
         | "spinningBubbles"
         | "spokes";
+    color?: string;
+    className?: string;
 }): JSX.Element {
     return (
-        <div className="Aligner full-size">
+        <div className={`Aligner ${props.className || "full-size"} `}>
             <div className="Aligner-item Aligner-item--top"></div>
             <div className="Aligner-item">
                 <div className="">
                     <ReactLoading
                         type={props.animation}
-                        color={`hsl(0, 0%, 71%)`}
+                        color={props.color || `hsl(0, 0%, 71%)`}
                         height={props.size}
                         width={props.size}
                     />
