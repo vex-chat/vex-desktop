@@ -485,3 +485,7 @@ div.sidebar > aside > ul > li > a:hover {
     opacity: 0.5;
     filter: alpha(opacity=40);
 }
+
+.hidden {
+    visibility: hidden;
+}

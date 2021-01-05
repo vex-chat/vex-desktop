@@ -11,6 +11,7 @@ type Props = {
 
 type State = {
     src: string;
+    loaded: boolean;
 };
 
 export class Avatar extends Component<Props, State> {
@@ -18,6 +19,7 @@ export class Avatar extends Component<Props, State> {
         super(props);
         this.state = {
             src: "https://api.vex.chat/avatar/" + props.user.userID,
+            loaded: false,
         };
     }
 
@@ -31,9 +33,14 @@ export class Avatar extends Component<Props, State> {
         const { src } = this.state;
         return (
             <img
-                className={`is-rounded ${this.props.className || ""}`}
+                className={`is-rounded ${this.props.className || ""} ${
+                    this.state.loaded ? "" : "hidden"
+                }`}
                 src={src}
                 onError={this.onError.bind(this)}
+                onLoad={() => {
+                    this.setState({ loaded: true });
+                }}
             />
         );
     }
