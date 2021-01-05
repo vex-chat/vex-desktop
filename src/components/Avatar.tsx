@@ -28,7 +28,6 @@ export class Avatar extends Component<Props, State> {
 
     render(): JSX.Element {
         const { src } = this.state;
-        console.log(src);
 
         return (
             <img
