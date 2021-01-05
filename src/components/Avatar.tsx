@@ -29,7 +29,6 @@ export class Avatar extends Component<Props, State> {
 
     render(): JSX.Element {
         const { src } = this.state;
-
         return (
             <img
                 className={`is-rounded ${this.props.className || ""}`}
