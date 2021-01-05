@@ -304,7 +304,11 @@ button {
     overflow-y: auto;
     overflow-x: hidden;
     padding: 10px 20px;
-    border-bottom: 1px solid $light;
+}
+
+.file-box {
+    overflow: hidden;
+    position: relative;
 }
 
 .conversation-wrapper::-webkit-scrollbar {

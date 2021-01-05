@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import { remote } from "electron";
 import log from "electron-log";
 import fs from "fs";
+import path from "path";
 import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import nacl from "tweetnacl";
@@ -22,6 +23,14 @@ import { selectFamiliars } from "../reducers/familiars";
 import { Avatar } from "./Avatar";
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
+import { VerticalAligner } from "./VerticalAligner";
+
+const RESOURCES_PATH = remote.app.isPackaged
+    ? path.join(__dirname, "../resources/assets")
+    : path.join(__dirname, "../assets");
+const getAssetPath = (...paths: string[]): string => {
+    return path.join(RESOURCES_PATH, ...paths);
+};
 
 export function MessageBox(props: {
     messages: ISerializedMessage[];
@@ -121,7 +130,7 @@ export function MessageBox(props: {
                             return (
                                 <p className="message-text" key={message.nonce}>
                                     <span
-                                        className="tag pointer"
+                                        className="pointer file-box"
                                         onClick={async () => {
                                             const client = window.vex;
                                             const file = await client.files.retrieve(
@@ -161,12 +170,24 @@ export function MessageBox(props: {
                                             );
                                         }}
                                     >
-                                        <span className="icon">
-                                            <FontAwesomeIcon
-                                                icon={faPaperclip}
-                                            />
+                                        <span className="file-box-label">
+                                            <span className="image is-48x48">
+                                                <img
+                                                    src={getAssetPath(
+                                                        "mimeIcons/" +
+                                                            (type !== undefined
+                                                                ? type
+                                                                : "unknown"
+                                                            ).replace(
+                                                                "/",
+                                                                "-"
+                                                            ) +
+                                                            ".svg"
+                                                    )}
+                                                />
+                                            </span>
                                         </span>
-                                        {name}&nbsp;&nbsp;{type}
+                                        <span className="help">{name}</span>
                                     </span>
                                 </p>
                             );
