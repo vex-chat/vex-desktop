@@ -93,7 +93,7 @@ export async function initClient(): Promise<void> {
 
     client = new Client(PK, {
         dbFolder,
-        logLevel: "warn",
+        logLevel: "info",
         dbLogLevel: "warn",
     });
 

@@ -3,6 +3,7 @@ import type { RootState } from "~Types";
 
 import { configureStore } from "@reduxjs/toolkit";
 import { createLogger } from "redux-logger";
+import thunk from "redux-thunk";
 
 import reducer from "./rootReducer";
 
@@ -14,10 +15,7 @@ const logger = createLogger({
 export default (): EnhancedStore<RootState> => {
     const store = configureStore({
         reducer,
-        middleware: (getDefaultMiddleware) => [
-            ...getDefaultMiddleware(),
-            logger,
-        ],
+        middleware: () => [thunk, logger],
     });
 
     if (process.env.NODE_ENV === "development" && module.hot) {
