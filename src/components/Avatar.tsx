@@ -6,6 +6,7 @@ import { strToIcon } from "../utils/strToIcon";
 
 type Props = {
     user: IUser;
+    className?: string;
 };
 
 type State = {
@@ -31,7 +32,7 @@ export class Avatar extends Component<Props, State> {
 
         return (
             <img
-                className="is-rounded"
+                className={`is-rounded ${this.props.className || ""}`}
                 src={src}
                 onError={this.onError.bind(this)}
             />

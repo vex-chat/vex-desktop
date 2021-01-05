@@ -9,7 +9,8 @@ export function IconUsername(
     user: IUser,
     iconSize = 48 | 32,
     icon?: IconDefinition,
-    subtitle = ""
+    subtitle = "",
+    avatarClassName = ""
 ): JSX.Element {
     const size = iconSize.toString() + "x" + iconSize.toString();
 
@@ -20,7 +21,7 @@ export function IconUsername(
                     <FontAwesomeIcon className="icon-username-fa" icon={icon} />
                 ) : (
                     <figure className={`image is-${size}`}>
-                        <Avatar user={user} />
+                        <Avatar user={user} className={avatarClassName} />
                     </figure>
                 )}
             </span>

@@ -98,9 +98,6 @@ body::-webkit-scrollbar-thumb {
     z-index: 9;
 }
 
-.chat-file-spinner {
-}
-
 textarea {
     border-radius: 0px !important;
 }
@@ -482,4 +479,9 @@ div.sidebar > aside > ul > li > a:hover {
 
 .outgoing-message {
     color: $black !important;
+}
+
+.avatar-trigger:hover {
+    opacity: 0.5;
+    filter: alpha(opacity=40);
 }

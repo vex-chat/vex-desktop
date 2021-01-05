@@ -48,7 +48,7 @@ export function UserMenu(): JSX.Element {
                             >
                                 <div className="dropdown-content user-dropdown">
                                     <div
-                                        className="dropdown-item pointer"
+                                        className="dropdown-item"
                                         onClick={async () => {
                                             setClassName("");
                                             const dialogRes = await remote.dialog.showOpenDialog(
@@ -84,7 +84,13 @@ export function UserMenu(): JSX.Element {
                                             }
                                         }}
                                     >
-                                        {IconUsername(user, 48, undefined, "")}
+                                        {IconUsername(
+                                            user,
+                                            48,
+                                            undefined,
+                                            "",
+                                            "avatar-trigger pointer"
+                                        )}
                                     </div>
                                     <Link
                                         to={routes.SETTINGS}
