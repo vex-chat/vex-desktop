@@ -3,7 +3,7 @@ import type { IUser } from "@vex-chat/libvex";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { strToIcon } from "../utils/strToIcon";
+import { Avatar } from "../components/Avatar";
 
 export function IconUsername(
     user: IUser,
@@ -20,10 +20,7 @@ export function IconUsername(
                     <FontAwesomeIcon className="icon-username-fa" icon={icon} />
                 ) : (
                     <figure className={`image is-${size}`}>
-                        <img
-                            className="is-rounded"
-                            src={strToIcon(user.username)}
-                        />
+                        <Avatar user={user} />
                     </figure>
                 )}
             </span>

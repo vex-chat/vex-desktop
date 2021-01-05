@@ -158,10 +158,10 @@
     ts-jest "^26.4.4"
     tweetnacl "^1.0.3"
 
-"@vex-chat/libvex@^0.12.12":
-  version "0.12.12"
-  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.12.12.tgz#44740aec28ca07716cfba9ddc2ad90a9744ff216"
-  integrity sha512-nd20tHkms61AoLPd3sRy2ZsUGrdlysThMohYIFIVgwaiFIGrHxkX3AhtGsbHgaGsZJHLAvJErq3ITA+ir5H3TQ==
+"@vex-chat/libvex@^0.12.17":
+  version "0.12.17"
+  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.12.17.tgz#2e0026af04947f8d324db3320d06cada281e3fff"
+  integrity sha512-xD/1HxEsiEAX5fPw6QdXgxR0G3jFFZFa3vaCtcoHlCiguFZG17vO3hoCF59tWEuG07jMb4EdJy2nTrft0a0YzQ==
   dependencies:
     "@extrahash/sleep" "^1.0.0"
     "@types/create-hmac" "^1.1.0"
@@ -175,6 +175,7 @@
     chalk "^4.1.0"
     knex "^0.21.15"
     lodash "^4.17.20"
+    lzma "^2.3.2"
     msgpack-lite "^0.1.26"
     sqlite3 "^5.0.0"
     tweetnacl "^1.0.3"
@@ -1456,6 +1457,11 @@ lru-cache@^6.0.0:
   integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
   dependencies:
     yallist "^4.0.0"
+
+lzma@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/lzma/-/lzma-2.3.2.tgz#3783b24858b9c0e747a0df3cbf1fb5fcaa92c441"
+  integrity sha1-N4OySFi5wOdHoN88vx+1/KqSxEE=
 
 make-error@1.x:
   version "1.3.6"
