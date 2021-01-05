@@ -18,8 +18,8 @@ import * as uuid from "uuid";
 
 import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 import { selectFamiliars } from "../reducers/familiars";
-import { strToIcon } from "../utils/strToIcon";
 
+import { Avatar } from "./Avatar";
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
 
@@ -47,10 +47,7 @@ export function MessageBox(props: {
                 <FamiliarMenu
                     trigger={
                         <p className="image is-48x48">
-                            <img
-                                className="is-rounded"
-                                src={strToIcon(sender.username)}
-                            />
+                            <Avatar user={sender} />
                         </p>
                     }
                     familiar={sender}

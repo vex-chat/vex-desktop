@@ -253,7 +253,7 @@ export function ClientLauncher(): JSX.Element {
 
     const authedHandler = async () => {
         dispatch(setApp("initialLoad", true));
-        const me = client.users.me();
+        const me = client.me.details();
         dispatch(setUser(me));
 
         history.push(routes.MESSAGING + "/" + me.userID);
