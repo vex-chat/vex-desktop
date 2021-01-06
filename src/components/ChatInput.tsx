@@ -1,6 +1,7 @@
 import type { IFile, IFileProgress } from "@vex-chat/libvex";
 
 import log from "electron-log";
+import FileType from "file-type";
 import fs from "fs";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
@@ -47,7 +48,9 @@ export function ChatInput(props: {
                 noClick
                 onDrop={(acceptedFiles) => {
                     const fileDetails = acceptedFiles[0];
-                    const { name, type } = fileDetails;
+                    const { name } = fileDetails;
+
+                    console.log(fileDetails);
 
                     fs.readFile(
                         fileDetails.path,
@@ -59,6 +62,10 @@ export function ChatInput(props: {
                                 log.warn(err);
                                 return;
                             }
+
+                            const details = await FileType.fromBuffer(buf);
+                            const type = details?.mime;
+
                             const client = window.vex;
 
                             const t0 = performance.now();
@@ -87,7 +94,13 @@ export function ChatInput(props: {
                             setProgress("00");
                             client.off("fileProgress", onProgress);
 
-                            const fileStr = fileToString(name, file, key, type);
+                            const fileStr = fileToString(
+                                name.replace(":", "-"),
+                                file,
+                                key,
+                                type || fileDetails.type || "unknown"
+                            );
+                            console.log(fileStr);
                             if (props.group) {
                                 await client.messages.group(
                                     props.targetID,

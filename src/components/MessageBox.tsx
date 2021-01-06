@@ -35,15 +35,13 @@ const bestMatch = (mimeType: string): string => {
     let lowestScore = 999999;
 
     mimeIcons.forEach((file) => {
-        const distance = levenshtein(mimeType, file);
+        const distance = levenshtein(mimeType.replace("/", "-"), file);
 
         if (distance < lowestScore) {
             lowestScore = distance;
             bestMatch = file;
         }
     });
-
-    console.log("Best match for " + mimeType + " was " + bestMatch);
 
     return getAssetPath("mimeIcons/" + bestMatch);
 };
