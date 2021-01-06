@@ -2,15 +2,13 @@ import type { ISerializedMessage } from "../reducers/messages";
 
 import { XUtils } from "@vex-chat/crypto";
 
-import {
-    faExclamationTriangle,
-    faPaperclip,
-} from "@fortawesome/free-solid-svg-icons";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { format } from "date-fns";
 import { remote } from "electron";
 import log from "electron-log";
 import fs from "fs";
+import levenshtein from "js-levenshtein";
 import path from "path";
 import { Fragment } from "react";
 import { useSelector } from "react-redux";
@@ -18,18 +16,36 @@ import nacl from "tweetnacl";
 import * as uuid from "uuid";
 
 import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
+import { mimeIcons } from "../constants/mimeIcons";
 import { selectFamiliars } from "../reducers/familiars";
 
 import { Avatar } from "./Avatar";
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
-import { VerticalAligner } from "./VerticalAligner";
 
 const RESOURCES_PATH = remote.app.isPackaged
     ? path.join(__dirname, "../resources/assets")
     : path.join(__dirname, "../assets");
 const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
+};
+
+const bestMatch = (mimeType: string): string => {
+    let bestMatch = "";
+    let lowestScore = 999999;
+
+    mimeIcons.forEach((file) => {
+        const distance = levenshtein(mimeType, file);
+
+        if (distance < lowestScore) {
+            lowestScore = distance;
+            bestMatch = file;
+        }
+    });
+
+    console.log("Best match for " + mimeType + " was " + bestMatch);
+
+    return getAssetPath("mimeIcons/" + bestMatch);
 };
 
 export function MessageBox(props: {
@@ -173,16 +189,8 @@ export function MessageBox(props: {
                                         <span className="file-box-label">
                                             <span className="image is-48x48">
                                                 <img
-                                                    src={getAssetPath(
-                                                        "mimeIcons/" +
-                                                            (type !== undefined
-                                                                ? type
-                                                                : "unknown"
-                                                            ).replace(
-                                                                "/",
-                                                                "-"
-                                                            ) +
-                                                            ".svg"
+                                                    src={bestMatch(
+                                                        type || "unknown"
                                                     )}
                                                 />
                                             </span>

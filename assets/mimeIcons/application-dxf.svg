@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" version="1.1">
- <path style="opacity:0.2" d="M 14.5,8 C 13.115,8 12,9.115 12,10.5 v 45 c 0,1.385 1.115,2.5 2.5,2.5 h 35 C 50.885,58 52,56.885 52,55.5 V 23 L 38.25,21.75 37,8 Z"/>
- <path style="fill:#ec4646" d="m14.5 7c-1.385 0-2.5 1.115-2.5 2.5v45c0 1.385 1.115 2.5 2.5 2.5h35c1.385 0 2.5-1.115 2.5-2.5v-32.5l-13.75-1.25-1.25-13.75z"/>
- <path style="opacity:0.2" d="m 37,8 v 12.5 c 0,1.3808 1.1193,2.5 2.5,2.5 H 52 Z"/>
- <path style="fill:#f17575" d="m37 7v12.5c0 1.3808 1.1193 2.5 2.5 2.5h12.5l-15-15z"/>
- <path style="opacity:0.2" d="M 25,8 V 33 H 16 V 42 H 12 V 45 H 16 V 54 H 25 V 57 H 28 V 54 H 37 V 45 H 52 V 42 H 37 V 33 H 28 V 8 Z M 19,51 V 36 H 34 V 51 M 25,42 V 45 H 28 V 42 Z"/>
- <path style="fill:#ffffff" d="M 25,7 V 32 H 16 V 41 H 12 V 44 H 16 V 53 H 25 V 57 H 28 V 53 H 37 V 44 H 52 V 41 H 37 V 32 H 28 V 7 Z M 19,50 V 35 H 34 V 50 M 25,41 V 44 H 28 V 41 Z"/>
- <path style="opacity:0.2;fill:#ffffff" d="M 14.5,7 C 13.115,7 12,8.115 12,9.5 v 1 C 12,9.115 13.115,8 14.5,8 H 37 c 0,-1 0,0 0,-1 z"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" version="1.1">
+ <path style="opacity:0.2" d="m 5,2.5 c -0.554,0 -1,0.446 -1,1 V 21.5 c 0,0.553999 0.446,1 1,1 h 14 c 0.554,0 1,-0.446001 1,-1 V 8.5 l -5.5,-0.5 -0.5,-5.5 z"/>
+ <path style="fill:#ec4646" d="M 5,2 C 4.446,2 4,2.446 4,3 V 21 C 4,21.554 4.446,22 5,22 H 19 C 19.554,22 20,21.554 20,21 V 8 L 14.5,7.5 14,2 Z"/>
+ <path style="opacity:0.2;fill:#ffffff" d="M 5,2 C 4.446,2 4,2.446 4,3 V 3.5 C 4,2.946 4.446,2.5 5,2.5 H 14 V 2 Z"/>
+ <path style="opacity:0.2" d="m 14,2.5 v 5 c 0,0.5525 0.448,1 1,1 h 5 z"/>
+ <path style="fill:#f17575" d="M 14,2 V 7 C 14,7.5525 14.448,8 15,8 H 20 Z"/>
+ <path style="opacity:0.2" d="M 8,2.5 V 14.5 H 5 V 17.5 H 4 V 18.5 H 5 V 21.5 H 8 V 22 H 9 V 21.5 H 12 V 18.5 H 20 V 17.5 H 12 V 14.5 H 9 V 2.5 Z M 6,15.5 H 11 V 20.5 H 6 Z M 8,17.5 V 18.5 H 9 V 17.5 Z"/>
+ <path style="fill:#ffffff" d="M 8,2 V 14 H 5 V 17 H 4 V 18 H 5 V 21 H 8 V 22 H 9 V 21 H 12 V 18 H 20 V 17 H 12 V 14 H 9 V 2 Z M 6,15 H 11 V 20 H 6 Z M 8,17 V 18 H 9 V 17 Z"/>
 </svg>

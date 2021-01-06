@@ -8,6 +8,9 @@ DO NOT attempt to use this for a reliable form of communication yet
 
 desktop client for vex
 
+uses Papirus Icon Set for files
+https://github.com/PapirusDevelopmentTeam/papirus-icon-theme
+
 ## dev setup
 
 Make sure you have the dependencies:
