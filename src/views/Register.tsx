@@ -59,10 +59,9 @@ export default function Register(): JSX.Element {
         });
 
         // TODO: high priority needs to be a saga. Suspect using client somewhere else without it being a singleton
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         tempClient.on("ready", async () => {
             // eslint-disable-next-line prefer-const
-            const [user, err] = await tempClient.register(username);
+            const [user, err] = await tempClient.register(username, password);
 
             await tempClient.close();
 
@@ -75,11 +74,11 @@ export default function Register(): JSX.Element {
 
             if (user !== null) {
                 setWaiting(false);
-                const keyPath = keyFolder + "/" + user.signKey;
-                Client.saveKeyFile(keyPath, password, PK);
+                const keyPath = keyFolder + "/" + user.username;
+                Client.saveKeyFile(keyPath, "", PK);
 
                 try {
-                    const confirm = Client.loadKeyFile(keyPath, password);
+                    const confirm = Client.loadKeyFile(keyPath, "");
                     if (confirm !== PK) {
                         console.log(confirm, PK);
                         throw new Error(
@@ -93,7 +92,7 @@ export default function Register(): JSX.Element {
                     return;
                 }
 
-                gaurdian.load(keyPath, password);
+                gaurdian.load(keyPath, "");
                 history.push(routes.HOME);
             }
         });
@@ -106,7 +105,7 @@ export default function Register(): JSX.Element {
             <div className="box has-background-white register-form">
                 <div className="field">
                     <label className="label is-small">
-                        Pick a username: &nbsp;&nbsp;
+                        Username: &nbsp;&nbsp;
                         <a
                             onClick={async () => {
                                 setErrorText("");
@@ -227,9 +226,7 @@ export default function Register(): JSX.Element {
                     )}
                 </div>
                 <div className="field">
-                    <label className="label is-small">
-                        Password to encrypt your keys:
-                    </label>
+                    <label className="label is-small">Password:</label>
                     <input
                         className="password-input input"
                         type="password"

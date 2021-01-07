@@ -158,10 +158,10 @@
     ts-jest "^26.4.4"
     tweetnacl "^1.0.3"
 
-"@vex-chat/libvex@^0.12.19":
-  version "0.12.19"
-  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.12.19.tgz#a0f7062716839e41de89f042bdb370e8e39dc6cf"
-  integrity sha512-vpcMhW1RVLRLVxRWW2tflI4ksU59SFsmAS2bIfbvqLavcahwFqYlbGR+4zdM9wEjjDLf1Nn7ikFwnuLH64qoDw==
+"@vex-chat/libvex@^0.13.1":
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.13.1.tgz#4357573992402651afd144ccec387b6f2824a51c"
+  integrity sha512-Aq/2V9w4443aj5eM9dR6znyK9YBSy/vXnZPrN6RktjfIRo0SA1tt/0nbbpzEk5HV0h3GZTokewy1GmBKRZ55zA==
   dependencies:
     "@extrahash/sleep" "^1.0.0"
     "@types/create-hmac" "^1.1.0"
@@ -170,12 +170,11 @@
     "@types/uuid" "^8.3.0"
     "@types/ws" "^7.4.0"
     "@vex-chat/crypto" "^0.7.13"
-    "@vex-chat/types" "^0.8.2"
+    "@vex-chat/types" "^0.9.4"
     axios "^0.21.0"
     chalk "^4.1.0"
     knex "^0.21.15"
     lodash "^4.17.20"
-    lzma "^2.3.2"
     msgpack-lite "^0.1.26"
     sqlite3 "^5.0.0"
     tweetnacl "^1.0.3"
@@ -190,10 +189,10 @@
   dependencies:
     tweetnacl "^1.0.3"
 
-"@vex-chat/types@^0.8.2":
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/@vex-chat/types/-/types-0.8.2.tgz#50fe3e40ca70d2ba509544c4ba492f6d6afe802e"
-  integrity sha512-lgrVo7uBbfm5BN9z2jz3sUHNwT0Ni9mYm7gPCHbnRK/bx7H+KEkf0Xj1MKyFCn3qH+8oafOLp0q9J/yg/Hu4fA==
+"@vex-chat/types@^0.9.4":
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/@vex-chat/types/-/types-0.9.4.tgz#4cdc838becd61891cf97ad68d192a938d5998c2e"
+  integrity sha512-YdVVW2IZdgKh5YI9x94CH4OkaXA+IVzWIAfOdibz1Zu27Dp6ns5bTZMLbLxNDt9arM1J0fpVhqLno8BJi7MpKg==
   dependencies:
     tweetnacl "^1.0.3"
 
@@ -1457,11 +1456,6 @@ lru-cache@^6.0.0:
   integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
   dependencies:
     yallist "^4.0.0"
-
-lzma@^2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/lzma/-/lzma-2.3.2.tgz#3783b24858b9c0e747a0df3cbf1fb5fcaa92c441"
-  integrity sha1-N4OySFi5wOdHoN88vx+1/KqSxEE=
 
 make-error@1.x:
   version "1.3.6"

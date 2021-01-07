@@ -60,7 +60,7 @@ for (const folder of folders) {
 
 let client: Client;
 
-const onReadyCallback = async () => {
+const onReadyCallback = async (username: string) => {
     const [, err] = await client.users.retrieve(client.getKeys().public);
 
     if (err !== null && err.response) {
@@ -78,8 +78,7 @@ const onReadyCallback = async () => {
                 launchEvents.emit("retry");
         }
     }
-
-    await client.login();
+    await client.login(username);
 };
 
 const launchEvents = new EventEmitter();
@@ -97,9 +96,26 @@ export async function initClient(): Promise<void> {
         dbLogLevel: "warn",
     });
 
+    const pubKey = client.getKeys().public;
+    const deviceInfo = await client.devices.retrieve(pubKey);
+    if (!deviceInfo) {
+        log.warn("No device info found, probably need to register device.");
+        return;
+    }
+
+    const [userInfo, err] = await client.users.retrieve(deviceInfo.owner);
+    if (!userInfo) {
+        log.warn("No user info found, are you registered?");
+        return;
+    }
+    if (err) {
+        log.error(err);
+        return;
+    }
+
     window.vex = client;
 
-    client.on("ready", () => void onReadyCallback());
+    client.on("ready", () => void onReadyCallback(userInfo.username));
 
     void client.init();
 }
@@ -253,7 +269,7 @@ export function ClientLauncher(): JSX.Element {
 
     const authedHandler = async () => {
         dispatch(setApp("initialLoad", true));
-        const me = client.me.details();
+        const me = client.me.user();
         dispatch(setUser(me));
 
         history.push(routes.MESSAGING + "/" + me.userID);

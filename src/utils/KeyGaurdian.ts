@@ -28,7 +28,7 @@ class KeyGaurdian {
         return this.SK;
     }
 
-    public load(path: string, password: string): void {
+    public load(path: string, password = ""): void {
         const SK = Client.loadKeyFile(path, password);
         this.SK = SK;
     }

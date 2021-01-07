@@ -9,10 +9,10 @@ import { addInputState, selectInputStates } from "../reducers/inputs";
 
 export const emptyUser: IUser = {
     userID: "",
-    signKey: "",
     username: "",
     lastSeen: new Date(Date.now()),
-    avatar: null,
+    passwordHash: "",
+    passwordSalt: "",
 };
 
 export function UserSearchBar(props: {

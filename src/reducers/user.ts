@@ -6,7 +6,6 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface ISerializableUser {
     userID: string;
     username: string;
-    signKey: string;
     lastSeen: string;
 }
 
@@ -16,7 +15,6 @@ export function deserializeUser(user: ISerializableUser): IUser {
     return {
         userID: user.userID,
         username: user.username,
-        signKey: user.signKey,
         lastSeen: new Date(user.lastSeen),
     };
 }
@@ -25,7 +23,6 @@ export function serializeUser(user: IUser): ISerializableUser {
     return {
         userID: user.userID,
         username: user.username,
-        signKey: user.signKey,
         lastSeen: user.lastSeen.toString(),
     };
 }
@@ -33,7 +30,6 @@ export function serializeUser(user: IUser): ISerializableUser {
 const emptyUser: ISerializableUser = {
     userID: "",
     username: "",
-    signKey: "",
     lastSeen: new Date(Date.now()).toString(),
 };
 

@@ -12,12 +12,14 @@ interface ISerializedSession {
     fingerprint: string;
     lastUsed: string;
     verified: boolean;
+    deviceID: string;
 }
 
 export const deserializeSession = (session: ISerializedSession): ISession => {
     return {
         sessionID: session.sessionID,
         userID: session.userID,
+        deviceID: session.deviceID,
         mode: session.mode,
         SK: session.SK,
         publicKey: session.publicKey,
@@ -37,6 +39,7 @@ export const serializeSession = (session: ISession): ISerializedSession => {
         fingerprint: session.fingerprint,
         lastUsed: session.lastUsed.toString(),
         verified: session.verified,
+        deviceID: session.deviceID,
     };
 };
 
