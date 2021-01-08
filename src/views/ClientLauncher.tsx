@@ -106,11 +106,21 @@ export async function initClient(): Promise<void> {
                 "Username and password not present in gaurdian, but need to register device."
             );
         }
-        deviceInfo = await client.devices.register(username, password);
-        if (!deviceInfo) {
-            throw new Error("Failed to register device.");
-        }
-        return;
+
+        await new Promise<void>((res, rej) => {
+            const tempClient = new Client(client.getKeys().private, {
+                dbFolder,
+            });
+            tempClient.on("ready", async () => {
+                deviceInfo = await client.devices.register(username, password);
+                res();
+            });
+            tempClient.init();
+        });
+    }
+
+    if (!deviceInfo) {
+        throw new Error("Couldn't register device and no device info found.");
     }
 
     const [userInfo, err] = await client.users.retrieve(deviceInfo.owner);
