@@ -28,13 +28,13 @@ export const Login: FunctionComponent = memo(() => {
         if (password == "") {
             return;
         }
+        gaurdian.setAuthInfo(username, password);
 
         setLoading(true);
         const keyPath = `${keyFolder}/${username}`;
         if (fs.existsSync(keyPath)) {
             try {
                 gaurdian.load(keyPath, "");
-                gaurdian.setAuthInfo(username, password);
                 history.push(routes.HOME);
             } catch (err) {
                 console.error(err);
