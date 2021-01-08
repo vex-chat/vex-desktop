@@ -18,6 +18,7 @@ export interface IBaseSerializedMessage {
     failed: boolean;
     failMessage: string;
     authorID: string;
+    readerID: string;
 }
 
 export interface IGroupSerializedMessage extends IBaseSerializedMessage {
@@ -46,6 +47,7 @@ export function serializeMessage(message: IMessage): ISerializedMessage {
         failed: false,
         failMessage: "",
         authorID: message.authorID,
+        readerID: message.readerID,
     };
     return serialized;
 }
@@ -61,7 +63,10 @@ const messageSlice = createSlice({
             state: Record<string, Record<string, ISerializedMessage>>,
             action
         ) => {
-            const thread = action.payload.authorID;
+            const thread =
+                action.payload.direction === "incoming"
+                    ? action.payload.authorID
+                    : action.payload.readerID;
             const message = action.payload;
 
             if (!state[thread]) {
@@ -102,7 +107,10 @@ const messageSlice = createSlice({
                 errorString: string;
             } = action.payload;
 
-            const thread = action.payload.authorID;
+            const thread =
+                action.payload.direction === "incoming"
+                    ? action.payload.authorID
+                    : action.payload.readerID;
 
             if (
                 state[thread] === undefined ||

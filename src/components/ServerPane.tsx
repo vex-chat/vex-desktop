@@ -5,8 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
+import * as uuid from "uuid";
 
 import { selectGroup } from "../reducers/groupMessages";
+import { chunkMessages } from "../utils/chunkMessages";
 
 import { ChatInput } from "./ChatInput";
 import { MessageBox } from "./MessageBox";
@@ -36,9 +38,14 @@ export function ServerPane(): JSX.Element {
                         <FontAwesomeIcon icon={faStar} />{" "}
                     </p>
                 </div>
-                {Object.keys(threadMessages || {}).map((key) => (
-                    <MessageBox key={key} messages={[threadMessages[key]]} />
-                ))}
+                {chunkMessages(threadMessages || {}).map((chunk) => {
+                    return (
+                        <MessageBox
+                            key={chunk[0]?.mailID || uuid.v4()}
+                            messages={chunk}
+                        />
+                    );
+                })}
                 <div ref={messagesEndRef} />
             </div>
 
