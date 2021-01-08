@@ -31,13 +31,16 @@ export function ServerPane(): JSX.Element {
     return (
         <Fragment>
             <div className="conversation-wrapper">
-                <div className={"history-disclaimer"}>
-                    <p className="help">
-                        <FontAwesomeIcon icon={faStar} /> For your security,
-                        message history is not transferred to new devices.
-                        <FontAwesomeIcon icon={faStar} />{" "}
-                    </p>
-                </div>
+                {channelID !== undefined && (
+                    <div className={"history-disclaimer"}>
+                        <p className="help">
+                            <FontAwesomeIcon icon={faStar} /> For your security,
+                            message history is not transferred to new devices.
+                            <FontAwesomeIcon icon={faStar} />{" "}
+                        </p>
+                    </div>
+                )}
+
                 {chunkMessages(threadMessages || {}).map((chunk) => {
                     return (
                         <MessageBox
