@@ -24,11 +24,21 @@ export const Login: FunctionComponent = memo(() => {
     const [loading, setLoading] = useState(false);
     const [errText, setErrText] = useState("");
 
-    const loginUser = () => {
+    const loginUser = async () => {
         if (password == "") {
             return;
         }
         gaurdian.setAuthInfo(username, password);
+
+        const tempClient = new Client(undefined, { inMemoryDb: true });
+        const [userDetails] = await tempClient.users.retrieve(username);
+        if (!userDetails) {
+            console.error("User not found.");
+            setLoading(false);
+            history.push(routes.HOME);
+            setErrText("User not found.");
+            return;
+        }
 
         setLoading(true);
         const keyPath = `${keyFolder}/${username}`;
@@ -102,7 +112,7 @@ export const Login: FunctionComponent = memo(() => {
                         }}
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
-                                loginUser();
+                                void loginUser();
                             }
                         }}
                     />
@@ -122,7 +132,7 @@ export const Login: FunctionComponent = memo(() => {
                         }}
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
-                                loginUser();
+                                void loginUser();
                             }
                         }}
                     />
@@ -136,7 +146,7 @@ export const Login: FunctionComponent = memo(() => {
                             loading ? "is-loading" : ""
                         }`}
                         onClick={() => {
-                            loginUser();
+                            void loginUser();
                         }}
                     >
                         Login
