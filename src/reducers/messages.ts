@@ -19,6 +19,7 @@ export interface IBaseSerializedMessage {
     failMessage: string;
     authorID: string;
     readerID: string;
+    forward: boolean;
 }
 
 export interface IGroupSerializedMessage extends IBaseSerializedMessage {
@@ -48,6 +49,7 @@ export function serializeMessage(message: IMessage): ISerializedMessage {
         failMessage: "",
         authorID: message.authorID,
         readerID: message.readerID,
+        forward: message.forward,
     };
     return serialized;
 }

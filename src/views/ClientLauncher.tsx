@@ -60,7 +60,7 @@ for (const folder of folders) {
 
 let client: Client;
 
-const onReadyCallback = async (username: string) => {
+const onReadyCallback = async (username: string, password: string) => {
     const [, err] = await client.users.retrieve(client.getKeys().public);
 
     if (err !== null && err.response) {
@@ -78,7 +78,7 @@ const onReadyCallback = async (username: string) => {
                 launchEvents.emit("retry");
         }
     }
-    await client.login(username);
+    await client.login(username, password);
 };
 
 const launchEvents = new EventEmitter();
@@ -99,28 +99,28 @@ export async function initClient(): Promise<void> {
     const pubKey = client.getKeys().public;
     let deviceInfo = await client.devices.retrieve(pubKey);
     if (!deviceInfo) {
-        log.warn("No device info found, probably need to register device.");
-        const [username, password] = gaurdian.getAuthInfo();
-        if (!username || !password) {
-            throw new Error(
-                "Username and password not present in gaurdian, but need to register device."
-            );
-        }
-
-        await new Promise<void>((res, rej) => {
+        await new Promise((res) => {
+            log.warn("No device info found..");
             const tempClient = new Client(client.getKeys().private, {
                 dbFolder,
             });
             tempClient.on("ready", async () => {
-                deviceInfo = await client.devices.register(username, password);
-                res();
+                const [username, password] = gaurdian.getAuthInfo();
+                if (!username || !password) {
+                    throw new Error("Auth info null.");
+                }
+                deviceInfo = await tempClient.devices.register(
+                    username,
+                    password
+                );
+                void tempClient.close();
+                res(1);
             });
-            tempClient.init();
+            void tempClient.init();
         });
-    }
-
-    if (!deviceInfo) {
-        throw new Error("Couldn't register device and no device info found.");
+        if (!deviceInfo) {
+            throw new Error("Registration failed.");
+        }
     }
 
     const [userInfo, err] = await client.users.retrieve(deviceInfo.owner);
@@ -134,8 +134,11 @@ export async function initClient(): Promise<void> {
     }
 
     window.vex = client;
-
-    client.on("ready", () => void onReadyCallback(userInfo.username));
+    const [username, password] = gaurdian.getAuthInfo();
+    if (!username || !password) {
+        throw new Error("No auth info in gaurdian.");
+    }
+    client.on("ready", () => void onReadyCallback(username, password));
 
     void client.init();
 }
