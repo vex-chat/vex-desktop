@@ -279,6 +279,7 @@ export function ClientLauncher(): JSX.Element {
 
         const familiars = await client.users.familiars();
         dispatch(setFamiliars(familiars));
+        dispatch(addFamiliar(me));
         for (const user of familiars) {
             const history = await client.messages.retrieve(user.userID);
 

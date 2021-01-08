@@ -54,10 +54,10 @@ export function MessageBox(props: {
     // don't match no characters of any length
     const codeRegex = /(```[^]+```)/;
     const fileRegex = /{{[^]+}}/;
-    const sender = familiars[props.messages[0]?.sender] || null;
+    const sender = familiars[props.messages[0]?.authorID] || null;
 
     if (!sender) {
-        return <span key={uuid.v4()} />;
+        return <p key={uuid.v4()} />;
     }
 
     if (props.messages.length == 0) {

@@ -101,7 +101,7 @@ export const Login: FunctionComponent = memo(() => {
                         }}
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
-                                void loginUser();
+                                loginUser();
                             }
                         }}
                     />
@@ -121,7 +121,7 @@ export const Login: FunctionComponent = memo(() => {
                         }}
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
-                                void loginUser();
+                                loginUser();
                             }
                         }}
                     />
@@ -135,7 +135,7 @@ export const Login: FunctionComponent = memo(() => {
                             loading ? "is-loading" : ""
                         }`}
                         onClick={() => {
-                            void loginUser();
+                            loginUser();
                         }}
                     >
                         Login

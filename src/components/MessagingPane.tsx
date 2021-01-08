@@ -1,7 +1,4 @@
 import type { IUser } from "@vex-chat/libvex";
-import type { ISerializedMessage } from "../reducers/messages";
-
-import { XUtils } from "@vex-chat/crypto";
 
 import {
     faAt,
@@ -11,6 +8,7 @@ import {
     faExclamationTriangle,
     faLock,
     faSkull,
+    faStar,
     faTimes,
     faUnlock,
 } from "@fortawesome/free-solid-svg-icons";
@@ -18,7 +16,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createRef, Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
-import nacl from "tweetnacl";
 import * as uuid from "uuid";
 
 import { routes } from "../constants/routes";
@@ -26,7 +23,6 @@ import { useQuery } from "../hooks/useQuery";
 import { selectFamiliars } from "../reducers/familiars";
 import { selectMessages } from "../reducers/messages";
 import { markSession, selectSessions } from "../reducers/sessions";
-import { selectUser } from "../reducers/user";
 import { chunkMessages } from "../utils/chunkMessages";
 
 import { ChatInput } from "./ChatInput";
@@ -73,9 +69,6 @@ export default function MessagingPane(): JSX.Element {
 
     const allMessages = useSelector(selectMessages);
     const threadMessages = allMessages[params.userID];
-
-    const messageIDs = Object.keys(threadMessages || {});
-    const user = useSelector(selectUser);
 
     if (!familiar) {
         return (
@@ -395,47 +388,19 @@ export default function MessagingPane(): JSX.Element {
                     exact
                     path={routes.MESSAGING + "/:userID"}
                     render={() => {
-                        const startMessages: ISerializedMessage[] = [
-                            {
-                                timestamp: new Date(Date.now()).toString(),
-                                sender: user.userID,
-                                recipient: user.userID,
-                                direction: "incoming",
-                                nonce: XUtils.encodeHex(nacl.randomBytes(24)),
-                                message: "Welcome to vex messenger!",
-                                decrypted: true,
-                                mailID: uuid.v4(),
-                                group: null,
-                                failed: false,
-                                failMessage: "",
-                            },
-                            {
-                                timestamp: new Date(Date.now()).toString(),
-                                sender: user.userID,
-                                recipient: user.userID,
-                                direction: "incoming",
-                                nonce: XUtils.encodeHex(nacl.randomBytes(24)),
-                                message:
-                                    "This is a personal thread for taking notes, or whatever you'd like.",
-                                decrypted: true,
-                                mailID: uuid.v4(),
-                                group: null,
-                                failed: false,
-                                failMessage: "",
-                            },
-                        ];
-
                         return (
                             <Fragment>
                                 <div className="conversation-wrapper">
-                                    {messageIDs.length === 0 &&
-                                        params.userID === user.userID && (
-                                            <div>
-                                                <MessageBox
-                                                    messages={startMessages}
-                                                />
-                                            </div>
-                                        )}
+                                    <div className={"history-disclaimer"}>
+                                        <p className="help">
+                                            <FontAwesomeIcon icon={faStar} />{" "}
+                                            For your security, message history
+                                            is not transferred to new devices.
+                                            <FontAwesomeIcon
+                                                icon={faStar}
+                                            />{" "}
+                                        </p>
+                                    </div>
                                     {chunkMessages(threadMessages || {}).map(
                                         (chunk) => {
                                             return (
