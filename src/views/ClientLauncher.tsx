@@ -97,9 +97,19 @@ export async function initClient(): Promise<void> {
     });
 
     const pubKey = client.getKeys().public;
-    const deviceInfo = await client.devices.retrieve(pubKey);
+    let deviceInfo = await client.devices.retrieve(pubKey);
     if (!deviceInfo) {
         log.warn("No device info found, probably need to register device.");
+        const [username, password] = gaurdian.getAuthInfo();
+        if (!username || !password) {
+            throw new Error(
+                "Username and password not present in gaurdian, but need to register device."
+            );
+        }
+        deviceInfo = await client.devices.register(username, password);
+        if (!deviceInfo) {
+            throw new Error("Failed to register device.");
+        }
         return;
     }
 

@@ -34,6 +34,7 @@ export const Login: FunctionComponent = memo(() => {
         if (fs.existsSync(keyPath)) {
             try {
                 gaurdian.load(keyPath, "");
+                gaurdian.setAuthInfo(username, password);
                 history.push(routes.HOME);
             } catch (err) {
                 console.error(err);

@@ -93,6 +93,7 @@ export default function Register(): JSX.Element {
                 }
 
                 gaurdian.load(keyPath, "");
+                gaurdian.setAuthInfo(username, password);
                 history.push(routes.HOME);
             }
         });
