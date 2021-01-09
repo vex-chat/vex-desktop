@@ -175,12 +175,14 @@ export function ClientLauncher(): JSX.Element {
 
             const tempClient = new Client(undefined, { dbFolder });
 
-            if (userRecords[message.sender] === undefined) {
-                const [user] = await tempClient.users.retrieve(message.sender);
+            if (userRecords[message.authorID] === undefined) {
+                const [user] = await tempClient.users.retrieve(
+                    message.authorID
+                );
                 if (!user) {
                     return;
                 }
-                userRecords[message.sender] = user;
+                userRecords[message.authorID] = user;
             }
             if (
                 message.group !== null &&
@@ -205,7 +207,7 @@ export function ClientLauncher(): JSX.Element {
                 }
             }
 
-            const userRecord = userRecords[message.sender];
+            const userRecord = userRecords[message.authorID];
             const channelRecord = message.group
                 ? channelRecords[message.group]
                 : null;
@@ -220,7 +222,7 @@ export function ClientLauncher(): JSX.Element {
                 });
                 msgNotification.onclick = () => {
                     remote.getCurrentWindow().show();
-                    history.push(routes.MESSAGING + "/" + message.sender);
+                    history.push(routes.MESSAGING + "/" + message.authorID);
                 };
             } else {
                 if (!serverRecord || !channelRecord) {

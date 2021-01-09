@@ -87,6 +87,12 @@ const sessionSlice = createSlice({
                 state[payload.userID] = {};
             }
 
+            for (const key of Object.keys(state[payload.userID])) {
+                if (state[payload.userID][key].SK === payload.SK) {
+                    return state;
+                }
+            }
+
             state[payload.userID][payload.sessionID] = payload;
 
             return state;
