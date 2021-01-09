@@ -14,6 +14,7 @@ import type {
 import { Client } from "@vex-chat/libvex";
 
 import { sleep } from "@extrahash/sleep";
+import axios from "axios";
 import { ipcRenderer, remote } from "electron";
 import log from "electron-log";
 import { EventEmitter } from "events";
@@ -27,6 +28,7 @@ import { dbFolder, keyFolder, progFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
 import { setApp } from "../reducers/app";
 import { addChannels } from "../reducers/channels";
+import { addDevices } from "../reducers/devices";
 import { addFamiliar, setFamiliars } from "../reducers/familiars";
 import {
     add as groupAdd,
@@ -287,9 +289,18 @@ export function ClientLauncher(): JSX.Element {
         history.push(routes.LOGOUT + "?clear=off");
     };
 
-    const sessionHandler = (session: ISession, user: IUser) => {
+    const sessionHandler = async (session: ISession, user: IUser) => {
         dispatch(addSession(session));
         dispatch(addFamiliar(user));
+
+        try {
+            const res = await axios.get(
+                "https://api.vex.chat/user/" + user.userID + "/devices"
+            );
+            dispatch(addDevices(res.data));
+        } catch (err) {
+            console.warn(err.toString);
+        }
     };
 
     const authedHandler = async () => {
@@ -302,12 +313,20 @@ export function ClientLauncher(): JSX.Element {
         const sessions = await client.sessions.retrieve();
         dispatch(setSessions(objifySessions(sessions)));
 
-        const familiars = await client.users.familiars();
+        const familiars = [...(await client.users.familiars()), me];
         dispatch(setFamiliars(familiars));
-        dispatch(addFamiliar(me));
-        for (const user of familiars) {
-            const history = await client.messages.retrieve(user.userID);
 
+        for (const user of familiars) {
+            try {
+                const res = await axios.get(
+                    "https://api.vex.chat/user/" + user.userID + "/devices"
+                );
+                dispatch(addDevices(res.data));
+            } catch (err) {
+                console.warn("error getting devices", err.toString());
+            }
+
+            const history = await client.messages.retrieve(user.userID);
             const szHistory = history.reduce<ISerializedMessage[]>(
                 (acc, msg) => {
                     const szMsg = serializeMessage(msg);

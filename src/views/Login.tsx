@@ -4,6 +4,7 @@ import { Client } from "@vex-chat/libvex";
 
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
 import fs from "fs";
 import { memo, useState } from "react";
 import { useHistory } from "react-router";
@@ -28,17 +29,20 @@ export const Login: FunctionComponent = memo(() => {
         if (password == "") {
             return;
         }
-        gaurdian.setAuthInfo(username, password);
 
-        const tempClient = new Client(undefined, { inMemoryDb: true });
-        const [userDetails] = await tempClient.users.retrieve(username);
-        if (!userDetails) {
-            console.error("User not found.");
+        try {
+            await axios.post(
+                "https://api.vex.chat/user/" + username + "/authenticate",
+                { username, password }
+            );
+        } catch (err) {
             setLoading(false);
             history.push(routes.HOME);
-            setErrText("User not found.");
+            setErrText(err.toString());
             return;
         }
+
+        gaurdian.setAuthInfo(username, password);
 
         setLoading(true);
         const keyPath = `${keyFolder}/${username}`;
@@ -62,7 +66,18 @@ export const Login: FunctionComponent = memo(() => {
                 console.log("Ready event reached, registering now.");
                 try {
                     await tempClient.devices.register(username, password);
-                    void tempClient.close();
+
+                    try {
+                        await tempClient.login(username, password);
+                        void tempClient.close();
+                    } catch (err) {
+                        console.error(err);
+                        setErrText(err.toString());
+                        setLoading(false);
+                        history.push(routes.HOME);
+                        void tempClient.close();
+                        return;
+                    }
 
                     setUsername("");
                     setPassword("");

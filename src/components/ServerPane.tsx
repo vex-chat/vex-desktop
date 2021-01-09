@@ -2,7 +2,7 @@ import type { IServerParams } from "~Types";
 
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import * as uuid from "uuid";
@@ -23,6 +23,18 @@ export function ServerPane(): JSX.Element {
             messagesEndRef.current.scrollIntoView();
         }
     };
+
+    useMemo(async () => {
+        const client = window.vex;
+        if (channelID) {
+            try {
+                const userList = await client.channels.userList(channelID);
+                console.log(userList);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }, [channelID]);
 
     useEffect(() => {
         scrollToBottom();

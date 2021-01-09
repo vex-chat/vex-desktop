@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 
 import appReducer from "./reducers/app";
 import channelReducer from "./reducers/channels";
+import deviceReducer from "./reducers/devices";
 import familiarsReducer from "./reducers/familiars";
 import groupMessageReducer from "./reducers/groupMessages";
 import inputsReducer from "./reducers/inputs";
@@ -22,4 +23,5 @@ export default combineReducers({
     channels: channelReducer,
     groupMessages: groupMessageReducer,
     permissions: permissionsReducer,
+    devices: deviceReducer,
 });

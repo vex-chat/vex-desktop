@@ -1,4 +1,4 @@
-import type { IDevice, IUser } from "@vex-chat/libvex";
+import type { IUser } from "@vex-chat/libvex";
 
 import {
     faAt,
@@ -13,22 +13,15 @@ import {
     faUnlock,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import { format } from "date-fns";
-import {
-    createRef,
-    Fragment,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from "react";
+import { createRef, Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
 import * as uuid from "uuid";
 
 import { routes } from "../constants/routes";
 import { useQuery } from "../hooks/useQuery";
+import { selectDevices } from "../reducers/devices";
 import { selectFamiliars } from "../reducers/familiars";
 import { selectMessages } from "../reducers/messages";
 import { markSession, selectSessions } from "../reducers/sessions";
@@ -137,9 +130,7 @@ export default function MessagingPane(): JSX.Element {
                 <Route
                     exact
                     path={routes.MESSAGING + "/:userID/devices"}
-                    render={({ match }) => (
-                        <DeviceList userID={match.params.userID} />
-                    )}
+                    render={() => <DeviceList />}
                 />
                 <Route
                     exact
@@ -449,27 +440,20 @@ export default function MessagingPane(): JSX.Element {
 }
 
 export function DeviceList(): JSX.Element {
-    const [devices, setDevices] = useState([] as IDevice[]);
     const params: { userID: string } = useParams();
-    useMemo(async () => {
-        const client = window.vex;
-        const res = await axios.get(
-            "https://api.vex.chat/user/" + params.userID + "/devices"
-        );
-        setDevices(res.data);
-    }, []);
+    const devices = useSelector(selectDevices(params.userID));
 
     return (
         <div className="pane-screen-wrapper">
             <div className="message">
                 <div className="message-header">Devices</div>
                 <div className="message-body">
-                    {devices.map((device) => (
-                        <div key={device.deviceID} className="help">
-                            {device.name}
+                    {Object.keys(devices).map((key) => (
+                        <div key={devices[key].deviceID} className="help">
+                            {devices[key].name}
                             &nbsp; &nbsp; last logged in{" "}
                             {format(
-                                new Date(device.lastLogin),
+                                new Date(devices[key].lastLogin),
                                 "kk:mm MM/dd/yyyy"
                             )}
                         </div>
