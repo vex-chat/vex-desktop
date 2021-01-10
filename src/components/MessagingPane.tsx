@@ -74,7 +74,7 @@ export default function MessagingPane(): JSX.Element {
 
     if (!familiar) {
         return (
-            <div className="pane">
+            <div className="pane direct-messaging">
                 <div className="pane-topbar">
                     <h1 className="subtitle">
                         <FontAwesomeIcon icon={faEnvelopeOpenText} />
@@ -85,7 +85,7 @@ export default function MessagingPane(): JSX.Element {
         );
     }
     return (
-        <div className="pane">
+        <div className="pane direct-messaging">
             <div className="pane-topbar">
                 <div className="columns">
                     <div className="column is-narrow">
@@ -429,7 +429,10 @@ export default function MessagingPane(): JSX.Element {
                                     )}
                                     <div ref={messagesEndRef} />
                                 </div>
-                                <ChatInput targetID={familiar.userID} />
+                                <ChatInput
+                                    targetID={familiar.userID}
+                                    className={"direct-messaging"}
+                                />
                             </Fragment>
                         );
                     }}

@@ -3,11 +3,12 @@ import type { IServerParams } from "~Types";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, useEffect, useMemo, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import * as uuid from "uuid";
 
 import { selectGroup } from "../reducers/groupMessages";
+import { set as setOnlineList } from "../reducers/onlineLists";
 import { chunkMessages } from "../utils/chunkMessages";
 
 import { ChatInput } from "./ChatInput";
@@ -17,6 +18,7 @@ export function ServerPane(): JSX.Element {
     const { channelID } = useParams<IServerParams>();
     const threadMessages = useSelector(selectGroup(channelID));
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const dispatch = useDispatch();
 
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
@@ -29,7 +31,7 @@ export function ServerPane(): JSX.Element {
         if (channelID) {
             try {
                 const userList = await client.channels.userList(channelID);
-                console.log(userList);
+                dispatch(setOnlineList({ channelID, userList }));
             } catch (err) {
                 console.log(err);
             }

@@ -72,7 +72,7 @@ body::-webkit-scrollbar {
 
 body::-webkit-scrollbar-track {
     border-radius: 10px;
-    background-color: $light;
+    background-color: $white;
 }
 
 body::-webkit-scrollbar-thumb {
@@ -278,11 +278,42 @@ button {
 
 .pane {
     position: absolute;
-    width: calc(100% - 265px - 72px);
-    right: 0;
+    width: calc(100% - 265px - 72px - 225px);
+    right: 225px;
     height: calc(100% - 22px);
     top: 22px;
     background-color: $white;
+}
+
+.pane.direct-messaging {
+    width: calc(100% - 265px - 72px);
+    right: 0px;
+}
+
+.right-bar {
+    background-image: linear-gradient(to bottom, $white, $light);
+    position: absolute;
+    width: 225px;
+    right: 0px;
+    bottom: 0px;
+    top: 22px;
+    height: calc(100% - 22px);
+    border-left: 2px solid $light;
+}
+
+.right-bar > p {
+    padding-top: 1ch;
+    padding-left: 10px;
+}
+
+.online-user {
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+
+.online-user.offline {
+    opacity: 0.45;
+    filter: alpha(opacity=45);
 }
 
 .pane-screen-wrapper {
@@ -299,7 +330,7 @@ button {
     top: 0;
     bottom: 180px;
     height: calc(100vh - 176px);
-    width: calc(100vw - 72px - 265px);
+    width: 100%;
     right: 0;
     overflow-y: auto;
     overflow-x: hidden;
@@ -369,8 +400,12 @@ div.sidebar > aside > ul > li > a:hover {
 .chat-input-wrapper {
     position: fixed;
     bottom: 0;
-    width: calc(100% - 265px);
+    width: calc(100% - 265px - 297px);
     height: 100px;
+}
+
+.chat-input-wrapper.direct-messaging {
+    width: calc(100% - 265px);
 }
 
 .user-icon {

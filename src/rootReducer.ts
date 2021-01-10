@@ -7,6 +7,7 @@ import familiarsReducer from "./reducers/familiars";
 import groupMessageReducer from "./reducers/groupMessages";
 import inputsReducer from "./reducers/inputs";
 import messageReducer from "./reducers/messages";
+import onlineListReducer from "./reducers/onlineLists";
 import permissionsReducer from "./reducers/permissions";
 import serverReducer from "./reducers/servers";
 import sessionReducer from "./reducers/sessions";
@@ -24,4 +25,5 @@ export default combineReducers({
     groupMessages: groupMessageReducer,
     permissions: permissionsReducer,
     devices: deviceReducer,
+    onlineLists: onlineListReducer,
 });

@@ -16,6 +16,7 @@ import Loading from "./Loading";
 export function ChatInput(props: {
     targetID: string;
     group?: boolean;
+    className?: string;
 }): JSX.Element {
     const dispatch = useDispatch();
     const inputValues: Record<string, string> = useSelector(selectInputStates);
@@ -27,7 +28,7 @@ export function ChatInput(props: {
     const [speed, setSpeed] = useState("");
 
     return (
-        <div className="chat-input-wrapper">
+        <div className={`chat-input-wrapper ${props.className || ""}`}>
             {uploading && (
                 <span className="chat-file-spinner-wrapper has-background-light">
                     <Loading

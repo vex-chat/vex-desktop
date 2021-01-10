@@ -4,6 +4,7 @@ import { capitalCase } from "change-case";
 import { useSelector } from "react-redux";
 import { Route, Switch, useParams } from "react-router";
 
+import { Avatar } from "../components/Avatar";
 import { ChannelBar } from "../components/ChannelBar";
 import { ChannelSettings } from "../components/ChannelSettings";
 import { AddChannel } from "../components/ServerAddChannel";
@@ -14,18 +15,23 @@ import { ServerSettings } from "../components/ServerSettings";
 import { UserMenu } from "../components/UserMenu";
 import { routes } from "../constants/routes";
 import { selectChannels } from "../reducers/channels";
+import { selectOnlineList } from "../reducers/onlineLists";
 import { selectServers } from "../reducers/servers";
+import { sortByTimeKey } from "../utils/chunkMessages";
 
 export function Server(): JSX.Element {
-    const { serverID, channelID, pageType, channelPage } = useParams<{
+    const params = useParams<{
         serverID: string;
         channelID: string;
         pageType: string;
         channelPage?: string;
     }>();
 
+    const { serverID, channelID, pageType, channelPage } = params;
+
     const servers = useSelector(selectServers);
     const serverChannels = useSelector(selectChannels(serverID));
+    const onlineList = useSelector(selectOnlineList(channelID));
 
     const server = servers[serverID];
 
@@ -92,6 +98,34 @@ export function Server(): JSX.Element {
                         render={() => <ChannelSettings />}
                     />
                 </Switch>
+            </div>
+            <div className="right-bar">
+                <p className="menu-label">Online</p>
+                {sortByTimeKey("lastSeen", [...onlineList])
+                    .reverse()
+                    .map((user) => (
+                        <div
+                            className={`online-user${
+                                new Date(Date.now()).getTime() -
+                                    new Date(user.lastSeen).getTime() >
+                                1000 * 60 * 5
+                                    ? " offline"
+                                    : ""
+                            }`}
+                            key={user.userID}
+                        >
+                            <article className="media">
+                                <figure className="media-left">
+                                    <p className="image is-32x32">
+                                        <Avatar user={user} />
+                                    </p>
+                                </figure>
+                                <div className="media-content">
+                                    {user.username}
+                                </div>
+                            </article>
+                        </div>
+                    ))}
             </div>
         </div>
     );

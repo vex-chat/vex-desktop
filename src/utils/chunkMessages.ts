@@ -14,14 +14,7 @@ export function chunkMessages(
     const messageIDs = Object.keys(threadMessages);
 
     const unsortedMessages = messageIDs.map((id) => threadMessages[id]);
-    const sortedMessages = unsortedMessages.sort(function (a, b) {
-        const keyA = new Date(a.timestamp);
-        const keyB = new Date(b.timestamp);
-        // Compare the 2 dates
-        if (keyA < keyB) return -1;
-        if (keyA > keyB) return 1;
-        return 0;
-    });
+    const sortedMessages = sortByTimeKey("timestamp", unsortedMessages);
 
     const chunkedMessages: ISerializedMessage[][] = [[]];
     for (const message of sortedMessages) {
@@ -58,4 +51,16 @@ export function chunkMessages(
         }
     }
     return chunkedMessages;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function sortByTimeKey(key: string, array: any[]): any[] {
+    return array.sort(function (a, b) {
+        const keyA = new Date(a[key]);
+        const keyB = new Date(b[key]);
+        // Compare the 2 dates
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+    });
 }
