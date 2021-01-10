@@ -20,10 +20,12 @@ Make sure you have the dependencies:
 
 Steps:
 
-`git clone https://github.com/vex-chat/vex-desktop`
-`cd vex-desktop`
-`yarn`
-`yarn start`
+```
+git clone https://github.com/vex-chat/vex-desktop
+cd vex-desktop
+yarn
+yarn start
+```
 
 you may also be interested in taking a look at our [javascript library](https://github.com/vex-chat/libvex-js)
 
