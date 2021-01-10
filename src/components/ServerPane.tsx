@@ -2,7 +2,7 @@ import type { IServerParams } from "~Types";
 
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Fragment, useEffect, useMemo, useRef } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import * as uuid from "uuid";
@@ -20,6 +20,8 @@ export function ServerPane(): JSX.Element {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const dispatch = useDispatch();
 
+    const [lastFetch, setLastFetch] = useState(Date.now());
+
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView();
@@ -36,10 +38,13 @@ export function ServerPane(): JSX.Element {
                 console.log(err);
             }
         }
-    }, [channelID]);
+    }, [channelID, lastFetch]);
 
     useEffect(() => {
         scrollToBottom();
+
+        const interval = setInterval(() => setLastFetch(Date.now()), 5000);
+        return () => clearInterval(interval);
     });
 
     return (
