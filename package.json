@@ -2,7 +2,7 @@
     "name": "vex-desktop",
     "productName": "vex desktop",
     "license": "AGPL-3.0-or-later",
-    "description": "Encrypted group chat that collects as little data as possible and isn't run by commies.",
+    "description": "Encrypted group chat that collects as little data as possible.",
     "scripts": {
         "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
         "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/webpack/prod.main.js",
