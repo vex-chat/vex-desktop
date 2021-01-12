@@ -106,6 +106,24 @@ body::-webkit-scrollbar-thumb {
     z-index: 9;
 }
 
+.file-label {
+    margin-top: 2ch;
+}
+
+.message-wrapper > .file-wrapper {
+    margin-top: 1ch;
+}
+
+.media {
+    border-top: none !important;
+}
+
+.file-box {
+    max-width: 400px;
+    padding-top: 7px !important;
+    padding-bottom: 0px !important;
+}
+
 textarea {
     border-radius: 0px !important;
 }
@@ -343,11 +361,6 @@ button {
     overflow-y: auto;
     overflow-x: hidden;
     padding: 10px 20px;
-}
-
-.file-box {
-    overflow: hidden;
-    position: relative;
 }
 
 .conversation-wrapper::-webkit-scrollbar {

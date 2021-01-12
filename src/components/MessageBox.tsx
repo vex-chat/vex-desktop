@@ -2,7 +2,10 @@ import type { ISerializedMessage } from "../reducers/messages";
 
 import { XUtils } from "@vex-chat/crypto";
 
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import {
+    faDownload,
+    faExclamationTriangle,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { format } from "date-fns";
 import { remote } from "electron";
@@ -145,9 +148,9 @@ export function MessageBox(props: {
                                 type,
                             } = parseFileMessage(message.message);
                             return (
-                                <p className="message-text" key={message.nonce}>
+                                <p key={message.nonce} className="file-wrapper">
                                     <span
-                                        className="pointer file-box"
+                                        className="message-text box file-box pointer"
                                         onClick={async () => {
                                             const client = window.vex;
                                             const file = await client.files.retrieve(
@@ -187,16 +190,31 @@ export function MessageBox(props: {
                                             );
                                         }}
                                     >
-                                        <span className="file-box-label">
-                                            <span className="image is-48x48">
-                                                <img
-                                                    src={bestMatch(
-                                                        type || "unknown"
-                                                    )}
-                                                />
-                                            </span>
-                                        </span>
-                                        <span className="help">{name}</span>
+                                        <article className="media">
+                                            <figure className="media-left">
+                                                <span className="image is-48x48">
+                                                    <img
+                                                        src={bestMatch(
+                                                            type || "unknown"
+                                                        )}
+                                                    />
+                                                </span>
+                                            </figure>
+                                            <div className="media-content">
+                                                <div className="content">
+                                                    <span className="help file-label">
+                                                        {name}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="media-right">
+                                                <div className="icon is-large">
+                                                    <FontAwesomeIcon
+                                                        icon={faDownload}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </article>
                                     </span>
                                 </p>
                             );
@@ -257,5 +275,5 @@ const parseFileMessage = (fileStr: string): IParsedFile => {
     const strParts = innerStr.split(":");
 
     const [name, fileID, key, type] = strParts;
-    return { name, fileID, key, type };
+    return { name, File, key, type };
 };
