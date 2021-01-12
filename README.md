@@ -11,6 +11,10 @@ desktop client for vex
 uses Papirus Icon Set for files
 https://github.com/PapirusDevelopmentTeam/papirus-icon-theme
 
+## installation
+
+Head on over to the [releases page](https://github.com/vex-chat/vex-desktop/releases) and download and install the appropriate package for your operating system. We offer builds for Windows, MacOS, and Linux.
+
 ## dev setup
 
 Make sure you have the dependencies:

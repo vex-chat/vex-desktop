@@ -134,7 +134,8 @@ export function ChatInput(props: {
                     <div {...getRootProps()}>
                         <input {...getInputProps()} />
                         <textarea
-                            ref={inputRef}
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            ref={inputRef as any}
                             autoFocus={true}
                             value={inputValue}
                             className={`textarea has-fixed-size ${

@@ -24,7 +24,7 @@ import { useHistory } from "react-router";
 import Loading from "../components/Loading";
 import { dbFolder, keyFolder, progFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
-import { unlockFX } from "../constants/sounds";
+import { notifyFX } from "../constants/sounds";
 import { setApp } from "../reducers/app";
 import { addChannels } from "../reducers/channels";
 import { addDevices } from "../reducers/devices";
@@ -87,8 +87,8 @@ export function ClientLauncher(): JSX.Element {
             message.direction === "incoming" &&
             message.authorID !== me.userID
         ) {
-            if (remote.getCurrentWindow().isFocused()) {
-                return;
+            if (process.platform !== "darwin") {
+                notifyFX.play();
             }
 
             const tempClient = await Client.create(undefined, { dbFolder });
@@ -190,7 +190,7 @@ export function ClientLauncher(): JSX.Element {
         const client = window.vex;
         await client.close();
 
-        client.off("connected", authedHandler);
+        client.off("connected", connectedHandler);
         client.off("disconnect", relaunch);
         client.off("session", sessionHandler);
         client.off("message", messageHandler);
@@ -214,7 +214,7 @@ export function ClientLauncher(): JSX.Element {
         }
     };
 
-    const authedHandler = async () => {
+    const connectedHandler = async () => {
         const client = window.vex;
         dispatch(setApp("initialLoad", true));
         const me = client.me.user();
@@ -299,7 +299,6 @@ export function ClientLauncher(): JSX.Element {
 
         const permissions = await client.permissions.retrieve();
         dispatch(setPermissions(permissions));
-        unlockFX.play();
         dispatch(setApp("initialLoad", false));
     };
 
@@ -337,7 +336,7 @@ export function ClientLauncher(): JSX.Element {
     const launch = () => {
         const client = window.vex;
         ipcRenderer.on("relaunch", relaunch);
-        client.on("connected", authedHandler);
+        client.on("connected", connectedHandler);
         client.on("disconnect", relaunch);
         client.on("session", sessionHandler);
         client.on("message", messageHandler);

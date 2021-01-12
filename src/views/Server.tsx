@@ -38,7 +38,6 @@ export function Server(): JSX.Element {
     const server = servers[serverID];
 
     useMemo(() => {
-        console.log(params);
         if (
             params.pageType === "channels" &&
             !params.channelPage &&

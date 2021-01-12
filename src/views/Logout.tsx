@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
 import { routes } from "../constants/routes";
-import { unlockFX } from "../constants/sounds";
+import { lockFX } from "../constants/sounds";
 import { useQuery } from "../hooks/useQuery";
 import { resetApp } from "../reducers/app";
 import { resetChannels } from "../reducers/channels";
@@ -43,7 +43,7 @@ export function Logout(): JSX.Element {
         dispatch(resetUser());
         dispatch(resetPermissions());
 
-        await unlockFX.play();
+        await lockFX.play();
         history.push(query.get("forward") || routes.HOME);
     };
 

@@ -47,7 +47,7 @@ export const AddChannel: FunctionComponent = () => {
                     <input
                         className="input is-small"
                         type="text"
-                        placeholder="cool names go here"
+                        placeholder="fitness"
                         value={inputVal}
                         onChange={({ target: { value } }) => {
                             setInputVal(value);
