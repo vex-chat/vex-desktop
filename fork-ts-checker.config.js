@@ -42,7 +42,7 @@ module.exports = {
                 "@typescript-eslint/no-unsafe-call": 0,
                 "@typescript-eslint/no-unsafe-assignment": 0,
                 "@typescript-eslint/no-unsafe-return": 0,
-                // TURN ON EXTRA TS TYPEAWARE RULES
+                // TURN ON EXTRA TYPE AWARE RULES
                 "@typescript-eslint/no-confusing-void-expression": 2,
                 // TURN OFF SOME ANNOYING RULES
                 "@typescript-eslint/no-misused-promises": [
@@ -51,6 +51,7 @@ module.exports = {
                         checksVoidReturn: false,
                     },
                 ],
+                "@typescript-eslint/no-floating-promises": 0,
             },
         },
     },

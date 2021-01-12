@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { BackButton } from "../components/BackButton";
 import { VerticalAligner } from "../components/VerticalAligner";
 import { dbFolder, keyFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
@@ -41,7 +40,7 @@ export default function Register(): JSX.Element {
         }
     });
 
-    const registerUser = () => {
+    const registerUser = async () => {
         if (password.length === 0) {
             return;
         }
@@ -54,55 +53,53 @@ export default function Register(): JSX.Element {
         setWaiting(true);
 
         const PK = Client.generateSecretKey();
-        const tempClient = new Client(PK, {
+        const client = await Client.create(PK, {
             dbFolder,
+            logLevel: "info",
         });
 
-        // TODO: high priority needs to be a saga. Suspect using client somewhere else without it being a singleton
-        tempClient.on("ready", async () => {
-            // eslint-disable-next-line prefer-const
-            const [user, err] = await tempClient.register(username, password);
+        // eslint-disable-next-line prefer-const
+        const [user, err] = await client.register(username, password);
 
-            await tempClient.close();
+        if (err !== null) {
+            // errorFX.play();
+            setWaiting(false);
+            console.warn("registration failed.", err);
+            setErrorText(err.toString());
+        }
 
-            if (err !== null) {
-                // errorFX.play();
-                setWaiting(false);
-                console.warn("registration failed.", err);
-                setErrorText(err.toString());
-            }
+        if (user !== null) {
+            const keyPath = keyFolder + "/" + user.username;
+            Client.saveKeyFile(keyPath, "", PK);
 
-            if (user !== null) {
-                setWaiting(false);
-                const keyPath = keyFolder + "/" + user.username;
-                Client.saveKeyFile(keyPath, "", PK);
-
-                try {
-                    const confirm = Client.loadKeyFile(keyPath, "");
-                    if (confirm !== PK) {
-                        console.log(confirm, PK);
-                        throw new Error(
-                            "Key file that was written to disk is corrupt."
-                        );
-                    }
-                } catch (err) {
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    const errText = `Failed to save the keyfile to disk: ${err.toString()}`;
-                    setErrorText(errText);
-                    return;
+            try {
+                const confirm = Client.loadKeyFile(keyPath, "");
+                if (confirm !== PK) {
+                    console.log(confirm, PK);
+                    throw new Error(
+                        "Key file that was written to disk is corrupt."
+                    );
                 }
-
-                gaurdian.load(keyPath, "");
-                gaurdian.setAuthInfo(username, password);
-                history.push(routes.HOME);
+            } catch (err) {
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                const errText = `Failed to save the keyfile to disk: ${err.toString()}`;
+                setErrorText(errText);
+                setWaiting(false);
+                return;
             }
-        });
-
-        void tempClient.init();
+            gaurdian.load(keyPath, "");
+            setWaiting(false);
+            const err = await client.login(username, password);
+            if (err) {
+                throw err;
+            }
+            window.vex = client;
+            history.push(routes.LAUNCH);
+        }
     };
 
     return (
-        <VerticalAligner top={<BackButton route={routes.HOME} />}>
+        <VerticalAligner>
             <div className="box has-background-white register-form">
                 <div className="field">
                     <label className="label is-small">
@@ -119,9 +116,12 @@ export default function Register(): JSX.Element {
                                     addInputState(USERNAME_INPUT_NAME, username)
                                 );
 
-                                const tempClient = new Client(undefined, {
-                                    dbFolder,
-                                });
+                                const tempClient = await Client.create(
+                                    undefined,
+                                    {
+                                        dbFolder,
+                                    }
+                                );
 
                                 const [
                                     serverResults,
@@ -192,9 +192,12 @@ export default function Register(): JSX.Element {
                                     setValid(false);
                                 }
 
-                                const tempClient = new Client(undefined, {
-                                    dbFolder,
-                                });
+                                const tempClient = await Client.create(
+                                    undefined,
+                                    {
+                                        dbFolder,
+                                    }
+                                );
                                 const [user] = await tempClient.users.retrieve(
                                     event.target.value
                                 );

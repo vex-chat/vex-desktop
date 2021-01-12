@@ -4,13 +4,11 @@ import { Client } from "@vex-chat/libvex";
 
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import fs from "fs";
 import { memo, useState } from "react";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 
-import { BackButton } from "../components/BackButton";
 import { VerticalAligner } from "../components/VerticalAligner";
 import { dbFolder, keyFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
@@ -29,78 +27,36 @@ export const Login: FunctionComponent = memo(() => {
         if (password == "") {
             return;
         }
-
-        try {
-            await axios.post(
-                "https://api.vex.chat/user/" + username + "/authenticate",
-                { username, password }
-            );
-        } catch (err) {
-            setLoading(false);
-            history.push(routes.HOME);
+        setLoading(true);
+        const keyPath = keyFolder + "/" + username;
+        if (fs.existsSync(keyPath)) {
+            console.log("Key file found, loading from keyfile.");
+            gaurdian.load(keyPath);
+            console.log("Gaurdian loaded key " + gaurdian.getKey());
+        } else {
+            console.log("Key file not found, generating new key.");
+            gaurdian.setKey(Client.generateSecretKey());
+            console.log("Gaurdian loaded key " + gaurdian.getKey());
+        }
+        const client = await Client.create(gaurdian.getKey(), {
+            dbFolder,
+            logLevel: "info",
+        });
+        const err = await client.login(username, password);
+        if (err) {
             setErrText(err.toString());
+            setLoading(false);
             return;
         }
-
-        gaurdian.setAuthInfo(username, password);
-
-        setLoading(true);
-        const keyPath = `${keyFolder}/${username}`;
-        if (fs.existsSync(keyPath)) {
-            try {
-                gaurdian.load(keyPath, "");
-                history.push(routes.HOME);
-            } catch (err) {
-                console.error(err);
-                setErrText(err.toString());
-                setLoading(false);
-                history.push(routes.HOME);
-                return;
-            }
-        } else {
-            console.log("No keyfile found, attempting to register.");
-            const NSK = Client.generateSecretKey();
-            const tempClient = new Client(NSK, { dbFolder });
-
-            tempClient.on("ready", async () => {
-                console.log("Ready event reached, registering now.");
-                try {
-                    await tempClient.devices.register(username, password);
-
-                    try {
-                        await tempClient.login(username, password);
-                        void tempClient.close();
-                    } catch (err) {
-                        console.error(err);
-                        setErrText(err.toString());
-                        setLoading(false);
-                        history.push(routes.HOME);
-                        void tempClient.close();
-                        return;
-                    }
-
-                    setUsername("");
-                    setPassword("");
-
-                    Client.saveKeyFile(keyPath, "", NSK);
-                    gaurdian.load(keyPath);
-                    history.push(routes.HOME);
-                } catch (err) {
-                    console.error(err);
-                    setErrText(err.toString());
-                    setLoading(false);
-                    void tempClient.close();
-                    history.push(routes.HOME);
-                    return;
-                }
-            });
-
-            void tempClient.init();
+        if (!fs.existsSync(keyPath)) {
+            Client.saveKeyFile(keyPath, "", gaurdian.getKey());
         }
+        window.vex = client;
+        history.push(routes.LAUNCH);
     };
 
     return (
-        <VerticalAligner top={<BackButton route={routes.HOME} />}>
+        <VerticalAligner>
             <div className="box">
                 <div className="tabs">
                     <ul>

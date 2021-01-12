@@ -43,8 +43,12 @@ export function ServerPane(): JSX.Element {
     useEffect(() => {
         scrollToBottom();
 
-        const interval = setInterval(() => setLastFetch(Date.now()), 5000);
-        return () => clearInterval(interval);
+        const interval = setInterval(() => {
+            setLastFetch(Date.now());
+        }, 5000);
+        return () => {
+            clearInterval(interval);
+        };
     });
 
     return (

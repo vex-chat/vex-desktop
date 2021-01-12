@@ -1,8 +1,7 @@
 import type {
-    IChannel,
+    Client,
     IMessage,
     IPermission,
-    IServer,
     ISession,
     IUser,
 } from "@vex-chat/libvex";
@@ -11,16 +10,12 @@ import type {
     ISerializedMessage,
 } from "../reducers/messages";
 
-import { Client } from "@vex-chat/libvex";
-
-import { sleep } from "@extrahash/sleep";
 import axios from "axios";
-import { ipcRenderer, remote } from "electron";
+import { ipcRenderer } from "electron";
 import log from "electron-log";
-import { EventEmitter } from "events";
 import fs from "fs";
-import { useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useMemo } from "react";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
 import Loading from "../components/Loading";
@@ -40,11 +35,9 @@ import {
     serializeMessage,
 } from "../reducers/messages";
 import { addPermission, setPermissions } from "../reducers/permissions";
-import { selectServers, setServers } from "../reducers/servers";
+import { setServers } from "../reducers/servers";
 import { addSession, setSessions } from "../reducers/sessions";
 import { setUser } from "../reducers/user";
-import store from "../utils/DataStore";
-import gaurdian from "../utils/KeyGaurdian";
 
 declare global {
     interface Window {
@@ -60,91 +53,6 @@ for (const folder of folders) {
     }
 }
 
-let client: Client;
-
-const onReadyCallback = async (username: string, password: string) => {
-    const [, err] = await client.users.retrieve(client.getKeys().public);
-
-    if (err !== null && err.response) {
-        log.warn(
-            `Server responded to users.retrieve() with ${err.response.status}`
-        );
-
-        switch (err.response.status) {
-            case 404:
-                launchEvents.emit("needs-register");
-                break;
-            default:
-                await client.close();
-                await sleep(1000 * 10);
-                launchEvents.emit("retry");
-        }
-    }
-    await client.login(username, password);
-};
-
-const launchEvents = new EventEmitter();
-
-export async function initClient(): Promise<void> {
-    if (window.vex && window.vex.hasInit) {
-        await window.vex.close();
-    }
-
-    const PK = gaurdian.getKey();
-
-    client = new Client(PK, {
-        dbFolder,
-        logLevel: "info",
-        dbLogLevel: "warn",
-    });
-
-    const pubKey = client.getKeys().public;
-    let deviceInfo = await client.devices.retrieve(pubKey);
-    if (!deviceInfo) {
-        await new Promise((res) => {
-            log.warn("No device info found..");
-            const tempClient = new Client(client.getKeys().private, {
-                dbFolder,
-            });
-            tempClient.on("ready", async () => {
-                const [username, password] = gaurdian.getAuthInfo();
-                if (!username || !password) {
-                    throw new Error("Auth info null.");
-                }
-                deviceInfo = await tempClient.devices.register(
-                    username,
-                    password
-                );
-                void tempClient.close();
-                res(1);
-            });
-            void tempClient.init();
-        });
-        if (!deviceInfo) {
-            throw new Error("Registration failed.");
-        }
-    }
-
-    const [userInfo, err] = await client.users.retrieve(deviceInfo.owner);
-    if (!userInfo) {
-        log.warn("No user info found, are you registered?");
-        return;
-    }
-    if (err) {
-        log.error(err);
-        return;
-    }
-
-    window.vex = client;
-    const [username, password] = gaurdian.getAuthInfo();
-    if (!username || !password) {
-        throw new Error("No auth info in gaurdian.");
-    }
-    client.on("ready", () => void onReadyCallback(username, password));
-
-    void client.init();
-}
-
 function objifySessions(sessions: ISession[]): Record<string, ISession[]> {
     const sessionsObj: Record<string, ISession[]> = {};
 
@@ -157,106 +65,9 @@ function objifySessions(sessions: ISession[]): Record<string, ISession[]> {
     return sessionsObj;
 }
 
-const userRecords: Record<string, IUser> = {};
-const channelRecords: Record<string, IChannel> = {};
-const serverRecords: Record<string, IServer> = {};
-
 export function ClientLauncher(): JSX.Element {
     const dispatch = useDispatch();
     const history = useHistory();
-    const servers = useSelector(selectServers);
-
-    const notification = async (message: IMessage) => {
-        if (
-            store.get("settings.notifications") &&
-            message.direction === "incoming"
-        ) {
-            if (remote.getCurrentWindow().isFocused()) {
-                return;
-            }
-
-            const tempClient = new Client(undefined, { dbFolder });
-
-            if (userRecords[message.authorID] === undefined) {
-                const [user] = await tempClient.users.retrieve(
-                    message.authorID
-                );
-                if (!user) {
-                    return;
-                }
-                userRecords[message.authorID] = user;
-            }
-            if (
-                message.group !== null &&
-                channelRecords[message.group] === undefined
-            ) {
-                const channel = await tempClient.channels.retrieveByID(
-                    message.group
-                );
-                if (!channel) {
-                    return;
-                }
-                channelRecords[message.group] = channel;
-
-                if (serverRecords[channel.serverID] === undefined) {
-                    const server = await tempClient.servers.retrieveByID(
-                        channel.serverID
-                    );
-                    if (!server) {
-                        return;
-                    }
-                    serverRecords[channel.serverID] = server;
-                }
-            }
-
-            const userRecord = userRecords[message.authorID];
-            const channelRecord = message.group
-                ? channelRecords[message.group]
-                : null;
-            const serverRecord = message.group
-                ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  serverRecords[channelRecord!.serverID]
-                : null;
-
-            if (message.group === null) {
-                const msgNotification = new Notification(userRecord.username, {
-                    body: message.message,
-                });
-                msgNotification.onclick = () => {
-                    remote.getCurrentWindow().show();
-                    history.push(routes.MESSAGING + "/" + message.authorID);
-                };
-            } else {
-                if (!serverRecord || !channelRecord) {
-                    return;
-                }
-
-                const msgNotification = new Notification(
-                    userRecord.username +
-                        " in " +
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        serverRecord.name +
-                        "/" +
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        channelRecord.name,
-                    { body: message.message }
-                );
-                msgNotification.onclick = () => {
-                    remote.getCurrentWindow().show();
-                    history.push(
-                        routes.SERVERS +
-                            "/" +
-                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                            serverRecord.serverID +
-                            "/channels" +
-                            "/" +
-                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                            channelRecord.channelID
-                    );
-                };
-            }
-        }
-    };
 
     const messageHandler = (message: IMessage) => {
         const szMsg = serializeMessage(message);
@@ -266,27 +77,20 @@ export function ClientLauncher(): JSX.Element {
         } else {
             dispatch(dmAdd(szMsg));
         }
-
-        void notification(message);
-    };
-
-    const needsRegisterHandler = () => {
-        history.push(routes.REGISTER);
     };
 
     const relaunch = async () => {
+        const client = window.vex;
         await client.close();
 
-        client.off("authed", () => void authedHandler());
-        client.off("disconnect", () => void relaunch());
+        client.off("connected", authedHandler);
+        client.off("disconnect", relaunch);
         client.off("session", sessionHandler);
         client.off("message", messageHandler);
-        client.off(
-            "permission",
-            (permission: IPermission) => void permissionHandler(permission)
-        );
+        client.off("permission", permissionHandler);
+        ipcRenderer.off("relaunch", relaunch);
 
-        history.push(routes.LOGOUT + "?clear=off");
+        history.push(routes.LOGOUT + "?clear=off?forward=" + routes.LOGIN);
     };
 
     const sessionHandler = async (session: ISession, user: IUser) => {
@@ -304,6 +108,7 @@ export function ClientLauncher(): JSX.Element {
     };
 
     const authedHandler = async () => {
+        const client = window.vex;
         dispatch(setApp("initialLoad", true));
         const me = client.me.user();
         dispatch(setUser(me));
@@ -387,7 +192,6 @@ export function ClientLauncher(): JSX.Element {
 
         const permissions = await client.permissions.retrieve();
         dispatch(setPermissions(permissions));
-
         dispatch(setApp("initialLoad", false));
     };
 
@@ -396,7 +200,8 @@ export function ClientLauncher(): JSX.Element {
 
         switch (permission.resourceType) {
             case "server":
-                if (servers[permission.resourceID] === undefined) {
+                await (async () => {
+                    const client = window.vex;
                     const newServers = await client.servers.retrieve();
                     dispatch(setServers(newServers));
 
@@ -409,7 +214,7 @@ export function ClientLauncher(): JSX.Element {
                         );
                         dispatch(addChannels(channels));
                     }
-                }
+                })();
                 break;
             default:
                 log.info(
@@ -421,30 +226,20 @@ export function ClientLauncher(): JSX.Element {
         }
     };
 
-    /* giving useMemo an empty set of dependencies
-    so that this only happens once */
-    useMemo(() => {
-        ipcRenderer.on("relaunch", () => void relaunch());
-        void initClient();
-    }, []);
-
-    useEffect(() => {
-        launchEvents.on("needs-register", needsRegisterHandler);
-        launchEvents.on("retry", () => void relaunch());
-
-        client.on("authed", () => void authedHandler());
-        client.on("disconnect", () => void relaunch());
+    const launch = () => {
+        const client = window.vex;
+        ipcRenderer.on("relaunch", relaunch);
+        client.on("connected", authedHandler);
+        client.on("disconnect", relaunch);
         client.on("session", sessionHandler);
         client.on("message", messageHandler);
-        client.on(
-            "permission",
-            (permission: IPermission) => void permissionHandler(permission)
-        );
+        client.on("permission", permissionHandler);
+        client.connect();
+    };
 
-        return () => {
-            launchEvents.off("needs-register", needsRegisterHandler);
-            launchEvents.off("retry", () => void relaunch());
-        };
-    });
+    /* giving useMemo an empty set of dependencies
+    so that this only happens once */
+    useMemo(launch, [window.vex, launch]);
+
     return <Loading size={256} animation={"cylon"} />;
 }
