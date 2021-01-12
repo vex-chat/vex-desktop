@@ -1,7 +1,8 @@
 import type {
-    Client,
+    IChannel,
     IMessage,
     IPermission,
+    IServer,
     ISession,
     IUser,
 } from "@vex-chat/libvex";
@@ -10,8 +11,10 @@ import type {
     ISerializedMessage,
 } from "../reducers/messages";
 
+import { Client } from "@vex-chat/libvex";
+
 import axios from "axios";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, remote } from "electron";
 import log from "electron-log";
 import fs from "fs";
 import { useMemo } from "react";
@@ -38,6 +41,7 @@ import { addPermission, setPermissions } from "../reducers/permissions";
 import { setServers } from "../reducers/servers";
 import { addSession, setSessions } from "../reducers/sessions";
 import { setUser } from "../reducers/user";
+import store from "../utils/DataStore";
 
 declare global {
     interface Window {
@@ -65,9 +69,109 @@ function objifySessions(sessions: ISession[]): Record<string, ISession[]> {
     return sessionsObj;
 }
 
+const userRecords: Record<string, IUser> = {};
+const channelRecords: Record<string, IChannel> = {};
+const serverRecords: Record<string, IServer> = {};
+
 export function ClientLauncher(): JSX.Element {
     const dispatch = useDispatch();
     const history = useHistory();
+
+    const notification = async (message: IMessage) => {
+        const client = window.vex;
+
+        const me = client.me.user();
+        if (
+            store.get("settings.notifications") &&
+            message.direction === "incoming" &&
+            message.authorID !== me.userID
+        ) {
+            if (remote.getCurrentWindow().isFocused()) {
+                return;
+            }
+
+            const tempClient = await Client.create(undefined, { dbFolder });
+
+            if (userRecords[message.authorID] === undefined) {
+                const [user] = await tempClient.users.retrieve(
+                    message.authorID
+                );
+                if (!user) {
+                    return;
+                }
+                userRecords[message.authorID] = user;
+            }
+            if (
+                message.group !== null &&
+                channelRecords[message.group] === undefined
+            ) {
+                const channel = await tempClient.channels.retrieveByID(
+                    message.group
+                );
+                if (!channel) {
+                    return;
+                }
+                channelRecords[message.group] = channel;
+
+                if (serverRecords[channel.serverID] === undefined) {
+                    const server = await tempClient.servers.retrieveByID(
+                        channel.serverID
+                    );
+                    if (!server) {
+                        return;
+                    }
+                    serverRecords[channel.serverID] = server;
+                }
+            }
+
+            const userRecord = userRecords[message.authorID];
+            const channelRecord = message.group
+                ? channelRecords[message.group]
+                : null;
+            const serverRecord = message.group
+                ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  serverRecords[channelRecord!.serverID]
+                : null;
+
+            if (message.group === null) {
+                const msgNotification = new Notification(userRecord.username, {
+                    body: message.message,
+                });
+                msgNotification.onclick = () => {
+                    remote.getCurrentWindow().show();
+                    history.push(routes.MESSAGING + "/" + message.authorID);
+                };
+            } else {
+                if (!serverRecord || !channelRecord) {
+                    return;
+                }
+
+                const msgNotification = new Notification(
+                    userRecord.username +
+                        " in " +
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        serverRecord.name +
+                        "/" +
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        channelRecord.name,
+                    { body: message.message }
+                );
+                msgNotification.onclick = () => {
+                    remote.getCurrentWindow().show();
+                    history.push(
+                        routes.SERVERS +
+                            "/" +
+                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                            serverRecord.serverID +
+                            "/channels" +
+                            "/" +
+                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                            channelRecord.channelID
+                    );
+                };
+            }
+        }
+    };
 
     const messageHandler = (message: IMessage) => {
         const szMsg = serializeMessage(message);
@@ -77,6 +181,8 @@ export function ClientLauncher(): JSX.Element {
         } else {
             dispatch(dmAdd(szMsg));
         }
+
+        notification(message);
     };
 
     const relaunch = async () => {
