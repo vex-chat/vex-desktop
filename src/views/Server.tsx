@@ -130,7 +130,7 @@ export function Server(): JSX.Element {
                         <article className="media">
                             <figure className="media-left">
                                 <div className="image">
-                                    <Avatar user={user} size={48} />
+                                    <Avatar user={user} size={32} />
                                 </div>
                             </figure>
                             <div className="media-content">{user.username}</div>
