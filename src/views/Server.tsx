@@ -38,7 +38,12 @@ export function Server(): JSX.Element {
     const server = servers[serverID];
 
     useMemo(() => {
-        if (server?.serverID) {
+        console.log(params);
+        if (
+            params.pageType === "channels" &&
+            !params.channelPage &&
+            server?.serverID
+        ) {
             dispatch(
                 pushHistoryStack({
                     serverID: server.serverID,

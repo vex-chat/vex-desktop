@@ -43,7 +43,7 @@ export default function MessagingPane(): JSX.Element {
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const history = useHistory();
     // url parameters
-    const params: { userID: string } = useParams();
+    const params: { userID: string; page: string | undefined } = useParams();
 
     const query = useQuery();
 
@@ -74,12 +74,14 @@ export default function MessagingPane(): JSX.Element {
     const familiar: IUser | undefined = familiars[params.userID];
 
     useMemo(() => {
-        dispatch(
-            pushHistoryStack({
-                serverID: DM_HISTORY_NAME,
-                path: history.location.pathname,
-            })
-        );
+        if (!params.page) {
+            dispatch(
+                pushHistoryStack({
+                    serverID: DM_HISTORY_NAME,
+                    path: history.location.pathname,
+                })
+            );
+        }
     }, [history.location.pathname]);
 
     const allMessages = useSelector(selectMessages);
