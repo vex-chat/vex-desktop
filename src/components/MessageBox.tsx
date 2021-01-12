@@ -24,11 +24,14 @@ import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
 
 const RESOURCES_PATH = remote.app.isPackaged
-    ? path.join(__dirname, "../resources/assets")
+    ? path.join(process.resourcesPath, "assets")
     : path.join(__dirname, "../assets");
-const getAssetPath = (...paths: string[]): string => {
+
+export const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
 };
+
+console.log(RESOURCES_PATH);
 
 const bestMatch = (mimeType: string): string => {
     let bestMatch = "";

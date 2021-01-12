@@ -24,6 +24,7 @@ import { useHistory } from "react-router";
 import Loading from "../components/Loading";
 import { dbFolder, keyFolder, progFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
+import { unlockFX } from "../constants/sounds";
 import { setApp } from "../reducers/app";
 import { addChannels } from "../reducers/channels";
 import { addDevices } from "../reducers/devices";
@@ -298,6 +299,7 @@ export function ClientLauncher(): JSX.Element {
 
         const permissions = await client.permissions.retrieve();
         dispatch(setPermissions(permissions));
+        unlockFX.play();
         dispatch(setApp("initialLoad", false));
     };
 

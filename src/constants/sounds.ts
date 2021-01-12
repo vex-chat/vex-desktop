@@ -1,5 +1,4 @@
-export const switchFX = new Audio("assets/sounds/switch_005.ogg");
-switchFX.load();
+import { getAssetPath } from "../components/MessageBox";
 
-export const errorFX = new Audio("assets/sounds/error_008.ogg");
-errorFX.load();
+export const unlockFX = new Audio(getAssetPath("sounds/switch_005.ogg"));
+unlockFX.load();

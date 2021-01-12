@@ -82,7 +82,7 @@
             "buildResources": "assets",
             "output": "release"
         },
-        "extraResources": ["./assets/**"]
+        "extraResources": ["./assets/*/**"]
     },
     "repository": {
         "type": "git",
