@@ -3,7 +3,7 @@ import type { IFile, IFileProgress } from "@vex-chat/libvex";
 import log from "electron-log";
 import FileType from "file-type";
 import fs from "fs";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import Dropzone from "react-dropzone";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -34,11 +34,11 @@ export function ChatInput(props: {
     const [loaded, setLoaded] = useState(0);
     const [total, setTotal] = useState(0);
     const [speed, setSpeed] = useState("");
-    const inputRef = React.createRef<HTMLTextAreaElement>();
+    const inputRef = useRef<HTMLTextAreaElement>();
 
     useMemo(() => {
         inputRef.current?.focus();
-    }, [userID, serverID, channelID]);
+    }, [userID, serverID, channelID, inputRef]);
 
     return (
         <div className={`chat-input-wrapper ${props.className || ""}`}>
