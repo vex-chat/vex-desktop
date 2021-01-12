@@ -39,7 +39,7 @@ export const Login: FunctionComponent = memo(() => {
             return;
         }
         setLoading(true);
-        const keyPath = keyFolder + "/" + username;
+        const keyPath = keyFolder + "/" + username.toLowerCase();
         if (fs.existsSync(keyPath)) {
             console.log("Key file found, loading from keyfile.");
             gaurdian.load(keyPath);

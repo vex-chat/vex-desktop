@@ -61,7 +61,7 @@ export default function Register(): JSX.Element {
         }
 
         if (user !== null) {
-            const keyPath = keyFolder + "/" + user.username;
+            const keyPath = keyFolder + "/" + user.username.toLowerCase();
             Client.saveKeyFile(keyPath, "", PK);
 
             try {
