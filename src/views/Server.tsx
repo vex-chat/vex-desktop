@@ -1,8 +1,9 @@
 import { faHashtag, faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { capitalCase } from "change-case";
-import { useSelector } from "react-redux";
-import { Route, Switch, useParams } from "react-router";
+import { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Route, Switch, useHistory, useParams } from "react-router";
 
 import { Avatar } from "../components/Avatar";
 import { ChannelBar } from "../components/ChannelBar";
@@ -15,6 +16,7 @@ import { ServerSettings } from "../components/ServerSettings";
 import { UserMenu } from "../components/UserMenu";
 import { routes } from "../constants/routes";
 import { selectChannels } from "../reducers/channels";
+import { push as pushHistoryStack } from "../reducers/historyStacks";
 import { selectOnlineList } from "../reducers/onlineLists";
 import { selectServers } from "../reducers/servers";
 
@@ -25,7 +27,8 @@ export function Server(): JSX.Element {
         pageType: string;
         channelPage?: string;
     }>();
-
+    const dispatch = useDispatch();
+    const history = useHistory();
     const { serverID, channelID, pageType, channelPage } = params;
 
     const servers = useSelector(selectServers);
@@ -33,6 +36,17 @@ export function Server(): JSX.Element {
     const onlineList = useSelector(selectOnlineList(channelID));
 
     const server = servers[serverID];
+
+    useMemo(() => {
+        if (server?.serverID) {
+            dispatch(
+                pushHistoryStack({
+                    serverID: server.serverID,
+                    path: history.location.pathname,
+                })
+            );
+        }
+    }, [history.location.pathname]);
 
     // loading
     if (!server) {
@@ -51,17 +65,14 @@ export function Server(): JSX.Element {
                             <FontAwesomeIcon icon={faHashtag} />
                             &nbsp;&nbsp;
                             {serverChannels[channelID].name}{" "}
-                            {channelPage ? capitalCase(channelPage) : ""}
+                            {capitalCase(channelPage || "")}
                         </h2>
                     )}
                     {!serverChannels[channelID] && server !== undefined && (
                         <h2 className="subtitle">
                             <FontAwesomeIcon icon={faServer} />
                             &nbsp;&nbsp;
-                            {server.name}{" "}
-                            {pageType !== "channels"
-                                ? capitalCase(pageType)
-                                : ""}
+                            {server.name} {capitalCase(pageType || "")}
                         </h2>
                     )}
                 </div>

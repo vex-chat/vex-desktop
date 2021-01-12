@@ -216,7 +216,7 @@ export function MessageBox(props: {
                                                 </div>
                                             </div>
                                             <div className="media-right">
-                                                <div className="icon is-large">
+                                                <div className="icon is-size-3 download-icon">
                                                     <FontAwesomeIcon
                                                         icon={faDownload}
                                                     />

@@ -1,10 +1,6 @@
 import type { IUser } from "@vex-chat/libvex";
 
-import {
-    faFingerprint,
-    faMobileAlt,
-    faUserAlt,
-} from "@fortawesome/free-solid-svg-icons";
+import { faMobileAlt, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -60,21 +56,6 @@ export function FamiliarMenu(props: {
                     >
                         <FontAwesomeIcon icon={faUserAlt} />
                         &nbsp; User Info
-                    </Link>
-                    <Link
-                        to={
-                            routes.MESSAGING +
-                            "/" +
-                            props.familiar.userID +
-                            "/verify"
-                        }
-                        className="dropdown-item"
-                        onClick={() => {
-                            setActive(false);
-                        }}
-                    >
-                        <FontAwesomeIcon icon={faFingerprint} />
-                        &nbsp; User Sessions
                     </Link>
                     <Link
                         to={

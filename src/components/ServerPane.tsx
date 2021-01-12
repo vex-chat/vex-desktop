@@ -45,7 +45,7 @@ export function ServerPane(): JSX.Element {
 
         const interval = setInterval(() => {
             setLastFetch(Date.now());
-        }, 5000);
+        }, 1000 * 60);
         return () => {
             clearInterval(interval);
         };

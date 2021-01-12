@@ -14,7 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { format } from "date-fns";
-import { createRef, Fragment, useEffect, useRef } from "react";
+import { createRef, Fragment, useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
 import * as uuid from "uuid";
@@ -23,6 +23,7 @@ import { routes } from "../constants/routes";
 import { useQuery } from "../hooks/useQuery";
 import { selectDevices } from "../reducers/devices";
 import { selectFamiliars } from "../reducers/familiars";
+import { push as pushHistoryStack } from "../reducers/historyStacks";
 import { selectMessages } from "../reducers/messages";
 import { markSession, selectSessions } from "../reducers/sessions";
 import { chunkMessages } from "../utils/chunkMessages";
@@ -33,8 +34,11 @@ import { Highlighter } from "./Highlighter";
 import { IconUsername } from "./IconUsername";
 import { MessageBox } from "./MessageBox";
 
+export const DM_HISTORY_NAME = "DIRECT-MESSAGING";
+
 export default function MessagingPane(): JSX.Element {
     // state
+
     const dispatch = useDispatch();
     const familiars: Record<string, IUser> = useSelector(selectFamiliars);
     const history = useHistory();
@@ -68,6 +72,15 @@ export default function MessagingPane(): JSX.Element {
     });
 
     const familiar: IUser | undefined = familiars[params.userID];
+
+    useMemo(() => {
+        dispatch(
+            pushHistoryStack({
+                serverID: DM_HISTORY_NAME,
+                path: history.location.pathname,
+            })
+        );
+    }, [history.location.pathname]);
 
     const allMessages = useSelector(selectMessages);
     const threadMessages = allMessages[params.userID];

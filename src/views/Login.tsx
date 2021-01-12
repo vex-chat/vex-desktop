@@ -4,6 +4,7 @@ import { Client } from "@vex-chat/libvex";
 
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import isDev from "electron-is-dev";
 import fs from "fs";
 import { memo, useState } from "react";
 import { useHistory } from "react-router";
@@ -40,7 +41,7 @@ export const Login: FunctionComponent = memo(() => {
         }
         const client = await Client.create(gaurdian.getKey(), {
             dbFolder,
-            logLevel: "info",
+            logLevel: isDev ? "info" : "warn",
         });
         const err = await client.login(username, password);
         if (err) {

@@ -2,6 +2,7 @@ import { Client } from "@vex-chat/libvex";
 
 import { faCheck, faTimes, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import isDev from "electron-is-dev";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
@@ -46,7 +47,7 @@ export default function Register(): JSX.Element {
         const PK = Client.generateSecretKey();
         const client = await Client.create(PK, {
             dbFolder,
-            logLevel: "info",
+            logLevel: isDev ? "info" : "warn",
         });
 
         // eslint-disable-next-line prefer-const

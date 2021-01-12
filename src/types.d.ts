@@ -12,4 +12,5 @@ export type AppThunk = ThunkAction<void, RootState, unknown, Action<string>>;
 export interface IServerParams {
     serverID: string;
     channelID: string;
+    pageType: string;
 }
