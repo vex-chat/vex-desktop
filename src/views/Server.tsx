@@ -101,31 +101,27 @@ export function Server(): JSX.Element {
             </div>
             <div className="right-bar">
                 <p className="menu-label">Online</p>
-                {sortByTimeKey("lastSeen", [...onlineList])
-                    .reverse()
-                    .map((user) => (
-                        <div
-                            className={`online-user${
-                                new Date(Date.now()).getTime() -
-                                    new Date(user.lastSeen).getTime() >
-                                1000 * 60 * 5
-                                    ? " offline"
-                                    : ""
-                            }`}
-                            key={user.userID}
-                        >
-                            <article className="media">
-                                <figure className="media-left">
-                                    <p className="image is-32x32">
-                                        <Avatar user={user} />
-                                    </p>
-                                </figure>
-                                <div className="media-content">
-                                    {user.username}
+                {[...onlineList].reverse().map((user) => (
+                    <div
+                        className={`online-user${
+                            new Date(Date.now()).getTime() -
+                                new Date(user.lastSeen).getTime() >
+                            1000 * 60 * 5
+                                ? " offline"
+                                : ""
+                        }`}
+                        key={user.userID}
+                    >
+                        <article className="media">
+                            <figure className="media-left">
+                                <div className="image">
+                                    <Avatar user={user} size={48} />
                                 </div>
-                            </article>
-                        </div>
-                    ))}
+                            </figure>
+                            <div className="media-content">{user.username}</div>
+                        </article>
+                    </div>
+                ))}
             </div>
         </div>
     );

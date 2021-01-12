@@ -7,6 +7,7 @@ import { strToIcon } from "../utils/strToIcon";
 type Props = {
     user: IUser;
     className?: string;
+    size?: number;
 };
 
 type State = {
@@ -31,17 +32,21 @@ export class Avatar extends Component<Props, State> {
 
     render(): JSX.Element {
         const { src } = this.state;
+        const size = this.props.size || 48;
+
         return (
-            <img
-                className={`is-rounded ${this.props.className || ""} ${
-                    this.state.loaded ? "" : "hidden"
-                }`}
-                src={src}
-                onError={this.onError.bind(this)}
-                onLoad={() => {
-                    this.setState({ loaded: true });
-                }}
-            />
+            <div className="image">
+                <img
+                    className={`image is-${size.toString()}x${size.toString()} is-rounded ${
+                        this.props.className || ""
+                    } ${this.state.loaded ? "" : "hidden"}`}
+                    src={src}
+                    onError={this.onError.bind(this)}
+                    onLoad={() => {
+                        this.setState({ loaded: true });
+                    }}
+                />
+            </div>
         );
     }
 }

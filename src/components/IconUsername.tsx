@@ -20,9 +20,7 @@ export function IconUsername(
                 {icon !== undefined ? (
                     <FontAwesomeIcon className="icon-username-fa" icon={icon} />
                 ) : (
-                    <figure className={`image is-${size}`}>
-                        <Avatar user={user} className={avatarClassName} />
-                    </figure>
+                    <Avatar user={user} className={avatarClassName} />
                 )}
             </span>
             <span className="media-content">

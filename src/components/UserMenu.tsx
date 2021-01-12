@@ -38,7 +38,9 @@ export function UserMenu(): JSX.Element {
                                     }
                                 }}
                             >
-                                <Avatar user={user} />
+                                <div className="image">
+                                    <Avatar user={user} size={32} />
+                                </div>
                             </div>
 
                             <div

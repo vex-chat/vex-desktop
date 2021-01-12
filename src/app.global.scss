@@ -14,6 +14,14 @@ $menu-item-active-color: hsl(0, 0%, 4%);
     overflow-y: scroll;
 }
 
+.image .is-rounded img {
+    object-fit: cover !important;
+    object-position: center center !important;
+    height: 100%;
+    width: 100%;
+    border-radius: 250983px;
+}
+
 .title-bar-grabber {
     position: absolute;
     width: calc(100% - 60px);
