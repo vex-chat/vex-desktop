@@ -116,28 +116,58 @@ export function Server(): JSX.Element {
             </div>
             <div className="right-bar">
                 <p className="menu-label">Online</p>
-                {[...onlineList].reverse().map((user) => (
-                    <div
-                        className={`online-user${
-                            new Date(Date.now()).getTime() -
-                                new Date(user.lastSeen).getTime() >
-                            1000 * 60 * 5
-                                ? " offline"
-                                : ""
-                        }`}
-                        key={user.userID}
-                    >
-                        <article className="media">
-                            <figure className="media-left">
-                                <div className="image">
-                                    <Avatar user={user} size={32} />
+                {[...onlineList]
+                    .reverse()
+                    .filter((user) =>
+                        withinTimeLimit(user.lastSeen, 1000 * 60 * 5)
+                    )
+                    .map((user) => (
+                        <div className={`online-user`} key={user.userID}>
+                            <article className="media">
+                                <figure className="media-left">
+                                    <div className="image">
+                                        <Avatar user={user} size={32} />
+                                    </div>
+                                </figure>
+                                <div className="media-content">
+                                    {user.username}
                                 </div>
-                            </figure>
-                            <div className="media-content">{user.username}</div>
-                        </article>
-                    </div>
-                ))}
+                            </article>
+                        </div>
+                    ))}
+                {[...onlineList]
+                    .reverse()
+                    .filter(
+                        (user) => !withinTimeLimit(user.lastSeen, 1000 * 60 * 5)
+                    )
+                    .map((user) => (
+                        <div
+                            className={`online-user offline`}
+                            key={user.userID}
+                        >
+                            <article className="media">
+                                <figure className="media-left">
+                                    <div className="image">
+                                        <Avatar user={user} size={32} />
+                                    </div>
+                                </figure>
+                                <div className="media-content">
+                                    {user.username}
+                                </div>
+                            </article>
+                        </div>
+                    ))}
             </div>
         </div>
     );
 }
+
+const withinTimeLimit = (
+    dateLike: Date | string | number,
+    timeLimit: number
+): boolean => {
+    return (
+        new Date(Date.now()).getTime() - new Date(dateLike).getTime() <
+        timeLimit
+    );
+};

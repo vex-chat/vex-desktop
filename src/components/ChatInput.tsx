@@ -3,9 +3,10 @@ import type { IFile, IFileProgress } from "@vex-chat/libvex";
 import log from "electron-log";
 import FileType from "file-type";
 import fs from "fs";
-import { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Dropzone from "react-dropzone";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 
 import { fail as failGroup } from "../reducers/groupMessages";
 import { failMessage } from "../reducers/messages";
@@ -17,6 +18,15 @@ export function ChatInput(props: {
     group?: boolean;
     className?: string;
 }): JSX.Element {
+    const {
+        userID,
+        serverID,
+        channelID,
+    }: {
+        userID: string | undefined;
+        serverID: string | undefined;
+        channelID: string | undefined;
+    } = useParams();
     const dispatch = useDispatch();
     const [inputValue, setInputValue] = useState("");
     const [uploading, setUploading] = useState(false);
@@ -24,6 +34,11 @@ export function ChatInput(props: {
     const [loaded, setLoaded] = useState(0);
     const [total, setTotal] = useState(0);
     const [speed, setSpeed] = useState("");
+    const inputRef = React.createRef<HTMLTextAreaElement>();
+
+    useMemo(() => {
+        inputRef.current?.focus();
+    }, [userID, serverID, channelID]);
 
     return (
         <div className={`chat-input-wrapper ${props.className || ""}`}>
@@ -119,6 +134,8 @@ export function ChatInput(props: {
                     <div {...getRootProps()}>
                         <input {...getInputProps()} />
                         <textarea
+                            ref={inputRef}
+                            autoFocus={true}
                             value={inputValue}
                             className={`textarea has-fixed-size ${
                                 isDragActive ? "is-warning is-focused" : ""
