@@ -139,7 +139,7 @@ export function ChatInput(props: {
                                     dispatch(addInputState(props.targetID, ""));
 
                                     const messageText = inputValue;
-                                    if (messageText.trim() === "") {
+                                    if ((messageText || "").trim() === "") {
                                         return;
                                     }
                                     const client = window.vex;
