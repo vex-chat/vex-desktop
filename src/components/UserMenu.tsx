@@ -6,7 +6,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { remote } from "electron";
 import fs from "fs";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -22,6 +22,10 @@ export function UserMenu(): JSX.Element {
     const [className, setClassName] = useState("");
     const dispatch = useDispatch();
 
+    const outsideClick = () => {
+        setClassName("");
+    };
+
     return (
         <div className="user-menu-wrapper">
             <div className="columns">
@@ -30,11 +34,20 @@ export function UserMenu(): JSX.Element {
                         <span className={`dropdown is-up ${className}`}>
                             <div
                                 className="dropdown-trigger pointer"
-                                onClick={() => {
+                                onClick={(event) => {
+                                    event.stopPropagation();
                                     if (className == "") {
                                         setClassName("is-active");
+                                        window.addEventListener(
+                                            "click",
+                                            outsideClick
+                                        );
                                     } else {
                                         setClassName("");
+                                        window.removeEventListener(
+                                            "click",
+                                            outsideClick
+                                        );
                                     }
                                 }}
                             >
@@ -53,6 +66,7 @@ export function UserMenu(): JSX.Element {
                                         className="dropdown-item"
                                         onClick={async () => {
                                             setClassName("");
+
                                             const dialogRes = await remote.dialog.showOpenDialog(
                                                 remote.getCurrentWindow(),
                                                 {

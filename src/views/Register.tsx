@@ -287,6 +287,14 @@ export default function Register(): JSX.Element {
                 <div className="field">
                     <div className="buttons register-form-buttons is-right">
                         <button
+                            className="button"
+                            onClick={() => {
+                                history.push(routes.LOGIN);
+                            }}
+                        >
+                            Back
+                        </button>
+                        <button
                             className={`button is-success${
                                 waiting ? " is-loading" : ""
                             } `}

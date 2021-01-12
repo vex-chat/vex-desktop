@@ -35,7 +35,7 @@ export class Avatar extends Component<Props, State> {
         const size = this.props.size || 48;
 
         return (
-            <div className="image">
+            <span className="image">
                 <img
                     className={`image is-${size.toString()}x${size.toString()} is-rounded ${
                         this.props.className || ""
@@ -46,7 +46,7 @@ export class Avatar extends Component<Props, State> {
                         this.setState({ loaded: true });
                     }}
                 />
-            </div>
+            </span>
         );
     }
 }

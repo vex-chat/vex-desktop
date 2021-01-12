@@ -106,8 +106,15 @@ body::-webkit-scrollbar-thumb {
     z-index: 9;
 }
 
+.dropdown-menu {
+    opacity: 1;
+    z-index: 2;
+}
+
 .file-label {
     margin-top: 2ch;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .message-wrapper > .file-wrapper {
@@ -122,6 +129,10 @@ body::-webkit-scrollbar-thumb {
     max-width: 400px;
     padding-top: 7px !important;
     padding-bottom: 0px !important;
+}
+
+.file-box:hover {
+    background-color: darken($white, 1%);
 }
 
 textarea {
@@ -423,6 +434,8 @@ div.sidebar > aside > ul > li > a:hover {
     bottom: 0;
     width: calc(100% - 265px - 297px);
     height: 100px;
+    z-index: 1;
+    overflow: remove;
 }
 
 .chat-input-wrapper.direct-messaging {

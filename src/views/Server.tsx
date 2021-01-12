@@ -17,7 +17,6 @@ import { routes } from "../constants/routes";
 import { selectChannels } from "../reducers/channels";
 import { selectOnlineList } from "../reducers/onlineLists";
 import { selectServers } from "../reducers/servers";
-import { sortByTimeKey } from "../utils/chunkMessages";
 
 export function Server(): JSX.Element {
     const params = useParams<{

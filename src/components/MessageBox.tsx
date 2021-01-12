@@ -148,7 +148,10 @@ export function MessageBox(props: {
                                 type,
                             } = parseFileMessage(message.message);
                             return (
-                                <p key={message.nonce} className="file-wrapper">
+                                <div
+                                    key={message.nonce}
+                                    className="file-wrapper"
+                                >
                                     <span
                                         className="message-text box file-box pointer"
                                         onClick={async () => {
@@ -203,7 +206,12 @@ export function MessageBox(props: {
                                             <div className="media-content">
                                                 <div className="content">
                                                     <span className="help file-label">
-                                                        {name}
+                                                        {name.length > 20
+                                                            ? name.slice(
+                                                                  0,
+                                                                  20
+                                                              ) + "..."
+                                                            : name}
                                                     </span>
                                                 </div>
                                             </div>
@@ -216,7 +224,7 @@ export function MessageBox(props: {
                                             </div>
                                         </article>
                                     </span>
-                                </p>
+                                </div>
                             );
                         }
 
@@ -275,5 +283,5 @@ const parseFileMessage = (fileStr: string): IParsedFile => {
     const strParts = innerStr.split(":");
 
     const [name, fileID, key, type] = strParts;
-    return { name, File, key, type };
+    return { name, fileID, key, type };
 };

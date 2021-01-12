@@ -14,15 +14,32 @@ import { routes } from "../constants/routes";
 export function FamiliarMenu(props: {
     familiar: IUser;
     trigger: JSX.Element;
+    up?: boolean;
 }): JSX.Element {
     const [active, setActive] = useState(false);
 
+    const outsideClick = () => {
+        setActive(false);
+        window.removeEventListener("click", outsideClick);
+    };
+
     return (
-        <div className={`dropdown ${active ? "is-active" : ""}`}>
+        <div
+            className={`dropdown ${active ? "is-active" : ""} ${
+                props.up ? "is-up" : ""
+            }`}
+        >
             <div
                 className="dropdown-trigger pointer"
-                onClick={() => {
-                    setActive(!active);
+                onClick={(event) => {
+                    event.stopPropagation();
+                    if (!active) {
+                        setActive(true);
+                        window.addEventListener("click", outsideClick);
+                    } else {
+                        setActive(false);
+                        window.removeEventListener("click", outsideClick);
+                    }
                 }}
             >
                 {props.trigger}
