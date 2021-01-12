@@ -5,10 +5,9 @@ import FileType from "file-type";
 import fs from "fs";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { fail as failGroup } from "../reducers/groupMessages";
-import { addInputState, selectInputStates } from "../reducers/inputs";
 import { failMessage } from "../reducers/messages";
 
 import Loading from "./Loading";
@@ -19,8 +18,7 @@ export function ChatInput(props: {
     className?: string;
 }): JSX.Element {
     const dispatch = useDispatch();
-    const inputValues: Record<string, string> = useSelector(selectInputStates);
-    const inputValue: string = inputValues[props.targetID];
+    const [inputValue, setInputValue] = useState("");
     const [uploading, setUploading] = useState(false);
     const [progress, setProgress] = useState("00");
     const [loaded, setLoaded] = useState(0);
@@ -126,22 +124,18 @@ export function ChatInput(props: {
                                 isDragActive ? "is-warning is-focused" : ""
                             }`}
                             onChange={(event) => {
-                                dispatch(
-                                    addInputState(
-                                        props.targetID,
-                                        event.target.value
-                                    )
-                                );
+                                setInputValue(event.target.value);
                             }}
                             onKeyDown={async (event) => {
                                 if (event.key === "Enter" && !event.shiftKey) {
                                     event.preventDefault();
-                                    dispatch(addInputState(props.targetID, ""));
 
                                     const messageText = inputValue;
                                     if ((messageText || "").trim() === "") {
                                         return;
                                     }
+                                    setInputValue("");
+
                                     const client = window.vex;
                                     try {
                                         if (props.group) {

@@ -9,7 +9,6 @@ import { resetApp } from "../reducers/app";
 import { resetChannels } from "../reducers/channels";
 import { resetFamiliars } from "../reducers/familiars";
 import { reset as resetGroupMessages } from "../reducers/groupMessages";
-import { resetInputStates } from "../reducers/inputs";
 import { resetMessages } from "../reducers/messages";
 import { resetPermissions } from "../reducers/permissions";
 import { resetServers } from "../reducers/servers";
@@ -38,7 +37,6 @@ export function Logout(): JSX.Element {
         dispatch(resetChannels());
         dispatch(resetFamiliars());
         dispatch(resetGroupMessages());
-        dispatch(resetInputStates());
         dispatch(resetMessages());
         dispatch(resetServers());
         dispatch(resetSessions());

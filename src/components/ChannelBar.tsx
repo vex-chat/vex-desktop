@@ -39,6 +39,11 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
 
     const channelIDs = Object.keys(serverChannels);
 
+    const outsideClick = () => {
+        setMenuOpen(false);
+        window.removeEventListener("click", outsideClick);
+    };
+
     return (
         <div className="sidebar">
             <div className="server-titlebar">
@@ -52,8 +57,21 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                         <div className="dropdown-trigger">
                             <span
                                 className="icon"
-                                onClick={() => {
-                                    setMenuOpen(!menuOpen);
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    if (!menuOpen) {
+                                        setMenuOpen(true);
+                                        window.addEventListener(
+                                            "click",
+                                            outsideClick
+                                        );
+                                    } else {
+                                        setMenuOpen(false);
+                                        window.removeEventListener(
+                                            "click",
+                                            outsideClick
+                                        );
+                                    }
                                 }}
                             >
                                 <FontAwesomeIcon

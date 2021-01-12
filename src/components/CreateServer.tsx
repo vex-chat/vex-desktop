@@ -2,21 +2,20 @@ import type { Client, IServer } from "@vex-chat/libvex";
 
 import { faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
 import { routes } from "../constants/routes";
 import { addChannels } from "../reducers/channels";
-import { addInputState, selectInputStates } from "../reducers/inputs";
 import { setPermissions } from "../reducers/permissions";
 import { addServer } from "../reducers/servers";
-
-const FORM_NAME = "create-server";
 
 export function CreateServer(): JSX.Element {
     const history = useHistory();
     const dispatch = useDispatch();
-    const inputStates = useSelector(selectInputStates);
+
+    const [inputVal, setInputVal] = useState("");
 
     return (
         <div className="Aligner full-size">
@@ -41,14 +40,9 @@ export function CreateServer(): JSX.Element {
                                 className="servername-input input"
                                 type="username"
                                 placeholder={"My Cool Server"}
-                                value={inputStates[FORM_NAME] || ""}
+                                value={inputVal}
                                 onChange={(event) => {
-                                    dispatch(
-                                        addInputState(
-                                            FORM_NAME,
-                                            event.target.value
-                                        )
-                                    );
+                                    setInputVal(event.target.value);
                                 }}
                             />
                             <span className="icon is-small is-left">
@@ -61,16 +55,13 @@ export function CreateServer(): JSX.Element {
                                 <button
                                     className="button is-success"
                                     onClick={async () => {
-                                        if (
-                                            !inputStates[FORM_NAME] ||
-                                            inputStates[FORM_NAME] === ""
-                                        ) {
+                                        if (inputVal.trim() === "") {
                                             return;
                                         }
                                         const client: Client = window.vex;
                                         try {
                                             const server: IServer = await client.servers.create(
-                                                inputStates[FORM_NAME]
+                                                inputVal
                                             );
                                             const channels = await client.channels.retrieve(
                                                 server.serverID

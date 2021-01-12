@@ -34,11 +34,6 @@ export function AddUser(): JSX.Element {
                 <div className="panel-heading">Add a user to {server.name}</div>
                 <div className="panel-block">
                     <UserSearchBar
-                        formName={
-                            "server-user-serach-bar" +
-                            params.serverID +
-                            params.channelID
-                        }
                         onFoundUser={(user: IUser) => {
                             setUser(user);
                         }}

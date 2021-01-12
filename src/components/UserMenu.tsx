@@ -7,11 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { remote } from "electron";
 import fs from "fs";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { routes } from "../constants/routes";
-import { addInputState } from "../reducers/inputs";
 import { selectUser } from "../reducers/user";
 
 import { Avatar } from "./Avatar";
@@ -20,7 +19,6 @@ import { IconUsername } from "./IconUsername";
 export function UserMenu(): JSX.Element {
     const user = useSelector(selectUser);
     const [className, setClassName] = useState("");
-    const dispatch = useDispatch();
 
     const outsideClick = () => {
         setClassName("");
@@ -112,12 +110,7 @@ export function UserMenu(): JSX.Element {
                                         to={routes.SETTINGS}
                                         className="dropdown-item"
                                         onClick={() => {
-                                            dispatch(
-                                                addInputState(
-                                                    "own-user-icon-dropdown",
-                                                    ""
-                                                )
-                                            );
+                                            setClassName("");
                                         }}
                                     >
                                         <FontAwesomeIcon icon={faCog} />
@@ -133,12 +126,6 @@ export function UserMenu(): JSX.Element {
                                         className="dropdown-item"
                                         onClick={() => {
                                             setClassName("");
-                                            dispatch(
-                                                addInputState(
-                                                    "own-user-icon-dropdown",
-                                                    ""
-                                                )
-                                            );
                                         }}
                                     >
                                         <FontAwesomeIcon icon={faUserAlt} />

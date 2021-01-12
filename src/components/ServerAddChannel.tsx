@@ -1,14 +1,12 @@
 import type { FunctionComponent } from "react";
-import type { IServerParams, RootState } from "~Types";
+import type { IServerParams } from "~Types";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 
 import { routes } from "../constants/routes";
-import { useDebounce } from "../hooks/useDebounce";
 import { add } from "../reducers/channels";
-import { addInputState } from "../reducers/inputs";
 import { selectServers } from "../reducers/servers";
 
 export const AddChannel: FunctionComponent = () => {
@@ -18,27 +16,16 @@ export const AddChannel: FunctionComponent = () => {
     const dispatch = useDispatch();
     const server = servers[serverID];
 
-    const FORM_NAME = `${serverID}/add-channel-form`;
-
-    const channel = useSelector<RootState, string>(
-        ({ inputs }) => inputs[FORM_NAME] || ""
-    );
-
     const [inputVal, setInputVal] = useState("");
 
-    const debouncedInput = useDebounce(inputVal, 500);
-
-    useEffect(() => {
-        dispatch(addInputState(FORM_NAME, debouncedInput));
-    }, [debouncedInput]);
-
-    const addChannel = async (enterChannel?: string) => {
+    const addChannel = async () => {
         const client = window.vex;
 
-        const newChannel = await client.channels.create(
-            enterChannel || channel,
-            serverID
-        );
+        if (inputVal.trim() === "") {
+            return;
+        }
+
+        const newChannel = await client.channels.create(inputVal, serverID);
 
         dispatch(add(newChannel));
         history.push(
@@ -67,7 +54,7 @@ export const AddChannel: FunctionComponent = () => {
                         }}
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
-                                void addChannel(inputVal);
+                                addChannel();
                                 setInputVal("");
                             }
                         }}
@@ -78,7 +65,7 @@ export const AddChannel: FunctionComponent = () => {
                         className="button is-small"
                         onClick={() => {
                             setInputVal("");
-                            void addChannel();
+                            addChannel();
                         }}
                     >
                         Add channel to {server.name}

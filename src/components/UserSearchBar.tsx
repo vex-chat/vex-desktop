@@ -3,9 +3,6 @@ import type { IUser } from "@vex-chat/libvex";
 import { faCheck, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-import { addInputState, selectInputStates } from "../reducers/inputs";
 
 export const emptyUser: IUser = {
     userID: "",
@@ -16,13 +13,11 @@ export const emptyUser: IUser = {
 };
 
 export function UserSearchBar(props: {
-    formName: string;
     onSelectUser?: (user: IUser) => void;
     onFoundUser?: (user: IUser) => void;
 }): JSX.Element {
     const [foundUser, setFoundUser] = useState(emptyUser);
-    const dispatch = useDispatch();
-    const inputs = useSelector(selectInputStates);
+    const [inputValue, setInputValue] = useState("");
 
     return (
         <div className="control has-icons-left">
@@ -32,11 +27,11 @@ export function UserSearchBar(props: {
                 }`}
                 type="text"
                 placeholder="Search for user"
-                value={inputs[props.formName] || ""}
+                value={inputValue}
                 onKeyDown={(event) => {
                     if (event.key === "Enter") {
                         if (foundUser.userID !== "") {
-                            dispatch(addInputState(props.formName, ""));
+                            setInputValue("");
                             setFoundUser(emptyUser);
                             if (props.onSelectUser) {
                                 props.onSelectUser(foundUser);
@@ -50,7 +45,7 @@ export function UserSearchBar(props: {
                     }
                 }}
                 onChange={async (event) => {
-                    dispatch(addInputState(props.formName, event.target.value));
+                    setInputValue(event.target.value);
                     try {
                         if (event.target.value.length > 2) {
                             const client = window.vex;

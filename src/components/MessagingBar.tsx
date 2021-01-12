@@ -12,8 +12,6 @@ import { FamiliarButton } from "./FamiliarButton";
 import { UserSearchBar } from "./UserSearchBar";
 
 export default function MessagingBar(): JSX.Element {
-    const FORM_NAME = "dm-search-input";
-
     const user: IUser = useSelector(selectUser);
     const history = useHistory();
     const params: { userID: string } = useParams();
@@ -37,7 +35,6 @@ export default function MessagingBar(): JSX.Element {
             <div className="field search-wrapper">
                 <div className="field">
                     <UserSearchBar
-                        formName={FORM_NAME}
                         onSelectUser={(user: IUser) => {
                             newConversation(user);
                         }}

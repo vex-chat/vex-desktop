@@ -3,31 +3,22 @@ import { Client } from "@vex-chat/libvex";
 import { faCheck, faTimes, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import { VerticalAligner } from "../components/VerticalAligner";
 import { dbFolder, keyFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
-import { addInputState, selectInputStates } from "../reducers/inputs";
 import gaurdian from "../utils/KeyGaurdian";
 
-const USERNAME_INPUT_NAME = "register_username";
-const PASSWORD_INPUT_NAME = "register_password";
-const CONFIRM_INPUT_NAME = "register_confirmpass";
-
 export default function Register(): JSX.Element {
-    const dispatch = useDispatch();
     const history = useHistory();
 
     const [valid, setValid] = useState(false);
     const [taken, setTaken] = useState(false);
 
-    const inputs = useSelector(selectInputStates);
-
-    const username = inputs[USERNAME_INPUT_NAME] || "";
-    const password = inputs[PASSWORD_INPUT_NAME] || "";
-    const passConfirm = inputs[CONFIRM_INPUT_NAME] || "";
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [passConfirm, setPassConfirm] = useState("");
 
     const [waiting, setWaiting] = useState(false);
     const [errorText, setErrorText] = useState("");
@@ -112,9 +103,7 @@ export default function Register(): JSX.Element {
 
                                 const username = Client.randomUsername();
 
-                                dispatch(
-                                    addInputState(USERNAME_INPUT_NAME, username)
-                                );
+                                setUsername(username);
 
                                 const tempClient = await Client.create(
                                     undefined,
@@ -154,6 +143,7 @@ export default function Register(): JSX.Element {
                         >
                             random
                         </a>
+                        &nbsp;&nbsp;
                         {taken && (
                             <span className="has-text-danger">
                                 Username is taken!
@@ -176,12 +166,7 @@ export default function Register(): JSX.Element {
                                 setTaken(false);
                                 setValid(false);
 
-                                dispatch(
-                                    addInputState(
-                                        USERNAME_INPUT_NAME,
-                                        event.target.value
-                                    )
-                                );
+                                setUsername(event.target.value);
 
                                 if (
                                     event.target.value.length > 2 &&
@@ -241,12 +226,7 @@ export default function Register(): JSX.Element {
                             }
                         }}
                         onChange={(event) => {
-                            dispatch(
-                                addInputState(
-                                    PASSWORD_INPUT_NAME,
-                                    event.target.value
-                                )
-                            );
+                            setPassword(event.target.value);
                         }}
                     />
                 </div>
@@ -272,12 +252,7 @@ export default function Register(): JSX.Element {
                             }
                         }}
                         onChange={(event) => {
-                            dispatch(
-                                addInputState(
-                                    CONFIRM_INPUT_NAME,
-                                    event.target.value
-                                )
-                            );
+                            setPassConfirm(event.target.value);
                         }}
                     />
                 </div>
