@@ -131,6 +131,7 @@ $text_color_0: darken($white, 15%);
         background-color: $theme_color_0 !important;
         box-shadow: none !important;
         color: $text_color_0 !important;
+        box-shadow: 0 -2px 10px rgba(50, 50, 50, 1) !important;
     }
 
     textarea:focus {
