@@ -41,13 +41,9 @@ export const Login: FunctionComponent = memo(() => {
         setLoading(true);
         const keyPath = keyFolder + "/" + username.toLowerCase();
         if (fs.existsSync(keyPath)) {
-            console.log("Key file found, loading from keyfile.");
             gaurdian.load(keyPath);
-            console.log("Gaurdian loaded key " + gaurdian.getKey());
         } else {
-            console.log("Key file not found, generating new key.");
             gaurdian.setKey(Client.generateSecretKey());
-            console.log("Gaurdian loaded key " + gaurdian.getKey());
         }
         const client = await Client.create(gaurdian.getKey(), {
             dbFolder,
