@@ -62,7 +62,7 @@ export const AddChannel: FunctionComponent = () => {
                 </div>
                 <div className="panel-block">
                     <button
-                        className="button is-small"
+                        className="button is-plain is-small"
                         onClick={() => {
                             setInputVal("");
                             addChannel();

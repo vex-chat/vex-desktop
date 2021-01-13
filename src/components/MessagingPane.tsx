@@ -130,7 +130,7 @@ export default function MessagingPane(): JSX.Element {
                                         "json"
                                     )}
                                     <button
-                                        className="button is-small t-12"
+                                        className="button is-plain is-small t-12"
                                         onClick={() => {
                                             history.goBack();
                                         }}
@@ -251,7 +251,7 @@ export default function MessagingPane(): JSX.Element {
                                 })}
                                 <div className="panel-block">
                                     <button
-                                        className="button is-small"
+                                        className="button is-plain is-small"
                                         onClick={() => {
                                             history.goBack();
                                         }}
@@ -350,7 +350,7 @@ export default function MessagingPane(): JSX.Element {
                                     <div className="panel-block">
                                         <div className="buttons is-right">
                                             <button
-                                                className="button is-right"
+                                                className="button is-plain is-right"
                                                 onClick={() => {
                                                     history.goBack();
                                                 }}

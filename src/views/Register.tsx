@@ -263,7 +263,7 @@ export default function Register(): JSX.Element {
                 <div className="field">
                     <div className="buttons register-form-buttons is-right">
                         <button
-                            className="button"
+                            className="button is-plain"
                             onClick={() => {
                                 history.push(routes.LOGIN);
                             }}

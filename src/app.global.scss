@@ -2,11 +2,12 @@ $tag-radius: 10px;
 $panel-tab-border-bottom: none;
 $panel-item-border: none;
 
+$green: #00c08b;
+$yellow: #ffb600;
+$red: #d50037;
+
 @import "../node_modules/@fortawesome/fontawesome-svg-core/styles.css";
 @import "../node_modules/bulma/bulma.sass";
-
-$turquoise: hsl(171, 100%, 41%);
-@import "../node_modules/bulma-prefers-dark/bulma-prefers-dark.sass";
 
 @import "../node_modules/highlight.js/scss/github.scss";
 
@@ -34,6 +35,15 @@ $text_color_0: darken($white, 15%);
 }
 
 @media (prefers-color-scheme: dark) {
+    .button {
+        color: $text_color_0 !important;
+    }
+
+    .is-plain {
+        background-color: $theme_color_0 !important;
+        color: $text_color_0 !important;
+    }
+
     ::-webkit-scrollbar {
         background-color: $theme_color_1;
         width: 8px;
@@ -126,10 +136,14 @@ $text_color_0: darken($white, 15%);
 
     .server-button {
         border: 2px solid $black;
+        background-color: $theme_color_0 !important;
+        color: $text_color_0 !important;
     }
 
     .server-button.is-active {
         border: 2px solid $black !important;
+        background-color: $theme_color_0 !important;
+        color: $text_color_0 !important;
     }
 
     .message-header {
@@ -322,6 +336,10 @@ html {
         color: darken($text_color_0, 1%);
     }
 
+    button {
+        color: $text_color_0 !important;
+    }
+
     path {
         color: darken($text_color_0, 1%);
     }
@@ -335,7 +353,7 @@ html {
     }
 
     .menu-list a.is-active {
-        color: #fff;
+        color: $text_color_0;
     }
 
     .title {
@@ -351,12 +369,12 @@ html {
     }
 
     .server-button.is-active {
-        border-color: darken($black, 10%);
+        border-color: $theme_color_0;
         border: 1px solid $blue;
     }
 
     .server-button.is-active > span > svg {
-        color: darken($light, 20%);
+        color: $theme_color_0;
     }
 
     .server-button.is-active > {
@@ -370,7 +388,7 @@ html {
     }
 
     html {
-        background-color: $theme_color_0;
+        background-color: $theme_color_1;
     }
 
     input {

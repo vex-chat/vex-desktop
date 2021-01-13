@@ -68,7 +68,7 @@ export function ServerSettings(): JSX.Element {
                         <br />
                         <div className="buttons is-right">
                             <div
-                                className="button"
+                                className="button is-plain"
                                 onClick={() => {
                                     setConfirmDeleteOpen(false);
                                 }}

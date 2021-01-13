@@ -47,7 +47,7 @@ export function AddUser(): JSX.Element {
                         <div className="panel-block">{IconUsername(user)}</div>
                         <div className="panel-block">
                             <button
-                                className="button is-small"
+                                className="button is-plain is-small"
                                 onClick={() => addUserPermission(user)}
                             >
                                 Add user to {server.name}
