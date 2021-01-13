@@ -17,6 +17,7 @@ export function ChatInput(props: {
     targetID: string;
     group?: boolean;
     className?: string;
+    disabled?: boolean;
 }): JSX.Element {
     const {
         userID,
@@ -134,6 +135,7 @@ export function ChatInput(props: {
                     <div {...getRootProps()}>
                         <input {...getInputProps()} />
                         <textarea
+                            disabled={props.disabled}
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             ref={inputRef as any}
                             autoFocus={true}

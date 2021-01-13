@@ -7,6 +7,7 @@ import { routes } from "../constants/routes";
 import { addFamiliar, selectFamiliars } from "../reducers/familiars";
 import { selectSessions, stubSession } from "../reducers/sessions";
 import { selectUser } from "../reducers/user";
+import store from "../utils/DataStore";
 
 import { FamiliarButton } from "./FamiliarButton";
 import { UserSearchBar } from "./UserSearchBar";
@@ -49,21 +50,22 @@ export default function MessagingBar(): JSX.Element {
                         subtitle: "Me",
                     })}
 
-                    {Object.keys(sessions).map((userID) => {
-                        if (familiars[userID] === undefined) {
-                            return;
-                        }
+                    {store.get("settings.directMessages") &&
+                        Object.keys(sessions).map((userID) => {
+                            if (familiars[userID] === undefined) {
+                                return;
+                            }
 
-                        if (user.userID === userID) {
-                            return;
-                        }
+                            if (user.userID === userID) {
+                                return;
+                            }
 
-                        return FamiliarButton({
-                            user: familiars[userID],
-                            params,
-                            subtitle: "",
-                        });
-                    })}
+                            return FamiliarButton({
+                                user: familiars[userID],
+                                params,
+                                subtitle: "",
+                            });
+                        })}
                 </ul>
             </aside>
         </div>

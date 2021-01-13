@@ -566,7 +566,7 @@ button {
         background-image: linear-gradient(
             to left,
             $theme_color_0,
-            darken($black-bis, 2%)
+            $theme_color_1
         );
         border-bottom: 2px solid $theme_color_2;
     }
@@ -584,11 +584,7 @@ button {
     }
 
     .right-bar {
-        background-image: linear-gradient(
-            to bottom,
-            $theme_color_2,
-            $theme_color_1
-        );
+        background-color: $theme_color_2;
         border-left: 2px solid $theme_color_1;
     }
 

@@ -27,6 +27,7 @@ import { push as pushHistoryStack } from "../reducers/historyStacks";
 import { selectMessages } from "../reducers/messages";
 import { markSession, selectSessions } from "../reducers/sessions";
 import { chunkMessages } from "../utils/chunkMessages";
+import store from "../utils/DataStore";
 
 import { ChatInput } from "./ChatInput";
 import { FamiliarMenu } from "./FamiliarMenu";
@@ -48,6 +49,10 @@ export default function MessagingPane(): JSX.Element {
     const query = useQuery();
 
     const sessions = useSelector(selectSessions);
+
+    const directMessagesEnabled = store.get(
+        "settings.directMessages"
+    ) as boolean;
 
     const sessionIDs = Object.keys(sessions[params.userID] || {});
     let hasUnverifiedSession = false;
@@ -412,25 +417,29 @@ export default function MessagingPane(): JSX.Element {
                     render={() => {
                         return (
                             <Fragment>
-                                <div className="conversation-wrapper">
-                                    {params.userID !== undefined && (
-                                        <div className={"history-disclaimer"}>
-                                            <p className="help">
-                                                <FontAwesomeIcon
-                                                    icon={faStar}
-                                                />{" "}
-                                                For your security, message
-                                                history is not transferred to
-                                                new devices.
-                                                <FontAwesomeIcon
-                                                    icon={faStar}
-                                                />{" "}
-                                            </p>
-                                        </div>
-                                    )}
+                                {store.get("settings.directMessages") && (
+                                    <div className="conversation-wrapper">
+                                        {params.userID !== undefined && (
+                                            <div
+                                                className={"history-disclaimer"}
+                                            >
+                                                <p className="help">
+                                                    <FontAwesomeIcon
+                                                        icon={faStar}
+                                                    />{" "}
+                                                    For your security, message
+                                                    history is not transferred
+                                                    to new devices.
+                                                    <FontAwesomeIcon
+                                                        icon={faStar}
+                                                    />{" "}
+                                                </p>
+                                            </div>
+                                        )}
 
-                                    {chunkMessages(threadMessages || {}).map(
-                                        (chunk) => {
+                                        {chunkMessages(
+                                            threadMessages || {}
+                                        ).map((chunk) => {
                                             return (
                                                 <MessageBox
                                                     key={
@@ -440,13 +449,15 @@ export default function MessagingPane(): JSX.Element {
                                                     messages={chunk}
                                                 />
                                             );
-                                        }
-                                    )}
-                                    <div ref={messagesEndRef} />
-                                </div>
+                                        })}
+                                        <div ref={messagesEndRef} />
+                                    </div>
+                                )}
+
                                 <ChatInput
                                     targetID={familiar.userID}
                                     className={"direct-messaging"}
+                                    disabled={!directMessagesEnabled}
                                 />
                             </Fragment>
                         );

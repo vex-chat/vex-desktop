@@ -243,24 +243,26 @@ export function ClientLauncher(): JSX.Element {
                 console.warn("error getting devices", err.toString());
             }
 
-            const history = await client.messages.retrieve(user.userID);
-            const szHistory = history.reduce<ISerializedMessage[]>(
-                (acc, msg) => {
-                    const szMsg = serializeMessage(msg);
-                    if (!szMsg.group) {
-                        acc.push(szMsg);
-                    } else {
-                        log.warn("Group messages found in dm history.");
-                    }
-                    return acc;
-                },
-                []
-            );
-
-            if (szHistory.length > 0) {
-                dispatch(
-                    dmAddMany({ messages: szHistory, userID: user.userID })
+            if (store.get("settings.directMessages")) {
+                const history = await client.messages.retrieve(user.userID);
+                const szHistory = history.reduce<ISerializedMessage[]>(
+                    (acc, msg) => {
+                        const szMsg = serializeMessage(msg);
+                        if (!szMsg.group) {
+                            acc.push(szMsg);
+                        } else {
+                            log.warn("Group messages found in dm history.");
+                        }
+                        return acc;
+                    },
+                    []
                 );
+
+                if (szHistory.length > 0) {
+                    dispatch(
+                        dmAddMany({ messages: szHistory, userID: user.userID })
+                    );
+                }
             }
         }
 
