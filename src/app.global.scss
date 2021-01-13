@@ -4,6 +4,8 @@ $panel-item-border: none;
 
 @import "../node_modules/@fortawesome/fontawesome-svg-core/styles.css";
 @import "../node_modules/bulma/bulma.sass";
+
+$turquoise: hsl(171, 100%, 41%);
 @import "../node_modules/bulma-prefers-dark/bulma-prefers-dark.sass";
 
 @import "../node_modules/highlight.js/scss/github.scss";
