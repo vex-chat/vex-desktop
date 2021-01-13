@@ -2,7 +2,7 @@ $tag-radius: 10px;
 $panel-tab-border-bottom: none;
 $panel-item-border: none;
 
-$green: #00c08b;
+$green: darken(#20c20e, 7%);
 $yellow: #ffb600;
 $red: #d50037;
 
@@ -35,18 +35,22 @@ $text_color_0: darken($white, 15%);
 }
 
 @media (prefers-color-scheme: dark) {
+    .tabs {
+        border-bottom-color: $theme_color_0 !important;
+    }
+
     .button {
         color: $text_color_0 !important;
     }
 
     .is-plain {
+        border-color: $theme_color_2 !important;
         background-color: $theme_color_0 !important;
-        color: $text_color_0 !important;
+        box-shadow: none !important;
     }
 
     ::-webkit-scrollbar {
         background-color: $theme_color_1;
-        width: 8px;
     }
 
     strong {
@@ -60,7 +64,6 @@ $text_color_0: darken($white, 15%);
     ::-webkit-scrollbar-thumb:window-inactive,
     ::-webkit-scrollbar-thumb {
         background: $theme_color_0;
-        border-radius: 20px;
     }
 
     .identity-panel {
@@ -71,7 +74,7 @@ $text_color_0: darken($white, 15%);
 
     .panel-heading {
         color: $text_color_0;
-        background-color: $theme_color_1;
+        background-color: $theme_color_0;
     }
 
     .dropdown-content {
@@ -124,10 +127,10 @@ $text_color_0: darken($white, 15%);
     }
 
     textarea {
-        border-color: $theme_color_2 !important;
+        border-color: $theme_color_0 !important;
         background-color: $theme_color_0 !important;
-        outline: 2px solid $theme_color_1 !important;
         box-shadow: none !important;
+        color: $text_color_0 !important;
     }
 
     textarea:focus {
@@ -207,7 +210,6 @@ $text_color_0: darken($white, 15%);
     ::-webkit-scrollbar-thumb:window-inactive,
     ::-webkit-scrollbar-thumb {
         background: $light;
-        border-radius: 20px;
     }
 
     .identity-panel {
@@ -392,10 +394,13 @@ html {
     }
 
     input {
+        border-color: $theme_color_2 !important;
         background-color: $theme_color_0 !important;
-        color: $text_color_0 !important;
-        box-shadow: 0 -2px 10px rgba(10, 10, 10, 1) !important;
-        border-color: $theme_color_0;
+        box-shadow: none !important;
+    }
+
+    input:focus {
+        box-shadow: 0 -2px 10px rgba(23, 66, 135, 1) !important;
     }
 
     ::placeholder {
