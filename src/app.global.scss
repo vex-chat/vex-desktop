@@ -11,9 +11,9 @@ $red: #d50037;
 
 @import "../node_modules/highlight.js/scss/github.scss";
 
-$theme_color_0: lighten(#000, 3%);
-$theme_color_1: lighten(#000, 6%);
-$theme_color_2: lighten(#000, 9%);
+$theme_color_0: lighten(#000, 5%);
+$theme_color_1: lighten(#000, 10%);
+$theme_color_2: lighten(#000, 15%);
 
 $text_color_0: darken($white, 15%);
 
@@ -55,6 +55,10 @@ $text_color_0: darken($white, 15%);
 
     strong {
         color: $text_color_0;
+    }
+
+    small {
+        color: darken($text_color_0, 33%);
     }
 
     p {
@@ -99,7 +103,7 @@ $text_color_0: darken($white, 15%);
     }
 
     .icon-username-wrapper:hover {
-        background-color: $theme_color_0;
+        background-color: $theme_color_1;
     }
 
     p {
@@ -112,7 +116,7 @@ $text_color_0: darken($white, 15%);
 
     a:hover {
         color: darken($text_color_0, 3%);
-        background-color: $theme_color_0;
+        background-color: $theme_color_1;
     }
 
     a.dropdown-item:hover {
@@ -124,7 +128,7 @@ $text_color_0: darken($white, 15%);
     }
 
     div.sidebar > aside > ul > li > a:hover {
-        background-color: $theme_color_0;
+        background-color: $theme_color_1;
     }
 
     textarea {
@@ -171,23 +175,23 @@ $text_color_0: darken($white, 15%);
 
     .search-wrapper {
         border-bottom: 2px solid $theme_color_1;
-        background-color: $theme_color_0;
+        background-color: $theme_color_2;
     }
 
     .familiar-button.is-active {
-        background-color: $theme_color_0;
+        background-color: $theme_color_1;
     }
 
     .channel-bar-link .is-active {
-        background-color: $theme_color_0 !important;
+        background-color: $theme_color_1 !important;
     }
 
     .sidebar-familiar:hover {
-        background-color: $theme_color_0;
+        background-color: $theme_color_1;
     }
 
     .familiar-button:hover {
-        background-color: $theme_color_0;
+        background-color: $theme_color_1;
     }
 
     .outgoing-message {
@@ -369,7 +373,7 @@ html {
     }
 
     .sidebar {
-        background-color: $theme_color_1;
+        background-color: $theme_color_2;
     }
 
     .server-button.is-active {
@@ -540,13 +544,17 @@ button {
 }
 
 @media (prefers-color-scheme: dark) {
+    .settings-panel {
+        border: 2px solid $theme_color_0;
+    }
+
     .server-icon-wrapper {
         border-color: $theme_color_0 !important;
     }
 
     .user-menu-wrapper {
-        border-top: 2px solid $theme_color_2;
-        background-color: $theme_color_1;
+        border-top: 2px solid $theme_color_1;
+        background-color: $theme_color_2;
     }
 
     .identity-link:hover {
@@ -566,8 +574,8 @@ button {
     .serverbar {
         background-image: linear-gradient(
             to top,
-            darken($black-bis, 1%),
-            $theme_color_0
+            $theme_color_0,
+            $theme_color_1
         );
     }
 
@@ -578,15 +586,15 @@ button {
     .right-bar {
         background-image: linear-gradient(
             to bottom,
-            $theme_color_0,
-            darken($black-bis, 2%)
+            $theme_color_2,
+            $theme_color_1
         );
         border-left: 2px solid $theme_color_1;
     }
 
     .server-titlebar {
-        border-bottom: 2px solid $theme_color_2;
-        background-color: $theme_color_0;
+        border-bottom: 2px solid $theme_color_1;
+        background-color: $theme_color_2;
     }
 }
 

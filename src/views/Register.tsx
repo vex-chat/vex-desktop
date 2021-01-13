@@ -9,6 +9,7 @@ import { useHistory } from "react-router";
 import { VerticalAligner } from "../components/VerticalAligner";
 import { dbFolder, keyFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
+import { errorFX, unlockFX } from "../constants/sounds";
 import gaurdian from "../utils/KeyGaurdian";
 
 export default function Register(): JSX.Element {
@@ -41,7 +42,8 @@ export default function Register(): JSX.Element {
             return;
         }
 
-        // switchFX.play();
+        await unlockFX.play();
+
         setWaiting(true);
 
         const PK = Client.generateSecretKey();
@@ -54,7 +56,7 @@ export default function Register(): JSX.Element {
         const [user, err] = await client.register(username, password);
 
         if (err !== null) {
-            // errorFX.play();
+            await errorFX.play();
             setWaiting(false);
             console.warn("registration failed.", err);
             setErrorText(err.toString());
@@ -93,6 +95,12 @@ export default function Register(): JSX.Element {
     return (
         <VerticalAligner>
             <div className="box register-form">
+                {errorText !== "" && (
+                    <span className="help has-text-white has-text-bold notification is-danger has-delete">
+                        {errorText}
+                    </span>
+                )}
+
                 <div className="field">
                     <label className="label is-small">
                         Username: &nbsp;&nbsp;
@@ -209,11 +217,6 @@ export default function Register(): JSX.Element {
                             <FontAwesomeIcon icon={taken ? faTimes : faCheck} />
                         </span>
                     </div>
-                    {errorText !== "" && (
-                        <span className="help has-text-white has-text-bold notification is-danger has-delete">
-                            {errorText}
-                        </span>
-                    )}
                 </div>
                 <div className="field">
                     <label className="label is-small">Password:</label>

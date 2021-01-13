@@ -113,6 +113,7 @@ export function Server(): JSX.Element {
                     />
                 </Switch>
             </div>
+            <div className="right-topbar"></div>
             <div className="right-bar">
                 <p className="menu-label">Online</p>
                 {[...onlineList]

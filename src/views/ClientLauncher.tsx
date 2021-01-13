@@ -88,7 +88,7 @@ export function ClientLauncher(): JSX.Element {
             message.authorID !== me.userID
         ) {
             if (process.platform !== "darwin") {
-                notifyFX.play();
+                await notifyFX.play();
             }
 
             const tempClient = await Client.create(undefined, { dbFolder });
@@ -177,10 +177,15 @@ export function ClientLauncher(): JSX.Element {
     const messageHandler = (message: IMessage) => {
         const szMsg = serializeMessage(message);
 
+        const directMessagesEnabled: boolean = store.get(
+            "settings.directMessages"
+        ) as boolean;
         if (szMsg.group) {
             dispatch(groupAdd(szMsg));
         } else {
-            dispatch(dmAdd(szMsg));
+            if (directMessagesEnabled) {
+                dispatch(dmAdd(szMsg));
+            }
         }
 
         notification(message);

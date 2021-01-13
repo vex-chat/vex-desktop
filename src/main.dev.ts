@@ -52,7 +52,7 @@ const createWindow = async () => {
         titleBarStyle: "hidden",
         frame: false,
         show: false,
-        width: 1200,
+        width: 1300,
         height: 900,
         icon: getAssetPath("icon.png"),
         webPreferences: {

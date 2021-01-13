@@ -1,7 +1,7 @@
 import type { IServer } from "@vex-chat/libvex";
 
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router";
+import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 
 import { routes } from "../constants/routes";
@@ -10,9 +10,10 @@ import { getHistoryHead } from "../reducers/historyStacks";
 import { strToIcon } from "../utils/strToIcon";
 
 export function ServerIcon(props: { server: IServer }): JSX.Element {
-    const history = useHistory();
     const historyHead = useSelector(getHistoryHead(props.server.serverID));
     const channels = useSelector(selectChannels(props.server.serverID));
+
+    const params: { serverID?: string } = useParams();
 
     const channelIDs = Object.keys(channels);
     const headChannel = channels[channelIDs[0]];
@@ -24,9 +25,8 @@ export function ServerIcon(props: { server: IServer }): JSX.Element {
         "/channels/" +
         (headChannel?.channelID || "");
 
-    const isActiveModifier = history.location.pathname.includes(href)
-        ? "is-active"
-        : "";
+    const isActiveModifier =
+        params.serverID === props.server.serverID ? "is-active" : "";
 
     return (
         <div

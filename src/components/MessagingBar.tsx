@@ -23,7 +23,6 @@ export default function MessagingBar(): JSX.Element {
     );
 
     const newConversation = (user: IUser) => {
-        // switchFX.play();
         dispatch(addFamiliar(user));
         dispatch(stubSession(user.userID));
 

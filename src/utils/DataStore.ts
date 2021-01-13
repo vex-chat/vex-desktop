@@ -12,6 +12,17 @@ class DataStore extends Store {
             DataStore.instance = new DataStore();
         }
 
+        // set the default values
+        if (!this.instance.get("settings.notifications")) {
+            this.instance.set("settings.notifications", true);
+        }
+
+        if (!this.instance.get("settings.directMessages")) {
+            this.instance.set("settings.directMessages", true);
+        }
+
+        console.log(this.instance.store);
+
         return DataStore.instance;
     }
 }

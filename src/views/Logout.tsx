@@ -43,7 +43,12 @@ export function Logout(): JSX.Element {
         dispatch(resetUser());
         dispatch(resetPermissions());
 
-        await lockFX.play();
+        try {
+            await lockFX.play();
+        } catch (err) {
+            console.warn(err.toString());
+        }
+
         history.push(query.get("forward") || routes.HOME);
     };
 
