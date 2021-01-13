@@ -11,7 +11,7 @@ export default function Settings(): JSX.Element {
 
     return (
         <VerticalAligner top={<BackButton />}>
-            <div className="panel is-light">
+            <div className="panel">
                 <p className="panel-heading">Settings</p>
                 <div className="panel-block">
                     <label className="checkbox settings-box">

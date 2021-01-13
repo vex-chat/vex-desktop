@@ -15,7 +15,7 @@ export function IconUsername(
     const size = iconSize.toString() + "x" + iconSize.toString();
 
     return (
-        <span className="media">
+        <span className="media icon-username-wrapper">
             <span className="media-left">
                 {icon !== undefined ? (
                     <FontAwesomeIcon className="icon-username-fa" icon={icon} />

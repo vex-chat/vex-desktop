@@ -92,7 +92,7 @@ export default function Register(): JSX.Element {
 
     return (
         <VerticalAligner>
-            <div className="box has-background-white register-form">
+            <div className="box register-form">
                 <div className="field">
                     <label className="label is-small">
                         Username: &nbsp;&nbsp;

@@ -175,7 +175,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                             : "";
 
                         return (
-                            <li key={channelID}>
+                            <li key={channelID} className="channel-bar-link">
                                 <Link
                                     to={`${routes.SERVERS}/${serverID}/channels/${channelID}`}
                                     className={chLinkStyle}

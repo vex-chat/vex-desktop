@@ -30,7 +30,7 @@ export function CreateServer(): JSX.Element {
                 </div>
             </div>
             <div className="Aligner-item">
-                <div className="box has-background-white register-form">
+                <div className="box register-form">
                     <div className="field">
                         <label className="label is-small">
                             Pick a server name: <br />

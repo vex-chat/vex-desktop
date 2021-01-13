@@ -1,11 +1,11 @@
 $tag-radius: 10px;
 $panel-tab-border-bottom: none;
 $panel-item-border: none;
-$menu-item-active-background-color: darken(hsl(0, 0%, 96%), 5%);
-$menu-item-active-color: hsl(0, 0%, 4%);
 
 @import "../node_modules/@fortawesome/fontawesome-svg-core/styles.css";
 @import "../node_modules/bulma/bulma.sass";
+@import "../node_modules/bulma-prefers-dark/bulma-prefers-dark.sass";
+
 @import "../node_modules/highlight.js/scss/github.scss";
 
 .identity-panel {
@@ -27,13 +27,135 @@ $menu-item-active-color: hsl(0, 0%, 4%);
     width: calc(100% - 60px);
     height: auto;
     line-height: 1.75;
-    color: $black;
     -ms-overflow-style: scrollbar;
     -webkit-app-region: drag;
 }
 
-.hljs {
-    background-color: $light !important;
+@media (prefers-color-scheme: dark) {
+    .dropdown-content {
+        background-color: #000 !important;
+        box-shadow: 0 -2px 10px rgba(10, 10, 10, 1) !important;
+    }
+
+    .box {
+        box-shadow: 0 -2px 10px rgba(10, 10, 10, 1) !important;
+    }
+
+    .icon-username-wrapper:hover {
+        background-color: #000;
+    }
+
+    a:hover {
+        background-color: #000 !important;
+    }
+
+    .add-user-icon:hover {
+        color: lighten($light, 10%);
+    }
+
+    div.sidebar > aside > ul > li > a:hover {
+        background-color: #000;
+    }
+
+    textarea {
+        border-color: lighten(#000, 2%) !important;
+        background-color: #000 !important;
+        outline: 2px solid lighten(#000, 1%) !important;
+        box-shadow: none !important;
+    }
+
+    textarea:focus {
+        box-shadow: 0 -2px 10px rgba(23, 66, 135, 1) !important;
+    }
+
+    .server-button {
+        border: 2px solid $black;
+    }
+
+    .server-button.is-active {
+        border: 2px solid $black !important;
+    }
+
+    .message-header {
+        background-color: lighten(#000, 1%);
+    }
+
+    .message-body {
+        background-color: lighten(#000, 2%);
+    }
+
+    .pane-topbar {
+        background-color: #000;
+        border-bottom: 2px solid lighten(#000, 1%);
+    }
+
+    .search-wrapper {
+        border-bottom: 2px solid lighten(#000, 1%);
+        background-color: #000;
+    }
+
+    .familiar-button.is-active {
+        background-color: #000;
+    }
+
+    .channel-bar-link .is-active {
+        background-color: #000 !important;
+    }
+
+    .sidebar-familiar:hover {
+        background-color: #000;
+    }
+
+    .familiar-button:hover {
+        background-color: #000;
+    }
+
+    .outgoing-message {
+        color: $black !important;
+    }
+
+    .title-bar-grabber {
+        color: $white;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .add-user-icon:hover {
+        color: lighten($dark, 10%);
+    }
+
+    div.sidebar > aside > ul > li > a:hover {
+        background-color: darken($light, 5%);
+    }
+
+    .pane-topbar {
+        background-color: #fff;
+        border-bottom: 1px solid $light;
+    }
+
+    .search-wrapper {
+        border-bottom: 1px solid $light;
+    }
+
+    .familiar-button.is-active {
+        background-color: darken($light, 5%);
+    }
+
+    .sidebar-familiar:hover {
+        background-color: darken($light, 5%);
+    }
+
+    .familiar-button:hover {
+        background-color: darken($light, 5%);
+    }
+
+    .outgoing-message {
+        color: $black !important;
+    }
+
+    .title-bar-grabber {
+        color: $black;
+    }
 }
 
 .input-wrapper {
@@ -51,41 +173,10 @@ $menu-item-active-color: hsl(0, 0%, 4%);
 
 .server-button {
     margin-top: 3px;
-    border: 1px solid $light;
 }
 
 .icon-username-fa {
     margin-top: 7px;
-}
-
-.server-button.is-active {
-    // background-color: $light;
-    border-color: darken($light, 10%);
-    border: 1px solid $blue;
-}
-
-.server-button.is-active > span > svg {
-    color: darken($light, 20%) !important;
-}
-
-.server-button.is-active > {
-    background-color: $light;
-    border-color: darken($light, 10%);
-}
-
-body::-webkit-scrollbar {
-    width: 12px;
-    background-color: $light;
-}
-
-body::-webkit-scrollbar-track {
-    border-radius: 10px;
-    background-color: $white;
-}
-
-body::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-color: $dark;
 }
 
 .message-text {
@@ -131,10 +222,6 @@ body::-webkit-scrollbar-thumb {
     padding-bottom: 0px !important;
 }
 
-.file-box:hover {
-    background-color: darken($white, 1%);
-}
-
 textarea {
     border-radius: 0px !important;
 }
@@ -142,6 +229,114 @@ textarea {
 html {
     overflow-y: hidden; /* Hide vertical scrollbar */
     overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
+@media (prefers-color-scheme: dark) {
+    .icon {
+        color: darken($white, 1%) !important;
+    }
+
+    path {
+        color: darken($white, 1%) !important;
+    }
+
+    path:hover {
+        color: darken($white, 2%) !important;
+    }
+
+    a {
+        color: darken($white, 1%) !important;
+    }
+
+    .menu-list a.is-active {
+        color: #fff;
+    }
+
+    .title {
+        color: $white;
+    }
+
+    .subtitle {
+        color: $white;
+    }
+
+    .sidebar {
+        background-color: lighten(#000, 1%);
+    }
+
+    .server-button.is-active {
+        border-color: darken($black, 10%);
+        border: 1px solid $blue;
+    }
+
+    .server-button.is-active > span > svg {
+        color: darken($light, 20%) !important;
+    }
+
+    .server-button.is-active > {
+        background-color: $black-bis;
+        border-color: darken($black-bis, 10%);
+    }
+
+    .hljs {
+        background-color: lighten(#000, 1%) !important;
+        color: $white;
+    }
+
+    html {
+        background-color: #000;
+    }
+
+    input {
+        background-color: #000 !important;
+        color: $white !important;
+        box-shadow: 0 -2px 10px rgba(10, 10, 10, 1) !important;
+        border-color: #000;
+    }
+
+    ::placeholder {
+        color: $grey !important;
+    }
+
+    .box {
+        background-color: #000;
+    }
+
+    .file-box {
+        background-color: #000;
+    }
+
+    .file-box:hover {
+        background-color: lighten(#000, 1%);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .server-button.is-active {
+        border-color: darken($light, 10%);
+        border: 1px solid $blue;
+    }
+
+    .server-button.is-active > span > svg {
+        color: darken($light, 20%) !important;
+    }
+
+    .server-button.is-active > {
+        background-color: $light;
+        border-color: darken($light, 10%);
+    }
+
+    .hljs {
+        background-color: $light !important;
+    }
+
+    html {
+        background-color: $white;
+    }
+
+    .file-box:hover {
+        background-color: darken($white, 1%);
+    }
 }
 
 input {
@@ -163,9 +358,7 @@ div {
     width: 265px;
     left: 72px;
     height: 55px;
-    border-top: 1px solid darken($light, 10%);
     padding: 10px 20px;
-    background-color: $light;
 }
 
 .horizontal-scroll {
@@ -221,18 +414,92 @@ button {
     width: 100%;
 }
 
-.identity-link:hover {
-    background-color: darken($light, 5%);
-    cursor: pointer;
-}
-
 .title-bar {
     position: absolute;
     height: 22px;
     width: calc(100% - 60px);
     left: 0;
     top: 0px;
-    background-image: linear-gradient(to left, $light, $white);
+}
+
+@media (prefers-color-scheme: dark) {
+    .server-icon-wrapper {
+        border-color: #000 !important;
+    }
+
+    .user-menu-wrapper {
+        border-top: 2px solid lighten(#000, 2%);
+        background-color: lighten(#000, 1%);
+    }
+
+    .identity-link:hover {
+        background-color: darken($black, 5%);
+        cursor: pointer;
+    }
+
+    .title-bar {
+        background-image: linear-gradient(
+            to left,
+            #000,
+            darken($black-bis, 2%)
+        );
+        border-bottom: 2px solid lighten(#000, 2%);
+    }
+
+    .serverbar {
+        background-image: linear-gradient(to top, darken($black-bis, 1%), #000);
+    }
+
+    .pane {
+        background-color: darken($black, 5%);
+    }
+
+    .right-bar {
+        background-image: linear-gradient(
+            to bottom,
+            #000,
+            darken($black-bis, 2%)
+        );
+        border-left: 2px solid lighten(#000, 1%);
+    }
+
+    .server-titlebar {
+        border-bottom: 1px solid darken($black, 5%);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .user-menu-wrapper {
+        border-top: 2px solid $white;
+        background-color: $light;
+    }
+
+    .identity-link:hover {
+        background-color: darken($light, 5%);
+        cursor: pointer;
+    }
+
+    .title-bar {
+        background-image: linear-gradient(to left, $light, $white);
+        border-bottom: 2px solid $light;
+    }
+
+    .serverbar {
+        background-image: linear-gradient(to top, $light, $white);
+    }
+
+    .pane {
+        background-color: $white;
+    }
+
+    .right-bar {
+        background-image: linear-gradient(to bottom, $white, $light);
+        border-left: 2px solid $light;
+    }
+
+    .server-titlebar {
+        border-bottom: 1px solid darken($light, 5%);
+    }
 }
 
 .tag:not(body) {
@@ -257,7 +524,6 @@ button {
 .title-bar {
     height: 22px;
     width: 100vw;
-    border-bottom: 2px solid $light;
 }
 
 .serverbar {
@@ -266,7 +532,6 @@ button {
     width: 72px;
     height: calc(100% - 22px);
     bottom: 0;
-    background-image: linear-gradient(to top, $light, $white);
     left: 0;
 }
 
@@ -295,7 +560,6 @@ button {
 .server-titlebar {
     width: 100%;
     height: 55px;
-    border-bottom: 1px solid darken($light, 5%);
 }
 
 .sidebar {
@@ -306,7 +570,6 @@ button {
     left: 72px;
     top: 22px;
     bottom: 55px;
-    background-color: $light;
 }
 
 .verify-mnemonic {
@@ -319,7 +582,6 @@ button {
     right: 225px;
     height: calc(100% - 22px);
     top: 22px;
-    background-color: $white;
 }
 
 .pane.direct-messaging {
@@ -328,14 +590,12 @@ button {
 }
 
 .right-bar {
-    background-image: linear-gradient(to bottom, $white, $light);
     position: absolute;
     width: 225px;
     right: 0px;
     bottom: 0px;
     top: 22px;
     height: calc(100% - 22px);
-    border-left: 2px solid $light;
 }
 
 .right-bar > p {
@@ -378,10 +638,6 @@ button {
     display: show;
 }
 
-div.sidebar > aside > ul > li > a:hover {
-    background-color: darken($light, 5%);
-}
-
 .full-size {
     width: 100vw;
     height: calc(100vh - 22px);
@@ -412,8 +668,6 @@ div.sidebar > aside > ul > li > a:hover {
     position: sticky;
     top: 0px;
     z-index: 1;
-    border-bottom: 1px solid $light;
-    background-color: #fff;
 }
 
 .pane-topbar-content {
@@ -423,10 +677,6 @@ div.sidebar > aside > ul > li > a:hover {
 
 .add-user-icon {
     float: right;
-}
-
-.add-user-icon:hover {
-    color: lighten($dark, 10%);
 }
 
 .chat-input-wrapper {
@@ -455,8 +705,6 @@ div.sidebar > aside > ul > li > a:hover {
     width: 100%;
     height: 55px;
     margin: 0px;
-    background-color: $light;
-    border-bottom: solid 1px darken($light, 5%);
     z-index: 1;
 }
 
@@ -488,10 +736,6 @@ div.sidebar > aside > ul > li > a:hover {
     cursor: pointer;
 }
 
-.window-button-icon:hover {
-    color: pink;
-}
-
 .pointer {
     cursor: pointer !important;
 }
@@ -521,13 +765,10 @@ div.sidebar > aside > ul > li > a:hover {
     padding-bottom: 12px;
 }
 
-.familiar-button.is-active {
-    background-color: darken($light, 5%);
-}
-
 .username-text-48x48 {
     padding-top: 15px;
 }
+
 .username-text-48x48.has-subtitle {
     padding-top: 10px;
     line-height: 0.7;
@@ -545,18 +786,6 @@ div.sidebar > aside > ul > li > a:hover {
 .username-text-32x32.has-subtitle {
     padding-top: 2px;
     line-height: 0.8;
-}
-
-.sidebar-familiar:hover {
-    background-color: darken($light, 5%);
-}
-
-.familiar-button:hover {
-    background-color: darken($light, 5%);
-}
-
-.outgoing-message {
-    color: $black !important;
 }
 
 .avatar-trigger:hover {
