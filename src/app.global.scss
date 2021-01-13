@@ -10,6 +10,12 @@ $turquoise: hsl(171, 100%, 41%);
 
 @import "../node_modules/highlight.js/scss/github.scss";
 
+$theme_color_0: lighten(#000, 3%);
+$theme_color_1: lighten(#000, 6%);
+$theme_color_2: lighten(#000, 9%);
+
+$text_color_0: darken($white, 15%);
+
 .image .is-rounded img {
     object-fit: cover !important;
     object-position: center center !important;
@@ -29,13 +35,21 @@ $turquoise: hsl(171, 100%, 41%);
 
 @media (prefers-color-scheme: dark) {
     ::-webkit-scrollbar {
-        background-color: lighten(#000, 1%);
+        background-color: $theme_color_1;
         width: 8px;
+    }
+
+    strong {
+        color: $text_color_0;
+    }
+
+    p {
+        color: $text_color_0;
     }
 
     ::-webkit-scrollbar-thumb:window-inactive,
     ::-webkit-scrollbar-thumb {
-        background: black;
+        background: $theme_color_0;
         border-radius: 20px;
     }
 
@@ -46,28 +60,49 @@ $turquoise: hsl(171, 100%, 41%);
     }
 
     .panel-heading {
-        background-color: lighten(#000, 1%);
+        color: $text_color_0;
+        background-color: $theme_color_1;
     }
 
     .dropdown-content {
-        background-color: #000 !important;
-        box-shadow: 0 -2px 10px rgba(10, 10, 10, 1) !important;
+        background-color: $theme_color_0 !important;
     }
 
     .box {
         box-shadow: 0 -2px 10px rgba(10, 10, 10, 1) !important;
     }
 
+    .label {
+        color: $text_color_0;
+    }
+
+    div {
+        color: $text_color_0;
+    }
+
+    label {
+        color: $text_color_0;
+    }
+
     .icon-username-wrapper:hover {
-        background-color: #000;
+        background-color: $theme_color_0;
+    }
+
+    p {
+        color: $text_color_0;
+    }
+
+    a {
+        color: $text_color_0 !important;
     }
 
     a:hover {
-        background-color: #000;
+        color: darken($text_color_0, 3%);
+        background-color: $theme_color_0;
     }
 
     a.dropdown-item:hover {
-        background-color: lighten(#000, 1%);
+        background-color: $theme_color_1;
     }
 
     .add-user-icon:hover {
@@ -75,13 +110,13 @@ $turquoise: hsl(171, 100%, 41%);
     }
 
     div.sidebar > aside > ul > li > a:hover {
-        background-color: #000;
+        background-color: $theme_color_0;
     }
 
     textarea {
-        border-color: lighten(#000, 2%) !important;
-        background-color: #000 !important;
-        outline: 2px solid lighten(#000, 1%) !important;
+        border-color: $theme_color_2 !important;
+        background-color: $theme_color_0 !important;
+        outline: 2px solid $theme_color_1 !important;
         box-shadow: none !important;
     }
 
@@ -98,42 +133,42 @@ $turquoise: hsl(171, 100%, 41%);
     }
 
     .message-header {
-        background-color: lighten(#000, 1%);
+        background-color: $theme_color_1;
     }
 
     .message-body {
-        background-color: #000;
+        background-color: $theme_color_0;
     }
 
     .message {
-        outline: 2px solid lighten(#000, 1%);
+        outline: 2px solid $theme_color_1;
         border-radius: 10px;
     }
 
     .pane-topbar {
-        background-color: #000;
-        border-bottom: 2px solid lighten(#000, 1%);
+        background-color: $theme_color_0;
+        border-bottom: 2px solid $theme_color_1;
     }
 
     .search-wrapper {
-        border-bottom: 2px solid lighten(#000, 1%);
-        background-color: #000;
+        border-bottom: 2px solid $theme_color_1;
+        background-color: $theme_color_0;
     }
 
     .familiar-button.is-active {
-        background-color: #000;
+        background-color: $theme_color_0;
     }
 
     .channel-bar-link .is-active {
-        background-color: #000 !important;
+        background-color: $theme_color_0 !important;
     }
 
     .sidebar-familiar:hover {
-        background-color: #000;
+        background-color: $theme_color_0;
     }
 
     .familiar-button:hover {
-        background-color: #000;
+        background-color: $theme_color_0;
     }
 
     .outgoing-message {
@@ -141,7 +176,7 @@ $turquoise: hsl(171, 100%, 41%);
     }
 
     .title-bar-grabber {
-        color: $white;
+        color: $text_color_0;
     }
 }
 
@@ -279,20 +314,24 @@ html {
 }
 
 @media (prefers-color-scheme: dark) {
+    .dropdown-menu {
+        box-shadow: none !important;
+    }
+
     .icon {
-        color: darken($white, 1%);
+        color: darken($text_color_0, 1%);
     }
 
     path {
-        color: darken($white, 1%);
+        color: darken($text_color_0, 1%);
     }
 
     path:hover {
-        color: darken($white, 2%);
+        color: darken($text_color_0, 2%);
     }
 
     a {
-        color: darken($white, 1%);
+        color: darken($text_color_0, 1%);
     }
 
     .menu-list a.is-active {
@@ -300,15 +339,15 @@ html {
     }
 
     .title {
-        color: $white;
+        color: $text_color_0 !important;
     }
 
     .subtitle {
-        color: $white;
+        color: $text_color_0 !important;
     }
 
     .sidebar {
-        background-color: lighten(#000, 1%);
+        background-color: $theme_color_1;
     }
 
     .server-button.is-active {
@@ -321,24 +360,24 @@ html {
     }
 
     .server-button.is-active > {
-        background-color: $black-bis;
-        border-color: darken($black-bis, 10%);
+        background-color: $theme_color_1;
+        border-color: darken($theme_color_1, 10%);
     }
 
     .hljs {
-        background-color: lighten(#000, 1%) !important;
-        color: $white;
+        background-color: $theme_color_1 !important;
+        color: $text_color_0;
     }
 
     html {
-        background-color: #000;
+        background-color: $theme_color_0;
     }
 
     input {
-        background-color: #000 !important;
-        color: $white !important;
+        background-color: $theme_color_0 !important;
+        color: $text_color_0 !important;
         box-shadow: 0 -2px 10px rgba(10, 10, 10, 1) !important;
-        border-color: #000;
+        border-color: $theme_color_0;
     }
 
     ::placeholder {
@@ -346,15 +385,15 @@ html {
     }
 
     .box {
-        background-color: #000;
+        background-color: $theme_color_0;
     }
 
     .file-box {
-        background-color: #000;
+        background-color: $theme_color_1;
     }
 
     .file-box:hover {
-        background-color: lighten(#000, 1%);
+        background-color: $theme_color_2;
     }
 }
 
@@ -476,12 +515,12 @@ button {
 
 @media (prefers-color-scheme: dark) {
     .server-icon-wrapper {
-        border-color: #000 !important;
+        border-color: $theme_color_0 !important;
     }
 
     .user-menu-wrapper {
-        border-top: 2px solid lighten(#000, 2%);
-        background-color: lighten(#000, 1%);
+        border-top: 2px solid $theme_color_2;
+        background-color: $theme_color_1;
     }
 
     .identity-link:hover {
@@ -492,31 +531,36 @@ button {
     .title-bar {
         background-image: linear-gradient(
             to left,
-            #000,
+            $theme_color_0,
             darken($black-bis, 2%)
         );
-        border-bottom: 2px solid lighten(#000, 2%);
+        border-bottom: 2px solid $theme_color_2;
     }
 
     .serverbar {
-        background-image: linear-gradient(to top, darken($black-bis, 1%), #000);
+        background-image: linear-gradient(
+            to top,
+            darken($black-bis, 1%),
+            $theme_color_0
+        );
     }
 
     .pane {
-        background-color: darken($black, 5%);
+        background-color: $theme_color_0;
     }
 
     .right-bar {
         background-image: linear-gradient(
             to bottom,
-            #000,
+            $theme_color_0,
             darken($black-bis, 2%)
         );
-        border-left: 2px solid lighten(#000, 1%);
+        border-left: 2px solid $theme_color_1;
     }
 
     .server-titlebar {
-        border-bottom: 1px solid darken($black, 5%);
+        border-bottom: 2px solid $theme_color_2;
+        background-color: $theme_color_0;
     }
 }
 
