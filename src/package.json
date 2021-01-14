@@ -17,8 +17,5 @@
     "dependencies": {
         "@vex-chat/libvex": "^0.18.2",
         "react-loading": "^2.0.3"
-    },
-    "devDependencies": {
-        "@types/node-notifier": "^8.0.0"
     }
 }
