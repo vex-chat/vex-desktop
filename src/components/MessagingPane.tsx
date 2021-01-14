@@ -34,6 +34,7 @@ import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
 import { IconUsername } from "./IconUsername";
 import { MessageBox } from "./MessageBox";
+import Settings from "./Settings";
 
 export const DM_HISTORY_NAME = "DIRECT-MESSAGING";
 
@@ -120,6 +121,11 @@ export default function MessagingPane(): JSX.Element {
             </div>
 
             <Switch>
+                <Route
+                    exact
+                    path={routes.MESSAGING + "/:userID/settings"}
+                    render={() => <Settings />}
+                ></Route>
                 <Route
                     exact
                     path={routes.MESSAGING + "/:userID/info"}

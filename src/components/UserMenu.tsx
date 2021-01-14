@@ -107,7 +107,12 @@ export function UserMenu(): JSX.Element {
                                         )}
                                     </div>
                                     <Link
-                                        to={routes.SETTINGS}
+                                        to={
+                                            routes.MESSAGING +
+                                            "/" +
+                                            user.userID +
+                                            "/settings"
+                                        }
                                         className="dropdown-item"
                                         onClick={() => {
                                             setClassName("");

@@ -12,7 +12,6 @@ import { Logout } from "./Logout";
 import Messaging from "./Messaging";
 import Register from "./Register";
 import { Server } from "./Server";
-import Settings from "./Settings";
 
 export default function Base(): JSX.Element {
     return (
@@ -31,7 +30,6 @@ export default function Base(): JSX.Element {
                     render={() => <Server />}
                 />
                 <Route path={routes.REGISTER} render={() => <Register />} />
-                <Route path={routes.SETTINGS} render={() => <Settings />} />
                 <Route path={routes.LAUNCH} render={() => <ClientLauncher />} />
                 <Route
                     path={routes.CREATE + "/:resourceType?"}

@@ -1,5 +1,7 @@
 import Store from "electron-store";
 
+import { setThemeColor } from "./setThemeColor";
+
 class DataStore extends Store {
     private static instance: DataStore;
 
@@ -20,6 +22,16 @@ class DataStore extends Store {
         if (!this.instance.get("settings.directMessages")) {
             this.instance.set("settings.directMessages", true);
         }
+
+        if (!this.instance.get("settings.themeColor")) {
+            this.instance.set("settings.themeColor", "#0F0F0F");
+        }
+
+        if (!this.instance.get("settings.forceMonospace")) {
+            this.instance.set("settings.forceMonospace", false);
+        }
+
+        setThemeColor(this.instance.get("settings.themeColor") as string);
 
         console.log(this.instance.store);
 

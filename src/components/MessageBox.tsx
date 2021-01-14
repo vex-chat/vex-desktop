@@ -86,7 +86,7 @@ export function MessageBox(props: {
                 <div className="content message-wrapper">
                     <strong>{sender.username || "Unknown User"}</strong>
                     &nbsp;&nbsp;
-                    <small>
+                    <small className="dim">
                         {format(
                             new Date(props.messages[0].timestamp),
                             "kk:mm MM/dd/yyyy"
