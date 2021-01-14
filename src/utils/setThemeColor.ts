@@ -26,6 +26,7 @@ export const setThemeColor = (colorStr: string): void => {
 
         textColor = Color("#fff");
         while (textColor.contrast(backgroundColor) > DESIRED_CONTRAST) {
+            console.log(textColor.contrast(backgroundColor));
             if (textColor.darken(0.01).hex() === textColor.hex()) {
                 break;
             }
@@ -45,12 +46,15 @@ export const setThemeColor = (colorStr: string): void => {
             backgroundColor.darken(0.09).hex()
         );
 
-        textColor = Color("#000");
+        textColor = Color("#0A0A0A");
+        console.log(textColor.lighten(0.1).hex());
         while (textColor.contrast(backgroundColor) > DESIRED_CONTRAST) {
-            if (textColor.lighten(0.01).hex() === textColor.hex()) {
+            console.log(textColor.contrast(backgroundColor));
+            console.log(textColor.hex());
+            if (textColor.lighten(0.1).hex() === textColor.hex()) {
                 break;
             }
-            textColor = textColor.lighten(0.01);
+            textColor = textColor.lighten(0.1);
         }
     }
     document.documentElement.style.setProperty(

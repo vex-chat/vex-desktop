@@ -4,8 +4,6 @@ import {
     faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { remote } from "electron";
-import fs from "fs";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -13,7 +11,7 @@ import { Link } from "react-router-dom";
 import { routes } from "../constants/routes";
 import { selectUser } from "../reducers/user";
 
-import { Avatar } from "./Avatar";
+import Avatar from "./Avatar";
 import { IconUsername } from "./IconUsername";
 
 export function UserMenu(): JSX.Element {
@@ -60,51 +58,8 @@ export function UserMenu(): JSX.Element {
                                 role="menu"
                             >
                                 <div className="dropdown-content user-dropdown">
-                                    <div
-                                        className="dropdown-item"
-                                        onClick={async () => {
-                                            setClassName("");
-
-                                            const dialogRes = await remote.dialog.showOpenDialog(
-                                                remote.getCurrentWindow(),
-                                                {
-                                                    title: "Select an avatar",
-                                                }
-                                            );
-
-                                            const {
-                                                canceled,
-                                                filePaths,
-                                            } = dialogRes;
-                                            if (canceled) {
-                                                return;
-                                            }
-
-                                            const [path] = filePaths;
-                                            if (path) {
-                                                fs.readFile(
-                                                    path,
-                                                    async (err, buf) => {
-                                                        if (err) {
-                                                            return;
-                                                        }
-                                                        const client =
-                                                            window.vex;
-                                                        await client.me.setAvatar(
-                                                            buf
-                                                        );
-                                                    }
-                                                );
-                                            }
-                                        }}
-                                    >
-                                        {IconUsername(
-                                            user,
-                                            48,
-                                            undefined,
-                                            "",
-                                            "avatar-trigger pointer"
-                                        )}
+                                    <div className="dropdown-item no-hover">
+                                        {IconUsername(user, 48, undefined, "")}
                                     </div>
                                     <Link
                                         to={

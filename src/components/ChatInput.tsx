@@ -44,6 +44,19 @@ export function ChatInput(props: {
         inputRef.current?.focus();
     }, [userID, serverID, channelID, inputRef]);
 
+    const adjustInputHeight = () => {
+        if (inputRef.current) {
+            inputRef.current.style.height = "inherit";
+            inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
+        }
+    };
+
+    const resetInputHeight = () => {
+        if (inputRef.current) {
+            inputRef.current.style.height = "58px";
+        }
+    };
+
     return (
         <div className={`chat-input-wrapper ${props.className || ""}`}>
             {uploading && (
@@ -188,16 +201,18 @@ export function ChatInput(props: {
                             onChange={(event) => {
                                 setInputValue(event.target.value);
                             }}
-                            onKeyDown={async (event) => {
+                            rows={1}
+                            onKeyDown={adjustInputHeight}
+                            onKeyUp={async (event) => {
+                                adjustInputHeight();
                                 if (event.key === "Enter" && !event.shiftKey) {
                                     event.preventDefault();
-
                                     const messageText = inputValue;
                                     if ((messageText || "").trim() === "") {
                                         return;
                                     }
                                     setInputValue("");
-
+                                    resetInputHeight();
                                     const client = window.vex;
                                     try {
                                         if (props.group) {

@@ -1,6 +1,8 @@
 import type { IUser } from "@vex-chat/libvex";
+import type { RootState } from "~Types";
 
 import { Component } from "react";
+import { connect } from "react-redux";
 
 import { strToIcon } from "../utils/strToIcon";
 
@@ -8,6 +10,7 @@ type Props = {
     user: IUser;
     className?: string;
     size?: number;
+    hash: number;
 };
 
 type State = {
@@ -15,7 +18,7 @@ type State = {
     loaded: boolean;
 };
 
-export class Avatar extends Component<Props, State> {
+class Avatar extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -40,7 +43,7 @@ export class Avatar extends Component<Props, State> {
                     className={`image is-${size.toString()}x${size.toString()} is-rounded ${
                         this.props.className || ""
                     } ${this.state.loaded ? "" : "hidden"}`}
-                    src={src}
+                    src={src + "?hash=" + this.props.hash.toString()}
                     onError={this.onError.bind(this)}
                     onLoad={() => {
                         this.setState({ loaded: true });
@@ -50,3 +53,9 @@ export class Avatar extends Component<Props, State> {
         );
     }
 }
+
+const mapStateToProps = (state: RootState) => {
+    return { hash: state.avatarHash };
+};
+
+export default connect(mapStateToProps)(Avatar);

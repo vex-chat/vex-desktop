@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 
 import appReducer from "./reducers/app";
+import avatarHashReducer from "./reducers/avatarHash";
 import channelReducer from "./reducers/channels";
 import deviceReducer from "./reducers/devices";
 import familiarsReducer from "./reducers/familiars";
@@ -26,4 +27,5 @@ export default combineReducers({
     devices: deviceReducer,
     onlineLists: onlineListReducer,
     historyStacks: historyStackReducer,
+    avatarHash: avatarHashReducer,
 });

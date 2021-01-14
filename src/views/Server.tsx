@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
 
-import { Avatar } from "../components/Avatar";
+import Avatar from "../components/Avatar";
 import { ChannelBar } from "../components/ChannelBar";
 import { ChannelSettings } from "../components/ChannelSettings";
 import { AddChannel } from "../components/ServerAddChannel";

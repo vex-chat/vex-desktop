@@ -23,7 +23,7 @@ import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 import { mimeIcons } from "../constants/mimeIcons";
 import { selectFamiliars } from "../reducers/familiars";
 
-import { Avatar } from "./Avatar";
+import Avatar from "./Avatar";
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
 
@@ -34,8 +34,6 @@ const RESOURCES_PATH = remote.app.isPackaged
 export const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
 };
-
-console.log(RESOURCES_PATH);
 
 const bestMatch = (mimeType: string): string => {
     let bestMatch = "";
@@ -163,10 +161,9 @@ export function MessageBox(props: {
                                                     message.nonce
                                                 )
                                             ) {
-                                                console.warn(
+                                                log.warn(
                                                     "Already downloading file."
                                                 );
-                                                console.warn(downloading);
                                                 return;
                                             }
                                             const currentDownloads = [
@@ -175,10 +172,6 @@ export function MessageBox(props: {
 
                                             currentDownloads.push(
                                                 message.nonce
-                                            );
-                                            console.warn(
-                                                "Downloading file " +
-                                                    message.nonce
                                             );
                                             setDownloading(currentDownloads);
                                             try {
@@ -196,7 +189,6 @@ export function MessageBox(props: {
                                                         1
                                                     )
                                                 );
-                                                console.log(downls);
 
                                                 const dialogRes = await remote.dialog.showSaveDialog(
                                                     remote.getCurrentWindow(),
@@ -249,7 +241,6 @@ export function MessageBox(props: {
                                                         1
                                                     )
                                                 );
-                                                console.log(downls);
                                             }
                                         }}
                                     >

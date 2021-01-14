@@ -57,18 +57,6 @@ $font_override: monospace;
 .twitter-picker {
     background-color: var(--theme_base_color) !important;
 }
-#root
-    > div.pane.direct-messaging
-    > div.pane-screen-wrapper
-    > div:nth-child(3)
-    > div
-    > ul
-    > li
-    > div
-    > div:nth-child(3)
-    > div:nth-child(6) {
-    display: none !important;
-}
 
 .title-bar-grabber {
     position: absolute;
@@ -143,10 +131,6 @@ label {
     color: var(--text_color_0);
 }
 
-.icon-username-wrapper:hover {
-    background-color: var(--theme_color_1);
-}
-
 p {
     color: var(--text_color_0);
 }
@@ -157,7 +141,6 @@ a {
 
 a:hover {
     color: var(--text_color_0);
-    background-color: var(--theme_color_1);
 }
 
 a.dropdown-item:hover {
@@ -177,6 +160,9 @@ textarea {
     background-color: var(--theme_color_0) !important;
     color: var(--text_color_0) !important;
     box-shadow: $theme_shadow var(--theme_color_0) !important;
+    min-height: 60px;
+    overflow-y: auto;
+    word-wrap: break-word;
 }
 
 textarea:focus {
@@ -227,14 +213,6 @@ textarea:focus {
     background-color: var(--theme_color_1) !important;
 }
 
-.sidebar-familiar:hover {
-    background-color: var(--theme_color_1);
-}
-
-.familiar-button:hover {
-    background-color: var(--theme_color_1);
-}
-
 .outgoing-message {
     color: var(--theme_color_0) !important;
 }
@@ -280,6 +258,10 @@ textarea:focus {
     right: 200;
     bottom: 200;
     z-index: 9;
+}
+.avatar-loader {
+    width: 42px;
+    height: 100%;
 }
 
 .download-file-spinner {
@@ -375,6 +357,27 @@ a {
 
 .server-button.is-active > span > svg {
     color: var(--theme_color_0);
+}
+
+.avatar-loader-text {
+    padding-top: 20px;
+}
+
+span {
+    color: var(--text_color_0);
+}
+
+#root
+    > div.pane.direct-messaging
+    > div.pane-screen-wrapper
+    > div:nth-child(4)
+    > div
+    > ul
+    > li
+    > div
+    > div:nth-child(3)
+    > div:nth-child(6) {
+    display: none !important;
 }
 
 .server-button.is-active > {
@@ -679,7 +682,7 @@ button {
     position: relative;
     top: 0;
     bottom: 180px;
-    height: calc(100vh - 176px);
+    height: calc(100vh - 55px - 22px - 58px);
     width: 100%;
     right: 0;
     overflow-y: auto;
@@ -736,8 +739,9 @@ button {
     position: fixed;
     bottom: 0;
     width: calc(100% - 265px - 297px);
-    height: 100px;
+    height: auto;
     z-index: 1;
+    min-height: 58px;
     overflow: remove;
     border-top: 2px solid var(--theme_color_2);
 }
