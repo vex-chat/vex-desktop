@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { format } from "date-fns";
-import { remote } from "electron";
+import { remote, shell } from "electron";
 import log from "electron-log";
 import fs from "fs";
 import levenshtein from "js-levenshtein";
@@ -188,6 +188,9 @@ export function MessageBox(props: {
                                                 () => {
                                                     log.debug(
                                                         `File downloaded to ${filePath}`
+                                                    );
+                                                    shell.openPath(
+                                                        path.resolve(filePath)
                                                     );
                                                 }
                                             );

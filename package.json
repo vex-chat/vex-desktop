@@ -220,6 +220,7 @@
         "redux-logger": "^3.0.6",
         "redux-saga": "^1.1.3",
         "regenerator-runtime": "^0.13.5",
+        "semver": "^7.3.4",
         "source-map-support": "^0.5.19",
         "tweetnacl": "^1.0.3"
     },
