@@ -3,7 +3,6 @@ import type { ISerializedMessage } from "../reducers/messages";
 import { XUtils } from "@vex-chat/crypto";
 
 import {
-    faAt,
     faDownload,
     faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
@@ -24,7 +23,6 @@ import Loading from "../components/Loading";
 import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 import { mimeIcons } from "../constants/mimeIcons";
 import { selectFamiliars } from "../reducers/familiars";
-import { selectUser } from "../reducers/user";
 
 import Avatar from "./Avatar";
 import { FamiliarMenu } from "./FamiliarMenu";
@@ -60,7 +58,6 @@ export function MessageBox(props: {
     messages: ISerializedMessage[];
 }): JSX.Element {
     const familiars = useSelector(selectFamiliars);
-    const user = useSelector(selectUser);
     const [downloading, setDownloading] = useState([] as string[]);
 
     // don't match no characters of any length
@@ -328,27 +325,12 @@ export function MessageBox(props: {
                                                             className={`is-small mention-wrapper has-text-weight-bold`}
                                                         >
                                                             <span
-                                                                className={`mention-wrapper-overlay ${
-                                                                    match.replace(
-                                                                        /[@<>]/g,
-                                                                        ""
-                                                                    ) ==
-                                                                    user.userID
-                                                                        ? "has-background-link"
-                                                                        : ""
-                                                                }`}
+                                                                className={`mention-wrapper-overlay has-background-link`}
                                                             />
                                                             <span
-                                                                className={`mention-icon `}
+                                                                className={`mention-text has-text-link`}
                                                             >
-                                                                <FontAwesomeIcon
-                                                                    icon={faAt}
-                                                                />
-                                                            </span>
-                                                            <span
-                                                                className={`mention-text`}
-                                                            >
-                                                                {" "}
+                                                                {"@"}
                                                                 {familiars[
                                                                     match.replace(
                                                                         /[@<>]/g,

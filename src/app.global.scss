@@ -94,11 +94,6 @@ p {
     color: var(--text_color_0);
 }
 
-code {
-    color: var(--text_color_0);
-    background-color: var(--theme_base_color);
-}
-
 ::-webkit-scrollbar-thumb:window-inactive,
 ::-webkit-scrollbar-thumb {
     background: var(--theme_color_0);
@@ -325,6 +320,12 @@ body {
     box-shadow: none !important;
 }
 
+code {
+    color: var(--text_color_0);
+    background-color: var(--theme_base_color);
+    border-radius: 5px !important;
+}
+
 .mention-wrapper {
     display: inline-block;
     position: relative;
@@ -340,7 +341,9 @@ body {
     position: absolute;
     padding: 0;
     transition: opacity 0.5s;
+    padding: 0px 0px;
     z-index: 1;
+    border-radius: 5px !important;
 }
 
 .icon {
