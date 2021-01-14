@@ -167,7 +167,12 @@ export function MessageBox(props: {
                                                     title:
                                                         "Save Decrypted File",
                                                     buttonLabel: "Save",
-                                                    defaultPath: name,
+                                                    defaultPath:
+                                                        remote.app.getPath(
+                                                            "downloads"
+                                                        ) +
+                                                        "/" +
+                                                        name,
                                                 }
                                             );
                                             const {
