@@ -8,8 +8,10 @@ import Dropzone from "react-dropzone";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
+import { errorFX } from "../constants/sounds";
 import { fail as failGroup } from "../reducers/groupMessages";
 import { failMessage } from "../reducers/messages";
+import store from "../utils/DataStore";
 
 import Loading from "./Loading";
 
@@ -36,6 +38,7 @@ export function ChatInput(props: {
     const [total, setTotal] = useState(0);
     const [speed, setSpeed] = useState("");
     const inputRef = useRef<HTMLTextAreaElement>();
+    const [errText, setErrText] = useState("");
 
     useMemo(() => {
         inputRef.current?.focus();
@@ -45,25 +48,50 @@ export function ChatInput(props: {
         <div className={`chat-input-wrapper ${props.className || ""}`}>
             {uploading && (
                 <span className="chat-file-spinner-wrapper">
-                    <Loading
-                        size={80}
-                        animation={"cubes"}
-                        color={"hsl(0, 0%, 71%)"}
-                        className={"chat-file-spinner"}
-                    />
-                    <span className="is-family-monospace help">
-                        {Number(progress) > 0 && progress}% Uploaded:{" "}
-                        {formatBytes(loaded)}/{formatBytes(total)} at {speed}
-                        /second
-                    </span>
+                    {errText == "" && (
+                        <span className="is-family-monospace help">
+                            <Loading
+                                size={80}
+                                animation={"bubbles"}
+                                color={"hsl(0, 0%, 71%)"}
+                                className={"chat-file-spinner"}
+                            />
+                            {Number(progress) > 0 && progress}% Uploaded:{" "}
+                            {formatBytes(loaded)}/{formatBytes(total)} at{" "}
+                            {speed}
+                            /second
+                        </span>
+                    )}
+                    {errText !== "" && (
+                        <div className="l-1ch">
+                            <span className="is-family-monospace help has-text-danger">
+                                {errText}
+                            </span>
+                        </div>
+                    )}
                 </span>
             )}
 
             <Dropzone
                 noClick
                 onDrop={(acceptedFiles) => {
+                    setUploading(true);
                     const fileDetails = acceptedFiles[0];
-                    const { name } = fileDetails;
+                    const { name, size } = fileDetails;
+
+                    if (size > 20000000) {
+                        if (store.get("settings.sounds")) {
+                            errorFX.play();
+                        }
+                        setErrText("File is too big (max 20mb)");
+                        setTimeout(() => {
+                            setUploading(false);
+                            setErrText("");
+                        }, 3000);
+                        return;
+                    }
+
+                    console.log(fileDetails.size);
 
                     console.log(fileDetails);
 
@@ -75,6 +103,11 @@ export function ChatInput(props: {
                         ) => {
                             if (err) {
                                 log.warn(err);
+                                setErrText(err.toString());
+                                setTimeout(() => {
+                                    setUploading(false);
+                                    setErrText("");
+                                }, 3000);
                                 return;
                             }
 
@@ -99,33 +132,42 @@ export function ChatInput(props: {
                                 setSpeed(formatBytes(speed));
                             };
 
-                            setUploading(true);
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             client.on("fileProgress", onProgress);
 
-                            const [file, key] = await client.files.create(buf);
-
-                            setUploading(false);
-                            setProgress("00");
-                            client.off("fileProgress", onProgress);
-
-                            const fileStr = fileToString(
-                                name.replace(":", "-"),
-                                file,
-                                key,
-                                type || fileDetails.type || "unknown"
-                            );
-                            console.log(fileStr);
-                            if (props.group) {
-                                await client.messages.group(
-                                    props.targetID,
-                                    fileStr
+                            try {
+                                const [file, key] = await client.files.create(
+                                    buf
                                 );
-                            } else {
-                                await client.messages.send(
-                                    props.targetID,
-                                    fileStr
+                                setUploading(false);
+                                setProgress("00");
+                                client.off("fileProgress", onProgress);
+
+                                const fileStr = fileToString(
+                                    name.replace(":", "-"),
+                                    file,
+                                    key,
+                                    type || fileDetails.type || "unknown"
                                 );
+                                console.log(fileStr);
+                                if (props.group) {
+                                    await client.messages.group(
+                                        props.targetID,
+                                        fileStr
+                                    );
+                                } else {
+                                    await client.messages.send(
+                                        props.targetID,
+                                        fileStr
+                                    );
+                                }
+                            } catch (err) {
+                                log.warn(err);
+                                setErrText(err.toString());
+                                setTimeout(() => {
+                                    setUploading(false);
+                                }, 3000);
+                                return;
                             }
                         }
                     );
