@@ -207,6 +207,7 @@
         "electron-log": "^4.2.4",
         "electron-store": "^6.0.1",
         "electron-updater": "^4.3.4",
+        "emoji-mart": "^3.0.0",
         "file-type": "^16.1.0",
         "highlight.js": "^10.5.0",
         "history": "^5.0.0",

@@ -44,7 +44,13 @@ export function ChatInput(props: {
         inputRef.current?.focus();
     }, [userID, serverID, channelID, inputRef]);
 
-    const adjustInputHeight = () => {
+    const adjustInputHeight = (
+        event?: React.KeyboardEvent<HTMLTextAreaElement>
+    ) => {
+        if (event && event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+        }
+
         if (inputRef.current) {
             inputRef.current.style.height = "inherit";
             inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
@@ -210,7 +216,6 @@ export function ChatInput(props: {
                             onKeyUp={async (event) => {
                                 adjustInputHeight();
                                 if (event.key === "Enter" && !event.shiftKey) {
-                                    event.preventDefault();
                                     const messageText = inputValue;
                                     if ((messageText || "").trim() === "") {
                                         return;

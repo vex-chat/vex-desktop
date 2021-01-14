@@ -245,6 +245,7 @@ textarea:focus {
 .message-text {
     margin-bottom: 4px !important;
     word-wrap: break-word;
+    white-space: pre-line;
 }
 
 .message-code {

@@ -314,7 +314,7 @@ export function MessageBox(props: {
                                             }`}
                                         >
                                             {message.decrypted &&
-                                                message.message}
+                                                message.message.trim()}
                                         </span>
                                     )}
                                     &nbsp;&nbsp;
