@@ -60,19 +60,23 @@ export function ChatInput(props: {
     return (
         <div className={`chat-input-wrapper ${props.className || ""}`}>
             {uploading && (
-                <span className="chat-file-spinner-wrapper">
+                <span className="chat-file-spinner-wrapper has-text-left">
                     {errText == "" && (
-                        <span className="is-family-monospace help">
-                            <Loading
-                                size={80}
-                                animation={"bubbles"}
-                                color={"hsl(0, 0%, 71%)"}
-                                className={"chat-file-spinner"}
-                            />
-                            {Number(progress) > 0 && progress}% Uploaded:{" "}
-                            {formatBytes(loaded)}/{formatBytes(total)} at{" "}
-                            {speed}
-                            /second
+                        <span className="columns">
+                            <span className="column is-narrow">
+                                <Loading
+                                    size={30}
+                                    animation={"bubbles"}
+                                    color={"hsl(0, 0%, 71%)"}
+                                    className={"chat-file-spinner"}
+                                />
+                            </span>
+                            <span className="help column is-family-monospace upload-speed-text">
+                                {Number(progress) > 0 && progress}% Uploaded:{" "}
+                                {formatBytes(loaded)}/{formatBytes(total)} at{" "}
+                                {speed}
+                                /second
+                            </span>
                         </span>
                     )}
                     {errText !== "" && (

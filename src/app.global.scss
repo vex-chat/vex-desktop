@@ -251,6 +251,10 @@ textarea:focus {
     margin-bottom: 4px !important;
 }
 
+.upload-speed-text {
+    margin-top: 5px;
+}
+
 .chat-file-spinner-wrapper {
     position: absolute;
     width: 100%;
@@ -258,6 +262,7 @@ textarea:focus {
     right: 200;
     bottom: 200;
     z-index: 9;
+    padding: 12px;
 }
 .avatar-loader {
     width: 42px;
