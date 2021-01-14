@@ -94,6 +94,11 @@ p {
     color: var(--text_color_0);
 }
 
+code {
+    color: var(--text_color_0);
+    background-color: var(--theme_base_color);
+}
+
 ::-webkit-scrollbar-thumb:window-inactive,
 ::-webkit-scrollbar-thumb {
     background: var(--theme_color_0);
@@ -278,10 +283,6 @@ textarea:focus {
     padding-left: 1ch;
 }
 
-.my-mention path {
-    color: $red !important;
-}
-
 .dropdown-menu {
     opacity: 1;
     z-index: 2;
@@ -322,6 +323,24 @@ body {
 
 .dropdown-menu {
     box-shadow: none !important;
+}
+
+.mention-wrapper {
+    display: inline-block;
+    position: relative;
+    z-index: 0;
+}
+
+.mention-wrapper .mention-wrapper-overlay {
+    height: 100%;
+    width: 100%;
+    opacity: 0.15;
+    top: 0;
+    left: 0;
+    position: absolute;
+    padding: 0;
+    transition: opacity 0.5s;
+    z-index: 1;
 }
 
 .icon {

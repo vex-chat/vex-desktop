@@ -325,33 +325,28 @@ export function MessageBox(props: {
                                                     (match) => (
                                                         <code
                                                             key={message.nonce}
-                                                            className={`is-small mention-code`}
+                                                            className={`is-small mention-wrapper has-text-weight-bold`}
                                                         >
                                                             <span
-                                                                className={`mention-icon ${
+                                                                className={`mention-wrapper-overlay ${
                                                                     match.replace(
                                                                         /[@<>]/g,
                                                                         ""
                                                                     ) ==
                                                                     user.userID
-                                                                        ? "my-mention"
+                                                                        ? "has-background-link"
                                                                         : ""
                                                                 }`}
+                                                            />
+                                                            <span
+                                                                className={`mention-icon `}
                                                             >
                                                                 <FontAwesomeIcon
                                                                     icon={faAt}
                                                                 />
                                                             </span>
                                                             <span
-                                                                className={`mention-text ${
-                                                                    match.replace(
-                                                                        /[@<>]/g,
-                                                                        ""
-                                                                    ) ==
-                                                                    user.userID
-                                                                        ? "has-text-danger"
-                                                                        : ""
-                                                                }`}
+                                                                className={`mention-text`}
                                                             >
                                                                 {" "}
                                                                 {familiars[
