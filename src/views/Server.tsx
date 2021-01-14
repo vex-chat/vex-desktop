@@ -135,6 +135,7 @@ export function Server(): JSX.Element {
                             </article>
                         </div>
                     ))}
+                <p className="menu-label">Offline</p>
                 {[...onlineList]
                     .reverse()
                     .filter(
