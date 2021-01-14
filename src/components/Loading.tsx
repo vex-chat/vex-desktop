@@ -4,6 +4,7 @@ export default function Loading(props: {
     size: number;
     animation:
         | "blank"
+        | "bars"
         | "balls"
         | "bubbles"
         | "cubes"

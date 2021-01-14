@@ -13,11 +13,12 @@ import log from "electron-log";
 import fs from "fs";
 import levenshtein from "js-levenshtein";
 import path from "path";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
 import nacl from "tweetnacl";
 import * as uuid from "uuid";
 
+import Loading from "../components/Loading";
 import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 import { mimeIcons } from "../constants/mimeIcons";
 import { selectFamiliars } from "../reducers/familiars";
@@ -56,6 +57,8 @@ export function MessageBox(props: {
     messages: ISerializedMessage[];
 }): JSX.Element {
     const familiars = useSelector(selectFamiliars);
+
+    const [downloading, setDownloading] = useState([] as string[]);
 
     // don't match no characters of any length
     const codeRegex = /(```[^]+```)/;
@@ -155,50 +158,99 @@ export function MessageBox(props: {
                                     <span
                                         className="message-text box file-box pointer"
                                         onClick={async () => {
-                                            const client = window.vex;
-                                            const file = await client.files.retrieve(
-                                                fileID,
-                                                key
-                                            );
-
-                                            const dialogRes = await remote.dialog.showSaveDialog(
-                                                remote.getCurrentWindow(),
-                                                {
-                                                    title:
-                                                        "Save Decrypted File",
-                                                    buttonLabel: "Save",
-                                                    defaultPath:
-                                                        remote.app.getPath(
-                                                            "downloads"
-                                                        ) +
-                                                        "/" +
-                                                        name,
-                                                }
-                                            );
-                                            const {
-                                                canceled,
-                                                filePath,
-                                            } = dialogRes;
                                             if (
-                                                canceled ||
-                                                !file ||
-                                                !filePath
+                                                downloading.includes(
+                                                    message.nonce
+                                                )
                                             ) {
+                                                console.warn(
+                                                    "Already downloading file."
+                                                );
+                                                console.warn(downloading);
                                                 return;
                                             }
-                                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                            fs.writeFile(
-                                                filePath,
-                                                file.data,
-                                                () => {
-                                                    log.debug(
-                                                        `File downloaded to ${filePath}`
-                                                    );
-                                                    shell.openPath(
-                                                        path.resolve(filePath)
-                                                    );
-                                                }
+                                            const currentDownloads = [
+                                                ...downloading,
+                                            ];
+
+                                            currentDownloads.push(
+                                                message.nonce
                                             );
+                                            console.warn(
+                                                "Downloading file " +
+                                                    message.nonce
+                                            );
+                                            setDownloading(currentDownloads);
+                                            try {
+                                                const client = window.vex;
+                                                const file = await client.files.retrieve(
+                                                    fileID,
+                                                    key
+                                                );
+                                                const downls = [...downloading];
+                                                setDownloading(
+                                                    downls.slice(
+                                                        downls.indexOf(
+                                                            message.nonce
+                                                        ),
+                                                        1
+                                                    )
+                                                );
+                                                console.log(downls);
+
+                                                const dialogRes = await remote.dialog.showSaveDialog(
+                                                    remote.getCurrentWindow(),
+                                                    {
+                                                        title:
+                                                            "Save Decrypted File",
+                                                        buttonLabel: "Save",
+                                                        defaultPath:
+                                                            remote.app.getPath(
+                                                                "downloads"
+                                                            ) +
+                                                            "/" +
+                                                            name,
+                                                    }
+                                                );
+                                                const {
+                                                    canceled,
+                                                    filePath,
+                                                } = dialogRes;
+                                                if (
+                                                    canceled ||
+                                                    !file ||
+                                                    !filePath
+                                                ) {
+                                                    return;
+                                                }
+                                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                                fs.writeFile(
+                                                    filePath,
+                                                    file.data,
+                                                    () => {
+                                                        log.debug(
+                                                            `File downloaded to ${filePath}`
+                                                        );
+                                                        shell.openPath(
+                                                            path.resolve(
+                                                                filePath
+                                                            )
+                                                        );
+                                                    }
+                                                );
+                                            } catch (err) {
+                                                log.warn(err.toString());
+                                                const downls = [...downloading];
+                                                setDownloading(
+                                                    downls.slice(
+                                                        downls.indexOf(
+                                                            message.nonce
+                                                        ),
+                                                        1
+                                                    )
+                                                );
+                                                console.log(downls);
+                                            }
                                         }}
                                     >
                                         <article className="media">
@@ -224,11 +276,26 @@ export function MessageBox(props: {
                                                 </div>
                                             </div>
                                             <div className="media-right">
-                                                <div className="icon is-size-3 download-icon">
-                                                    <FontAwesomeIcon
-                                                        icon={faDownload}
+                                                {downloading.includes(
+                                                    message.nonce
+                                                ) ? (
+                                                    <Loading
+                                                        size={60}
+                                                        animation={"bubbles"}
+                                                        color={
+                                                            "hsl(0, 0%, 71%)"
+                                                        }
+                                                        className={
+                                                            "download-file-spinner"
+                                                        }
                                                     />
-                                                </div>
+                                                ) : (
+                                                    <div className="icon is-size-3 download-icon">
+                                                        <FontAwesomeIcon
+                                                            icon={faDownload}
+                                                        />
+                                                    </div>
+                                                )}
                                             </div>
                                         </article>
                                     </span>
