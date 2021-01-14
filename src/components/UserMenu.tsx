@@ -103,9 +103,8 @@ export function UserMenu(): JSX.Element {
                         </span>
                     </figure>
                 </div>
-
-                <div className="column">
-                    <span className="help">{user.username}</span>
+                <div className="column is-narrow">
+                    <span className="is-size-5">{user.username}</span>
                 </div>
             </div>
         </div>
