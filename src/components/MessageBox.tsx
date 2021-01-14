@@ -3,6 +3,7 @@ import type { ISerializedMessage } from "../reducers/messages";
 import { XUtils } from "@vex-chat/crypto";
 
 import {
+    faAt,
     faDownload,
     faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
@@ -15,6 +16,7 @@ import levenshtein from "js-levenshtein";
 import path from "path";
 import { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
+import reactStringReplace from "react-string-replace";
 import nacl from "tweetnacl";
 import * as uuid from "uuid";
 
@@ -22,6 +24,7 @@ import Loading from "../components/Loading";
 import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 import { mimeIcons } from "../constants/mimeIcons";
 import { selectFamiliars } from "../reducers/familiars";
+import { selectUser } from "../reducers/user";
 
 import Avatar from "./Avatar";
 import { FamiliarMenu } from "./FamiliarMenu";
@@ -34,6 +37,8 @@ const RESOURCES_PATH = remote.app.isPackaged
 export const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
 };
+
+const mentionRegex = /(@<[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}>)/gi;
 
 const bestMatch = (mimeType: string): string => {
     let bestMatch = "";
@@ -55,7 +60,7 @@ export function MessageBox(props: {
     messages: ISerializedMessage[];
 }): JSX.Element {
     const familiars = useSelector(selectFamiliars);
-
+    const user = useSelector(selectUser);
     const [downloading, setDownloading] = useState([] as string[]);
 
     // don't match no characters of any length
@@ -314,7 +319,52 @@ export function MessageBox(props: {
                                             }`}
                                         >
                                             {message.decrypted &&
-                                                message.message.trim()}
+                                                reactStringReplace(
+                                                    message.message.trim(),
+                                                    mentionRegex,
+                                                    (match) => (
+                                                        <code
+                                                            key={message.nonce}
+                                                            className={`is-small mention-code`}
+                                                        >
+                                                            <span
+                                                                className={`mention-icon ${
+                                                                    match.replace(
+                                                                        /[@<>]/g,
+                                                                        ""
+                                                                    ) ==
+                                                                    user.userID
+                                                                        ? "my-mention"
+                                                                        : ""
+                                                                }`}
+                                                            >
+                                                                <FontAwesomeIcon
+                                                                    icon={faAt}
+                                                                />
+                                                            </span>
+                                                            <span
+                                                                className={`mention-text ${
+                                                                    match.replace(
+                                                                        /[@<>]/g,
+                                                                        ""
+                                                                    ) ==
+                                                                    user.userID
+                                                                        ? "has-text-danger"
+                                                                        : ""
+                                                                }`}
+                                                            >
+                                                                {" "}
+                                                                {familiars[
+                                                                    match.replace(
+                                                                        /[@<>]/g,
+                                                                        ""
+                                                                    )
+                                                                ]?.username ||
+                                                                    "Unknown"}
+                                                            </span>
+                                                        </code>
+                                                    )
+                                                )}
                                         </span>
                                     )}
                                     &nbsp;&nbsp;

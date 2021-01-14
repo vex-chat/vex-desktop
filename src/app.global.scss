@@ -278,6 +278,10 @@ textarea:focus {
     padding-left: 1ch;
 }
 
+.my-mention path {
+    color: $red !important;
+}
+
 .dropdown-menu {
     opacity: 1;
     z-index: 2;
@@ -324,9 +328,9 @@ body {
     color: var(--text_color_0);
 }
 
-path {
-    color: var(--text_color_0);
-}
+// path {
+//     color: var(--text_color_0);
+// }
 
 path:hover {
     color: var(--text_color_0);
