@@ -14,6 +14,7 @@ import { resetPermissions } from "../reducers/permissions";
 import { resetServers } from "../reducers/servers";
 import { resetSessions } from "../reducers/sessions";
 import { resetUser } from "../reducers/user";
+import store from "../utils/DataStore";
 import gaurdian from "../utils/KeyGaurdian";
 
 export function Logout(): JSX.Element {
@@ -43,10 +44,8 @@ export function Logout(): JSX.Element {
         dispatch(resetUser());
         dispatch(resetPermissions());
 
-        try {
+        if (store.get("settings.sounds") as boolean) {
             await lockFX.play();
-        } catch (err) {
-            console.warn(err.toString());
         }
 
         history.push(query.get("forward") || routes.HOME);

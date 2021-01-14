@@ -88,7 +88,9 @@ export function ClientLauncher(): JSX.Element {
             message.authorID !== me.userID
         ) {
             if (process.platform !== "darwin") {
-                await notifyFX.play();
+                if (store.get("settings.sounds") as boolean) {
+                    await notifyFX.play();
+                }
             }
 
             const tempClient = await Client.create(undefined, { dbFolder });

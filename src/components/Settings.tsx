@@ -39,6 +39,10 @@ export default function Settings(): JSX.Element {
         store.get("settings.directMessages") as boolean
     );
 
+    const [sounds, setSounds] = useState(
+        store.get("settings.sounds") as boolean
+    );
+
     return (
         <div className="pane-screen-wrapper">
             <div className="message">
@@ -77,6 +81,19 @@ export default function Settings(): JSX.Element {
                                 &nbsp; Direct Messages
                             </label>
                             <br />
+                        </li>
+                        <li>
+                            <label className="checkbox settings-box">
+                                <input
+                                    onChange={() => {
+                                        store.set("settings.sounds", !sounds);
+                                        setSounds(!sounds);
+                                    }}
+                                    type="checkbox"
+                                    checked={sounds}
+                                />
+                                &nbsp; Sounds
+                            </label>
                         </li>
                     </ul>
                 </div>

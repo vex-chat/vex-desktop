@@ -13,7 +13,8 @@ import { Link } from "react-router-dom";
 import { VerticalAligner } from "../components/VerticalAligner";
 import { dbFolder, keyFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
-import { authedFX, errorFX, unlockFX } from "../constants/sounds";
+import { errorFX, unlockFX } from "../constants/sounds";
+import store from "../utils/DataStore";
 import gaurdian from "../utils/KeyGaurdian";
 
 export const Login: FunctionComponent = memo(() => {
@@ -26,14 +27,17 @@ export const Login: FunctionComponent = memo(() => {
     const [errText, setErrText] = useState("");
 
     const loginUser = async () => {
-        await unlockFX.play();
-
+        if (store.get("settings.sounds") as boolean) {
+            await unlockFX.play();
+        }
         if (password == "" || username == "") {
             if (unlockFX.duration > 0 && !unlockFX.paused) {
                 unlockFX.pause();
                 unlockFX.currentTime = 0;
             }
-            await errorFX.play();
+            if (store.get("settings.sounds") as boolean) {
+                await errorFX.play();
+            }
             setErrText("All fields are required.");
             setLoading(false);
             return;
@@ -55,12 +59,13 @@ export const Login: FunctionComponent = memo(() => {
                 unlockFX.pause();
                 unlockFX.currentTime = 0;
             }
-            await errorFX.play();
+            if (store.get("settings.sounds") as boolean) {
+                await errorFX.play();
+            }
             setErrText(err.toString());
             setLoading(false);
             return;
         }
-        await authedFX.play();
         if (!fs.existsSync(keyPath)) {
             Client.saveKeyFile(keyPath, "", gaurdian.getKey());
         }

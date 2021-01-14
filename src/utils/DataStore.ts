@@ -31,6 +31,10 @@ class DataStore extends Store {
             this.instance.set("settings.forceMonospace", false);
         }
 
+        if (!this.instance.get("settings.sounds")) {
+            this.instance.set("settings.sounds", true);
+        }
+
         setThemeColor(this.instance.get("settings.themeColor") as string);
 
         console.log(this.instance.store);

@@ -44,7 +44,7 @@ export function ChatInput(props: {
     return (
         <div className={`chat-input-wrapper ${props.className || ""}`}>
             {uploading && (
-                <span className="chat-file-spinner-wrapper has-background-light">
+                <span className="chat-file-spinner-wrapper">
                     <Loading
                         size={80}
                         animation={"cubes"}

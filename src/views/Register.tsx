@@ -10,6 +10,7 @@ import { VerticalAligner } from "../components/VerticalAligner";
 import { dbFolder, keyFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
 import { errorFX, unlockFX } from "../constants/sounds";
+import store from "../utils/DataStore";
 import gaurdian from "../utils/KeyGaurdian";
 
 export default function Register(): JSX.Element {
@@ -42,8 +43,9 @@ export default function Register(): JSX.Element {
             return;
         }
 
-        await unlockFX.play();
-
+        if (store.get("settings.sounds") as boolean) {
+            await unlockFX.play();
+        }
         setWaiting(true);
 
         const PK = Client.generateSecretKey();
@@ -56,7 +58,9 @@ export default function Register(): JSX.Element {
         const [user, err] = await client.register(username, password);
 
         if (err !== null) {
-            await errorFX.play();
+            if (store.get("settings.sounds") as boolean) {
+                await errorFX.play();
+            }
             setWaiting(false);
             console.warn("registration failed.", err);
             setErrorText(err.toString());

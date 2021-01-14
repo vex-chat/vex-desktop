@@ -11,6 +11,3 @@ notifyFX.load();
 
 export const errorFX = new Audio(getAssetPath("sounds/error_005.ogg"));
 errorFX.load();
-
-export const authedFX = new Audio(getAssetPath("sounds/confirmation_004.ogg"));
-authedFX.load();
