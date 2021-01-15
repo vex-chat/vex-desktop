@@ -21,6 +21,7 @@ export function ServerPane(): JSX.Element {
     const dispatch = useDispatch();
 
     const [lastFetch, setLastFetch] = useState(Date.now());
+    const [scrollLock, setScrollLock] = useState(true);
 
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
@@ -41,7 +42,9 @@ export function ServerPane(): JSX.Element {
     }, [channelID, lastFetch]);
 
     useEffect(() => {
-        scrollToBottom();
+        if (scrollLock) {
+            scrollToBottom();
+        }
 
         const interval = setInterval(() => {
             setLastFetch(Date.now());
@@ -53,7 +56,27 @@ export function ServerPane(): JSX.Element {
 
     return (
         <Fragment>
-            <div className="conversation-wrapper">
+            <div
+                className="conversation-wrapper"
+                onScroll={(event) => {
+                    const chatWindowHeight = (event.target as HTMLInputElement)
+                        .offsetHeight;
+                    const scrollHeight = (event.target as HTMLInputElement)
+                        .scrollHeight;
+                    const scrollTop = (event.target as HTMLInputElement)
+                        .scrollTop;
+                    const vScrollPosition =
+                        scrollHeight - (scrollTop + chatWindowHeight);
+
+                    if (vScrollPosition === 0) {
+                        setScrollLock(true);
+                    }
+
+                    if (vScrollPosition > 150) {
+                        setScrollLock(false);
+                    }
+                }}
+            >
                 {channelID !== undefined && (
                     <div className={"history-disclaimer"}>
                         <p className="help">

@@ -14,7 +14,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { format } from "date-fns";
-import { createRef, Fragment, useEffect, useMemo, useRef } from "react";
+import {
+    createRef,
+    Fragment,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
 import * as uuid from "uuid";
@@ -51,6 +58,8 @@ export default function MessagingPane(): JSX.Element {
 
     const sessions = useSelector(selectSessions);
 
+    const [scrollLock, setScrollLock] = useState(true);
+
     const directMessagesEnabled = store.get(
         "settings.directMessages"
     ) as boolean;
@@ -74,7 +83,9 @@ export default function MessagingPane(): JSX.Element {
     };
 
     useEffect(() => {
-        scrollToBottom();
+        if (scrollLock) {
+            scrollToBottom();
+        }
     });
 
     const familiar: IUser | undefined = familiars[params.userID];
@@ -424,7 +435,28 @@ export default function MessagingPane(): JSX.Element {
                         return (
                             <Fragment>
                                 {store.get("settings.directMessages") && (
-                                    <div className="conversation-wrapper">
+                                    <div
+                                        className="conversation-wrapper"
+                                        onScroll={(event) => {
+                                            const chatWindowHeight = (event.target as HTMLInputElement)
+                                                .offsetHeight;
+                                            const scrollHeight = (event.target as HTMLInputElement)
+                                                .scrollHeight;
+                                            const scrollTop = (event.target as HTMLInputElement)
+                                                .scrollTop;
+                                            const vScrollPosition =
+                                                scrollHeight -
+                                                (scrollTop + chatWindowHeight);
+
+                                            if (vScrollPosition === 0) {
+                                                setScrollLock(true);
+                                            }
+
+                                            if (vScrollPosition > 150) {
+                                                setScrollLock(false);
+                                            }
+                                        }}
+                                    >
                                         {params.userID !== undefined && (
                                             <div
                                                 className={"history-disclaimer"}
