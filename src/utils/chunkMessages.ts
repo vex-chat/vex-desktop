@@ -14,7 +14,14 @@ export function chunkMessages(
     const messageIDs = Object.keys(threadMessages);
 
     const unsortedMessages = messageIDs.map((id) => threadMessages[id]);
-    const sortedMessages = sortByTimeKey("timestamp", unsortedMessages);
+    let sortedMessages = sortByTimeKey("timestamp", unsortedMessages);
+
+    if (sortedMessages.length > 100) {
+        sortedMessages = sortedMessages.slice(
+            sortedMessages.length - 100,
+            sortedMessages.length
+        );
+    }
 
     const chunkedMessages: ISerializedMessage[][] = [[]];
     for (const message of sortedMessages) {
