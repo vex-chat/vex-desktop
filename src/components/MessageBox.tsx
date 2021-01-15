@@ -369,7 +369,7 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
                             setFullSizePreview(false);
                         }}
                     ></div>
-                    <div className="modal-content box has-text-centered image-preview-modal">
+                    <div className="modal-content has-text-centered image-preview-modal">
                         <img src={previewSrc} />
                         <br />
                         <p className="button is-small" onClick={download}>
