@@ -1030,6 +1030,16 @@
   dependencies:
     prop-types "^15.7.2"
 
+"@iconify/icons-mdi@^1.0.46":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-mdi/-/icons-mdi-1.1.4.tgz#fdaa2f4257a024e7d69b29dc3110fe7ce11b7ed2"
+  integrity sha512-32KA/NCcSf7BMWk5pAx2+fyk0hczqjIl/qYzqKXjC8XFSY1PiVNM0yt7mKFhtdt+n56mkERiIa64d+4dHUCVEA==
+
+"@iconify/react@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@iconify/react/-/react-1.1.3.tgz#ebe4d3e5f5dea23cd6a9634acd7a0a25c7414a59"
+  integrity sha512-ReZNJyr89AfED6XZIXkhsJiNv2taT3j1cTo1HVPHMsrKOz6gAYdXtD2kDWF6+GVoFUxpmnO0fMcA6yCyTf6Tow==
+
 "@icons/material@^0.2.4":
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/@icons/material/-/material-0.2.4.tgz#e90c9f71768b3736e76d7dd6783fc6c2afa88bc8"
@@ -9007,6 +9017,15 @@ react-dropzone@^11.2.4:
     attr-accept "^2.2.1"
     file-selector "^0.2.2"
     prop-types "^15.7.2"
+
+react-h5-audio-player@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/react-h5-audio-player/-/react-h5-audio-player-3.5.0.tgz#f3703db038b34a68d2e21c4815e3337e2cb51629"
+  integrity sha512-d8UyDZArysAn2aCs/lRwBGat40IylzOOETG0gwQtuTQhvVb5S8DKbxImbG6iSoqN7LFB2D0YxJ6iFwElSww9Mg==
+  dependencies:
+    "@babel/runtime" "^7.10.2"
+    "@iconify/icons-mdi" "^1.0.46"
+    "@iconify/react" "^1.1.3"
 
 "react-is@^16.12.0 || ^17.0.0", react-is@^17.0.1:
   version "17.0.1"

@@ -18,6 +18,8 @@ $red: #d50037;
 $theme_base_color: #0a0a0a;
 $theme_text_color: #f5f5f5;
 
+@import "../node_modules/react-h5-audio-player/lib/styles.css";
+
 @import "../node_modules/css-vars/css-vars.scss";
 $css-vars-use-native: true;
 
@@ -147,12 +149,6 @@ a.dropdown-item:hover {
     background-color: var(--theme_color_2);
 }
 
-audio::-webkit-media-controls-panel {
-    background-color: $light;
-    outline: none;
-    border: none;
-}
-
 .add-user-icon:hover {
     color: lighten($light, 10%);
 }
@@ -215,6 +211,11 @@ textarea:focus {
 .search-wrapper {
     border-bottom: 2px solid var(--theme_color_1);
     background-color: var(--theme_color_2);
+}
+
+.rhap_container {
+    background-color: var(--theme_base_color) !important;
+    width: 100%;
 }
 
 .familiar-button.is-active {
@@ -905,4 +906,10 @@ button {
 
 .history-disclaimer {
     margin-bottom: 1.5ch;
+}
+
+audio::-webkit-media-controls-panel {
+    background-color: var(--theme_color_1);
+    outline: none;
+    border: none;
 }

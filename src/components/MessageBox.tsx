@@ -14,6 +14,7 @@ import fs from "fs";
 import levenshtein from "js-levenshtein";
 import path from "path";
 import { Fragment, useMemo, useState } from "react";
+import AudioPlayer from "react-h5-audio-player";
 import { useDispatch, useSelector } from "react-redux";
 import reactStringReplace from "react-string-replace";
 import nacl from "tweetnacl";
@@ -416,48 +417,33 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
                         </span>
                     </figure>
                     <div className="media-content">
-                        {audioSrc !== "" ? (
-                            <div className="content has-text-centered">
-                                <span className="file-label">
-                                    {name.length > 20
-                                        ? name.slice(0, 20) + "..."
-                                        : name}
-                                </span>
-                                <audio
-                                    controls
-                                    src={audioSrc}
-                                    onError={(event) => {
-                                        console.log(event);
-                                    }}
-                                />
-                            </div>
+                        <div className="content">
+                            <span className="file-label">
+                                {name.length > 20
+                                    ? name.slice(0, 20) + "..."
+                                    : name}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="media-right pointer" onClick={download}>
+                        {downloading ? (
+                            <Loading
+                                size={60}
+                                animation={"bubbles"}
+                                color={"hsl(0, 0%, 71%)"}
+                                className={"download-file-spinner"}
+                            />
                         ) : (
-                            <div className="content">
-                                <span className="file-label">
-                                    {name.length > 20
-                                        ? name.slice(0, 20) + "..."
-                                        : name}
-                                </span>
+                            <div className="icon is-size-3 download-icon">
+                                <FontAwesomeIcon icon={faDownload} />
                             </div>
                         )}
                     </div>
-                    {audioSrc === "" && (
-                        <div className="media-right pointer" onClick={download}>
-                            {downloading ? (
-                                <Loading
-                                    size={60}
-                                    animation={"bubbles"}
-                                    color={"hsl(0, 0%, 71%)"}
-                                    className={"download-file-spinner"}
-                                />
-                            ) : (
-                                <div className="icon is-size-3 download-icon">
-                                    <FontAwesomeIcon icon={faDownload} />
-                                </div>
-                            )}
-                        </div>
-                    )}
                 </article>
+                <div className="content audio-wrapper">
+                    <AudioPlayer src={audioSrc} />
+                </div>
+                &nbsp;
             </span>
         </div>
     );
