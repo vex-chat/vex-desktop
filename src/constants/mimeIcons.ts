@@ -532,7 +532,7 @@ export const mimeIcons = [
     "audio-shn.svg",
     "audio-vn.rn-realmedia.svg",
     "audio-vnd.rn-realvideo.svg",
-    "audio-vnd.wave.svg",
+    "audio-wav.svg",
     "audio-x-adpcm.svg",
     "audio-x-aiff.svg",
     "audio-x-caf.svg",

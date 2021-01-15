@@ -200,6 +200,12 @@ textarea:focus {
     border-bottom: 2px solid var(--theme_color_1);
 }
 
+.image-preview-wrapper {
+    margin-top: 1ch;
+    max-width: 300px;
+    height: auto;
+}
+
 .search-wrapper {
     border-bottom: 2px solid var(--theme_color_1);
     background-color: var(--theme_color_2);
@@ -302,7 +308,7 @@ textarea:focus {
 }
 
 .file-box {
-    max-width: 400px;
+    max-width: 450px;
     padding-top: 7px !important;
     padding-bottom: 0px !important;
 }

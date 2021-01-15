@@ -13,8 +13,8 @@ import log from "electron-log";
 import fs from "fs";
 import levenshtein from "js-levenshtein";
 import path from "path";
-import { Fragment, useState } from "react";
-import { useSelector } from "react-redux";
+import { Fragment, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import reactStringReplace from "react-string-replace";
 import nacl from "tweetnacl";
 import * as uuid from "uuid";
@@ -23,6 +23,7 @@ import Loading from "../components/Loading";
 import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 import { mimeIcons } from "../constants/mimeIcons";
 import { selectFamiliars } from "../reducers/familiars";
+import { getFiles, set as setFile } from "../reducers/files";
 import { getAssetPath } from "../utils/getAssetPath";
 
 import Avatar from "./Avatar";
@@ -31,27 +32,26 @@ import { Highlighter } from "./Highlighter";
 
 const mentionRegex = /(@<[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}>)/gi;
 
-const bestMatch = (mimeType: string): string => {
+export const bestMatch = (query: string, values: string[]): string => {
     let bestMatch = "";
     let lowestScore = 999999;
 
-    mimeIcons.forEach((file) => {
-        const distance = levenshtein(mimeType.replace("/", "-"), file);
+    values.forEach((value) => {
+        const distance = levenshtein(query.replace("/", "-"), value);
 
         if (distance < lowestScore) {
             lowestScore = distance;
-            bestMatch = file;
+            bestMatch = value;
         }
     });
 
-    return getAssetPath("mimeIcons/" + bestMatch);
+    return bestMatch;
 };
 
 export function MessageBox(props: {
     messages: ISerializedMessage[];
 }): JSX.Element {
     const familiars = useSelector(selectFamiliars);
-    const [downloading, setDownloading] = useState([] as string[]);
 
     // don't match no characters of any length
     const codeRegex = /(```[^]+```)/;
@@ -137,156 +137,7 @@ export function MessageBox(props: {
                         }
 
                         if (isFile) {
-                            const {
-                                name,
-                                fileID,
-                                key,
-                                type,
-                            } = parseFileMessage(message.message);
-                            return (
-                                <div
-                                    key={message.nonce}
-                                    className="file-wrapper"
-                                >
-                                    <span
-                                        className="message-text box file-box pointer"
-                                        onClick={async () => {
-                                            if (
-                                                downloading.includes(
-                                                    message.nonce
-                                                )
-                                            ) {
-                                                log.warn(
-                                                    "Already downloading file."
-                                                );
-                                                return;
-                                            }
-                                            const currentDownloads = [
-                                                ...downloading,
-                                            ];
-
-                                            currentDownloads.push(
-                                                message.nonce
-                                            );
-                                            setDownloading(currentDownloads);
-                                            try {
-                                                const client = window.vex;
-                                                const file = await client.files.retrieve(
-                                                    fileID,
-                                                    key
-                                                );
-                                                const downls = [...downloading];
-                                                setDownloading(
-                                                    downls.slice(
-                                                        downls.indexOf(
-                                                            message.nonce
-                                                        ),
-                                                        1
-                                                    )
-                                                );
-
-                                                const dialogRes = await remote.dialog.showSaveDialog(
-                                                    remote.getCurrentWindow(),
-                                                    {
-                                                        title:
-                                                            "Save Decrypted File",
-                                                        buttonLabel: "Save",
-                                                        defaultPath:
-                                                            remote.app.getPath(
-                                                                "downloads"
-                                                            ) +
-                                                            "/" +
-                                                            name,
-                                                    }
-                                                );
-                                                const {
-                                                    canceled,
-                                                    filePath,
-                                                } = dialogRes;
-                                                if (
-                                                    canceled ||
-                                                    !file ||
-                                                    !filePath
-                                                ) {
-                                                    return;
-                                                }
-                                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                                fs.writeFile(
-                                                    filePath,
-                                                    file.data,
-                                                    () => {
-                                                        log.debug(
-                                                            `File downloaded to ${filePath}`
-                                                        );
-                                                        shell.openPath(
-                                                            path.resolve(
-                                                                filePath
-                                                            )
-                                                        );
-                                                    }
-                                                );
-                                            } catch (err) {
-                                                log.warn(err.toString());
-                                                const downls = [...downloading];
-                                                setDownloading(
-                                                    downls.slice(
-                                                        downls.indexOf(
-                                                            message.nonce
-                                                        ),
-                                                        1
-                                                    )
-                                                );
-                                            }
-                                        }}
-                                    >
-                                        <article className="media">
-                                            <figure className="media-left">
-                                                <span className="image is-48x48">
-                                                    <img
-                                                        src={bestMatch(
-                                                            type || "unknown"
-                                                        )}
-                                                    />
-                                                </span>
-                                            </figure>
-                                            <div className="media-content">
-                                                <div className="content">
-                                                    <span className="help file-label">
-                                                        {name.length > 20
-                                                            ? name.slice(
-                                                                  0,
-                                                                  20
-                                                              ) + "..."
-                                                            : name}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div className="media-right">
-                                                {downloading.includes(
-                                                    message.nonce
-                                                ) ? (
-                                                    <Loading
-                                                        size={60}
-                                                        animation={"bubbles"}
-                                                        color={
-                                                            "hsl(0, 0%, 71%)"
-                                                        }
-                                                        className={
-                                                            "download-file-spinner"
-                                                        }
-                                                    />
-                                                ) : (
-                                                    <div className="icon is-size-3 download-icon">
-                                                        <FontAwesomeIcon
-                                                            icon={faDownload}
-                                                        />
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </article>
-                                    </span>
-                                </div>
-                            );
+                            return <FileBox message={message} />;
                         }
 
                         return (
@@ -371,3 +222,223 @@ const parseFileMessage = (fileStr: string): IParsedFile => {
     const [name, fileID, key, type] = strParts;
     return { name, fileID, key, type };
 };
+
+const allowedAudioTypes = [
+    "audio/wav",
+    "audio/mpeg",
+    "audio/mp4",
+    "audio/aac",
+    "audio/aacp",
+    "audio/ogg",
+    "audio/webm",
+    "audio/flac",
+];
+const allowedImageTypes = [
+    "image/apng",
+    "image/avif",
+    "image/gif",
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+];
+
+export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
+    const [downloading, setDownloading] = useState(false);
+    const [previewSrc, setPreviewSrc] = useState("");
+    const dispatch = useDispatch();
+    const [audioSrc, setAudioSrc] = useState("");
+    const files = useSelector(getFiles());
+    const [fullSizePreview, setFullSizePreview] = useState(false);
+    const parsed = parseFileMessage(props.message.message);
+    const { name, fileID, key, type } = parsed;
+
+    useMemo(async () => {
+        if (type.includes("image")) {
+            if (files[fileID]) {
+                console.log("Found in local cache.");
+                setPreviewSrc(
+                    "data:" +
+                        bestMatch(type, allowedImageTypes) +
+                        ";base64," +
+                        files[fileID]
+                );
+                return;
+            }
+
+            const client = window.vex;
+            try {
+                const fileRes = await client.files.retrieve(fileID, key);
+                if (fileRes) {
+                    setPreviewSrc(
+                        "data:" +
+                            bestMatch(type, allowedImageTypes) +
+                            ";base64," +
+                            fileRes.data.toString("base64")
+                    );
+                    dispatch(
+                        setFile({
+                            fileID,
+                            data: fileRes.data.toString("base64"),
+                        })
+                    );
+                }
+            } catch (err) {
+                console.warn(err.toString());
+            }
+        }
+
+        if (type.includes("audio")) {
+            if (files[fileID]) {
+                console.log("Found in local cache.");
+                setAudioSrc(
+                    "data:" +
+                        bestMatch(type, allowedAudioTypes) +
+                        ";base64," +
+                        files[fileID]
+                );
+                return;
+            }
+
+            const client = window.vex;
+            try {
+                const fileRes = await client.files.retrieve(fileID, key);
+                if (fileRes) {
+                    setAudioSrc(
+                        "data:" +
+                            bestMatch(type, allowedAudioTypes) +
+                            ";base64," +
+                            fileRes.data.toString("base64")
+                    );
+                    dispatch(
+                        setFile({
+                            fileID,
+                            data: fileRes.data.toString("base64"),
+                        })
+                    );
+                }
+            } catch (err) {
+                console.warn(err.toString());
+            }
+        }
+    }, []);
+
+    if (previewSrc !== "") {
+        return (
+            <div className="image-preview-wrapper">
+                <img
+                    src={previewSrc}
+                    onError={() => {
+                        setPreviewSrc("");
+                    }}
+                />
+            </div>
+        );
+    }
+
+    return (
+        <div key={props.message.nonce} className="file-wrapper">
+            <span className="message-text box file-box">
+                <article className="media">
+                    <figure className="media-left">
+                        <span className="image is-48x48">
+                            <img
+                                src={getAssetPath(
+                                    "mimeIcons/" +
+                                        bestMatch(type || "unknown", mimeIcons)
+                                )}
+                            />
+                        </span>
+                    </figure>
+                    <div className="media-content">
+                        {audioSrc !== "" ? (
+                            <div className="content has-text-centered">
+                                <span className="help file-label">
+                                    {name.length > 20
+                                        ? name.slice(0, 20) + "..."
+                                        : name}
+                                </span>
+                                <audio
+                                    controls
+                                    src={audioSrc}
+                                    onError={(event) => {
+                                        console.log(event);
+                                    }}
+                                />
+                            </div>
+                        ) : (
+                            <div className="content">
+                                <span className="help file-label">
+                                    {name.length > 20
+                                        ? name.slice(0, 20) + "..."
+                                        : name}
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                    {audioSrc === "" && (
+                        <div
+                            className="media-right pointer"
+                            onClick={async () => {
+                                if (downloading) {
+                                    log.warn("Already downloading file.");
+                                    return;
+                                }
+                                setDownloading(true);
+
+                                try {
+                                    const client = window.vex;
+                                    const file = await client.files.retrieve(
+                                        fileID,
+                                        key
+                                    );
+                                    setDownloading(false);
+
+                                    const dialogRes = await remote.dialog.showSaveDialog(
+                                        remote.getCurrentWindow(),
+                                        {
+                                            title: "Save Decrypted File",
+                                            buttonLabel: "Save",
+                                            defaultPath:
+                                                remote.app.getPath(
+                                                    "downloads"
+                                                ) +
+                                                "/" +
+                                                name,
+                                        }
+                                    );
+                                    const { canceled, filePath } = dialogRes;
+                                    if (canceled || !file || !filePath) {
+                                        return;
+                                    }
+                                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                    fs.writeFile(filePath, file.data, () => {
+                                        log.debug(
+                                            `File downloaded to ${filePath}`
+                                        );
+                                        shell.openPath(path.resolve(filePath));
+                                    });
+                                } catch (err) {
+                                    log.warn(err.toString());
+                                    setDownloading(false);
+                                }
+                            }}
+                        >
+                            {downloading ? (
+                                <Loading
+                                    size={60}
+                                    animation={"bubbles"}
+                                    color={"hsl(0, 0%, 71%)"}
+                                    className={"download-file-spinner"}
+                                />
+                            ) : (
+                                <div className="icon is-size-3 download-icon">
+                                    <FontAwesomeIcon icon={faDownload} />
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </article>
+            </span>
+        </div>
+    );
+}

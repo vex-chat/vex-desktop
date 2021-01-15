@@ -7,12 +7,15 @@ import Dropzone from "react-dropzone";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
+import { mimeIcons } from "../constants/mimeIcons";
 import { errorFX } from "../constants/sounds";
 import { fail as failGroup } from "../reducers/groupMessages";
 import { failMessage } from "../reducers/messages";
 import store from "../utils/DataStore";
+import { getAssetPath } from "../utils/getAssetPath";
 
 import Loading from "./Loading";
+import { bestMatch } from "./MessageBox";
 
 export function ChatInput(props: {
     targetID: string;
@@ -105,6 +108,7 @@ export function ChatInput(props: {
                     const client = window.vex;
                     const type = await FileType.fromBuffer(buf);
                     const [file, key] = await client.files.create(buf);
+
                     const fileStr = fileToString(
                         name.replace(":", "-"),
                         file,

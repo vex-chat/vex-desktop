@@ -5,6 +5,7 @@ import avatarHashReducer from "./reducers/avatarHash";
 import channelReducer from "./reducers/channels";
 import deviceReducer from "./reducers/devices";
 import familiarsReducer from "./reducers/familiars";
+import fileReducer from "./reducers/files";
 import groupMessageReducer from "./reducers/groupMessages";
 import historyStackReducer from "./reducers/historyStacks";
 import messageReducer from "./reducers/messages";
@@ -28,4 +29,5 @@ export default combineReducers({
     onlineLists: onlineListReducer,
     historyStacks: historyStackReducer,
     avatarHash: avatarHashReducer,
+    files: fileReducer,
 });
