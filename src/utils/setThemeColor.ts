@@ -26,7 +26,6 @@ export const setThemeColor = (colorStr: string): void => {
 
         textColor = Color("#fff");
         while (textColor.contrast(backgroundColor) > DESIRED_CONTRAST) {
-            console.log(textColor.contrast(backgroundColor));
             if (textColor.darken(0.01).hex() === textColor.hex()) {
                 break;
             }
@@ -47,10 +46,7 @@ export const setThemeColor = (colorStr: string): void => {
         );
 
         textColor = Color("#0A0A0A");
-        console.log(textColor.lighten(0.1).hex());
         while (textColor.contrast(backgroundColor) > DESIRED_CONTRAST) {
-            console.log(textColor.contrast(backgroundColor));
-            console.log(textColor.hex());
             if (textColor.lighten(0.1).hex() === textColor.hex()) {
                 break;
             }

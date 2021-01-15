@@ -42,7 +42,6 @@ export default function Base(): JSX.Element {
 
             setRelease(latest);
 
-            console.log(latest);
             const { tag_name } = latest;
 
             if (semver.lt(version, tag_name)) {
