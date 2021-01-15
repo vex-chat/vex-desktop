@@ -2,7 +2,6 @@ import type { IFile, IFileProgress } from "@vex-chat/libvex";
 
 import log from "electron-log";
 import FileType from "file-type";
-import fs from "fs";
 import React, { useMemo, useRef, useState } from "react";
 import Dropzone from "react-dropzone";
 import { useDispatch } from "react-redux";
@@ -63,6 +62,76 @@ export function ChatInput(props: {
         }
     };
 
+    const uploadFile = async (fileDetails: File) => {
+        setUploading(true);
+        const { name, size } = fileDetails;
+        const client = window.vex;
+        const t0 = performance.now();
+
+        const onProgress = (progress: IFileProgress) => {
+            setProgress(
+                progress.progress < 100
+                    ? zeroPad(progress.progress, 2)
+                    : zeroPad(99, 2)
+            );
+            setLoaded(progress.loaded);
+            setTotal(progress.total);
+            const timeElapsed = (performance.now() - t0) / 1000;
+            const speed = progress.loaded / timeElapsed;
+            setSpeed(formatBytes(speed));
+        };
+
+        client.on("fileProgress", onProgress);
+
+        if (size > 20000000) {
+            if (store.get("settings.sounds")) {
+                errorFX.play();
+            }
+            client.off("fileProgress", onProgress);
+            setErrText("File is too big (max 20mb)");
+            setTimeout(() => {
+                setUploading(false);
+                setErrText("");
+            }, 3000);
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            const result = event.target?.result;
+            if (result) {
+                try {
+                    const buf = Buffer.from(result as ArrayBuffer);
+                    const client = window.vex;
+                    const type = await FileType.fromBuffer(buf);
+                    const [file, key] = await client.files.create(buf);
+                    const fileStr = fileToString(
+                        name.replace(":", "-"),
+                        file,
+                        key,
+                        type?.mime || fileDetails.type || "unknown"
+                    );
+                    if (props.group) {
+                        await client.messages.group(props.targetID, fileStr);
+                    } else {
+                        await client.messages.send(props.targetID, fileStr);
+                    }
+                    client.off("fileProgress", onProgress);
+                    setUploading(false);
+                } catch (err) {
+                    log.warn(err);
+                    setErrText(err.toString());
+                    client.off("fileProgress", onProgress);
+                    setTimeout(() => {
+                        setUploading(false);
+                    }, 3000);
+                    return;
+                }
+            }
+        };
+        reader.readAsArrayBuffer(fileDetails);
+    };
+
     return (
         <div className={`chat-input-wrapper ${props.className || ""}`}>
             {uploading && (
@@ -97,103 +166,9 @@ export function ChatInput(props: {
 
             <Dropzone
                 noClick
-                onDrop={(acceptedFiles) => {
-                    setUploading(true);
+                onDrop={async (acceptedFiles) => {
                     const fileDetails = acceptedFiles[0];
-                    const { name, size } = fileDetails;
-
-                    if (size > 20000000) {
-                        if (store.get("settings.sounds")) {
-                            errorFX.play();
-                        }
-                        setErrText("File is too big (max 20mb)");
-                        setTimeout(() => {
-                            setUploading(false);
-                            setErrText("");
-                        }, 3000);
-                        return;
-                    }
-
-                    console.log(fileDetails.size);
-
-                    console.log(fileDetails);
-
-                    fs.readFile(
-                        fileDetails.path,
-                        async (
-                            err: NodeJS.ErrnoException | null,
-                            buf: Buffer
-                        ) => {
-                            if (err) {
-                                log.warn(err);
-                                setErrText(err.toString());
-                                setTimeout(() => {
-                                    setUploading(false);
-                                    setErrText("");
-                                }, 3000);
-                                return;
-                            }
-
-                            const details = await FileType.fromBuffer(buf);
-                            const type = details?.mime;
-
-                            const client = window.vex;
-
-                            const t0 = performance.now();
-
-                            const onProgress = (progress: IFileProgress) => {
-                                setProgress(
-                                    progress.progress < 100
-                                        ? zeroPad(progress.progress, 2)
-                                        : zeroPad(99, 2)
-                                );
-                                setLoaded(progress.loaded);
-                                setTotal(progress.total);
-                                const timeElapsed =
-                                    (performance.now() - t0) / 1000;
-                                const speed = progress.loaded / timeElapsed;
-                                setSpeed(formatBytes(speed));
-                            };
-
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            client.on("fileProgress", onProgress);
-
-                            try {
-                                const [file, key] = await client.files.create(
-                                    buf
-                                );
-                                setUploading(false);
-                                setProgress("00");
-                                client.off("fileProgress", onProgress);
-
-                                const fileStr = fileToString(
-                                    name.replace(":", "-"),
-                                    file,
-                                    key,
-                                    type || fileDetails.type || "unknown"
-                                );
-                                console.log(fileStr);
-                                if (props.group) {
-                                    await client.messages.group(
-                                        props.targetID,
-                                        fileStr
-                                    );
-                                } else {
-                                    await client.messages.send(
-                                        props.targetID,
-                                        fileStr
-                                    );
-                                }
-                            } catch (err) {
-                                log.warn(err);
-                                setErrText(err.toString());
-                                setTimeout(() => {
-                                    setUploading(false);
-                                }, 3000);
-                                return;
-                            }
-                        }
-                    );
+                    await uploadFile(fileDetails);
                 }}
             >
                 {({ getRootProps, getInputProps, isDragActive }) => (
@@ -204,6 +179,19 @@ export function ChatInput(props: {
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             ref={inputRef as any}
                             autoFocus={true}
+                            onPaste={async (event) => {
+                                if (
+                                    event.clipboardData.items.length > 0 &&
+                                    event.clipboardData.items[0].type.includes(
+                                        "image"
+                                    )
+                                ) {
+                                    const fileDetails = event.clipboardData.items[0].getAsFile();
+                                    if (fileDetails) {
+                                        await uploadFile(fileDetails);
+                                    }
+                                }
+                            }}
                             value={inputValue}
                             className={`textarea has-fixed-size ${
                                 isDragActive ? "is-warning is-focused" : ""
