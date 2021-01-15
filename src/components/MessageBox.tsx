@@ -23,18 +23,11 @@ import Loading from "../components/Loading";
 import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 import { mimeIcons } from "../constants/mimeIcons";
 import { selectFamiliars } from "../reducers/familiars";
+import { getAssetPath } from "../utils/getAssetPath";
 
 import Avatar from "./Avatar";
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
-
-const RESOURCES_PATH = remote.app.isPackaged
-    ? path.join(process.resourcesPath, "assets")
-    : path.join(__dirname, "../assets");
-
-export const getAssetPath = (...paths: string[]): string => {
-    return path.join(RESOURCES_PATH, ...paths);
-};
 
 const mentionRegex = /(@<[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}>)/gi;
 

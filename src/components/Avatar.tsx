@@ -22,9 +22,15 @@ class Avatar extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            src: "https://api.vex.chat/avatar/" + props.user.userID,
+            src: strToIcon(this.props.user.username), // "https://api.vex.chat/avatar/" + props.user.userID,
             loaded: false,
         };
+    }
+
+    componentDidMount() {
+        this.setState({
+            src: "https://api.vex.chat/avatar/" + this.props.user.userID,
+        });
     }
 
     onError(): void {

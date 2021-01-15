@@ -1,4 +1,4 @@
-import { getAssetPath } from "../components/MessageBox";
+import { getAssetPath } from "../utils/getAssetPath";
 
 export const unlockFX = new Audio(getAssetPath("sounds/switch_006.ogg"));
 unlockFX.load();

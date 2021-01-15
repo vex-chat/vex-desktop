@@ -13,6 +13,14 @@ import path from "path";
 
 import MenuBuilder from "./menu";
 
+const RESOURCES_PATH = app.isPackaged
+    ? path.join(process.resourcesPath, "assets")
+    : path.join(__dirname, "../assets");
+
+export const getAssetPath = (...paths: string[]): string => {
+    return path.join(RESOURCES_PATH, ...paths);
+};
+
 export default class AppUpdater {
     constructor() {
         log.transports.file.level = "info";
@@ -36,16 +44,6 @@ if (
     // eslint-disable-next-line  @typescript-eslint/no-var-requires
     require("electron-debug")();
 }
-
-const RESOURCES_PATH = app.isPackaged
-    ? path.join(process.resourcesPath, "assets")
-    : path.join(__dirname, "../assets");
-
-console.log("RESOURCES_PATH", RESOURCES_PATH);
-
-const getAssetPath = (...paths: string[]): string => {
-    return path.join(RESOURCES_PATH, ...paths);
-};
 
 const createWindow = async () => {
     mainWindow = new BrowserWindow({

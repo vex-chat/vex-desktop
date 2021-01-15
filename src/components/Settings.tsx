@@ -1,6 +1,6 @@
 import { remote } from "electron";
 import fs from "fs";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { TwitterPicker } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -36,6 +36,8 @@ export default function Settings(): JSX.Element {
         store.get("settings.sounds") as boolean
     );
 
+    const [errText, setErrText] = useState("");
+
     return (
         <div className="pane-screen-wrapper">
             <div className="message">
@@ -47,6 +49,20 @@ export default function Settings(): JSX.Element {
                                 remote.getCurrentWindow(),
                                 {
                                     title: "Select an avatar",
+                                    filters: [
+                                        {
+                                            name: "Images",
+                                            extensions: [
+                                                "jpg",
+                                                "jpeg",
+                                                "png",
+                                                "gif",
+                                                "apng",
+                                                "avif",
+                                                "svg",
+                                            ],
+                                        },
+                                    ],
                                 }
                             );
 
@@ -55,44 +71,69 @@ export default function Settings(): JSX.Element {
                                 return;
                             }
 
+                            setErrText("");
+
                             const [path] = filePaths;
                             if (path) {
                                 setUploadingAvatar(true);
                                 fs.readFile(path, async (err, buf) => {
+                                    if (buf.byteLength > 5000000) {
+                                        setUploadingAvatar(false);
+                                        setErrText("File too big (max 5mb)");
+                                        return;
+                                    }
+
                                     if (err) {
                                         setUploadingAvatar(false);
                                         return;
                                     }
                                     const client = window.vex;
-                                    await client.me.setAvatar(buf);
+                                    try {
+                                        await client.me.setAvatar(buf);
+                                    } catch (err) {
+                                        setErrText(
+                                            err.response?.data?.error ||
+                                                err.toString()
+                                        );
+                                    }
+
                                     setUploadingAvatar(false);
                                     dispatch(setAvatarHash());
                                 });
                             }
                         }}
                     >
-                        {!uploadingAvatar &&
-                            IconUsername(
-                                user,
-                                48,
-                                undefined,
-                                "",
-                                "avatar-trigger pointer"
+                        <span className="columns">
+                            {!uploadingAvatar &&
+                                IconUsername(
+                                    user,
+                                    48,
+                                    undefined,
+                                    "",
+                                    "avatar-trigger pointer"
+                                )}
+                            {uploadingAvatar && (
+                                <Fragment>
+                                    <span className="column is-narrow">
+                                        <Loading
+                                            className={"avatar-loader"}
+                                            animation={"spinningBubbles"}
+                                            size={16}
+                                        />
+                                    </span>
+                                    <span className="column is-narrow avatar-loader-text">
+                                        Uploading, please wait.
+                                    </span>
+                                </Fragment>
                             )}
-                        {uploadingAvatar && (
-                            <span className="columns">
+                            {errText !== "" && (
                                 <span className="column is-narrow">
-                                    <Loading
-                                        className={"avatar-loader"}
-                                        animation={"spinningBubbles"}
-                                        size={42}
-                                    />
+                                    <span className="has-text-danger">
+                                        {errText}
+                                    </span>
                                 </span>
-                                <span className="column is-narrow avatar-loader-text">
-                                    Uploading, please wait.
-                                </span>
-                            </span>
-                        )}
+                            )}
+                        </span>
                     </span>
                 </div>
             </div>
