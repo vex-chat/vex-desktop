@@ -252,6 +252,41 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
     const parsed = parseFileMessage(props.message.message);
     const { name, fileID, key, type } = parsed;
 
+    const download = async () => {
+        if (downloading) {
+            log.warn("Already downloading file.");
+            return;
+        }
+        setDownloading(true);
+
+        try {
+            const client = window.vex;
+            const file = await client.files.retrieve(fileID, key);
+            setDownloading(false);
+
+            const dialogRes = await remote.dialog.showSaveDialog(
+                remote.getCurrentWindow(),
+                {
+                    title: "Save Decrypted File",
+                    buttonLabel: "Save",
+                    defaultPath: remote.app.getPath("downloads") + "/" + name,
+                }
+            );
+            const { canceled, filePath } = dialogRes;
+            if (canceled || !file || !filePath) {
+                return;
+            }
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            fs.writeFile(filePath, file.data, () => {
+                log.debug(`File downloaded to ${filePath}`);
+                shell.openPath(path.resolve(filePath));
+            });
+        } catch (err) {
+            log.warn(err.toString());
+            setDownloading(false);
+        }
+    };
+
     useMemo(async () => {
         if (type.includes("image")) {
             if (files[fileID]) {
@@ -324,14 +359,45 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
 
     if (previewSrc !== "") {
         return (
-            <div className="image-preview-wrapper">
-                <img
-                    src={previewSrc}
-                    onError={() => {
-                        setPreviewSrc("");
+            <Fragment>
+                <div className={`modal ${fullSizePreview ? "is-active" : ""}`}>
+                    <div
+                        className="modal-background"
+                        onClick={() => {
+                            console.log("Clicked background.");
+                            setFullSizePreview(false);
+                        }}
+                    ></div>
+                    <div className="modal-content box has-text-centered image-preview-modal">
+                        <img src={previewSrc} />
+                        <br />
+                        <p className="button is-small" onClick={download}>
+                            Download
+                        </p>
+                    </div>
+                    <button
+                        className="modal-close is-large"
+                        aria-label="close"
+                        onClick={() => {
+                            console.log("Clicked close.");
+                            setFullSizePreview(false);
+                        }}
+                    ></button>
+                </div>
+                <div
+                    className="image-preview-wrapper pointer"
+                    onClick={() => {
+                        setFullSizePreview(true);
                     }}
-                />
-            </div>
+                >
+                    <img
+                        src={previewSrc}
+                        onError={() => {
+                            setPreviewSrc("");
+                        }}
+                    />
+                </div>
+            </Fragment>
         );
     }
 
@@ -352,7 +418,7 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
                     <div className="media-content">
                         {audioSrc !== "" ? (
                             <div className="content has-text-centered">
-                                <span className="help file-label">
+                                <span className="file-label">
                                     {name.length > 20
                                         ? name.slice(0, 20) + "..."
                                         : name}
@@ -367,7 +433,7 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
                             </div>
                         ) : (
                             <div className="content">
-                                <span className="help file-label">
+                                <span className="file-label">
                                     {name.length > 20
                                         ? name.slice(0, 20) + "..."
                                         : name}
@@ -376,53 +442,7 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
                         )}
                     </div>
                     {audioSrc === "" && (
-                        <div
-                            className="media-right pointer"
-                            onClick={async () => {
-                                if (downloading) {
-                                    log.warn("Already downloading file.");
-                                    return;
-                                }
-                                setDownloading(true);
-
-                                try {
-                                    const client = window.vex;
-                                    const file = await client.files.retrieve(
-                                        fileID,
-                                        key
-                                    );
-                                    setDownloading(false);
-
-                                    const dialogRes = await remote.dialog.showSaveDialog(
-                                        remote.getCurrentWindow(),
-                                        {
-                                            title: "Save Decrypted File",
-                                            buttonLabel: "Save",
-                                            defaultPath:
-                                                remote.app.getPath(
-                                                    "downloads"
-                                                ) +
-                                                "/" +
-                                                name,
-                                        }
-                                    );
-                                    const { canceled, filePath } = dialogRes;
-                                    if (canceled || !file || !filePath) {
-                                        return;
-                                    }
-                                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                    fs.writeFile(filePath, file.data, () => {
-                                        log.debug(
-                                            `File downloaded to ${filePath}`
-                                        );
-                                        shell.openPath(path.resolve(filePath));
-                                    });
-                                } catch (err) {
-                                    log.warn(err.toString());
-                                    setDownloading(false);
-                                }
-                            }}
-                        >
+                        <div className="media-right pointer" onClick={download}>
                             {downloading ? (
                                 <Loading
                                     size={60}
