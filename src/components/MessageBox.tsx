@@ -440,10 +440,12 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
                         )}
                     </div>
                 </article>
-                <div className="content audio-wrapper">
-                    <AudioPlayer src={audioSrc} />
-                </div>
-                &nbsp;
+                {audioSrc !== "" && (
+                    <div className="content audio-wrapper">
+                        <AudioPlayer src={audioSrc} />
+                        &nbsp;
+                    </div>
+                )}
             </span>
         </div>
     );
