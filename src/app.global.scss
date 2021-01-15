@@ -350,9 +350,9 @@ code {
     color: var(--text_color_0);
 }
 
-// path {
-//     color: var(--text_color_0);
-// }
+path {
+    color: var(--text_color_0) !important;
+}
 
 path:hover {
     color: var(--text_color_0);
