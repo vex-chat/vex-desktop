@@ -1,6 +1,7 @@
 import type { IUser } from "@vex-chat/libvex";
 
 import {
+    faArrowCircleDown,
     faAt,
     faCheckCircle,
     faEnvelopeOpenText,
@@ -489,6 +490,18 @@ export default function MessagingPane(): JSX.Element {
                                             );
                                         })}
                                         <div ref={messagesEndRef} />
+                                    </div>
+                                )}
+
+                                {!scrollLock && (
+                                    <div className="conversation-fab">
+                                        <FontAwesomeIcon
+                                            icon={faArrowCircleDown}
+                                            onClick={() => {
+                                                scrollToBottom();
+                                                setScrollLock(true);
+                                            }}
+                                        />
                                     </div>
                                 )}
 

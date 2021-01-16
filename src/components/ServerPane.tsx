@@ -1,6 +1,6 @@
 import type { IServerParams } from "~Types";
 
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faArrowCircleDown, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -96,6 +96,17 @@ export function ServerPane(): JSX.Element {
                     );
                 })}
                 <div ref={messagesEndRef} />
+                {true && (
+                    <div className="conversation-fab">
+                        <FontAwesomeIcon
+                            icon={faArrowCircleDown}
+                            onClick={() => {
+                                scrollToBottom();
+                                setScrollLock(true);
+                            }}
+                        />
+                    </div>
+                )}
             </div>
 
             {channelID && <ChatInput targetID={channelID} group />}

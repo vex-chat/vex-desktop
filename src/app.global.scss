@@ -220,6 +220,24 @@ textarea:focus {
     width: 100%;
 }
 
+.rhap_current-time {
+    color: var(--text_color_0);
+}
+
+.rhap_total-time {
+    color: var(--text_color_0);
+}
+
+.conversation-fab {
+    position: absolute;
+    bottom: 0rem;
+    right: 1.25rem;
+    z-index: 5;
+    font-size: 42px;
+    color: $grey-darker;
+    cursor: pointer;
+}
+
 .familiar-button.is-active {
     background-color: var(--theme_color_1);
 }
