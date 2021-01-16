@@ -139,7 +139,7 @@ p {
 }
 
 a {
-    color: var(--text_color_0) !important;
+    color: var(--text_color_0);
 }
 
 a:hover {
@@ -949,8 +949,10 @@ button {
     margin-bottom: 1.5ch;
 }
 
-audio::-webkit-media-controls-panel {
-    background-color: var(--theme_color_1);
-    outline: none;
-    border: none;
+.message-link {
+    color: $link !important;
+}
+
+.message-link:hover {
+    color: lighten($link, 3%) !important;
 }

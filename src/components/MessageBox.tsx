@@ -15,6 +15,7 @@ import levenshtein from "js-levenshtein";
 import path from "path";
 import { Fragment, useMemo, useState } from "react";
 import AudioPlayer from "react-h5-audio-player";
+import Linkify from "react-linkify";
 import { useDispatch, useSelector } from "react-redux";
 import reactStringReplace from "react-string-replace";
 import nacl from "tweetnacl";
@@ -149,77 +150,101 @@ export function MessageBox(props: {
 
                         return (
                             <Fragment key={message.nonce}>
-                                <p className="message-text">
-                                    {!message.decrypted && (
-                                        <code>Decryption Failed</code>
-                                    )}
-                                    {message.failed ? (
-                                        <span className="has-text-danger">
-                                            {message.message}
-                                        </span>
-                                    ) : (
-                                        <span
-                                            className={`${
-                                                message.message.charAt(0) ===
-                                                ">"
-                                                    ? "has-text-success has-text-weight-bold"
-                                                    : ""
-                                            }`}
+                                <Linkify
+                                    componentDecorator={(
+                                        decoratedHref,
+                                        decoratedText,
+                                        key
+                                    ) => (
+                                        <a
+                                            className="message-link"
+                                            onClick={() => {
+                                                shell.openExternal(
+                                                    decoratedHref
+                                                );
+                                            }}
                                         >
-                                            {message.decrypted &&
-                                                reactStringReplace(
-                                                    message.message.trim(),
-                                                    mentionRegex,
-                                                    (match) => (
-                                                        <code
-                                                            key={message.nonce}
-                                                            className={`is-small mention-wrapper has-text-weight-bold`}
-                                                        >
-                                                            <span
-                                                                className={`mention-wrapper-overlay ${
-                                                                    familiars[
+                                            {decoratedText}
+                                        </a>
+                                    )}
+                                >
+                                    <p className="message-text">
+                                        {!message.decrypted && (
+                                            <code>Decryption Failed</code>
+                                        )}
+                                        {message.failed ? (
+                                            <span className="has-text-danger">
+                                                {message.message}
+                                            </span>
+                                        ) : (
+                                            <span
+                                                className={`${
+                                                    message.message.charAt(
+                                                        0
+                                                    ) === ">"
+                                                        ? "has-text-success has-text-weight-bold"
+                                                        : ""
+                                                }`}
+                                            >
+                                                {message.decrypted &&
+                                                    reactStringReplace(
+                                                        message.message.trim(),
+                                                        mentionRegex,
+                                                        (match) => (
+                                                            <code
+                                                                key={
+                                                                    message.nonce
+                                                                }
+                                                                className={`is-small mention-wrapper has-text-weight-bold`}
+                                                            >
+                                                                <span
+                                                                    className={`mention-wrapper-overlay ${
+                                                                        familiars[
+                                                                            match.replace(
+                                                                                /[@<>]/g,
+                                                                                ""
+                                                                            )
+                                                                        ]
+                                                                            ?.userID ==
+                                                                            user.userID &&
+                                                                        Date.now() -
+                                                                            new Date(
+                                                                                message.timestamp
+                                                                            ).getTime() <
+                                                                            5000
+                                                                            ? "my-mention"
+                                                                            : ""
+                                                                    }`}
+                                                                />
+                                                                <span
+                                                                    className={`mention-text has-text-link`}
+                                                                >
+                                                                    {"@"}
+                                                                    {familiars[
                                                                         match.replace(
                                                                             /[@<>]/g,
                                                                             ""
                                                                         )
-                                                                    ]?.userID ==
-                                                                        user.userID &&
-                                                                    Date.now() -
-                                                                        new Date(
-                                                                            message.timestamp
-                                                                        ).getTime() <
-                                                                        5000
-                                                                        ? "my-mention"
-                                                                        : ""
-                                                                }`}
-                                                            />
-                                                            <span
-                                                                className={`mention-text has-text-link`}
-                                                            >
-                                                                {"@"}
-                                                                {familiars[
-                                                                    match.replace(
-                                                                        /[@<>]/g,
-                                                                        ""
-                                                                    )
-                                                                ]?.username ||
-                                                                    "Unknown"}
-                                                            </span>
-                                                        </code>
-                                                    )
-                                                )}
-                                        </span>
-                                    )}
-                                    &nbsp;&nbsp;
-                                    {message.failed && (
-                                        <span className="help has-text-danger">
-                                            <FontAwesomeIcon
-                                                icon={faExclamationTriangle}
-                                            />{" "}
-                                            Failed: {message.failMessage}{" "}
-                                        </span>
-                                    )}
-                                </p>
+                                                                    ]
+                                                                        ?.username ||
+                                                                        "Unknown"}
+                                                                </span>
+                                                            </code>
+                                                        )
+                                                    )}
+                                            </span>
+                                        )}
+                                        &nbsp;&nbsp;
+                                        {message.failed && (
+                                            <span className="help has-text-danger">
+                                                <FontAwesomeIcon
+                                                    icon={faExclamationTriangle}
+                                                />{" "}
+                                                Failed: {message.failMessage}{" "}
+                                            </span>
+                                        )}
+                                    </p>
+                                </Linkify>
                             </Fragment>
                         );
                     })}
