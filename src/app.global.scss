@@ -362,6 +362,7 @@ code {
 }
 
 .mention-wrapper .mention-wrapper-overlay {
+    background-color: $blue;
     height: 100%;
     width: 100%;
     opacity: 0.15;
@@ -373,6 +374,23 @@ code {
     padding: 0px 0px;
     z-index: 1;
     border-radius: 5px !important;
+}
+
+.my-mention {
+    animation: flash 0.5s infinite forwards ease-out;
+    animation-iteration-count: 1;
+}
+
+@keyframes flash {
+    0% {
+        background-color: $blue;
+    }
+    50% {
+        background-color: $yellow;
+    }
+    100% {
+        background-color: $blue;
+    }
 }
 
 .icon {

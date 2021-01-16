@@ -25,6 +25,7 @@ import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
 import { mimeIcons } from "../constants/mimeIcons";
 import { selectFamiliars } from "../reducers/familiars";
 import { getFiles, set as setFile } from "../reducers/files";
+import { selectUser } from "../reducers/user";
 import { getAssetPath } from "../utils/getAssetPath";
 
 import Avatar from "./Avatar";
@@ -53,7 +54,7 @@ export function MessageBox(props: {
     messages: ISerializedMessage[];
 }): JSX.Element {
     const familiars = useSelector(selectFamiliars);
-
+    const user = useSelector(selectUser);
     // don't match no characters of any length
     const codeRegex = /(```[^]+```)/;
     const fileRegex = /{{[^]+}}/;
@@ -175,7 +176,22 @@ export function MessageBox(props: {
                                                             className={`is-small mention-wrapper has-text-weight-bold`}
                                                         >
                                                             <span
-                                                                className={`mention-wrapper-overlay has-background-link`}
+                                                                className={`mention-wrapper-overlay ${
+                                                                    familiars[
+                                                                        match.replace(
+                                                                            /[@<>]/g,
+                                                                            ""
+                                                                        )
+                                                                    ]?.userID ==
+                                                                        user.userID &&
+                                                                    Date.now() -
+                                                                        new Date(
+                                                                            message.timestamp
+                                                                        ).getTime() <
+                                                                        5000
+                                                                        ? "my-mention"
+                                                                        : ""
+                                                                }`}
                                                             />
                                                             <span
                                                                 className={`mention-text has-text-link`}
