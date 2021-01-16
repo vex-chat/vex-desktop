@@ -18,14 +18,14 @@ import { ipcRenderer, remote } from "electron";
 import log from "electron-log";
 import fs from "fs";
 import { useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
 import Loading from "../components/Loading";
 import { dbFolder, keyFolder, progFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
 import { notifyFX } from "../constants/sounds";
-import { selectApp, setApp } from "../reducers/app";
+import { setApp } from "../reducers/app";
 import { addChannels } from "../reducers/channels";
 import { addDevices } from "../reducers/devices";
 import { addFamiliar, setFamiliars } from "../reducers/familiars";

@@ -138,7 +138,12 @@ export function MessageBox(props: {
                         }
 
                         if (isFile) {
-                            return <FileBox message={message} />;
+                            return (
+                                <FileBox
+                                    key={message.nonce}
+                                    message={message}
+                                />
+                            );
                         }
 
                         return (
