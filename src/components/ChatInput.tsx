@@ -1,6 +1,8 @@
 import type { IFile, IFileProgress } from "@vex-chat/libvex";
+import type { EmojiData } from "emoji-mart";
 
 import log from "electron-log";
+import { emojiIndex } from "emoji-mart";
 import FileType from "file-type";
 import React, { useMemo, useRef, useState } from "react";
 import Dropzone from "react-dropzone";
@@ -13,6 +15,8 @@ import { failMessage } from "../reducers/messages";
 import store from "../utils/DataStore";
 
 import Loading from "./Loading";
+
+const openEmojiRegex = /:\w+$/;
 
 export function ChatInput(props: {
     targetID: string;
@@ -38,10 +42,36 @@ export function ChatInput(props: {
     const [speed, setSpeed] = useState("");
     const inputRef = useRef<HTMLTextAreaElement>();
     const [errText, setErrText] = useState("");
+    const [matches, setMatches] = useState(null as RegExpExecArray | null);
+    const [emoji, setEmoji] = useState([] as EmojiData[] | undefined);
+    const [activeEmoji, setActiveEmoji] = useState(-1);
 
     useMemo(() => {
         inputRef.current?.focus();
     }, [userID, serverID, channelID, inputRef]);
+
+    useMemo(() => {
+        const matches = openEmojiRegex.exec(inputValue);
+        if (matches) {
+            setMatches(matches);
+            const emoji = emojiIndex
+                .search(matches[0].replace(":", ""))
+                ?.slice(0, 10);
+            if (emoji && emoji.length > 0) {
+                setEmoji(emoji);
+                if (activeEmoji == -1) {
+                    setActiveEmoji(activeEmoji + 1);
+                }
+                if (activeEmoji > emoji.length - 1) {
+                    setActiveEmoji(emoji.length - 1);
+                }
+            } else {
+                setEmoji(undefined);
+            }
+        } else {
+            setEmoji(undefined);
+        }
+    }, [inputValue]);
 
     const adjustInputHeight = (
         event?: React.KeyboardEvent<HTMLTextAreaElement>
@@ -54,6 +84,14 @@ export function ChatInput(props: {
             inputRef.current.style.height = "inherit";
             inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
         }
+    };
+
+    const selectEmoji = (emoji: EmojiData) => {
+        const [match] = matches!;
+        setInputValue(
+            inputValue.replace(match, (emoji as any).native + " " || ":X ")
+        );
+        setEmoji(undefined);
     };
 
     const resetInputHeight = () => {
@@ -135,6 +173,26 @@ export function ChatInput(props: {
 
     return (
         <div className={`chat-input-wrapper ${props.className || ""}`}>
+            {emoji && (
+                <div className="emoji-picker-wrapper">
+                    {matches &&
+                        emoji.map((emoji, index) => (
+                            <div
+                                onClick={() => {
+                                    selectEmoji(emoji);
+                                    inputRef.current?.focus();
+                                }}
+                                className={`emoji-list-entry ${
+                                    activeEmoji == index ? "is-active" : ""
+                                }`}
+                                key={emoji.colons}
+                            >
+                                {(emoji as any).native || ":X"}&nbsp;&nbsp;
+                                {emoji.colons}
+                            </div>
+                        ))}
+                </div>
+            )}
             {uploading && (
                 <span className="chat-file-spinner-wrapper has-text-left">
                     {errText == "" && (
@@ -201,9 +259,35 @@ export function ChatInput(props: {
                                 setInputValue(event.target.value);
                             }}
                             rows={1}
-                            onKeyDown={adjustInputHeight}
+                            onKeyDown={(event) => {
+                                adjustInputHeight(event);
+
+                                if (emoji && emoji.length > 0) {
+                                    console.log(event.key);
+                                    if (event.key === "Tab") {
+                                        event.preventDefault();
+                                        const selectedEmoji =
+                                            emoji[activeEmoji];
+                                        selectEmoji(selectedEmoji);
+                                    }
+                                    if (event.key === "ArrowDown") {
+                                        event.preventDefault();
+                                        if (activeEmoji + 1 < emoji.length) {
+                                            setActiveEmoji(activeEmoji + 1);
+                                        }
+                                    }
+                                    if (event.key === "ArrowUp") {
+                                        event.preventDefault();
+                                        if (activeEmoji !== 0) {
+                                            setActiveEmoji(activeEmoji - 1);
+                                        }
+                                    }
+                                    return;
+                                }
+                            }}
                             onKeyUp={async (event) => {
                                 adjustInputHeight();
+
                                 if (event.key === "Enter" && !event.shiftKey) {
                                     const messageText = inputValue;
                                     if ((messageText || "").trim() === "") {
