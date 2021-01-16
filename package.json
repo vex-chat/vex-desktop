@@ -24,8 +24,7 @@
         "test": "npx jest",
         "prettier:node": "npx prettier '**/*.{js,jsx,ts,tsx,md}' --ignore-path .gitignore",
         "prettier": "npx prettier '**/*.{js,jsx,ts,tsx,md}' --ignore-path .gitignore --write",
-        "prettier-ci": "concurrently \"yarn prettier:node -c\" \"yarn lint:ci\"",
-        "copyapp": "sudo cp -rp ./release/mac/*.app /Applications"
+        "prettier-ci": "concurrently \"yarn prettier:node -c\" \"yarn lint:ci\""
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx}": [
