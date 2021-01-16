@@ -214,7 +214,7 @@ textarea:focus {
 }
 
 .rhap_container {
-    background-color: var(--theme_color_1) !important;
+    background-color: transparent !important;
     border: none !important;
     box-shadow: none !important;
     width: 100%;
@@ -226,6 +226,10 @@ textarea:focus {
 
 .rhap_total-time {
     color: var(--text_color_0);
+}
+
+.rhap_progress-bar {
+    background-color: var(--theme_color_2) !important;
 }
 
 .conversation-fab {

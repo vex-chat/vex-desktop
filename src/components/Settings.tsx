@@ -207,7 +207,7 @@ export default function Settings(): JSX.Element {
                                 triangle={"hide"}
                                 colors={[
                                     "#0f0f0f",
-                                    "#f5f5f5",
+                                    "#ffffff",
                                     "#400C0C",
                                     "#280e34",
                                     "#1C1D26",
