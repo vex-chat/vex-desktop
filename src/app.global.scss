@@ -70,11 +70,6 @@ $font_override: monospace;
     -webkit-app-region: drag;
 }
 
-.emoji-picker-wrapper {
-    margin: 10px 25px 10px 10px;
-    background-color: var(--theme_color_1);
-}
-
 .tabs {
     border-bottom-color: var(--theme_color_0) !important;
 }
@@ -534,17 +529,21 @@ div {
     max-width: 400px;
 }
 
+.emoji-picker-wrapper {
+    background-color: var(--theme_color_1);
+}
+
 .emoji-list-entry {
     padding: 3px;
     cursor: pointer;
 }
 
 .emoji-list-entry:hover {
-    background-color: var(--theme_color_2);
+    background-color: var(--theme_color_0);
 }
 
 .emoji-list-entry.is-active {
-    background-color: var(--theme_color_2);
+    background-color: var(--theme_color_0);
 }
 
 .settings-box {

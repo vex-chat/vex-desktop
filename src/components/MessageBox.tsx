@@ -312,7 +312,6 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
     useMemo(async () => {
         if (type.includes("image")) {
             if (files[fileID]) {
-                console.log("Found in local cache.");
                 setPreviewSrc(
                     "data:" +
                         bestMatch(type, allowedImageTypes) +
@@ -346,7 +345,6 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
 
         if (type.includes("audio")) {
             if (files[fileID]) {
-                console.log("Found in local cache.");
                 setAudioSrc(
                     "data:" +
                         bestMatch(type, allowedAudioTypes) +

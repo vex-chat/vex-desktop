@@ -263,7 +263,6 @@ export function ChatInput(props: {
                                 adjustInputHeight(event);
 
                                 if (emoji && emoji.length > 0) {
-                                    console.log(event.key);
                                     if (event.key === "Tab") {
                                         event.preventDefault();
                                         const selectedEmoji =
