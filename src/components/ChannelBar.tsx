@@ -74,10 +74,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                     }
                                 }}
                             >
-                                <FontAwesomeIcon
-                                    className="has-text-dark"
-                                    icon={faCarrot}
-                                />
+                                <FontAwesomeIcon icon={faCarrot} />
                             </span>
                         </div>
                         <div
@@ -96,7 +93,6 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                     >
                                         <span className="icon">
                                             <FontAwesomeIcon
-                                                className="has-text-dark"
                                                 icon={faUserPlus}
                                             />
                                         </span>
@@ -109,10 +105,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                         className="dropdown-item"
                                     >
                                         <span className="icon">
-                                            <FontAwesomeIcon
-                                                className="has-text-dark"
-                                                icon={faPlus}
-                                            />
+                                            <FontAwesomeIcon icon={faPlus} />
                                         </span>
                                         &nbsp; Add Channel
                                     </Link>
@@ -132,7 +125,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                                 className={`${
                                                     manageChannels
                                                         ? "has-text-danger"
-                                                        : "has-text-dark"
+                                                        : ""
                                                 }`}
                                                 icon={faTrash}
                                             />
@@ -153,10 +146,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                     className="dropdown-item"
                                 >
                                     <span className="icon">
-                                        <FontAwesomeIcon
-                                            className="has-text-dark"
-                                            icon={faCog}
-                                        />
+                                        <FontAwesomeIcon icon={faCog} />
                                     </span>
                                     &nbsp; Server Settings
                                 </Link>
