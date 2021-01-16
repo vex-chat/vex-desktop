@@ -171,18 +171,6 @@ textarea:focus {
     box-shadow: $theme_shadow var(--theme_color_2) !important;
 }
 
-.server-button {
-    border: 2px solid var(--theme_color_0);
-    background-color: var(--theme_color_0) !important;
-    color: var(--text_color_0) !important;
-}
-
-.server-button.is-active {
-    border: 2px solid var(--theme_color_0) !important;
-    background-color: var(--theme_color_0) !important;
-    color: var(--text_color_0) !important;
-}
-
 .message-header {
     background-color: var(--theme_color_1);
     color: var(--text_color_0);
@@ -238,8 +226,12 @@ textarea:focus {
     right: 40px;
     z-index: 5;
     font-size: 42px;
-    color: $grey-darker;
+    color: var(--theme_color_2) !important;
     cursor: pointer;
+}
+
+.conversation-fab > svg {
+    color: var(--theme_color_2) !important;
 }
 
 .familiar-button.is-active {
@@ -270,17 +262,12 @@ textarea:focus {
     margin-top: 12px !important;
 }
 
-.server-button-icon {
-    font-size: 36px;
-    color: darken($light, 10%);
-}
-
-.server-button {
-    margin-top: 3px;
-}
-
 .icon-username-fa {
     margin-top: 7px;
+}
+
+.server-button-icon {
+    font-size: 36px;
 }
 
 .message-text {
@@ -392,14 +379,6 @@ code {
     color: var(--text_color_0);
 }
 
-path {
-    color: var(--text_color_0) !important;
-}
-
-path:hover {
-    color: var(--text_color_0);
-}
-
 a {
     color: var(--text_color_0);
 }
@@ -424,13 +403,13 @@ a {
     background-color: var(--theme_color_2);
 }
 
-.server-button.is-active {
-    border-color: var(--theme_color_0);
-    border: 1px solid $blue;
+button {
+    background-color: var(--theme_color_1) !important;
+    border: none !important;
 }
 
-.server-button.is-active > span > svg {
-    color: var(--theme_color_0);
+.server-button .is-active {
+    border: 2px solid var(--theme_color_2) !important;
 }
 
 .avatar-loader-text {
@@ -452,11 +431,6 @@ span {
     > div:nth-child(3)
     > div:nth-child(6) {
     display: none !important;
-}
-
-.server-button.is-active > {
-    background-color: var(--theme_color_1);
-    border-color: var(--text_color_0);
 }
 
 .hljs {
