@@ -18,14 +18,14 @@ import { ipcRenderer, remote } from "electron";
 import log from "electron-log";
 import fs from "fs";
 import { useMemo } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import Loading from "../components/Loading";
 import { dbFolder, keyFolder, progFolder } from "../constants/folders";
 import { routes } from "../constants/routes";
 import { notifyFX } from "../constants/sounds";
-import { setApp } from "../reducers/app";
+import { selectApp, setApp } from "../reducers/app";
 import { addChannels } from "../reducers/channels";
 import { addDevices } from "../reducers/devices";
 import { addFamiliar, setFamiliars } from "../reducers/familiars";
@@ -148,7 +148,6 @@ export function ClientLauncher(): JSX.Element {
                 if (!serverRecord || !channelRecord) {
                     return;
                 }
-
                 const msgNotification = new Notification(
                     userRecord.username +
                         " in " +
@@ -189,8 +188,6 @@ export function ClientLauncher(): JSX.Element {
                 dispatch(dmAdd(szMsg));
             }
         }
-
-        notification(message);
     };
 
     const relaunch = async () => {
@@ -202,6 +199,7 @@ export function ClientLauncher(): JSX.Element {
         client.off("session", sessionHandler);
         client.off("message", messageHandler);
         client.off("permission", permissionHandler);
+        client.off("message", notification);
         ipcRenderer.off("relaunch", relaunch);
 
         history.push(routes.LOGOUT + "?clear=off?forward=" + routes.LOGIN);
@@ -309,6 +307,7 @@ export function ClientLauncher(): JSX.Element {
         const permissions = await client.permissions.retrieve();
         dispatch(setPermissions(permissions));
         dispatch(setApp("initialLoad", false));
+        client.on("message", notification);
     };
 
     const permissionHandler = async (permission: IPermission) => {
