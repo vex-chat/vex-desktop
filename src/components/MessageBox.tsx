@@ -370,11 +370,13 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
                         }}
                     ></div>
                     <div className="modal-content has-text-centered image-preview-modal">
-                        <img src={previewSrc} />
-                        <br />
-                        <p className="button is-small" onClick={download}>
-                            Download
-                        </p>
+                        <div className="modal-content-button-wrapper has-text-right">
+                            <img src={previewSrc} />
+                            <br />
+                            <a className="has-text-white " onClick={download}>
+                                Download
+                            </a>
+                        </div>
                     </div>
                     <button
                         className="modal-close is-large"

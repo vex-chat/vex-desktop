@@ -403,9 +403,14 @@ a {
     background-color: var(--theme_color_2);
 }
 
-button {
-    background-color: var(--theme_color_1) !important;
+.server-button {
+    background-color: var(--theme_color_2);
     border: none !important;
+    color: var(--text_color_0);
+}
+
+button .is-success {
+    color: $white !important;
 }
 
 .server-button .is-active {
@@ -463,10 +468,6 @@ input:focus {
 
 .file-box {
     background-color: var(--theme_color_1);
-}
-
-.file-box:hover {
-    background-color: var(--theme_color_2);
 }
 
 input {
