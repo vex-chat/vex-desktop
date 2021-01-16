@@ -7,9 +7,13 @@ import { lockFX } from "../constants/sounds";
 import { useQuery } from "../hooks/useQuery";
 import { resetApp } from "../reducers/app";
 import { resetChannels } from "../reducers/channels";
+import { reset as resetDevices } from "../reducers/devices";
 import { resetFamiliars } from "../reducers/familiars";
+import { reset as resetFiles } from "../reducers/files";
 import { reset as resetGroupMessages } from "../reducers/groupMessages";
+import { reset as resetHistoryStacks } from "../reducers/historyStacks";
 import { resetMessages } from "../reducers/messages";
+import { reset as resetOnlineLists } from "../reducers/onlineLists";
 import { resetPermissions } from "../reducers/permissions";
 import { resetServers } from "../reducers/servers";
 import { resetSessions } from "../reducers/sessions";
@@ -29,20 +33,24 @@ export function Logout(): JSX.Element {
         if (query.get("clear") !== "off") {
             gaurdian.clear();
         } else {
-            console.log(
+            console.warn(
                 "clear set to off explicitly, keeping keys in gaurdian."
             );
         }
 
         dispatch(resetApp());
         dispatch(resetChannels());
+        dispatch(resetDevices());
         dispatch(resetFamiliars());
+        dispatch(resetFiles());
         dispatch(resetGroupMessages());
+        dispatch(resetHistoryStacks());
         dispatch(resetMessages());
+        dispatch(resetOnlineLists());
+        dispatch(resetPermissions());
         dispatch(resetServers());
         dispatch(resetSessions());
         dispatch(resetUser());
-        dispatch(resetPermissions());
 
         if (store.get("settings.sounds") as boolean) {
             await lockFX.play();
