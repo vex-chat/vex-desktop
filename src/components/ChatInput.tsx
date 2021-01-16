@@ -7,15 +7,12 @@ import Dropzone from "react-dropzone";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { mimeIcons } from "../constants/mimeIcons";
 import { errorFX } from "../constants/sounds";
 import { fail as failGroup } from "../reducers/groupMessages";
 import { failMessage } from "../reducers/messages";
 import store from "../utils/DataStore";
-import { getAssetPath } from "../utils/getAssetPath";
 
 import Loading from "./Loading";
-import { bestMatch } from "./MessageBox";
 
 export function ChatInput(props: {
     targetID: string;
@@ -65,7 +62,7 @@ export function ChatInput(props: {
         }
     };
 
-    const uploadFile = async (fileDetails: File) => {
+    const uploadFile = (fileDetails: File) => {
         setUploading(true);
         const { name, size } = fileDetails;
         const client = window.vex;
@@ -170,9 +167,9 @@ export function ChatInput(props: {
 
             <Dropzone
                 noClick
-                onDrop={async (acceptedFiles) => {
+                onDrop={(acceptedFiles) => {
                     const fileDetails = acceptedFiles[0];
-                    await uploadFile(fileDetails);
+                    uploadFile(fileDetails);
                 }}
             >
                 {({ getRootProps, getInputProps, isDragActive }) => (
@@ -183,7 +180,7 @@ export function ChatInput(props: {
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             ref={inputRef as any}
                             autoFocus={true}
-                            onPaste={async (event) => {
+                            onPaste={(event) => {
                                 if (
                                     event.clipboardData.items.length > 0 &&
                                     event.clipboardData.items[0].type.includes(
@@ -192,7 +189,7 @@ export function ChatInput(props: {
                                 ) {
                                     const fileDetails = event.clipboardData.items[0].getAsFile();
                                     if (fileDetails) {
-                                        await uploadFile(fileDetails);
+                                        uploadFile(fileDetails);
                                     }
                                 }
                             }}

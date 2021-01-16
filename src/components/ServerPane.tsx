@@ -96,20 +96,20 @@ export function ServerPane(): JSX.Element {
                     );
                 })}
                 <div ref={messagesEndRef} />
-                {true && (
-                    <div className="conversation-fab">
-                        <FontAwesomeIcon
-                            icon={faArrowCircleDown}
-                            onClick={() => {
-                                scrollToBottom();
-                                setScrollLock(true);
-                            }}
-                        />
-                    </div>
-                )}
             </div>
 
             {channelID && <ChatInput targetID={channelID} group />}
+            {!scrollLock && (
+                <div className="conversation-fab">
+                    <FontAwesomeIcon
+                        icon={faArrowCircleDown}
+                        onClick={() => {
+                            scrollToBottom();
+                            setScrollLock(true);
+                        }}
+                    />
+                </div>
+            )}
         </Fragment>
     );
 }
