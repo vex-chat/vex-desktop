@@ -403,6 +403,11 @@ a {
     background-color: var(--theme_color_2);
 }
 
+.modal-content-button-wrapper {
+    display: inline-block;
+    width: auto;
+}
+
 .server-button {
     background-color: var(--theme_color_2);
     border: none !important;
