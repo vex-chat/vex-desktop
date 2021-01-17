@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { useMemo } from "react";
+import { useEffect } from "react";
 import { Route, Switch, useHistory } from "react-router-dom";
 
 import Loading from "../components/Loading";
@@ -16,42 +16,48 @@ import Messaging from "./Messaging";
 import Register from "./Register";
 import { Server } from "./Server";
 
+type UpdateDownloadProgress = {
+    bytesPerSecond: number;
+    percent: number;
+    transferred: number;
+    total: number;
+};
+
+type updateStatus = {
+    status:
+        | "checking"
+        | "available"
+        | "current"
+        | "error"
+        | "progress"
+        | "downloaded";
+    message?: string;
+    data?: UpdateDownloadProgress;
+};
+
 export default function Base(): JSX.Element {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const history = useHistory();
 
-    useMemo(() => {
-        type UpdateDownloadProgress = {
-            bytesPerSecond: number;
-            percent: number;
-            transferred: number;
-            total: number;
-        };
+    const onUpdateStatus = (data: any) => {
+        console.log(data);
+        const { status } = data as updateStatus;
+        switch (status) {
+            case "available":
+                history.push(routes.UPDATING);
+                break;
+            default:
+                break;
+        }
+    };
 
-        type updateStatus = {
-            status:
-                | "checking"
-                | "available"
-                | "current"
-                | "error"
-                | "progress"
-                | "downloaded";
-            message?: string;
-            data?: UpdateDownloadProgress;
-        };
-
+    useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ipcRenderer.on("autoUpdater", (data: any) => {
-            const { status } = data as updateStatus;
-            switch (status) {
-                case "available":
-                    history.push(routes.UPDATING);
-                    break;
-                default:
-                    break;
-            }
-        });
-    }, []);
+        ipcRenderer.on("autoUpdater", onUpdateStatus);
+        return () => {
+            ipcRenderer.off("autoUpdater", onUpdateStatus);
+        };
+    });
 
     return (
         <App>
