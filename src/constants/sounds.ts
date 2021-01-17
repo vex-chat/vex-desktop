@@ -1,13 +1,13 @@
 import { getAssetPath } from "../utils/getAssetPath";
 
-export const unlockFX = new Audio(getAssetPath("sounds/switch_006.ogg"));
+export const unlockFX = new Audio(getAssetPath("sounds/unlock.ogg"));
 unlockFX.load();
 
-export const lockFX = new Audio(getAssetPath("sounds/switch_007.wav"));
+export const lockFX = new Audio(getAssetPath("sounds/lock.ogg"));
 lockFX.load();
 
-export const notifyFX = new Audio(getAssetPath("sounds/confirmation_001.ogg"));
+export const notifyFX = new Audio(getAssetPath("sounds/notification.ogg"));
 notifyFX.load();
 
-export const errorFX = new Audio(getAssetPath("sounds/error_005.ogg"));
+export const errorFX = new Audio(getAssetPath("sounds/error.ogg"));
 errorFX.load();

@@ -70,6 +70,7 @@ export function ChatInput(props: {
             inputValue.replace(match, (emoji as any).native + " " || ":X ")
         );
         setEmoji(undefined);
+        setActiveEmoji(-1);
     };
 
     const resetInputHeight = () => {
@@ -170,9 +171,11 @@ export function ChatInput(props: {
                 }
             } else {
                 setEmoji(undefined);
+                setActiveEmoji(-1);
             }
         } else {
             setEmoji(undefined);
+            setActiveEmoji(-1);
         }
 
         const closedMatches = closedEmojiRegex.exec(inputValue);
