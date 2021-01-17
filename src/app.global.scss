@@ -243,8 +243,8 @@ textarea:focus {
     background-color: var(--theme_color_1);
 }
 
-.channel-bar-link.is-active {
-    background-color: var(--theme_color_1);
+.channel-bar-link .is-active {
+    background-color: var(--theme_color_1) !important;
 }
 
 .outgoing-message {
