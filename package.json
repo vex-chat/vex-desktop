@@ -13,7 +13,7 @@
         "package": "yarn build && electron-builder build --publish never",
         "package-fast": "yarn build && electron-builder build --dir --publish never",
         "package-all": "rm -rf ./release; yarn build && electron-builder build -mwl --publish never; shasum -a 256 release/*.{exe,dmg,deb,AppImage} >> ./release/sha256.txt",
-        "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
+        "package-ci": "yarn postinstall && yarn build && electron-builder build -mwl --publish always",
         "package-mac": "yarn build && electron-builder build --mac",
         "package-linux": "yarn build && electron-builder build --linux",
         "package-win": "yarn build && electron-builder build --win --x64",
@@ -239,5 +239,5 @@
             "pre-commit": "yarn syncVersions; git add ./src/package.json package.json; lint-staged"
         }
     },
-    "version": "0.9.14"
+    "version": "0.9.16"
 }
