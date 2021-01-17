@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
 
 import { formatBytes } from "../utils/formatBytes";
@@ -47,10 +47,8 @@ export default function Loading(props: {
 }): JSX.Element {
     const [progress, setProgress] = useState(initialState);
 
-    const downloading = progress.transferred > 0;
-
-    const onDownloadProgress = (updateStatus: any) => {
-        const { status, data } = updateStatus as updateStatus;
+    const onDownloadProgress = (_event: Event, updateStatus: updateStatus) => {
+        const { status, data } = updateStatus;
         switch (status) {
             case "progress":
                 if (data) {
@@ -62,11 +60,12 @@ export default function Loading(props: {
         }
     };
 
-    useMemo(() => {
+    useEffect(() => {
         ipcRenderer.on("autoUpdater", onDownloadProgress);
-
-        return ipcRenderer.off("autoUpdater", onDownloadProgress);
-    }, []);
+        return () => {
+            ipcRenderer.off("autoUpdater", onDownloadProgress);
+        };
+    });
 
     return (
         <div className={`Aligner ${props.className || "full-size"} `}>
@@ -79,7 +78,7 @@ export default function Loading(props: {
                         height={props.size}
                         width={props.size}
                     />
-                    {downloading && (
+                    {progress.transferred > 0 && (
                         <div>
                             Fetching update. Please wait.
                             <br />

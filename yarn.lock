@@ -997,6 +997,17 @@
     tweetnacl-util "^0.15.1"
     typedoc-plugin-no-inherit "^1.1.10"
 
+"@extrahash/sleep@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@extrahash/sleep/-/sleep-1.0.0.tgz#2c008642ecaaeb9f12917bf8fe30d3b917ab79b5"
+  integrity sha512-3aRRt61wT2KvKwPYbbR0CVcRF/P0A5UgL/druHn0JErrQ7uVLuFUe5KWU0eFCafsUHfRURdbzX0A4YFM8v+EpA==
+  dependencies:
+    "@types/node" "^14.0.14"
+    chalk "^4.1.0"
+    tweetnacl "^1.0.3"
+    tweetnacl-util "^0.15.1"
+    typedoc-plugin-no-inherit "^1.1.10"
+
 "@fortawesome/fontawesome-common-types@^0.2.32":
   version "0.2.32"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.32.tgz#3436795d5684f22742989bfa08f46f50f516f259"

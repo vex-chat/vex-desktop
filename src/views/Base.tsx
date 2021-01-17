@@ -1,4 +1,5 @@
 import { ipcRenderer } from "electron";
+import log from "electron-log";
 import { useEffect } from "react";
 import { Route, Switch, useHistory } from "react-router-dom";
 
@@ -39,14 +40,37 @@ export default function Base(): JSX.Element {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const history = useHistory();
 
-    const onUpdateStatus = (data: any) => {
-        console.log(data);
-        const { status } = data as updateStatus;
+    const onUpdateStatus = (_event: Event, data: updateStatus) => {
+        log.info("ON UPDATE STATUS REACHED");
+        log.info("data", data);
+        const { status } = data;
         switch (status) {
+            case "checking":
+                log.info("Checking for updates.");
+                break;
+            case "current":
+                log.info("We are on current version.");
+                break;
+            case "error":
+                log.info("Error fetching update data.");
+                log.error(data);
+                log.info("We are on current version.");
+                break;
             case "available":
+                log.info("Update available.");
                 history.push(routes.UPDATING);
                 break;
+            case "downloaded":
+                log.info("Update has been downloaded.");
+                break;
+            case "progress":
+                if (!history.location.pathname.includes(routes.UPDATING)) {
+                    history.push(routes.UPDATING);
+                }
+                log.info("progress", data);
+                break;
             default:
+                log.info(`updater: Don't know how to ${status as string}`);
                 break;
         }
     };
@@ -54,6 +78,7 @@ export default function Base(): JSX.Element {
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ipcRenderer.on("autoUpdater", onUpdateStatus);
+
         return () => {
             ipcRenderer.off("autoUpdater", onUpdateStatus);
         };

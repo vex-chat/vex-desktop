@@ -927,6 +927,20 @@ $register-box-base: 330px;
     width: $register-box-base * $phi;
 }
 
+.update-indicator {
+    color: var(--text_color_0);
+    font-size: 32px;
+    position: absolute;
+    top: 22px;
+    right: 250px;
+    z-index: 5;
+}
+
+.update-indicator:hover {
+    opacity: 80%;
+    cursor: pointer;
+}
+
 .register-form-buttons {
     margin-left: 0px;
     margin-right: -3px;
