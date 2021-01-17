@@ -8,7 +8,6 @@ import isDev from "electron-is-dev";
 import fs from "fs";
 import { memo, useState } from "react";
 import { useHistory } from "react-router";
-import { Link } from "react-router-dom";
 
 import { VerticalAligner } from "../components/VerticalAligner";
 import { dbFolder, keyFolder } from "../constants/folders";

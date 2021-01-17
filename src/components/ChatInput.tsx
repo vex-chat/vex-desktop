@@ -67,6 +67,7 @@ export function ChatInput(props: {
         }
         const match = matchOverride || matches[0];
         setInputValue(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             inputValue.replace(match, (emoji as any).native + " " || ":X ")
         );
         setEmoji(undefined);
@@ -210,6 +211,7 @@ export function ChatInput(props: {
                                 }`}
                                 key={emoji.colons}
                             >
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                 {(emoji as any).native || ":X"}&nbsp;&nbsp;
                                 {emoji.colons}
                             </div>

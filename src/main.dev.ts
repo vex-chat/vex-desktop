@@ -21,13 +21,10 @@ export const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
 };
 
-export default class AppUpdater {
-    constructor() {
-        log.transports.file.level = "info";
-        autoUpdater.logger = log;
-        void autoUpdater.checkForUpdatesAndNotify();
-    }
-}
+autoUpdater.on("update-downloaded", () => {
+    console.log("Update downloaded");
+    autoUpdater.quitAndInstall();
+});
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -90,9 +87,6 @@ const createWindow = async () => {
     menuBuilder.buildMenu();
 
     await mainWindow.loadURL(`file://${__dirname}/index.html`);
-
-    // Remove this if your app does not use auto updates
-    new AppUpdater();
 };
 
 /**
@@ -108,6 +102,10 @@ app.on("window-all-closed", () => {
 });
 
 app.whenReady().then(createWindow).catch(console.log);
+
+app.on("ready", () => {
+    autoUpdater.checkForUpdatesAndNotify();
+});
 
 app.on("activate", () => {
     // On macOS it's common to re-create a window in the app when the

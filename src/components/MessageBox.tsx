@@ -152,8 +152,7 @@ export function MessageBox(props: {
                                 <Linkify
                                     componentDecorator={(
                                         decoratedHref,
-                                        decoratedText,
-                                        key
+                                        decoratedText
                                     ) => (
                                         <a
                                             className="message-link"
