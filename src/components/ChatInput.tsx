@@ -181,6 +181,7 @@ export function ChatInput(props: {
                 const emojiResults = emojiIndex.search(match.replace(/:/g, ""));
                 if (
                     emojiResults &&
+                    emojiResults.length > 0 &&
                     emojiResults[0].id === match.replace(/:/g, "")
                 ) {
                     const emoji = emojiResults[0];
