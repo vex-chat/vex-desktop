@@ -310,6 +310,12 @@ textarea:focus {
     height: 100%;
 }
 
+progress {
+    margin-top: 20px;
+    background: var(--theme_base_color);
+    width: 100%;
+}
+
 .download-file-spinner {
     padding-right: 20px;
 }

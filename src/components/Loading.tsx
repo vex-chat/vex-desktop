@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import ReactLoading from "react-loading";
 
 import { formatBytes } from "../utils/formatBytes";
@@ -79,12 +79,21 @@ export default function Loading(props: {
                         width={props.size}
                     />
                     {progress.transferred > 0 && (
-                        <div>
-                            Fetching update. Please wait.
-                            <br />
-                            {progress.percent}%{" "}
-                            {formatBytes(progress.bytesPerSecond)}/sec
-                        </div>
+                        <Fragment>
+                            <div className="help">
+                                Fetching update at{" "}
+                                {formatBytes(progress.bytesPerSecond)}/second.
+                                Please wait.
+                            </div>
+                            <div className="help">
+                                <progress
+                                    className=""
+                                    value={progress.percent.toFixed(0)}
+                                    max="100"
+                                ></progress>
+                            </div>
+                            <div className="help"></div>
+                        </Fragment>
                     )}
                 </div>
             </div>
