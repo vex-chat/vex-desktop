@@ -17,6 +17,7 @@ import store from "../utils/DataStore";
 import Loading from "./Loading";
 
 const openEmojiRegex = /:\w+$/;
+const closedEmojiRegex = /:\w+:/g;
 
 export function ChatInput(props: {
     targetID: string;
@@ -46,33 +47,6 @@ export function ChatInput(props: {
     const [emoji, setEmoji] = useState([] as EmojiData[] | undefined);
     const [activeEmoji, setActiveEmoji] = useState(-1);
 
-    useMemo(() => {
-        inputRef.current?.focus();
-    }, [userID, serverID, channelID, inputRef]);
-
-    useMemo(() => {
-        const matches = openEmojiRegex.exec(inputValue);
-        if (matches) {
-            setMatches(matches);
-            const emoji = emojiIndex
-                .search(matches[0].replace(":", ""))
-                ?.slice(0, 10);
-            if (emoji && emoji.length > 0) {
-                setEmoji(emoji);
-                if (activeEmoji == -1) {
-                    setActiveEmoji(activeEmoji + 1);
-                }
-                if (activeEmoji > emoji.length - 1) {
-                    setActiveEmoji(emoji.length - 1);
-                }
-            } else {
-                setEmoji(undefined);
-            }
-        } else {
-            setEmoji(undefined);
-        }
-    }, [inputValue]);
-
     const adjustInputHeight = (
         event?: React.KeyboardEvent<HTMLTextAreaElement>
     ) => {
@@ -86,8 +60,12 @@ export function ChatInput(props: {
         }
     };
 
-    const selectEmoji = (emoji: EmojiData) => {
-        const [match] = matches!;
+    const selectEmoji = (emoji: EmojiData, matchOverride?: string) => {
+        if (!matches) {
+            console.warn("No matches.");
+            return;
+        }
+        const match = matchOverride || matches[0];
         setInputValue(
             inputValue.replace(match, (emoji as any).native + " " || ":X ")
         );
@@ -170,6 +148,48 @@ export function ChatInput(props: {
         };
         reader.readAsArrayBuffer(fileDetails);
     };
+
+    useMemo(() => {
+        inputRef.current?.focus();
+    }, [userID, serverID, channelID, inputRef]);
+
+    useMemo(() => {
+        const matches = openEmojiRegex.exec(inputValue);
+        if (matches) {
+            setMatches(matches);
+            const emoji = emojiIndex
+                .search(matches[0].replace(":", ""))
+                ?.slice(0, 10);
+            if (emoji && emoji.length > 0) {
+                setEmoji(emoji);
+                if (activeEmoji == -1) {
+                    setActiveEmoji(activeEmoji + 1);
+                }
+                if (activeEmoji > emoji.length - 1) {
+                    setActiveEmoji(emoji.length - 1);
+                }
+            } else {
+                setEmoji(undefined);
+            }
+        } else {
+            setEmoji(undefined);
+        }
+
+        const closedMatches = closedEmojiRegex.exec(inputValue);
+        if (closedMatches) {
+            for (const match of closedMatches) {
+                const emojiResults = emojiIndex.search(match.replace(/:/g, ""));
+                if (
+                    emojiResults &&
+                    emojiResults[0].id === match.replace(/:/g, "")
+                ) {
+                    const emoji = emojiResults[0];
+                    console.log(match);
+                    selectEmoji(emoji, match);
+                }
+            }
+        }
+    }, [inputValue]);
 
     return (
         <div className={`chat-input-wrapper ${props.className || ""}`}>
