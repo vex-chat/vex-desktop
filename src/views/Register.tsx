@@ -98,7 +98,7 @@ export default function Register(): JSX.Element {
 
     return (
         <VerticalAligner>
-            <div className="box register-form">
+            <div className="box login-register-box">
                 {errorText !== "" && (
                     <span className="help has-text-white has-text-bold notification is-danger has-delete">
                         {errorText}

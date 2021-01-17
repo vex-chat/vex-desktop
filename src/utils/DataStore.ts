@@ -15,24 +15,28 @@ class DataStore extends Store {
         }
 
         // set the default values
-        if (!this.instance.get("settings.notifications")) {
-            this.instance.set("settings.notifications", true);
+        if (this.instance.get("settings.notifications") == undefined) {
+            this.instance.set("settings.notifications", false);
         }
 
-        if (!this.instance.get("settings.directMessages")) {
+        if (this.instance.get("settings.directMessages") == undefined) {
             this.instance.set("settings.directMessages", true);
         }
 
-        if (!this.instance.get("settings.themeColor")) {
+        if (this.instance.get("settings.themeColor") == undefined) {
             this.instance.set("settings.themeColor", "#0F0F0F");
         }
 
-        if (!this.instance.get("settings.forceMonospace")) {
+        if (this.instance.get("settings.forceMonospace") == undefined) {
             this.instance.set("settings.forceMonospace", false);
         }
 
-        if (!this.instance.get("settings.sounds")) {
+        if (this.instance.get("settings.sounds") == undefined) {
             this.instance.set("settings.sounds", true);
+        }
+
+        if (this.instance.get("settings.notify.mentions") == undefined) {
+            this.instance.set("settings.notify.mentions", true);
         }
 
         setThemeColor(this.instance.get("settings.themeColor") as string);

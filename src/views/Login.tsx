@@ -2,7 +2,7 @@ import type { FunctionComponent } from "react";
 
 import { Client } from "@vex-chat/libvex";
 
-import { faLock } from "@fortawesome/free-solid-svg-icons";
+import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import isDev from "electron-is-dev";
 import fs from "fs";
@@ -75,17 +75,7 @@ export const Login: FunctionComponent = memo(() => {
 
     return (
         <VerticalAligner>
-            <div className="box">
-                <div className="tabs">
-                    <ul>
-                        <li className="is-active">
-                            <a>Login</a>
-                        </li>
-                        <li>
-                            <Link to={routes.REGISTER}>Register</Link>
-                        </li>
-                    </ul>
-                </div>
+            <div className="box login-register-box">
                 {errText !== "" && (
                     <div className="notification is-danger">{errText}</div>
                 )}
@@ -106,7 +96,7 @@ export const Login: FunctionComponent = memo(() => {
                         }}
                     />
                     <span className="icon is-left">
-                        <FontAwesomeIcon icon={faLock} />
+                        <FontAwesomeIcon icon={faUser} />
                     </span>
                 </div>
                 <label className="label is-small">Password:</label>
@@ -130,6 +120,14 @@ export const Login: FunctionComponent = memo(() => {
                     </span>
                 </div>
                 <div className="buttons is-right">
+                    <button
+                        className="button is-plain"
+                        onClick={() => {
+                            history.push(routes.REGISTER);
+                        }}
+                    >
+                        Register
+                    </button>
                     <button
                         className={`button is-success ${
                             loading ? "is-loading" : ""

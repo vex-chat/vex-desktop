@@ -36,7 +36,13 @@ export default function Settings(): JSX.Element {
         store.get("settings.sounds") as boolean
     );
 
+    const [mentionNotifications, setMentionNotifications] = useState(
+        store.get("settings.notify.mentions") as boolean
+    );
+
     const [errText, setErrText] = useState("");
+
+    console.log(store.store);
 
     return (
         <div className="pane-screen-wrapper">
@@ -146,22 +152,6 @@ export default function Settings(): JSX.Element {
                                 <input
                                     onChange={() => {
                                         store.set(
-                                            "settings.notifications",
-                                            !notification
-                                        );
-                                        setNotifications(!notification);
-                                    }}
-                                    type="checkbox"
-                                    checked={notification}
-                                />
-                                &nbsp; Notifications
-                            </label>
-                        </li>
-                        <li>
-                            <label className="checkbox settings-box">
-                                <input
-                                    onChange={() => {
-                                        store.set(
                                             "settings.directMessages",
                                             !directMessages
                                         );
@@ -190,7 +180,7 @@ export default function Settings(): JSX.Element {
                     </ul>
                 </div>
             </div>
-            <br />
+
             <div className="message">
                 <p className="message-header">Theme Settings</p>
                 <div className="message-body">
@@ -222,6 +212,57 @@ export default function Settings(): JSX.Element {
                                     );
                                 }}
                             />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div className="message">
+                <p className="message-header">Notification Settings</p>
+                <div className="message-body">
+                    <ul>
+                        <li>
+                            <label className="checkbox settings-box">
+                                <input
+                                    onChange={() => {
+                                        if (!notification) {
+                                            store.set(
+                                                "settings.notify.mentions",
+                                                true
+                                            );
+                                            setMentionNotifications(true);
+                                        }
+
+                                        store.set(
+                                            "settings.notifications",
+                                            !notification
+                                        );
+                                        setNotifications(!notification);
+                                    }}
+                                    type="checkbox"
+                                    checked={notification}
+                                />
+                                &nbsp; Global (all messages)
+                            </label>
+                        </li>
+                        <li>
+                            <label className="checkbox settings-box">
+                                <input
+                                    disabled={notification}
+                                    onChange={() => {
+                                        store.set(
+                                            "settings.notify.mentions",
+                                            !mentionNotifications
+                                        );
+                                        setMentionNotifications(
+                                            !mentionNotifications
+                                        );
+                                    }}
+                                    type="checkbox"
+                                    checked={mentionNotifications}
+                                />
+                                &nbsp; Mentions
+                            </label>
                         </li>
                     </ul>
                 </div>

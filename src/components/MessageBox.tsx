@@ -28,12 +28,11 @@ import { selectFamiliars } from "../reducers/familiars";
 import { getFiles, set as setFile } from "../reducers/files";
 import { selectUser } from "../reducers/user";
 import { getAssetPath } from "../utils/getAssetPath";
+import { mentionRegex } from "../utils/regexes";
 
 import Avatar from "./Avatar";
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
-
-const mentionRegex = /(@<[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}>)/gi;
 
 export const bestMatch = (query: string, values: string[]): string => {
     let bestMatch = "";

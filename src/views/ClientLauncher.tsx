@@ -43,6 +43,7 @@ import { setServers } from "../reducers/servers";
 import { addSession, setSessions } from "../reducers/sessions";
 import { setUser } from "../reducers/user";
 import store from "../utils/DataStore";
+import { mentionRegex } from "../utils/regexes";
 
 declare global {
     interface Window {
@@ -79,16 +80,40 @@ export function ClientLauncher(): JSX.Element {
     const history = useHistory();
 
     const notification = async (message: IMessage) => {
+        const globalNotifications = store.get(
+            "settings.notifications"
+        ) as boolean;
+        const mentionsUs = mentionRegex.test(message.message);
+        const sounds = store.get("settings.sounds") as boolean;
+
+        // all notifications are off
+        if (!mentionsUs && !globalNotifications) {
+            console.log("All notifications are off, notifarino.");
+            return;
+        }
+
+        if (mentionsUs && !globalNotifications) {
+            console.log("Mentions are on but globals are off.");
+            if (!mentionsUs) {
+                console.log("It doesn't mention us, notifarino.");
+                return;
+            }
+            console.log("It mentions us! NOTIFARINO!");
+        }
+
+        if (globalNotifications) {
+            console.log("Global notifications are on.");
+        }
+
         const client = window.vex;
 
         const me = client.me.user();
         if (
-            store.get("settings.notifications") &&
             message.direction === "incoming" &&
             message.authorID !== me.userID
         ) {
             if (process.platform !== "darwin") {
-                if (store.get("settings.sounds") as boolean) {
+                if (sounds) {
                     await notifyFX.play();
                 }
             }
