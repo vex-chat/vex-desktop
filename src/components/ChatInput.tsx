@@ -1,5 +1,5 @@
 import type { IFile, IFileProgress } from "@vex-chat/libvex";
-import type { EmojiData } from "emoji-mart";
+import type { BaseEmoji, EmojiData } from "emoji-mart";
 
 import log from "electron-log";
 import { emojiIndex } from "emoji-mart";
@@ -69,7 +69,10 @@ export function ChatInput(props: {
         const match = matchOverride || matches[0];
         setInputValue(
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            inputValue.replace(match, (emoji as any).native + " " || ":X ")
+            inputValue.replace(
+                match,
+                `${(emoji as BaseEmoji).native} ` || ":X "
+            )
         );
         setEmoji(undefined);
         setActiveEmoji(-1);
@@ -365,7 +368,6 @@ export function ChatInput(props: {
 const fileToString = (name: string, file: IFile, key: string, type: string) => {
     return `{{${name}:${file.fileID}:${key}:${type}}}`;
 };
-
 
 const zeroPad = (num: number, places: number) =>
     String(num).padStart(places, "0");

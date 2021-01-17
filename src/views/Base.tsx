@@ -19,11 +19,9 @@ import Messaging from "./Messaging";
 import Register from "./Register";
 import { Server } from "./Server";
 
-
 export default function Base(): JSX.Element {
     const [modalOpen, setModalOpen] = useState(false);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [release, setRelease] = useState({} as Record<string, any>);
     const [lastFetch, setLastFetch] = useState(Date.now());
     const history = useHistory();
 
@@ -43,26 +41,32 @@ export default function Base(): JSX.Element {
             percent: number;
             transferred: number;
             total: number;
-        }
-        
+        };
+
         type updateStatus = {
-            status: "checking" | "available" | "current" | "error" | "progress" | "downloaded";
+            status:
+                | "checking"
+                | "available"
+                | "current"
+                | "error"
+                | "progress"
+                | "downloaded";
             message?: string;
             data?: UpdateDownloadProgress;
-        }
-        
+        };
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ipcRenderer.on("autoUpdater", (data: any) => {
             const { status } = data as updateStatus;
-            switch(status) {
+            switch (status) {
                 case "available":
                     history.push(routes.UPDATING);
                     break;
                 default:
                     break;
             }
-        })
-    }, [])
+        });
+    }, []);
 
     useMemo(async () => {
         try {
@@ -70,11 +74,7 @@ export default function Base(): JSX.Element {
                 "https://api.github.com/repos/vex-chat/vex-desktop/releases"
             );
             const latest = res.data[0];
-
-            setRelease(latest);
-
             const { tag_name } = latest;
-
             if (semver.lt(version, tag_name)) {
                 console.log("Newer version available.");
                 setModalOpen(true);
@@ -107,7 +107,10 @@ export default function Base(): JSX.Element {
                 <Route path={routes.LOGIN} render={() => <Login />} />
                 <Route path={routes.LOGOUT} render={() => <Logout />} />
                 <Route exact path={routes.HOME} render={() => <Home />} />
-                <Route path={routes.UPDATING} render={() =>  <Loading size={256} animation={"cylon"} />} />
+                <Route
+                    path={routes.UPDATING}
+                    render={() => <Loading size={256} animation={"cylon"} />}
+                />
             </Switch>
 
             <div className={`modal ${modalOpen ? "is-active" : ""}`}>
@@ -139,8 +142,9 @@ export default function Base(): JSX.Element {
                                 className="button is-success"
                                 onClick={() => {
                                     setModalOpen(false);
-                                    shell.openExternal(release.html_url);
-                                    console.log("Downloadarino!");
+                                    shell.openExternal(
+                                        "https://vex.chat/download"
+                                    );
                                 }}
                             >
                                 Download

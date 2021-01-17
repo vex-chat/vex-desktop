@@ -7,6 +7,7 @@
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
 import { app, BrowserWindow, shell } from "electron";
+import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import path from "path";
 
@@ -19,6 +20,43 @@ const RESOURCES_PATH = app.isPackaged
 export const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
 };
+
+log.transports.file.level = "info";
+autoUpdater.logger = log;
+
+log.info("App starting...");
+
+autoUpdater.on("checking-for-update", () => {
+    log.info("Checking for update...");
+});
+autoUpdater.on("update-available", () => {
+    log.info("Update available.");
+});
+autoUpdater.on("update-not-available", () => {
+    log.info("Update not available.");
+});
+autoUpdater.on("error", (err: Error) => {
+    log.info(`Error in auto-updater ${err.toString()}`);
+});
+autoUpdater.on(
+    "download-progress",
+    (progressObj: {
+        bytesPerSecond: number;
+        percent: number;
+        transferred: number;
+        total: number;
+    }) => {
+        let log_message = `Download speed: ${progressObj.bytesPerSecond}`;
+        log_message = `${log_message} - Downloaded ${progressObj.percent}%`;
+        log_message = `${log_message}(${progressObj.transferred}/${progressObj.total})`;
+        log.info(log_message);
+    }
+);
+
+autoUpdater.on("update-downloaded", () => {
+    log.info("Update downloaded, attempting install.");
+    autoUpdater.quitAndInstall();
+});
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -53,31 +91,40 @@ const createWindow = async () => {
     // DEFINE EVENT HANDLERS BEFORE LOADING THE APP
 
     // AUTO UPDATER EVENTS
-    autoUpdater.on('checking-for-update', () => {
-        mainWindow?.webContents.send("autoUpdater", { status: "checking" })
-    })
-    autoUpdater.on('update-available', () => {
-        mainWindow?.webContents.send("autoUpdater", { status: "available" })
-    })
-    autoUpdater.on('update-not-available', () => {
-        mainWindow?.webContents.send("autoUpdater", { status: "current" })
-    })
-    autoUpdater.on('error', (err) => {
-        mainWindow?.webContents.send("autoUpdater", { status: "error", message: err.toString() })
-    })
+    autoUpdater.on("checking-for-update", () => {
+        mainWindow?.webContents.send("autoUpdater", { status: "checking" });
+    });
+    autoUpdater.on("update-available", () => {
+        mainWindow?.webContents.send("autoUpdater", { status: "available" });
+    });
+    autoUpdater.on("update-not-available", () => {
+        mainWindow?.webContents.send("autoUpdater", { status: "current" });
+    });
+    autoUpdater.on("error", (err) => {
+        mainWindow?.webContents.send("autoUpdater", {
+            status: "error",
+            message: err.toString(),
+        });
+    });
 
     type UpdateDownloadProgress = {
         bytesPerSecond: number;
         percent: number;
         transferred: number;
         total: number;
-    }
+    };
 
-    autoUpdater.on('download-progress', (progressObj: UpdateDownloadProgress) => {
-        mainWindow?.webContents.send("autoUpdater", { status: "progress", data: progressObj })
-    })
+    autoUpdater.on(
+        "download-progress",
+        (progressObj: UpdateDownloadProgress) => {
+            mainWindow?.webContents.send("autoUpdater", {
+                status: "progress",
+                data: progressObj,
+            });
+        }
+    );
     autoUpdater.on("update-downloaded", () => {
-        mainWindow?.webContents.send("autoUpdater", { status: "downloaded" })
+        mainWindow?.webContents.send("autoUpdater", { status: "downloaded" });
         autoUpdater.quitAndInstall();
     });
 

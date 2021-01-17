@@ -9,20 +9,26 @@ type UpdateDownloadProgress = {
     percent: number;
     transferred: number;
     total: number;
-}
+};
 
 type updateStatus = {
-    status: "checking" | "available" | "current" | "error" | "progress" | "downloaded";
+    status:
+        | "checking"
+        | "available"
+        | "current"
+        | "error"
+        | "progress"
+        | "downloaded";
     message?: string;
     data?: UpdateDownloadProgress;
-}
+};
 
 const initialState: UpdateDownloadProgress = {
     bytesPerSecond: 0,
     percent: 0,
     transferred: 0,
-    total: 0
-}
+    total: 0,
+};
 
 export default function Loading(props: {
     size: number;
@@ -39,14 +45,13 @@ export default function Loading(props: {
     color?: string;
     className?: string;
 }): JSX.Element {
-
     const [progress, setProgress] = useState(initialState);
 
     const downloading = progress.transferred > 0;
-    
-    const onDownloadProgress =  (updateStatus: any) => {
+
+    const onDownloadProgress = (updateStatus: any) => {
         const { status, data } = updateStatus as updateStatus;
-        switch(status) {
+        switch (status) {
             case "progress":
                 if (data) {
                     setProgress(data);
@@ -61,12 +66,11 @@ export default function Loading(props: {
         ipcRenderer.on("autoUpdater", onDownloadProgress);
 
         return ipcRenderer.off("autoUpdater", onDownloadProgress);
-    }, [])
+    }, []);
 
     return (
         <div className={`Aligner ${props.className || "full-size"} `}>
-            <div className="Aligner-item Aligner-item--top">
-            </div>
+            <div className="Aligner-item Aligner-item--top"></div>
             <div className="Aligner-item">
                 <div className="has-text-centered">
                     <ReactLoading
@@ -75,12 +79,14 @@ export default function Loading(props: {
                         height={props.size}
                         width={props.size}
                     />
-                    {downloading &&  <div>
-                    Fetching update. Please wait.
-                    <br />
-                    {progress.percent}%  {formatBytes(progress.bytesPerSecond)}/sec
-                    </div> }
-                  
+                    {downloading && (
+                        <div>
+                            Fetching update. Please wait.
+                            <br />
+                            {progress.percent}%{" "}
+                            {formatBytes(progress.bytesPerSecond)}/sec
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="Aligner-item Aligner-item--bottom has-text-centered"></div>

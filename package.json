@@ -50,7 +50,6 @@
         ],
         "afterSign": ".erb/scripts/Notarize.js",
         "mac": {
-            "target": ["dmg"],
             "type": "distribution",
             "hardenedRuntime": true,
             "entitlements": "assets/entitlements.mac.plist",

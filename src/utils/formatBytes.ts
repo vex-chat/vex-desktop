@@ -1,4 +1,3 @@
-
 export const formatBytes = (bytes: number, decimals = 2) => {
     if (bytes === 0) return "0 Bytes";
 
