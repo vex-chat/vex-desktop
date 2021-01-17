@@ -148,6 +148,11 @@ a:hover {
 
 a.dropdown-item:hover {
     background-color: var(--theme_color_2);
+    color: var(--text_color_0);
+}
+
+a.dropdown-item {
+    color: var(--text_color_0);
 }
 
 .add-user-icon:hover {
