@@ -21,6 +21,7 @@
         "start": "node ./.erb/scripts/CheckPortInUse.js && cross-env yarn start:renderer",
         "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
         "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/webpack/renderer.js",
+        "start:packaged": "./release/mac/vex desktop.app/Contents/MacOS/vex desktop",
         "test": "npx jest",
         "prettier:node": "npx prettier '**/*.{js,jsx,ts,tsx,md}' --ignore-path .gitignore",
         "prettier": "npx prettier '**/*.{js,jsx,ts,tsx,md}' --ignore-path .gitignore --write",
@@ -238,5 +239,5 @@
             "pre-commit": "yarn syncVersions; git add ./src/package.json package.json; lint-staged"
         }
     },
-    "version": "0.9.29"
+    "version": "0.9.30"
 }
