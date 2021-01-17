@@ -236,7 +236,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn syncVersions; lint-staged"
+            "pre-commit": "yarn syncVersions; git add ./src/package.json package.json; lint-staged"
         }
     },
     "version": "0.9.11"
