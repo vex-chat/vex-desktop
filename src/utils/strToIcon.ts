@@ -7,6 +7,6 @@ export function strToIcon(s: string): string {
         .replace(/\s/g, "");
 
     return getAssetPath(
-        `/defaultAvatars/${str.substring(0, 2).toLowerCase()}.png`
+        `/defaultAvatars/${str.substring(0, 2).toUpperCase()}.png`
     );
 }
