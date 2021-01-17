@@ -24,7 +24,8 @@
         "test": "npx jest",
         "prettier:node": "npx prettier '**/*.{js,jsx,ts,tsx,md}' --ignore-path .gitignore",
         "prettier": "npx prettier '**/*.{js,jsx,ts,tsx,md}' --ignore-path .gitignore --write",
-        "prettier-ci": "concurrently \"yarn prettier:node -c\" \"yarn lint:ci\""
+        "prettier-ci": "concurrently \"yarn prettier:node -c\" \"yarn lint:ci\"",
+        "syncVersions": "node ./scripts/syncVersions.js"
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx}": [
@@ -235,7 +236,8 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged"
+            "pre-commit": "yarn syncVersions; lint-staged"
         }
-    }
+    },
+    "version": "0.9.11"
 }
