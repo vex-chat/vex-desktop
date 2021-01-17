@@ -26,7 +26,6 @@ export default function Base(): JSX.Element {
     const history = useHistory();
 
     useEffect(() => {
-        ipcRenderer.emit("autoUpdater", { status: "available" });
         const interval = setInterval(() => {
             setLastFetch(Date.now());
         }, 1000 * 60 * 60);
@@ -69,18 +68,21 @@ export default function Base(): JSX.Element {
     }, []);
 
     useMemo(async () => {
-        try {
-            const res = await axios.get(
-                "https://api.github.com/repos/vex-chat/vex-desktop/releases"
-            );
-            const latest = res.data[0];
-            const { tag_name } = latest;
-            if (semver.lt(version, tag_name)) {
-                console.log("Newer version available.");
-                setModalOpen(true);
+        if (process.platform !== "win32") {
+            try {
+                const res = await axios.get(
+                    "https://api.github.com/repos/vex-chat/vex-desktop/releases"
+                );
+                const latest = res.data[0];    
+                const { tag_name } = latest;
+    
+                if (semver.lt(version, tag_name)) {
+                    console.log("Newer version available.");
+                    setModalOpen(true);
+                }
+            } catch (err) {
+                console.warn(err.toString());
             }
-        } catch (err) {
-            console.warn(err.toString());
         }
     }, [lastFetch]);
     return (
