@@ -5,10 +5,13 @@ import Loading from "../components/Loading";
 import MessagingBar from "../components/MessagingBar";
 import MessagingPane from "../components/MessagingPane";
 import { ServerBar } from "../components/ServerBar";
+import { UpdateIndicator } from "../components/UpdateIndicator";
 import { UserMenu } from "../components/UserMenu";
 import { selectApp } from "../reducers/app";
 
-export default function Messaging(): JSX.Element {
+export default function Messaging(props: {
+    updateAvailable: boolean;
+}): JSX.Element {
     const app = useSelector(selectApp);
 
     if (app.initialLoad) {
@@ -17,6 +20,7 @@ export default function Messaging(): JSX.Element {
 
     return (
         <Fragment>
+            {props.updateAvailable && <UpdateIndicator />}
             <ServerBar />
             <MessagingBar />
             <MessagingPane />

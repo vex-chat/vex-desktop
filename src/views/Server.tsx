@@ -13,6 +13,7 @@ import { AddUser } from "../components/ServerAddUser";
 import { ServerBar } from "../components/ServerBar";
 import { ServerPane } from "../components/ServerPane";
 import { ServerSettings } from "../components/ServerSettings";
+import { UpdateIndicator } from "../components/UpdateIndicator";
 import { UserMenu } from "../components/UserMenu";
 import { routes } from "../constants/routes";
 import { selectChannels } from "../reducers/channels";
@@ -20,7 +21,7 @@ import { push as pushHistoryStack } from "../reducers/historyStacks";
 import { selectOnlineList } from "../reducers/onlineLists";
 import { selectServers } from "../reducers/servers";
 
-export function Server(): JSX.Element {
+export function Server(props: { updateAvailable: boolean }): JSX.Element {
     const params = useParams<{
         serverID: string;
         channelID: string;
@@ -59,6 +60,7 @@ export function Server(): JSX.Element {
 
     return (
         <div>
+            {props.updateAvailable && <UpdateIndicator className="server" />}
             <ServerBar />
             <ChannelBar name={server.name} serverID={serverID} />
             <UserMenu />

@@ -1,11 +1,14 @@
+import axios from "axios";
 import { ipcRenderer } from "electron";
 import log from "electron-log";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Route, Switch, useHistory } from "react-router-dom";
+import semver from "semver";
 
 import Loading from "../components/Loading";
 import { TitleBar } from "../components/TitleBar";
 import { routes } from "../constants/routes";
+import { version as currentVersion } from "../package.json";
 
 import App from "./App";
 import { ClientLauncher } from "./ClientLauncher";
@@ -39,6 +42,17 @@ type updateStatus = {
 export default function Base(): JSX.Element {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const history = useHistory();
+    const [lastFetched, setLastFetched] = useState(Date.now);
+    const [updateAvailable, setUpdateAvailable] = useState(false);
+
+    useMemo(async () => {
+        const res = await axios.get(
+            "https://api.github.com/repos/vex-chat/vex-desktop/releases/latest"
+        );
+        if (semver.gt(res.data.tag_name, currentVersion)) {
+            setUpdateAvailable(true);
+        }
+    }, [lastFetched]);
 
     const onUpdateStatus = (_event: Event, data: updateStatus) => {
         log.info("ON UPDATE STATUS REACHED");
@@ -84,20 +98,31 @@ export default function Base(): JSX.Element {
         };
     });
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setLastFetched(Date.now());
+        }, 1000 * 60 * 60);
+        return () => {
+            clearInterval(interval);
+        };
+    });
+
     return (
         <App>
             <TitleBar />
             <Switch>
                 <Route
                     path={routes.MESSAGING + "/:userID?/:page?/:sessionID?"}
-                    render={() => <Messaging />}
+                    render={() => (
+                        <Messaging updateAvailable={updateAvailable} />
+                    )}
                 />
                 <Route
                     path={
                         routes.SERVERS +
                         "/:serverID?/:pageType/:channelID?/:channelPage?"
                     }
-                    render={() => <Server />}
+                    render={() => <Server updateAvailable={updateAvailable} />}
                 />
                 <Route path={routes.REGISTER} render={() => <Register />} />
                 <Route path={routes.LAUNCH} render={() => <ClientLauncher />} />

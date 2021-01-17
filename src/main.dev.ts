@@ -6,7 +6,6 @@
  * When running `yarn build` or `yarn build-main`, this file is compiled to
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
-import { sleep } from "@extrahash/sleep";
 import { app, BrowserWindow, shell } from "electron";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
@@ -142,7 +141,7 @@ app.on("window-all-closed", () => {
 
 app.whenReady().then(createWindow).catch(console.log);
 
-app.on("ready", async () => {
+app.on("ready", () => {
     autoUpdater.checkForUpdatesAndNotify();
 });
 

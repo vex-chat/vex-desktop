@@ -933,8 +933,8 @@ $register-box-base: 330px;
     width: $register-box-base * $phi;
 }
 
-.update-indicator {
-    color: var(--text_color_0);
+.update-indicator.server {
+    color: $blue;
     font-size: 32px;
     position: absolute;
     top: 22px;
@@ -942,8 +942,18 @@ $register-box-base: 330px;
     z-index: 5;
 }
 
+.update-indicator {
+    color: $blue;
+    font-size: 32px;
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    z-index: 5;
+}
+
 .update-indicator:hover {
-    opacity: 80%;
+    filter: alpha(opacity=80);
+    opacity: 0.8;
     cursor: pointer;
 }
 
