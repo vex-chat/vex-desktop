@@ -1,13 +1,10 @@
-import axios from "axios";
-import { ipcRenderer, shell } from "electron";
-import { useEffect, useMemo, useState } from "react";
+import { ipcRenderer } from "electron";
+import { useMemo } from "react";
 import { Route, Switch, useHistory } from "react-router-dom";
-import semver from "semver";
 
 import Loading from "../components/Loading";
 import { TitleBar } from "../components/TitleBar";
 import { routes } from "../constants/routes";
-import { version } from "../package.json";
 
 import App from "./App";
 import { ClientLauncher } from "./ClientLauncher";
@@ -20,7 +17,6 @@ import Register from "./Register";
 import { Server } from "./Server";
 
 export default function Base(): JSX.Element {
-    const [modalOpen, setModalOpen] = useState(false);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const history = useHistory();
 
