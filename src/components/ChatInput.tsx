@@ -185,7 +185,6 @@ export function ChatInput(props: {
                     emojiResults[0].id === match.replace(/:/g, "")
                 ) {
                     const emoji = emojiResults[0];
-                    console.log(match);
                     selectEmoji(emoji, match);
                 }
             }
