@@ -26,38 +26,6 @@ autoUpdater.logger = log;
 
 log.info("App starting...");
 
-autoUpdater.on("checking-for-update", () => {
-    log.info("Checking for update...");
-});
-autoUpdater.on("update-available", () => {
-    log.info("Update available.");
-});
-autoUpdater.on("update-not-available", () => {
-    log.info("Update not available.");
-});
-autoUpdater.on("error", (err: Error) => {
-    log.info(`Error in auto-updater ${err.toString()}`);
-});
-autoUpdater.on(
-    "download-progress",
-    (progressObj: {
-        bytesPerSecond: number;
-        percent: number;
-        transferred: number;
-        total: number;
-    }) => {
-        let log_message = `Download speed: ${progressObj.bytesPerSecond}`;
-        log_message = `${log_message} - Downloaded ${progressObj.percent}%`;
-        log_message = `${log_message}(${progressObj.transferred}/${progressObj.total})`;
-        log.info(log_message);
-    }
-);
-
-autoUpdater.on("update-downloaded", () => {
-    log.info("Update downloaded, attempting install.");
-    autoUpdater.quitAndInstall();
-});
-
 let mainWindow: BrowserWindow | null = null;
 
 if (process.env.NODE_ENV === "production") {
@@ -125,7 +93,7 @@ const createWindow = async () => {
     );
     autoUpdater.on("update-downloaded", () => {
         mainWindow?.webContents.send("autoUpdater", { status: "downloaded" });
-        autoUpdater.quitAndInstall();
+        autoUpdater.quitAndInstall(true, true);
     });
 
     // @TODO: Use 'ready-to-show' event
