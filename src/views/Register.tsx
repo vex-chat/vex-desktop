@@ -98,196 +98,205 @@ export default function Register(): JSX.Element {
 
     return (
         <VerticalAligner>
-            <div className="box login-register-box">
-                {errorText !== "" && (
-                    <span className="help has-text-white has-text-bold notification is-danger has-delete">
-                        {errorText}
-                    </span>
-                )}
+            <div className="login-register-box-wrapper">
+                <div className="box register-box">
+                    {errorText !== "" && (
+                        <span className="help has-text-white has-text-bold notification is-danger has-delete">
+                            {errorText}
+                        </span>
+                    )}
 
-                <div className="field">
-                    <label className="label is-small">
-                        Username: &nbsp;&nbsp;
-                        <a
-                            onClick={async () => {
-                                setErrorText("");
-                                setTaken(false);
-                                setValid(false);
-
-                                const username = Client.randomUsername();
-
-                                setUsername(username);
-
-                                const tempClient = await Client.create(
-                                    undefined,
-                                    {
-                                        dbFolder,
-                                    }
-                                );
-
-                                const [
-                                    serverResults,
-                                    err,
-                                ] = await tempClient.users.retrieve(username);
-
-                                if (
-                                    err &&
-                                    err.response &&
-                                    err.response.status === 200
-                                ) {
-                                    setTaken(true);
-                                }
-
-                                if (
-                                    username.length > 2 &&
-                                    username.length < 20
-                                ) {
-                                    setValid(true);
-                                } else {
-                                    setValid(false);
-                                }
-
-                                if (serverResults) {
-                                    setTaken(true);
-                                } else {
+                    <div className="field">
+                        <label className="label is-small">
+                            Username: &nbsp;&nbsp;
+                            <a
+                                onClick={async () => {
+                                    setErrorText("");
                                     setTaken(false);
-                                }
-                            }}
-                        >
-                            random
-                        </a>
-                        &nbsp;&nbsp;
-                        {taken && (
-                            <span className="has-text-danger">
-                                Username is taken!
+                                    setValid(false);
+
+                                    const username = Client.randomUsername();
+
+                                    setUsername(username);
+
+                                    const tempClient = await Client.create(
+                                        undefined,
+                                        {
+                                            dbFolder,
+                                        }
+                                    );
+
+                                    const [
+                                        serverResults,
+                                        err,
+                                    ] = await tempClient.users.retrieve(
+                                        username
+                                    );
+
+                                    if (
+                                        err &&
+                                        err.response &&
+                                        err.response.status === 200
+                                    ) {
+                                        setTaken(true);
+                                    }
+
+                                    if (
+                                        username.length > 2 &&
+                                        username.length < 20
+                                    ) {
+                                        setValid(true);
+                                    } else {
+                                        setValid(false);
+                                    }
+
+                                    if (serverResults) {
+                                        setTaken(true);
+                                    } else {
+                                        setTaken(false);
+                                    }
+                                }}
+                            >
+                                random
+                            </a>
+                            &nbsp;&nbsp;
+                            {taken && (
+                                <span className="has-text-danger">
+                                    Username is taken!
+                                </span>
+                            )}
+                            <br />
+                        </label>
+                        <div className="control input-wrapper has-icons-left has-icons-right">
+                            <input
+                                className="servername-input input"
+                                type="username"
+                                value={username}
+                                onKeyDown={(event) => {
+                                    if (event.key === "Enter") {
+                                        registerUser();
+                                    }
+                                }}
+                                onChange={async (event) => {
+                                    setErrorText("");
+                                    setTaken(false);
+                                    setValid(false);
+
+                                    setUsername(event.target.value);
+
+                                    if (
+                                        event.target.value.length > 2 &&
+                                        event.target.value.length < 20
+                                    ) {
+                                        setValid(true);
+                                    } else {
+                                        setValid(false);
+                                    }
+
+                                    const tempClient = await Client.create(
+                                        undefined,
+                                        {
+                                            dbFolder,
+                                        }
+                                    );
+                                    const [
+                                        user,
+                                    ] = await tempClient.users.retrieve(
+                                        event.target.value
+                                    );
+
+                                    if (user !== null) {
+                                        setTaken(true);
+                                    }
+                                }}
+                                placeholder={Client.randomUsername()}
+                            />
+                            <span className="icon is-small is-left">
+                                <FontAwesomeIcon icon={faUserAlt} />
                             </span>
-                        )}
-                        <br />
-                    </label>
-                    <div className="control input-wrapper has-icons-left has-icons-right">
+                            <span
+                                className={`icon is-small is-right${
+                                    taken
+                                        ? " has-text-danger"
+                                        : valid
+                                        ? " has-text-success"
+                                        : ""
+                                }`}
+                            >
+                                <FontAwesomeIcon
+                                    icon={taken ? faTimes : faCheck}
+                                />
+                            </span>
+                        </div>
+                    </div>
+                    <div className="field">
+                        <label className="label is-small">Password:</label>
                         <input
-                            className="servername-input input"
-                            type="username"
-                            value={username}
+                            className="password-input input"
+                            type="password"
+                            value={password}
                             onKeyDown={(event) => {
                                 if (event.key === "Enter") {
                                     registerUser();
                                 }
                             }}
-                            onChange={async (event) => {
-                                setErrorText("");
-                                setTaken(false);
-                                setValid(false);
-
-                                setUsername(event.target.value);
-
-                                if (
-                                    event.target.value.length > 2 &&
-                                    event.target.value.length < 20
-                                ) {
-                                    setValid(true);
-                                } else {
-                                    setValid(false);
-                                }
-
-                                const tempClient = await Client.create(
-                                    undefined,
-                                    {
-                                        dbFolder,
-                                    }
-                                );
-                                const [user] = await tempClient.users.retrieve(
-                                    event.target.value
-                                );
-
-                                if (user !== null) {
-                                    setTaken(true);
-                                }
+                            onChange={(event) => {
+                                setPassword(event.target.value);
                             }}
-                            placeholder={Client.randomUsername()}
                         />
-                        <span className="icon is-small is-left">
-                            <FontAwesomeIcon icon={faUserAlt} />
-                        </span>
-                        <span
-                            className={`icon is-small is-right${
-                                taken
-                                    ? " has-text-danger"
-                                    : valid
-                                    ? " has-text-success"
-                                    : ""
-                            }`}
-                        >
-                            <FontAwesomeIcon icon={taken ? faTimes : faCheck} />
-                        </span>
                     </div>
-                </div>
-                <div className="field">
-                    <label className="label is-small">Password:</label>
-                    <input
-                        className="password-input input"
-                        type="password"
-                        value={password}
-                        onKeyDown={(event) => {
-                            if (event.key === "Enter") {
-                                registerUser();
-                            }
-                        }}
-                        onChange={(event) => {
-                            setPassword(event.target.value);
-                        }}
-                    />
-                </div>
-                <br />
-                <div className="field">
-                    <label className="label is-small">
-                        Confirm password:{" "}
-                        {password !== passConfirm && (
-                            <span className="has-text-danger">
-                                Does not match!
-                            </span>
-                        )}
-                    </label>
-                    <input
-                        className={`password-input input ${
-                            password !== passConfirm ? "is-danger" : ""
-                        }`}
-                        type="password"
-                        value={passConfirm}
-                        onKeyDown={(event) => {
-                            if (event.key === "Enter") {
-                                registerUser();
-                            }
-                        }}
-                        onChange={(event) => {
-                            setPassConfirm(event.target.value);
-                        }}
-                    />
-                </div>
-
-                <br />
-
-                <div className="field">
-                    <div className="buttons register-form-buttons is-right">
-                        <button
-                            className="button is-plain"
-                            onClick={() => {
-                                history.push(routes.LOGIN);
+                    <br />
+                    <div className="field">
+                        <label className="label is-small">
+                            Confirm password:{" "}
+                            {password !== passConfirm && (
+                                <span className="has-text-danger">
+                                    Does not match!
+                                </span>
+                            )}
+                        </label>
+                        <input
+                            className={`password-input input ${
+                                password !== passConfirm ? "is-danger" : ""
+                            }`}
+                            type="password"
+                            value={passConfirm}
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                    registerUser();
+                                }
                             }}
-                        >
-                            Back
-                        </button>
-                        <button
-                            className={`button is-success${
-                                waiting ? " is-loading" : ""
-                            } `}
-                            disabled={
-                                password !== passConfirm || password.length < 3
-                            }
-                            onClick={registerUser}
-                        >
-                            Chat
-                        </button>
+                            onChange={(event) => {
+                                setPassConfirm(event.target.value);
+                            }}
+                        />
+                    </div>
+
+                    <br />
+
+                    <div className="field">
+                        <div className="buttons register-form-buttons is-right">
+                            <button
+                                className="button is-plain"
+                                onClick={() => {
+                                    history.push(routes.LOGIN);
+                                }}
+                            >
+                                Back
+                            </button>
+                            <button
+                                className={`button is-success${
+                                    waiting ? " is-loading" : ""
+                                } `}
+                                disabled={
+                                    password !== passConfirm ||
+                                    password.length < 3
+                                }
+                                onClick={registerUser}
+                            >
+                                Chat
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

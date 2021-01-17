@@ -7,7 +7,6 @@
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
 import { app, BrowserWindow, shell } from "electron";
-import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import path from "path";
 
@@ -47,7 +46,7 @@ const createWindow = async () => {
         titleBarStyle: "hidden",
         frame: false,
         show: false,
-        width: 1300,
+        width: 1449,
         height: 900,
         icon: getAssetPath("icon.png"),
         webPreferences: {

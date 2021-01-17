@@ -18,6 +18,8 @@ $red: #d50037;
 $theme_base_color: #0a0a0a;
 $theme_text_color: #f5f5f5;
 
+$phi: 1.6180339887498948482;
+
 @import "../node_modules/emoji-mart/css/emoji-mart.css";
 @import "../node_modules/react-h5-audio-player/lib/styles.css";
 
@@ -912,6 +914,19 @@ button {
     top: 32px;
 }
 
+$login-box-base: 250px;
+
+.login-box {
+    height: $login-box-base;
+    width: $login-box-base * $phi;
+}
+
+$register-box-base: 330px;
+.register-box {
+    height: $register-box-base;
+    width: $register-box-base * $phi;
+}
+
 .register-form-buttons {
     margin-left: 0px;
     margin-right: -3px;
@@ -933,10 +948,6 @@ button {
 
 .username-text-32x32 {
     padding-top: 5px;
-}
-
-.login-register-box {
-    min-width: 500px;
 }
 
 .download-icon {
