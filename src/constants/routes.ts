@@ -8,6 +8,7 @@ interface IRoutes {
     CREATE: string;
     LOGIN: string;
     LOGOUT: string;
+    UPDATING: string;
 }
 
 export const routes: IRoutes = {
@@ -20,4 +21,5 @@ export const routes: IRoutes = {
     CREATE: "/create",
     LOGIN: "/login",
     LOGOUT: "/logout",
+    UPDATING: "/updating",
 };

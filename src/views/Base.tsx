@@ -1,9 +1,10 @@
 import axios from "axios";
-import { shell } from "electron";
+import { ipcRenderer, shell } from "electron";
 import { useEffect, useMemo, useState } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
 import semver from "semver";
 
+import Loading from "../components/Loading";
 import { TitleBar } from "../components/TitleBar";
 import { routes } from "../constants/routes";
 import { version } from "../package.json";
@@ -18,13 +19,16 @@ import Messaging from "./Messaging";
 import Register from "./Register";
 import { Server } from "./Server";
 
+
 export default function Base(): JSX.Element {
     const [modalOpen, setModalOpen] = useState(false);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [release, setRelease] = useState({} as Record<string, any>);
     const [lastFetch, setLastFetch] = useState(Date.now());
+    const history = useHistory();
 
     useEffect(() => {
+        ipcRenderer.emit("autoUpdater", { status: "available" });
         const interval = setInterval(() => {
             setLastFetch(Date.now());
         }, 1000 * 60 * 60);
@@ -32,6 +36,33 @@ export default function Base(): JSX.Element {
             clearInterval(interval);
         };
     });
+
+    useMemo(() => {
+        type UpdateDownloadProgress = {
+            bytesPerSecond: number;
+            percent: number;
+            transferred: number;
+            total: number;
+        }
+        
+        type updateStatus = {
+            status: "checking" | "available" | "current" | "error" | "progress" | "downloaded";
+            message?: string;
+            data?: UpdateDownloadProgress;
+        }
+        
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ipcRenderer.on("autoUpdater", (data: any) => {
+            const { status } = data as updateStatus;
+            switch(status) {
+                case "available":
+                    history.push(routes.UPDATING);
+                    break;
+                default:
+                    break;
+            }
+        })
+    }, [])
 
     useMemo(async () => {
         try {
@@ -76,6 +107,7 @@ export default function Base(): JSX.Element {
                 <Route path={routes.LOGIN} render={() => <Login />} />
                 <Route path={routes.LOGOUT} render={() => <Logout />} />
                 <Route exact path={routes.HOME} render={() => <Home />} />
+                <Route path={routes.UPDATING} render={() =>  <Loading size={256} animation={"cylon"} />} />
             </Switch>
 
             <div className={`modal ${modalOpen ? "is-active" : ""}`}>

@@ -20,11 +20,6 @@ export const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
 };
 
-autoUpdater.on("update-downloaded", () => {
-    console.log("Update downloaded");
-    autoUpdater.quitAndInstall();
-});
-
 let mainWindow: BrowserWindow | null = null;
 
 if (process.env.NODE_ENV === "production") {
@@ -56,6 +51,35 @@ const createWindow = async () => {
     });
 
     // DEFINE EVENT HANDLERS BEFORE LOADING THE APP
+
+    // AUTO UPDATER EVENTS
+    autoUpdater.on('checking-for-update', () => {
+        mainWindow?.webContents.send("autoUpdater", { status: "checking" })
+    })
+    autoUpdater.on('update-available', () => {
+        mainWindow?.webContents.send("autoUpdater", { status: "available" })
+    })
+    autoUpdater.on('update-not-available', () => {
+        mainWindow?.webContents.send("autoUpdater", { status: "current" })
+    })
+    autoUpdater.on('error', (err) => {
+        mainWindow?.webContents.send("autoUpdater", { status: "error", message: err.toString() })
+    })
+
+    type UpdateDownloadProgress = {
+        bytesPerSecond: number;
+        percent: number;
+        transferred: number;
+        total: number;
+    }
+
+    autoUpdater.on('download-progress', (progressObj: UpdateDownloadProgress) => {
+        mainWindow?.webContents.send("autoUpdater", { status: "progress", data: progressObj })
+    })
+    autoUpdater.on("update-downloaded", () => {
+        mainWindow?.webContents.send("autoUpdater", { status: "downloaded" })
+        autoUpdater.quitAndInstall();
+    });
 
     // @TODO: Use 'ready-to-show' event
     //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
