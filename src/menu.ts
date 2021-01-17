@@ -134,7 +134,7 @@ export default class MenuBuilder {
                     },
                 },
                 {
-                    label: "Relaunch",
+                    label: "Logout",
                     accelerator: "Command+F12",
                     click: this.sendRelaunch.bind(this),
                 },

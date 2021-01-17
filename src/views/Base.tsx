@@ -22,17 +22,7 @@ import { Server } from "./Server";
 export default function Base(): JSX.Element {
     const [modalOpen, setModalOpen] = useState(false);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [lastFetch, setLastFetch] = useState(Date.now());
     const history = useHistory();
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setLastFetch(Date.now());
-        }, 1000 * 60 * 60);
-        return () => {
-            clearInterval(interval);
-        };
-    });
 
     useMemo(() => {
         type UpdateDownloadProgress = {
@@ -67,24 +57,6 @@ export default function Base(): JSX.Element {
         });
     }, []);
 
-    useMemo(async () => {
-        if (process.platform !== "win32") {
-            try {
-                const res = await axios.get(
-                    "https://api.github.com/repos/vex-chat/vex-desktop/releases"
-                );
-                const latest = res.data[0];    
-                const { tag_name } = latest;
-    
-                if (semver.lt(version, tag_name)) {
-                    console.log("Newer version available.");
-                    setModalOpen(true);
-                }
-            } catch (err) {
-                console.warn(err.toString());
-            }
-        }
-    }, [lastFetch]);
     return (
         <App>
             <TitleBar />
@@ -114,54 +86,6 @@ export default function Base(): JSX.Element {
                     render={() => <Loading size={256} animation={"cylon"} />}
                 />
             </Switch>
-
-            <div className={`modal ${modalOpen ? "is-active" : ""}`}>
-                <div
-                    className="modal-background"
-                    onClick={() => {
-                        setModalOpen(true);
-                    }}
-                ></div>
-                <div className="modal-content">
-                    <div className="box">
-                        <h1 className="title">Newer Version Available</h1>
-                        <p>
-                            There&apos;s a new version of vex available. Would
-                            you like to go to the release page?
-                        </p>
-                        <br />
-                        <br />
-                        <div className="buttons is-right">
-                            <div
-                                className="button is-plain"
-                                onClick={() => {
-                                    setModalOpen(false);
-                                }}
-                            >
-                                Not now
-                            </div>
-                            <div
-                                className="button is-success"
-                                onClick={() => {
-                                    setModalOpen(false);
-                                    shell.openExternal(
-                                        "https://vex.chat/download"
-                                    );
-                                }}
-                            >
-                                Download
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button
-                    className="modal-close is-large"
-                    aria-label="close"
-                    onClick={() => {
-                        setModalOpen(false);
-                    }}
-                ></button>
-            </div>
         </App>
     );
 }
