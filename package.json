@@ -90,7 +90,11 @@
             "buildResources": "assets",
             "output": "release"
         },
-        "extraResources": ["./assets/*/**"]
+        "extraResources": ["./assets/*/**"],
+        "publish": {
+            "provider": "github",
+            "releaseType": "release"
+        }
     },
     "repository": {
         "type": "git",
@@ -247,5 +251,5 @@
             "pre-commit": "yarn syncVersions; git add ./src/package.json package.json; lint-staged"
         }
     },
-    "version": "0.10.1"
+    "version": "0.10.2"
 }
