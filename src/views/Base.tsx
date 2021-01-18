@@ -45,10 +45,21 @@ export default function Base(): JSX.Element {
     const [lastFetched, setLastFetched] = useState(Date.now);
     const [updateAvailable, setUpdateAvailable] = useState(false);
 
+    const openInvite = (url: string) => {
+        console.log(url);
+    };
+
     useEffect(() => {
-        ipcRenderer.on("open-url", (_event, data) => {
-            console.log(data);
-        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const callback = (_event: any, data: { url: string }) => {
+            openInvite(data.url);
+        };
+
+        ipcRenderer.on("open-url", callback);
+
+        return () => {
+            ipcRenderer.off("open-url", callback);
+        };
     });
 
     useMemo(async () => {
