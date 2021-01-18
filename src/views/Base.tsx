@@ -45,6 +45,12 @@ export default function Base(): JSX.Element {
     const [lastFetched, setLastFetched] = useState(Date.now);
     const [updateAvailable, setUpdateAvailable] = useState(false);
 
+    useEffect(() => {
+        ipcRenderer.on("open-url", (_event, data) => {
+            console.log(data);
+        });
+    });
+
     useMemo(async () => {
         const res = await axios.get(
             "https://api.github.com/repos/vex-chat/vex-desktop/releases/latest"

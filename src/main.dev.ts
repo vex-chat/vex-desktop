@@ -144,6 +144,7 @@ app.whenReady().then(createWindow).catch(console.log);
 
 let tray;
 app.on("ready", async () => {
+    log.info("App is ready.");
     tray = new Tray(getAssetPath("icon.iconset/icon_16x16@2x.png"));
     while (!mainWindow) {
         await sleep(100);
@@ -151,7 +152,13 @@ app.on("ready", async () => {
     const menuBuilder = new MenuBuilder(mainWindow);
     const menu = menuBuilder.buildMenu(false);
     tray.setContextMenu(menu);
+    log.info("Created context menu.");
     autoUpdater.checkForUpdatesAndNotify();
+});
+
+app.on("open-url", (event, url) => {
+    log.info(`booba ${url}`);
+    mainWindow?.webContents.send("open-url", { url });
 });
 
 app.on("activate", () => {
