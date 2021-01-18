@@ -6,7 +6,8 @@
  * When running `yarn build` or `yarn build-main`, this file is compiled to
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
-import { app, BrowserWindow, shell } from "electron";
+import { sleep } from "@extrahash/sleep";
+import { app, BrowserWindow, shell, Tray } from "electron";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import path from "path";
@@ -141,7 +142,16 @@ app.on("window-all-closed", () => {
 
 app.whenReady().then(createWindow).catch(console.log);
 
-app.on("ready", () => {
+let tray;
+app.on("ready", async () => {
+    tray = new Tray(getAssetPath("icon.iconset/icon_16x16@2x.png"));
+    while (!mainWindow) {
+        await sleep(100);
+    }
+    const menuBuilder = new MenuBuilder(mainWindow);
+    const menu = menuBuilder.buildMenu(false);
+    log.info(menu);
+    tray.setContextMenu(menu);
     autoUpdater.checkForUpdatesAndNotify();
 });
 

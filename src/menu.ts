@@ -13,7 +13,7 @@ export default class MenuBuilder {
         this.mainWindow = mainWindow;
     }
 
-    buildMenu(): Menu {
+    buildMenu(set = true): Menu {
         if (
             process.env.NODE_ENV === "development" ||
             process.env.DEBUG_PROD === "true"
@@ -27,7 +27,9 @@ export default class MenuBuilder {
                 : this.buildDefaultTemplate();
 
         const menu = Menu.buildFromTemplate(template);
-        Menu.setApplicationMenu(menu);
+        if (set) {
+            Menu.setApplicationMenu(menu);
+        }
 
         return menu;
     }
