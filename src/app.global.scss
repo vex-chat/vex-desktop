@@ -467,19 +467,6 @@ span {
     color: var(--text_color_0);
 }
 
-#root
-    > div.pane.direct-messaging
-    > div.pane-screen-wrapper
-    > div:nth-child(4)
-    > div
-    > ul
-    > li
-    > div
-    > div:nth-child(3)
-    > div:nth-child(6) {
-    display: none !important;
-}
-
 .hljs {
     background-color: var(--theme_color_1) !important;
     color: var(--text_color_0);

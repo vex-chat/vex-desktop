@@ -1,6 +1,6 @@
 import { remote } from "electron";
 import fs from "fs";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { TwitterPicker } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -15,6 +15,26 @@ import Loading from "./Loading";
 export default function Settings(): JSX.Element {
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        // this is to hide the unwanted # before color input tag
+        // there might be a better solution
+        const colorPicker = document.getElementsByClassName("twitter-picker");
+        console.log(colorPicker);
+        if (colorPicker.length == 0) {
+            return;
+        }
+        const children = colorPicker[0].children;
+
+        for (let i = 0; i < children.length; i++) {
+            for (let j = 0; j < children[i].children.length; j++) {
+                if (children[i].children[j].textContent == "#") {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (children[i].children[j] as any).style.display = "none";
+                }
+            }
+        }
+    });
 
     const [uploadingAvatar, setUploadingAvatar] = useState(false);
 

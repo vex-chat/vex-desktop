@@ -1,6 +1,9 @@
 import type { IServerParams } from "~Types";
 
-import { faArrowCircleDown, faStar } from "@fortawesome/free-solid-svg-icons";
+import {
+    faArrowAltCircleDown,
+    faStar,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -102,7 +105,7 @@ export function ServerPane(): JSX.Element {
             {!scrollLock && (
                 <div className="conversation-fab">
                     <FontAwesomeIcon
-                        icon={faArrowCircleDown}
+                        icon={faArrowAltCircleDown}
                         onClick={() => {
                             scrollToBottom();
                             setScrollLock(true);

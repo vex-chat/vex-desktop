@@ -102,6 +102,12 @@ export default function Register(): JSX.Element {
                 <div className="box register-box">
                     {errorText !== "" && (
                         <span className="help has-text-white has-text-bold notification is-danger has-delete">
+                            <button
+                                className="delete"
+                                onClick={() => {
+                                    setErrorText("");
+                                }}
+                            />
                             {errorText}
                         </span>
                     )}

@@ -77,7 +77,16 @@ export const Login: FunctionComponent = memo(() => {
             <div className="login-register-box-wrapper">
                 <div className="box login-box">
                     {errText !== "" && (
-                        <div className="notification is-danger">{errText}</div>
+                        <div className="notification is-danger">
+                            {" "}
+                            <button
+                                className="delete"
+                                onClick={() => {
+                                    setErrText("");
+                                }}
+                            />{" "}
+                            {errText}
+                        </div>
                     )}
                     <label className="label is-small">Username:</label>
                     <div className="control input-wrapper has-icons-left has-icons-right">
