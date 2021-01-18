@@ -79,7 +79,6 @@ export default function Base(): JSX.Element {
         if (semver.gt(res.data.tag_name, currentVersion)) {
             setUpdateAvailable(true);
         }
-        openInvite("vex://f5f69e97-5dc0-4f8b-805a-7f95f3a8d679");
     }, [lastFetched]);
 
     const onUpdateStatus = (_event: Event, data: updateStatus) => {
