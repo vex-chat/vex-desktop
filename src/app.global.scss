@@ -923,14 +923,14 @@ button {
 $login-box-base: 250px;
 
 .login-box {
-    height: $login-box-base;
-    width: $login-box-base * $phi;
+    min-height: $login-box-base;
+    min-width: $login-box-base * $phi;
 }
 
 $register-box-base: 330px;
 .register-box {
-    height: $register-box-base;
-    width: $register-box-base * $phi;
+    min-height: $register-box-base;
+    min-width: $register-box-base * $phi;
 }
 
 .update-indicator.server {
