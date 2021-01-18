@@ -156,9 +156,12 @@ app.on("ready", async () => {
     autoUpdater.checkForUpdatesAndNotify();
 });
 
-app.on("open-url", (event, url) => {
-    log.info(`booba ${url}`);
-    mainWindow?.webContents.send("open-url", { url });
+app.on("open-url", async (_event, url) => {
+    // in case user hasn't opened app yet
+    while (!mainWindow) {
+        await sleep(100);
+    }
+    mainWindow.webContents.send("open-url", { url });
 });
 
 app.on("activate", () => {

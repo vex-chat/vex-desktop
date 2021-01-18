@@ -44,9 +44,21 @@ export default function Base(): JSX.Element {
     const history = useHistory();
     const [lastFetched, setLastFetched] = useState(Date.now);
     const [updateAvailable, setUpdateAvailable] = useState(false);
+    const [modalContents, setModalContents] = useState(
+        null as JSX.Element | null
+    );
 
     const openInvite = (url: string) => {
         console.log(url);
+        setModalContents(
+            <div>
+                <h1 className="title">Invite Opened</h1>
+                <p>
+                    You&apos;ve clicked on an invitation to [SERVER_NAME]. Would
+                    you like to join?
+                </p>
+            </div>
+        );
     };
 
     useEffect(() => {
@@ -54,9 +66,7 @@ export default function Base(): JSX.Element {
         const callback = (_event: any, data: { url: string }) => {
             openInvite(data.url);
         };
-
         ipcRenderer.on("open-url", callback);
-
         return () => {
             ipcRenderer.off("open-url", callback);
         };
@@ -69,23 +79,18 @@ export default function Base(): JSX.Element {
         if (semver.gt(res.data.tag_name, currentVersion)) {
             setUpdateAvailable(true);
         }
+        openInvite("vex://f5f69e97-5dc0-4f8b-805a-7f95f3a8d679");
     }, [lastFetched]);
 
     const onUpdateStatus = (_event: Event, data: updateStatus) => {
-        log.info("ON UPDATE STATUS REACHED");
-        log.info("data", data);
         const { status } = data;
         switch (status) {
             case "checking":
-                log.info("Checking for updates.");
                 break;
             case "current":
-                log.info("We are on current version.");
                 break;
             case "error":
-                log.info("Error fetching update data.");
                 log.error(data);
-                log.info("We are on current version.");
                 break;
             case "available":
                 log.info("Update available.");
@@ -98,7 +103,6 @@ export default function Base(): JSX.Element {
                 if (!history.location.pathname.includes(routes.UPDATING)) {
                     history.push(routes.UPDATING);
                 }
-                log.info("progress", data);
                 break;
             default:
                 log.info(`updater: Don't know how to ${status as string}`);
@@ -127,6 +131,18 @@ export default function Base(): JSX.Element {
     return (
         <App>
             <TitleBar />
+            {modalContents !== null && (
+                <Modal
+                    close={() => {
+                        setModalContents(null);
+                    }}
+                    active={true}
+                    acceptText={"Join"}
+                    cancelText={"No"}
+                >
+                    {modalContents}
+                </Modal>
+            )}
             <Switch>
                 <Route
                     path={routes.MESSAGING + "/:userID?/:page?/:sessionID?"}
@@ -156,5 +172,65 @@ export default function Base(): JSX.Element {
                 />
             </Switch>
         </App>
+    );
+}
+
+export function Modal(props: {
+    children: JSX.Element;
+    active: boolean;
+    onAccept?: () => void;
+    onCancel?: () => void;
+    showCancel?: boolean;
+    cancelText?: string;
+    acceptText?: string;
+    close: () => void;
+}): JSX.Element {
+    return (
+        <div className={`modal ${props.active ? "is-active" : ""}`}>
+            <div
+                className="modal-background"
+                onClick={() => {
+                    props.close();
+                }}
+            ></div>
+            <div className="modal-content box">
+                {props.children}
+                <br />
+                <div className="buttons is-right">
+                    {!props.showCancel && (
+                        <button
+                            className="button is-plain"
+                            onClick={() => {
+                                if (props.onCancel) {
+                                    props.onCancel();
+                                }
+                                props.close();
+                            }}
+                        >
+                            {props.cancelText || "Cancel"}
+                        </button>
+                    )}
+
+                    <button
+                        className="button is-success"
+                        onClick={() => {
+                            if (props.onAccept) {
+                                props.onAccept();
+                            }
+                            props.close();
+                        }}
+                    >
+                        {props.acceptText || "OK"}
+                    </button>
+                </div>
+            </div>
+            <button
+                className="modal-close is-large"
+                aria-label="close"
+                onClick={() => {
+                    props.close();
+                }}
+            ></button>
+        </div>
     );
 }
