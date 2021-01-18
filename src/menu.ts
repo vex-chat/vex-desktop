@@ -34,7 +34,7 @@ export default class MenuBuilder {
         return menu;
     }
 
-    sendRelaunch(): void {
+    sendLogout(): void {
         this.mainWindow.webContents.send("relaunch");
     }
 
@@ -76,6 +76,11 @@ export default class MenuBuilder {
                 },
                 { label: "Show All", selector: "unhideAllApplications:" },
                 { type: "separator" },
+                {
+                    label: "Logout",
+                    accelerator: "Command+F12",
+                    click: this.sendLogout.bind(this),
+                },
                 {
                     label: "Quit",
                     accelerator: "Command+Q",
@@ -134,11 +139,6 @@ export default class MenuBuilder {
                     click: () => {
                         this.mainWindow.webContents.toggleDevTools();
                     },
-                },
-                {
-                    label: "Logout",
-                    accelerator: "Command+F12",
-                    click: this.sendRelaunch.bind(this),
                 },
             ],
         };
@@ -203,6 +203,11 @@ export default class MenuBuilder {
                             this.mainWindow.close();
                         },
                     },
+                    {
+                        label: "Logout",
+                        accelerator: "Ctrl+F12",
+                        click: this.sendLogout.bind(this),
+                    },
                 ],
             },
             {
@@ -234,11 +239,6 @@ export default class MenuBuilder {
                                       this.mainWindow.webContents.toggleDevTools();
                                   },
                               },
-                              {
-                                  label: "Relaunch",
-                                  accelerator: "Ctrl+F12",
-                                  click: this.sendRelaunch.bind(this),
-                              },
                           ]
                         : [
                               {
@@ -248,6 +248,13 @@ export default class MenuBuilder {
                                       this.mainWindow.setFullScreen(
                                           !this.mainWindow.isFullScreen()
                                       );
+                                  },
+                              },
+                              {
+                                  label: "Toggle &Developer Tools",
+                                  accelerator: "Alt+Ctrl+I",
+                                  click: () => {
+                                      this.mainWindow.webContents.toggleDevTools();
                                   },
                               },
                           ],
