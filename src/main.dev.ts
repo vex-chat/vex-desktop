@@ -150,7 +150,6 @@ app.on("ready", async () => {
     }
     const menuBuilder = new MenuBuilder(mainWindow);
     const menu = menuBuilder.buildMenu(false);
-    log.info(menu);
     tray.setContextMenu(menu);
     autoUpdater.checkForUpdatesAndNotify();
 });
