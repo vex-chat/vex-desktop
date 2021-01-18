@@ -156,6 +156,7 @@ export function MessageBox(props: {
                                     ) => (
                                         <a
                                             className="message-link"
+                                            key={message.nonce}
                                             onClick={() => {
                                                 shell.openExternal(
                                                     decoratedHref
