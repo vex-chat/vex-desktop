@@ -84,7 +84,10 @@ export default function Base(): JSX.Element {
         const res = await axios.get(
             "https://api.github.com/repos/vex-chat/vex-desktop/releases/latest"
         );
-        if (semver.gt(res.data.tag_name, currentVersion)) {
+        if (
+            semver.gt(res.data.tag_name, currentVersion) &&
+            res.data.assets.length === 9
+        ) {
             setUpdateAvailable(true);
         }
     }, [lastFetched]);
