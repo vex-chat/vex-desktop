@@ -2,15 +2,18 @@ import type { Client, IServer } from "@vex-chat/libvex";
 
 import { faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import * as uuid from "uuid";
 
 import { routes } from "../constants/routes";
+import { useQuery } from "../hooks/useQuery";
 import { addChannels } from "../reducers/channels";
 import { setPermissions } from "../reducers/permissions";
 import { addServer } from "../reducers/servers";
+
+import Loading from "./Loading";
 
 export function CreateServer(): JSX.Element {
     const history = useHistory();
@@ -18,6 +21,58 @@ export function CreateServer(): JSX.Element {
 
     const [inputVal, setInputVal] = useState("");
     const [inviteVal, setInviteVal] = useState("");
+
+    const query = useQuery();
+    const urlInvite = query.get("inviteID");
+
+    const [errText, setErrText] = useState("");
+
+    const joinServer = async () => {
+        const inviteID = inviteVal ? inviteVal.split("/").pop() : null;
+        if (inviteID && uuid.validate(inviteID)) {
+            const client = window.vex;
+            try {
+                const permission = await client.invites.redeem(inviteID);
+
+                const serverInfo = await client.servers.retrieveByID(
+                    permission.resourceID
+                );
+                if (!serverInfo) {
+                    console.warn("Server info not found.");
+                    setErrText("Problem with invite link.");
+                    return;
+                }
+
+                const serverChannels = await client.channels.retrieve(
+                    serverInfo.serverID
+                );
+                const newPermissions = await client.permissions.retrieve();
+
+                dispatch(addServer(serverInfo));
+                dispatch(addChannels(serverChannels));
+                dispatch(setPermissions(newPermissions));
+
+                history.push(
+                    routes.SERVERS +
+                        "/" +
+                        permission.resourceID +
+                        "/channels/" +
+                        (serverChannels[0]?.channelID || "")
+                );
+            } catch (err) {
+                console.warn(err.toString());
+            }
+        }
+    };
+
+    useMemo(() => {
+        setInviteVal(urlInvite as string);
+        joinServer();
+    }, [urlInvite, inviteVal]);
+
+    if (urlInvite) {
+        return <Loading size={256} animation={"cylon"} />;
+    }
 
     return (
         <div className="Aligner full-size">
@@ -33,6 +88,10 @@ export function CreateServer(): JSX.Element {
             </div>
             <div className="Aligner-item">
                 <div className="box register-form">
+                    {errText !== "" && (
+                        <div className="notification is-danger">{errText}</div>
+                    )}
+
                     <div className="field">
                         <label className="label is-small">
                             Pick a server name: <br />
@@ -116,58 +175,7 @@ export function CreateServer(): JSX.Element {
                             <div className="buttons register-form-buttons is-right">
                                 <button
                                     className="button is-success is-small"
-                                    onClick={async () => {
-                                        const inviteID = inviteVal
-                                            .split("/")
-                                            .pop();
-                                        if (
-                                            inviteID &&
-                                            uuid.validate(inviteID)
-                                        ) {
-                                            const client = window.vex;
-                                            try {
-                                                const permission = await client.invites.redeem(
-                                                    inviteID
-                                                );
-
-                                                const serverInfo = await client.servers.retrieveByID(
-                                                    permission.resourceID
-                                                );
-                                                if (!serverInfo) {
-                                                    console.warn(
-                                                        "Server info not found."
-                                                    );
-                                                    return;
-                                                }
-
-                                                const serverChannels = await client.channels.retrieve(
-                                                    serverInfo.serverID
-                                                );
-                                                const newPermissions = await client.permissions.retrieve();
-
-                                                dispatch(addServer(serverInfo));
-                                                dispatch(
-                                                    addChannels(serverChannels)
-                                                );
-                                                dispatch(
-                                                    setPermissions(
-                                                        newPermissions
-                                                    )
-                                                );
-
-                                                history.push(
-                                                    routes.SERVERS +
-                                                        "/" +
-                                                        permission.resourceID +
-                                                        "/channels/" +
-                                                        (serverChannels[0]
-                                                            ?.channelID || "")
-                                                );
-                                            } catch (err) {
-                                                console.warn(err.toString());
-                                            }
-                                        }
-                                    }}
+                                    onClick={joinServer}
                                 >
                                     Join
                                 </button>

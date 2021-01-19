@@ -4,6 +4,7 @@ import log from "electron-log";
 import { useEffect, useMemo, useState } from "react";
 import { Route, Switch, useHistory } from "react-router-dom";
 import semver from "semver";
+import * as uuid from "uuid";
 
 import Loading from "../components/Loading";
 import { TitleBar } from "../components/TitleBar";
@@ -49,16 +50,22 @@ export default function Base(): JSX.Element {
     );
 
     const openInvite = (url: string) => {
-        console.log(url);
-        setModalContents(
-            <div>
-                <h1 className="title">Invite Opened</h1>
-                <p>
-                    You&apos;ve clicked on an invitation to [SERVER_NAME]. Would
-                    you like to join?
-                </p>
-            </div>
-        );
+        const inviteID = url.split("/").pop();
+
+        const unauthedRoutes = ["/", "/register", "/login"];
+        if (unauthedRoutes.includes(history.location.pathname)) {
+            console.warn("Clicked invite link, but not logged in.");
+            setModalContents(
+                <p>You need to log in before you can accept an invite.</p>
+            );
+            return;
+        }
+
+        if (!uuid.validate(inviteID || "")) {
+            return;
+        }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        history.push(`${routes.CREATE}/server?inviteID=${inviteID!}`);
     };
 
     useEffect(() => {
@@ -67,6 +74,7 @@ export default function Base(): JSX.Element {
             openInvite(data.url);
         };
         ipcRenderer.on("open-url", callback);
+
         return () => {
             ipcRenderer.off("open-url", callback);
         };
@@ -136,8 +144,8 @@ export default function Base(): JSX.Element {
                         setModalContents(null);
                     }}
                     active={true}
-                    acceptText={"Join"}
-                    cancelText={"No"}
+                    showCancel={false}
+                    acceptText={"OK"}
                 >
                     {modalContents}
                 </Modal>
@@ -196,7 +204,7 @@ export function Modal(props: {
                 {props.children}
                 <br />
                 <div className="buttons is-right">
-                    {!props.showCancel && (
+                    {props.showCancel && (
                         <button
                             className="button is-plain"
                             onClick={() => {
