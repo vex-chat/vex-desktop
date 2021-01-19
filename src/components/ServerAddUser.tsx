@@ -1,9 +1,10 @@
 import type { XTypes } from "@vex-chat/types";
 
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
+import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { format } from "date-fns";
-import { clipboard } from "electron";
+import { clipboard, shell } from "electron";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -36,13 +37,14 @@ export function AddUser(): JSX.Element {
     return (
         <div className="pane-screen-wrapper">
             {links.length > 0 && (
-                <table className="table is-striped is-narrow is-hoverable is-fullwidth">
+                <table className="table is-striped is-narrow is-fullwidth">
                     <thead>
                         <tr>
                             <td />
                             <td>Code</td>
                             <td>Owner</td>
                             <td>Expires</td>
+                            <td />
                         </tr>
                     </thead>
                     <tbody>
@@ -70,6 +72,16 @@ export function AddUser(): JSX.Element {
                                         new Date(link.expiration),
                                         "kk:mm MM/dd/yyyy"
                                     )}
+                                </td>
+                                <td
+                                    className="pointer"
+                                    onClick={() => {
+                                        shell.openExternal(
+                                            `https://vex.chat/invite/${link.inviteID}`
+                                        );
+                                    }}
+                                >
+                                    <FontAwesomeIcon icon={faExternalLinkAlt} />
                                 </td>
                             </tr>
                         ))}

@@ -921,6 +921,15 @@ $register-form-base: 275px;
     min-width: $register-form-base * $phi;
 }
 
+table {
+    background-color: var(--theme_color_0) !important;
+    color: var(--text_color_0) !important;
+}
+
+td {
+    color: var(--text_color_0) !important;
+}
+
 $register-box-base: 330px;
 .register-box {
     min-height: $register-box-base;
