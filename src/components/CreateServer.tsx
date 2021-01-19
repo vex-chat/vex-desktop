@@ -40,6 +40,7 @@ export function CreateServer(): JSX.Element {
                 if (!serverInfo) {
                     console.warn("Server info not found.");
                     setErrText("Problem with invite link.");
+                    history.replace(`${routes.CREATE}/server`)
                     return;
                 }
 
@@ -61,6 +62,8 @@ export function CreateServer(): JSX.Element {
                 );
             } catch (err) {
                 console.warn(err.toString());
+                setErrText(err.toString());
+                history.replace(`${routes.CREATE}/server`);
             }
         }
     };

@@ -112,7 +112,7 @@ export function ClientLauncher(): JSX.Element {
             message.direction === "incoming" &&
             message.authorID !== me.userID
         ) {
-            if (process.platform !== "darwin") {
+            if (process.platform !== "darwin" && process.platform !== "win32") {
                 if (sounds) {
                     await notifyFX.play();
                 }

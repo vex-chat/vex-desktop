@@ -8,11 +8,39 @@
  */
 import { sleep } from "@extrahash/sleep";
 import { app, BrowserWindow, shell, Tray } from "electron";
+import isDev from "electron-is-dev";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import path from "path";
 
 import MenuBuilder from "./menu";
+
+    
+const singleLock = app.requestSingleInstanceLock()
+let mainWindow: BrowserWindow | null = null;
+
+if (!singleLock) {
+    app.quit()
+} else {
+    app.on('second-instance', (_event, argv) => {
+        // Someone tried to run a second instance, we should focus our window.
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) mainWindow.restore()
+            mainWindow.focus()
+        }
+
+        for (const arg of argv) {
+            if (arg.includes("vex://")) {
+                mainWindow?.webContents.send("open-url", { url: arg });
+            }
+        }
+    })
+}
+
+if (!isDev) {
+    app.setAsDefaultProtocolClient("vex");
+}
+
 
 const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, "assets")
@@ -26,8 +54,6 @@ log.transports.file.level = "info";
 autoUpdater.logger = log;
 
 log.info("App starting...");
-
-let mainWindow: BrowserWindow | null = null;
 
 if (process.env.NODE_ENV === "production") {
     // eslint-disable-next-line  @typescript-eslint/no-var-requires
@@ -58,6 +84,7 @@ const createWindow = async () => {
     });
 
     // DEFINE EVENT HANDLERS BEFORE LOADING THE APP
+
 
     // AUTO UPDATER EVENTS
     autoUpdater.on("checking-for-update", () => {

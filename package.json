@@ -81,6 +81,9 @@
         "win": {
             "target": ["nsis"]
         },
+        "nsis": {
+            "perMachine": true
+        },
         "linux": {
             "target": ["AppImage"],
             "category": "Communication"
