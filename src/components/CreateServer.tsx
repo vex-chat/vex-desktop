@@ -40,7 +40,7 @@ export function CreateServer(): JSX.Element {
                 if (!serverInfo) {
                     console.warn("Server info not found.");
                     setErrText("Problem with invite link.");
-                    history.replace(`${routes.CREATE}/server`)
+                    history.replace(`${routes.CREATE}/server`);
                     return;
                 }
 

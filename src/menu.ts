@@ -83,6 +83,12 @@ export default class MenuBuilder {
                         app.quit();
                     },
                 },
+                {
+                    label: "Privacy Policy",
+                    click: () => {
+                        shell.openExternal("https://vex.chat/privacy-policy");
+                    },
+                },
             ],
         };
         const subMenuEdit: DarwinMenuItemConstructorOptions = {
@@ -234,12 +240,20 @@ export default class MenuBuilder {
                 ],
             },
             {
-                label: "Help",
+                label: "Information",
                 submenu: [
                     {
                         label: "Learn More",
                         click: () => {
                             void shell.openExternal("https://vex.chat");
+                        },
+                    },
+                    {
+                        label: "Privacy Policy",
+                        click: () => {
+                            shell.openExternal(
+                                "https://vex.chat/privacy-policy"
+                            );
                         },
                     },
                 ],

@@ -15,18 +15,17 @@ import path from "path";
 
 import MenuBuilder from "./menu";
 
-    
-const singleLock = app.requestSingleInstanceLock()
+const singleLock = app.requestSingleInstanceLock();
 let mainWindow: BrowserWindow | null = null;
 
 if (!singleLock) {
-    app.quit()
+    app.quit();
 } else {
-    app.on('second-instance', (_event, argv) => {
+    app.on("second-instance", (_event, argv) => {
         // Someone tried to run a second instance, we should focus our window.
         if (mainWindow) {
-            if (mainWindow.isMinimized()) mainWindow.restore()
-            mainWindow.focus()
+            if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.focus();
         }
 
         for (const arg of argv) {
@@ -34,13 +33,12 @@ if (!singleLock) {
                 mainWindow?.webContents.send("open-url", { url: arg });
             }
         }
-    })
+    });
 }
 
 if (!isDev) {
     app.setAsDefaultProtocolClient("vex");
 }
-
 
 const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, "assets")
@@ -84,7 +82,6 @@ const createWindow = async () => {
     });
 
     // DEFINE EVENT HANDLERS BEFORE LOADING THE APP
-
 
     // AUTO UPDATER EVENTS
     autoUpdater.on("checking-for-update", () => {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, shell } from "electron";
 import log from "electron-log";
 import { useEffect, useMemo, useState } from "react";
 import { Route, Switch, useHistory } from "react-router-dom";
@@ -10,6 +10,7 @@ import Loading from "../components/Loading";
 import { TitleBar } from "../components/TitleBar";
 import { routes } from "../constants/routes";
 import { version as currentVersion } from "../package.json";
+import DataStore from "../utils/DataStore";
 
 import App from "./App";
 import { ClientLauncher } from "./ClientLauncher";
@@ -79,6 +80,38 @@ export default function Base(): JSX.Element {
             ipcRenderer.off("open-url", callback);
         };
     });
+
+    useMemo(async () => {
+        try {
+            const res = await axios.get(
+                "https://api.github.com/repos/vex-chat/privacy-policy/commits/main"
+            );
+
+            const lastSeen = DataStore.get("privacyPolicySHA") as string | null;
+
+            if (lastSeen !== res.data.sha) {
+                setModalContents(
+                    <span>
+                        There&apos;s been a privacy policy update. Click{" "}
+                        <a
+                            className="has-text-link"
+                            onClick={() => {
+                                shell.openExternal(
+                                    "https://vex.chat/privacy-policy"
+                                );
+                            }}
+                        >
+                            here
+                        </a>{" "}
+                        to view it.
+                    </span>
+                );
+            }
+            DataStore.set("privacyPolicySHA", res.data.sha);
+        } catch (err) {
+            console.error(err);
+        }
+    }, [lastFetched]);
 
     useMemo(async () => {
         const res = await axios.get(
