@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
+import * as uuid from "uuid";
 
 import { routes } from "../constants/routes";
 import { addChannels } from "../reducers/channels";
@@ -16,6 +17,7 @@ export function CreateServer(): JSX.Element {
     const dispatch = useDispatch();
 
     const [inputVal, setInputVal] = useState("");
+    const [inviteVal, setInviteVal] = useState("");
 
     return (
         <div className="Aligner full-size">
@@ -53,7 +55,7 @@ export function CreateServer(): JSX.Element {
                         <div className="control button-container">
                             <div className="buttons register-form-buttons is-right">
                                 <button
-                                    className="button is-success"
+                                    className="button is-success is-small"
                                     onClick={async () => {
                                         if (inputVal.trim() === "") {
                                             return;
@@ -87,6 +89,87 @@ export function CreateServer(): JSX.Element {
                                     }}
                                 >
                                     Create
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div className="field">
+                        <label className="label is-small">
+                            Or, enter an invite link/code:
+                        </label>
+                        <input
+                            className="input has-icons-left"
+                            type="text"
+                            placeholder={
+                                "https://vex.chat/invite/1c01eb5e-e9db-44a7-b137-3b5ee9cad364"
+                            }
+                            value={inviteVal}
+                            onChange={(event) => {
+                                setInviteVal(event.target.value);
+                            }}
+                        />
+
+                        <br />
+                        <br />
+                        <div className="control button-container">
+                            <div className="buttons register-form-buttons is-right">
+                                <button
+                                    className="button is-success is-small"
+                                    onClick={async () => {
+                                        const inviteID = inviteVal
+                                            .split("/")
+                                            .pop();
+                                        if (
+                                            inviteID &&
+                                            uuid.validate(inviteID)
+                                        ) {
+                                            const client = window.vex;
+                                            try {
+                                                const permission = await client.invites.redeem(
+                                                    inviteID
+                                                );
+
+                                                const serverInfo = await client.servers.retrieveByID(
+                                                    permission.resourceID
+                                                );
+                                                if (!serverInfo) {
+                                                    console.warn(
+                                                        "Server info not found."
+                                                    );
+                                                    return;
+                                                }
+
+                                                const serverChannels = await client.channels.retrieve(
+                                                    serverInfo.serverID
+                                                );
+                                                const newPermissions = await client.permissions.retrieve();
+
+                                                dispatch(addServer(serverInfo));
+                                                dispatch(
+                                                    addChannels(serverChannels)
+                                                );
+                                                dispatch(
+                                                    setPermissions(
+                                                        newPermissions
+                                                    )
+                                                );
+
+                                                history.push(
+                                                    routes.SERVERS +
+                                                        "/" +
+                                                        permission.resourceID +
+                                                        "/channels/" +
+                                                        (serverChannels[0]
+                                                            ?.channelID || "")
+                                                );
+                                            } catch (err) {
+                                                console.warn(err.toString());
+                                            }
+                                        }
+                                    }}
+                                >
+                                    Join
                                 </button>
                             </div>
                         </div>

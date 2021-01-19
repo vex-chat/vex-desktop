@@ -85,7 +85,7 @@ export function Server(props: { updateAvailable: boolean }): JSX.Element {
                 <Switch>
                     <Route
                         exact
-                        path={routes.SERVERS + "/:serverID/add-user"}
+                        path={routes.SERVERS + "/:serverID/invite-links"}
                         render={() => <AddUser />}
                     />
                     <Route

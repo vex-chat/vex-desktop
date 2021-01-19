@@ -914,6 +914,13 @@ $login-box-base: 250px;
     min-width: $login-box-base * $phi;
 }
 
+$register-form-base: 275px;
+
+.register-form {
+    min-height: $register-form-base;
+    min-width: $register-form-base * $phi;
+}
+
 $register-box-base: 330px;
 .register-box {
     min-height: $register-box-base;

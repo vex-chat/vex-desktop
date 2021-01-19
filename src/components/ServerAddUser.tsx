@@ -1,60 +1,93 @@
-import type { IUser } from "@vex-chat/libvex";
-import type { IServerParams } from "~Types";
+import type { XTypes } from "@vex-chat/types";
 
-import { Fragment, useState } from "react";
+import { faCopy } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { format } from "date-fns";
+import { clipboard } from "electron";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { useHistory, useParams } from "react-router";
+import { useParams } from "react-router-dom";
 
-import { selectServers } from "../reducers/servers";
-
-import { IconUsername } from "./IconUsername";
-import { emptyUser, UserSearchBar } from "./UserSearchBar";
+import { selectFamiliars } from "../reducers/familiars";
 
 export function AddUser(): JSX.Element {
-    const history = useHistory();
-    const servers = useSelector(selectServers);
-    const params: IServerParams = useParams();
-    const [user, setUser] = useState(emptyUser);
-    const server = servers[params.serverID];
+    const params: { serverID: string } = useParams();
+    console.log(params);
+    const [links, setLinks] = useState([] as XTypes.SQL.IInvite[]);
+    const familiars = useSelector(selectFamiliars);
 
-    const addUserPermission = async (user: IUser) => {
+    const createLink = async () => {
         const client = window.vex;
-        const { userID } = user;
-        await client.permissions.create({
-            userID,
-            resourceType: "server",
-            resourceID: params.serverID,
-        });
-        history.goBack();
+        const link = await client.invites.create(params.serverID, "1h");
+        console.log(link);
+        if (link) {
+            const newLinks = [...links, link];
+            setLinks(newLinks);
+        }
     };
+
+    useMemo(async () => {
+        const client = window.vex;
+        const invites = await client.invites.retrieve(params.serverID);
+
+        setLinks(invites);
+    }, []);
 
     return (
         <div className="pane-screen-wrapper">
-            <div className="panel">
-                <div className="panel-heading">Add a user to {server.name}</div>
-                <div className="panel-block">
-                    <UserSearchBar
-                        onFoundUser={(user: IUser) => {
-                            setUser(user);
-                        }}
-                        onSelectUser={async (user: IUser) =>
-                            addUserPermission(user)
-                        }
-                    />
+            {links.length > 0 && (
+                <table className="table is-striped is-narrow is-hoverable is-fullwidth">
+                    <thead>
+                        <tr>
+                            <td />
+                            <td>Code</td>
+                            <td>Owner</td>
+                            <td>Expires</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {links.map((link) => (
+                            <tr key={link.inviteID}>
+                                <td
+                                    className="pointer"
+                                    onClick={() => {
+                                        console.log(link);
+                                        clipboard.writeText(
+                                            `https://vex.chat/invite/${link.inviteID}`
+                                        );
+                                    }}
+                                >
+                                    <FontAwesomeIcon icon={faCopy} />
+                                </td>
+                                <td>
+                                    <p className="help is-family-monospace">
+                                        {link.inviteID}
+                                    </p>
+                                </td>
+                                <td>{familiars[link.owner].username}</td>
+                                <td>
+                                    {format(
+                                        new Date(link.expiration),
+                                        "kk:mm MM/dd/yyyy"
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
+            {links.length == 0 && (
+                <div className="help">
+                    No invite links! You can create one. <br />
                 </div>
-                {user !== emptyUser && (
-                    <Fragment>
-                        <div className="panel-block">{IconUsername(user)}</div>
-                        <div className="panel-block">
-                            <button
-                                className="button is-plain is-small"
-                                onClick={() => addUserPermission(user)}
-                            >
-                                Add user to {server.name}
-                            </button>
-                        </div>
-                    </Fragment>
-                )}
+            )}
+            <div className="buttons is-right">
+                <button
+                    className="button is-small is-plain"
+                    onClick={createLink}
+                >
+                    Create Link
+                </button>
             </div>
         </div>
     );

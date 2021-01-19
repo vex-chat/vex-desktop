@@ -158,10 +158,10 @@
     ts-jest "^26.4.4"
     tweetnacl "^1.0.3"
 
-"@vex-chat/libvex@^0.18.7":
-  version "0.18.7"
-  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.18.7.tgz#c318e3fd6882398d2ce86a169ab1692f1aa734cf"
-  integrity sha512-5hV1UHKQX6f0bA9nrLcnmtqHCxtEsmlJSD96n+Er+SS3oNtX0cTIiTrY8YK+QcnkjTatHFzdU/xcnIr84bXtwg==
+"@vex-chat/libvex@^0.18.11":
+  version "0.18.11"
+  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.18.11.tgz#eda0e13d467e58536924a8e390a8e1f786718f97"
+  integrity sha512-bzKqVIMGzQ5NP4UMb5oq5Sn60FEBrqY7PMON/GwuViNm+FTPROvl6B0bXJeEhDaPuwFi4eBUEVyoJA+AkOboRw==
   dependencies:
     "@extrahash/sleep" "^1.0.0"
     "@types/create-hmac" "^1.1.0"
@@ -170,7 +170,7 @@
     "@types/uuid" "^8.3.0"
     "@types/ws" "^7.4.0"
     "@vex-chat/crypto" "^0.7.13"
-    "@vex-chat/types" "^0.10.6"
+    "@vex-chat/types" "^0.10.9"
     axios "^0.21.0"
     chalk "^4.1.0"
     knex "^0.21.15"
@@ -182,10 +182,10 @@
     winston "^3.3.3"
     ws "^7.4.0"
 
-"@vex-chat/types@^0.10.6":
-  version "0.10.6"
-  resolved "https://registry.yarnpkg.com/@vex-chat/types/-/types-0.10.6.tgz"
-  integrity sha512-OQMgVJHDx7aLXqoF5q/Z77+4+HOqJ2edZsM8RN67nFHUcd0Kr5bfYP6+etEq6UAu+TE3pniS9WyYjEwN1Qy4CQ==
+"@vex-chat/types@^0.10.9":
+  version "0.10.9"
+  resolved "https://registry.yarnpkg.com/@vex-chat/types/-/types-0.10.9.tgz#82221bb35657a73ef8141b4605b8b9b32ddb7b7e"
+  integrity sha512-DoSoZ23cmb4UHtD/CffFcRJuhYwugYEhVpv43JuvQimn1CpU7ujdRpunfAfGoDgCnJ8DUEjEcPBSysrZ4y3znA==
   dependencies:
     tweetnacl "^1.0.3"
 

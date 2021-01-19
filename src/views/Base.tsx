@@ -121,7 +121,7 @@ export default function Base(): JSX.Element {
     useEffect(() => {
         const interval = setInterval(() => {
             setLastFetched(Date.now());
-        }, 1000 * 60 * 60);
+        }, 1000 * 60 * 10);
         return () => {
             clearInterval(interval);
         };
