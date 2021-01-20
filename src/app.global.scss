@@ -936,20 +936,21 @@ $register-box-base: 330px;
     min-width: $register-box-base * $phi;
 }
 
-.topbar-buttons.server {
-    color: $blue;
-    font-size: 32px;
+$topbar-buttons-size: 20px;
+
+.topbar-buttons {
+    font-size: $topbar-buttons-size;
     position: absolute;
-    top: 22px;
-    right: 250px;
+    top: 35px;
+    right: 22px;
     z-index: 5;
 }
 
-.topbar-buttons {
-    font-size: 32px;
+.topbar-buttons.server {
+    font-size: $topbar-buttons-size;
     position: absolute;
-    top: 22px;
-    right: 22px;
+    top: 35px;
+    right: 250px;
     z-index: 5;
 }
 

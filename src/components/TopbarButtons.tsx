@@ -23,7 +23,7 @@ export function TopbarButtons(props: {
         >
             {props.updateAvailable && (
                 <span
-                    className="topbar-button has-text-link"
+                    className="icon topbar-button has-text-link"
                     onClick={() => {
                         remote.app.relaunch();
                         remote.app.exit();
@@ -35,7 +35,7 @@ export function TopbarButtons(props: {
 
             {props.setUserBarOpen && props.pageType === "channels" && (
                 <span
-                    className="topbar-button"
+                    className="icon topbar-button"
                     onClick={() => {
                         if (props.setUserBarOpen) {
                             props.setUserBarOpen(!props.userBarOpen);
