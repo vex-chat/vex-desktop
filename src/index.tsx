@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { HashRouter as Router } from "react-router-dom";
 
 import { dbFolder, keyFolder, progFolder } from "./constants/folders";
-import Base from "./views/Base";
+import Base from "./Base";
 import configuredStore from "./store";
 
 import "./app.global.scss";

@@ -6,12 +6,9 @@ import isDev from "electron-is-dev";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
-import { VerticalAligner } from "../components/VerticalAligner";
-import { dbFolder, keyFolder } from "../constants/folders";
-import { routes } from "../constants/routes";
-import { errorFX, unlockFX } from "../constants/sounds";
-import store from "../utils/DataStore";
-import gaurdian from "../utils/KeyGaurdian";
+import { VerticalAligner } from "../components";
+import { dbFolder, errorFX, keyFolder, routes, unlockFX } from "../constants";
+import { DataStore, gaurdian } from "../utils";
 
 export default function Register(): JSX.Element {
     const history = useHistory();
@@ -43,7 +40,7 @@ export default function Register(): JSX.Element {
             return;
         }
 
-        if (store.get("settings.sounds") as boolean) {
+        if (DataStore.get("settings.sounds") as boolean) {
             await unlockFX.play();
         }
         setWaiting(true);
@@ -58,7 +55,7 @@ export default function Register(): JSX.Element {
         const [user, err] = await client.register(username, password);
 
         if (err !== null) {
-            if (store.get("settings.sounds") as boolean) {
+            if (DataStore.get("settings.sounds") as boolean) {
                 await errorFX.play();
             }
             setWaiting(false);

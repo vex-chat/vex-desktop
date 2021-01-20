@@ -1,7 +1,7 @@
 import { Redirect } from "react-router";
 
-import { routes } from "../constants/routes";
-import gaurdian from "../utils/KeyGaurdian";
+import { routes } from "../constants";
+import { gaurdian } from "../utils";
 
 import { Login } from "./Login";
 

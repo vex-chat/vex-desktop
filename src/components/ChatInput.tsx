@@ -22,6 +22,7 @@ const closedEmojiRegex = /:\w+:/g;
 
 export function ChatInput(props: {
     targetID: string;
+    userBarOpen: boolean;
     group?: boolean;
     className?: string;
     disabled?: boolean;
@@ -200,7 +201,11 @@ export function ChatInput(props: {
     }, [inputValue]);
 
     return (
-        <div className={`chat-input-wrapper ${props.className || ""}`}>
+        <div
+            className={`chat-input-wrapper ${props.className || ""} ${
+                props.userBarOpen ? "direct-messaging" : ""
+            }`}
+        >
             {emoji && (
                 <div className="emoji-picker-wrapper">
                     {matches &&

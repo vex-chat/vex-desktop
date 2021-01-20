@@ -1,25 +1,28 @@
 import { faHashtag, faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { capitalCase } from "change-case";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
 
-import Avatar from "../components/Avatar";
-import { ChannelBar } from "../components/ChannelBar";
-import { ChannelSettings } from "../components/ChannelSettings";
-import { AddChannel } from "../components/ServerAddChannel";
-import { AddUser } from "../components/ServerAddUser";
-import { ServerBar } from "../components/ServerBar";
-import { ServerPane } from "../components/ServerPane";
-import { ServerSettings } from "../components/ServerSettings";
-import { UpdateIndicator } from "../components/UpdateIndicator";
-import { UserMenu } from "../components/UserMenu";
-import { routes } from "../constants/routes";
+import {
+    AddChannel,
+    AddUser,
+    Avatar,
+    ChannelBar,
+    ChannelSettings,
+    ServerBar,
+    ServerPane,
+    ServerSettings,
+    TopbarButtons,
+    UserMenu,
+} from "../components";
+import { routes } from "../constants";
 import { selectChannels } from "../reducers/channels";
 import { push as pushHistoryStack } from "../reducers/historyStacks";
 import { selectOnlineList } from "../reducers/onlineLists";
 import { selectServers } from "../reducers/servers";
+import { DataStore } from "../utils";
 
 export function Server(props: { updateAvailable: boolean }): JSX.Element {
     const params = useParams<{
@@ -37,6 +40,10 @@ export function Server(props: { updateAvailable: boolean }): JSX.Element {
     const onlineList = useSelector(selectOnlineList(channelID));
 
     const server = servers[serverID];
+
+    const [userBarOpen, setUserBarOpen] = useState(
+        DataStore.get("settings.userBarOpen") as boolean
+    );
 
     useMemo(() => {
         if (
@@ -60,11 +67,15 @@ export function Server(props: { updateAvailable: boolean }): JSX.Element {
 
     return (
         <div>
-            {props.updateAvailable && <UpdateIndicator className="server" />}
+            <TopbarButtons
+                setUserBarOpen={setUserBarOpen}
+                userBarOpen={userBarOpen}
+                updateAvailable={props.updateAvailable}
+            />
             <ServerBar />
             <ChannelBar name={server.name} serverID={serverID} />
             <UserMenu />
-            <div className="pane">
+            <div className={`pane ${userBarOpen ? "" : "direct-messaging"}`}>
                 <div className="pane-topbar">
                     {serverChannels[channelID] && (
                         <h2 className="subtitle">
@@ -103,7 +114,7 @@ export function Server(props: { updateAvailable: boolean }): JSX.Element {
                         path={
                             routes.SERVERS + "/:serverID/channels/:channelID?"
                         }
-                        render={() => <ServerPane />}
+                        render={() => <ServerPane userBarOpen={userBarOpen} />}
                     />
                     <Route
                         exact
@@ -116,51 +127,54 @@ export function Server(props: { updateAvailable: boolean }): JSX.Element {
                 </Switch>
             </div>
             <div className="right-topbar"></div>
-            <div className="right-bar">
-                <p className="menu-label">Online</p>
-                {[...onlineList]
-                    .reverse()
-                    .filter((user) =>
-                        withinTimeLimit(user.lastSeen, 1000 * 60 * 5)
-                    )
-                    .map((user) => (
-                        <div className={`online-user`} key={user.userID}>
-                            <article className="media">
-                                <figure className="media-left">
-                                    <div className="image">
-                                        <Avatar user={user} size={32} />
+            {userBarOpen && (
+                <div className="right-bar ">
+                    <p className="menu-label">Online</p>
+                    {[...onlineList]
+                        .reverse()
+                        .filter((user) =>
+                            withinTimeLimit(user.lastSeen, 1000 * 60 * 5)
+                        )
+                        .map((user) => (
+                            <div className={`online-user`} key={user.userID}>
+                                <article className="media">
+                                    <figure className="media-left">
+                                        <div className="image">
+                                            <Avatar user={user} size={32} />
+                                        </div>
+                                    </figure>
+                                    <div className="media-content">
+                                        {user.username}
                                     </div>
-                                </figure>
-                                <div className="media-content">
-                                    {user.username}
-                                </div>
-                            </article>
-                        </div>
-                    ))}
-                <p className="menu-label">Offline</p>
-                {[...onlineList]
-                    .reverse()
-                    .filter(
-                        (user) => !withinTimeLimit(user.lastSeen, 1000 * 60 * 5)
-                    )
-                    .map((user) => (
-                        <div
-                            className={`online-user offline`}
-                            key={user.userID}
-                        >
-                            <article className="media">
-                                <figure className="media-left">
-                                    <div className="image">
-                                        <Avatar user={user} size={32} />
+                                </article>
+                            </div>
+                        ))}
+                    <p className="menu-label">Offline</p>
+                    {[...onlineList]
+                        .reverse()
+                        .filter(
+                            (user) =>
+                                !withinTimeLimit(user.lastSeen, 1000 * 60 * 5)
+                        )
+                        .map((user) => (
+                            <div
+                                className={`online-user offline`}
+                                key={user.userID}
+                            >
+                                <article className="media">
+                                    <figure className="media-left">
+                                        <div className="image">
+                                            <Avatar user={user} size={32} />
+                                        </div>
+                                    </figure>
+                                    <div className="media-content">
+                                        {user.username}
                                     </div>
-                                </figure>
-                                <div className="media-content">
-                                    {user.username}
-                                </div>
-                            </article>
-                        </div>
-                    ))}
-            </div>
+                                </article>
+                            </div>
+                        ))}
+                </div>
+            )}
         </div>
     );
 }

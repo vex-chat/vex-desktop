@@ -6,21 +6,21 @@ import { Route, Switch, useHistory } from "react-router-dom";
 import semver from "semver";
 import * as uuid from "uuid";
 
-import Loading from "../components/Loading";
-import { TitleBar } from "../components/TitleBar";
-import { routes } from "../constants/routes";
-import { version as currentVersion } from "../package.json";
-import DataStore from "../utils/DataStore";
-
-import App from "./App";
-import { ClientLauncher } from "./ClientLauncher";
-import { Create } from "./Create";
-import { Home } from "./Home";
-import { Login } from "./Login";
-import { Logout } from "./Logout";
-import Messaging from "./Messaging";
-import Register from "./Register";
-import { Server } from "./Server";
+import { Loading, TitleBar } from "./components";
+import { routes } from "./constants";
+import { version as currentVersion } from "./package.json";
+import { DataStore } from "./utils";
+import {
+    App,
+    ClientLauncher,
+    Create,
+    Home,
+    Login,
+    Logout,
+    Messaging,
+    Register,
+    Server,
+} from "./views";
 
 type UpdateDownloadProgress = {
     bytesPerSecond: number;

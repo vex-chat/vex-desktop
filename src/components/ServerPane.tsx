@@ -17,7 +17,7 @@ import { chunkMessages } from "../utils/chunkMessages";
 import { ChatInput } from "./ChatInput";
 import { MessageBox } from "./MessageBox";
 
-export function ServerPane(): JSX.Element {
+export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
     const { channelID } = useParams<IServerParams>();
     const threadMessages = useSelector(selectGroup(channelID));
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -101,7 +101,13 @@ export function ServerPane(): JSX.Element {
                 <div ref={messagesEndRef} />
             </div>
 
-            {channelID && <ChatInput targetID={channelID} group />}
+            {channelID && (
+                <ChatInput
+                    targetID={channelID}
+                    userBarOpen={props.userBarOpen}
+                    group
+                />
+            )}
             {!scrollLock && (
                 <div className="conversation-fab">
                     <FontAwesomeIcon

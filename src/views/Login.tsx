@@ -9,12 +9,9 @@ import fs from "fs";
 import { memo, useState } from "react";
 import { useHistory } from "react-router";
 
-import { VerticalAligner } from "../components/VerticalAligner";
-import { dbFolder, keyFolder } from "../constants/folders";
-import { routes } from "../constants/routes";
-import { errorFX, unlockFX } from "../constants/sounds";
-import store from "../utils/DataStore";
-import gaurdian from "../utils/KeyGaurdian";
+import { VerticalAligner } from "../components";
+import { dbFolder, errorFX, keyFolder, routes, unlockFX } from "../constants";
+import { DataStore, gaurdian } from "../utils";
 
 export const Login: FunctionComponent = memo(() => {
     const history = useHistory();
@@ -26,7 +23,7 @@ export const Login: FunctionComponent = memo(() => {
     const [errText, setErrText] = useState("");
 
     const loginUser = async () => {
-        if (store.get("settings.sounds") as boolean) {
+        if (DataStore.get("settings.sounds") as boolean) {
             await unlockFX.play();
         }
         if (password == "" || username == "") {
@@ -34,7 +31,7 @@ export const Login: FunctionComponent = memo(() => {
                 unlockFX.pause();
                 unlockFX.currentTime = 0;
             }
-            if (store.get("settings.sounds") as boolean) {
+            if (DataStore.get("settings.sounds") as boolean) {
                 await errorFX.play();
             }
             setErrText("All fields are required.");
@@ -58,7 +55,7 @@ export const Login: FunctionComponent = memo(() => {
                 unlockFX.pause();
                 unlockFX.currentTime = 0;
             }
-            if (store.get("settings.sounds") as boolean) {
+            if (DataStore.get("settings.sounds") as boolean) {
                 await errorFX.play();
             }
             setErrText(err.toString());

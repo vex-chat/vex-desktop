@@ -21,10 +21,14 @@ import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
-import Loading from "../components/Loading";
-import { dbFolder, keyFolder, progFolder } from "../constants/folders";
-import { routes } from "../constants/routes";
-import { notifyFX } from "../constants/sounds";
+import { Loading } from "../components";
+import {
+    dbFolder,
+    keyFolder,
+    notifyFX,
+    progFolder,
+    routes,
+} from "../constants";
 import { setApp } from "../reducers/app";
 import { addChannels } from "../reducers/channels";
 import { addDevices } from "../reducers/devices";
@@ -42,8 +46,7 @@ import { addPermission, setPermissions } from "../reducers/permissions";
 import { setServers } from "../reducers/servers";
 import { addSession, setSessions } from "../reducers/sessions";
 import { setUser } from "../reducers/user";
-import store from "../utils/DataStore";
-import { mentionRegex } from "../utils/regexes";
+import { DataStore, mentionRegex } from "../utils";
 
 declare global {
     interface Window {
@@ -80,11 +83,11 @@ export function ClientLauncher(): JSX.Element {
     const history = useHistory();
 
     const notification = async (message: IMessage) => {
-        const globalNotifications = store.get(
+        const globalNotifications = DataStore.get(
             "settings.notifications"
         ) as boolean;
         const mentionsUs = mentionRegex.test(message.message);
-        const sounds = store.get("settings.sounds") as boolean;
+        const sounds = DataStore.get("settings.sounds") as boolean;
 
         // all notifications are off
         if (!mentionsUs && !globalNotifications) {
@@ -203,7 +206,7 @@ export function ClientLauncher(): JSX.Element {
     const messageHandler = (message: IMessage) => {
         const szMsg = serializeMessage(message);
 
-        const directMessagesEnabled: boolean = store.get(
+        const directMessagesEnabled: boolean = DataStore.get(
             "settings.directMessages"
         ) as boolean;
         if (szMsg.group) {
@@ -268,7 +271,7 @@ export function ClientLauncher(): JSX.Element {
                 console.warn("error getting devices", err.toString());
             }
 
-            if (store.get("settings.directMessages")) {
+            if (DataStore.get("settings.directMessages")) {
                 const history = await client.messages.retrieve(user.userID);
                 const szHistory = history.reduce<ISerializedMessage[]>(
                     (acc, msg) => {

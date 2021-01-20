@@ -43,6 +43,10 @@ class DataStore extends Store {
             this.instance.set("privacyPolicySHA", null);
         }
 
+        if (this.instance.get("settings.userBarOpen") == undefined) {
+            this.instance.set("settings.userBarOpen", true);
+        }
+
         setThemeColor(this.instance.get("settings.themeColor") as string);
 
         console.log(this.instance.store);

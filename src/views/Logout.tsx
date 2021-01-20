@@ -2,9 +2,8 @@ import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
-import { routes } from "../constants/routes";
-import { lockFX } from "../constants/sounds";
-import { useQuery } from "../hooks/useQuery";
+import { lockFX, routes } from "../constants";
+import { useQuery } from "../hooks";
 import { resetApp } from "../reducers/app";
 import { resetChannels } from "../reducers/channels";
 import { reset as resetDevices } from "../reducers/devices";
@@ -18,8 +17,7 @@ import { resetPermissions } from "../reducers/permissions";
 import { resetServers } from "../reducers/servers";
 import { resetSessions } from "../reducers/sessions";
 import { resetUser } from "../reducers/user";
-import store from "../utils/DataStore";
-import gaurdian from "../utils/KeyGaurdian";
+import { DataStore, gaurdian } from "../utils";
 
 export function Logout(): JSX.Element {
     const dispatch = useDispatch();
@@ -52,7 +50,7 @@ export function Logout(): JSX.Element {
         dispatch(resetSessions());
         dispatch(resetUser());
 
-        if (store.get("settings.sounds") as boolean) {
+        if (DataStore.get("settings.sounds") as boolean) {
             await lockFX.play();
         }
 

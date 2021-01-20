@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 
-import { CreateServer } from "../components/CreateServer";
+import { CreateServer } from "../components";
 
 export function Create(): JSX.Element {
     const params: { resourceType: string } = useParams();

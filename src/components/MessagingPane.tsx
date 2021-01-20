@@ -507,7 +507,7 @@ export default function MessagingPane(): JSX.Element {
 
                                 <ChatInput
                                     targetID={familiar.userID}
-                                    className={"direct-messaging"}
+                                    userBarOpen={false}
                                     disabled={!directMessagesEnabled}
                                 />
                             </Fragment>

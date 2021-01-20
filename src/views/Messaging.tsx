@@ -1,12 +1,14 @@
 import { Fragment } from "react";
 import { useSelector } from "react-redux";
 
-import Loading from "../components/Loading";
-import MessagingBar from "../components/MessagingBar";
-import MessagingPane from "../components/MessagingPane";
-import { ServerBar } from "../components/ServerBar";
-import { UpdateIndicator } from "../components/UpdateIndicator";
-import { UserMenu } from "../components/UserMenu";
+import {
+    Loading,
+    MessagingBar,
+    MessagingPane,
+    ServerBar,
+    TopbarButtons,
+    UserMenu,
+} from "../components";
 import { selectApp } from "../reducers/app";
 
 export default function Messaging(props: {
@@ -20,7 +22,11 @@ export default function Messaging(props: {
 
     return (
         <Fragment>
-            {props.updateAvailable && <UpdateIndicator />}
+            <TopbarButtons
+                updateAvailable={props.updateAvailable}
+                userBarOpen={false}
+                setUserBarOpen={null}
+            />
             <ServerBar />
             <MessagingBar />
             <MessagingPane />
