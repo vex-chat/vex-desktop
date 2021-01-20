@@ -1,3 +1,4 @@
+import { remote } from "electron";
 import Store from "electron-store";
 
 import { setThemeColor } from "./setThemeColor";
@@ -47,9 +48,20 @@ class DataStore extends Store {
             this.instance.set("settings.userBarOpen", true);
         }
 
+        if (this.instance.get("settings.windowDimensions") == undefined) {
+            this.instance.set(
+                "settings.windowDimensions",
+                JSON.stringify(remote.getCurrentWindow().getSize())
+            );
+        }
+
+        const [width, height]: [width: number, height: number] = JSON.parse(
+            this.instance.get("settings.windowDimensions") as string
+        );
+        remote.getCurrentWindow().setSize(width, height);
         setThemeColor(this.instance.get("settings.themeColor") as string);
 
-        console.log(this.instance.store);
+        console.log("settings", this.instance.store);
 
         return DataStore.instance;
     }

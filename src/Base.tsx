@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ipcRenderer, shell } from "electron";
+import { ipcRenderer, remote, shell } from "electron";
 import log from "electron-log";
 import { useEffect, useMemo, useState } from "react";
 import { Route, Switch, useHistory } from "react-router-dom";
@@ -49,6 +49,22 @@ export default function Base(): JSX.Element {
     const [modalContents, setModalContents] = useState(
         null as JSX.Element | null
     );
+
+    let resizingTimeout = setTimeout(() => {
+        ("");
+    }, 500);
+
+    const doneResizing = () => {
+        DataStore.set(
+            "settings.windowDimensions",
+            JSON.stringify(remote.getCurrentWindow().getSize())
+        );
+    };
+
+    const onResize = () => {
+        clearTimeout(resizingTimeout);
+        resizingTimeout = setTimeout(doneResizing, 500);
+    };
 
     const openInvite = (url: string) => {
         const inviteID = url.split("/").pop();
@@ -124,6 +140,10 @@ export default function Base(): JSX.Element {
             setUpdateAvailable(true);
         }
     }, [lastFetched]);
+
+    useMemo(async () => {
+        remote.getCurrentWindow().on("resize", onResize);
+    }, []);
 
     const onUpdateStatus = (_event: Event, data: updateStatus) => {
         const { status } = data;
