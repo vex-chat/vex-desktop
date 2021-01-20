@@ -91,21 +91,13 @@ export function ClientLauncher(): JSX.Element {
 
         // all notifications are off
         if (!mentionsUs && !globalNotifications) {
-            console.log("All notifications are off, notifarino.");
             return;
         }
 
         if (mentionsUs && !globalNotifications) {
-            console.log("Mentions are on but globals are off.");
             if (!mentionsUs) {
-                console.log("It doesn't mention us, notifarino.");
                 return;
             }
-            console.log("It mentions us! NOTIFARINO!");
-        }
-
-        if (globalNotifications) {
-            console.log("Global notifications are on.");
         }
 
         const client = window.vex;

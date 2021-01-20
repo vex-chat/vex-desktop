@@ -60,10 +60,6 @@ export function Server(props: { updateAvailable: boolean }): JSX.Element {
         }
     }, [history.location.pathname]);
 
-    useEffect(() => {
-        console.log(pageType);
-    });
-
     // loading
     if (!server) {
         return <div />;
