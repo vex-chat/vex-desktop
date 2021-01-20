@@ -26,6 +26,7 @@ export default function Messaging(props: {
                 updateAvailable={props.updateAvailable}
                 userBarOpen={false}
                 setUserBarOpen={null}
+                pageType={"direct-messaging"}
             />
             <ServerBar />
             <MessagingBar />

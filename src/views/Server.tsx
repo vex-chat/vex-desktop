@@ -1,7 +1,7 @@
 import { faHashtag, faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { capitalCase } from "change-case";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
 
@@ -60,6 +60,10 @@ export function Server(props: { updateAvailable: boolean }): JSX.Element {
         }
     }, [history.location.pathname]);
 
+    useEffect(() => {
+        console.log(pageType);
+    });
+
     // loading
     if (!server) {
         return <div />;
@@ -70,12 +74,19 @@ export function Server(props: { updateAvailable: boolean }): JSX.Element {
             <TopbarButtons
                 setUserBarOpen={setUserBarOpen}
                 userBarOpen={userBarOpen}
+                pageType={pageType}
                 updateAvailable={props.updateAvailable}
             />
             <ServerBar />
             <ChannelBar name={server.name} serverID={serverID} />
             <UserMenu />
-            <div className={`pane ${userBarOpen ? "" : "direct-messaging"}`}>
+            <div
+                className={`pane ${
+                    userBarOpen && params.pageType === "channels"
+                        ? ""
+                        : "direct-messaging"
+                }`}
+            >
                 <div className="pane-topbar">
                     {serverChannels[channelID] && (
                         <h2 className="subtitle">
@@ -127,8 +138,8 @@ export function Server(props: { updateAvailable: boolean }): JSX.Element {
                 </Switch>
             </div>
             <div className="right-topbar"></div>
-            {userBarOpen && (
-                <div className="right-bar ">
+            {userBarOpen && params.pageType === "channels" && (
+                <div className="right-bar">
                     <p className="menu-label">Online</p>
                     {[...onlineList]
                         .reverse()

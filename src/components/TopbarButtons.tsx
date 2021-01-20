@@ -12,6 +12,7 @@ export function TopbarButtons(props: {
     updateAvailable: boolean;
     userBarOpen: boolean;
     setUserBarOpen: ((state: boolean) => void) | null;
+    pageType: string;
     className?: string;
 }): JSX.Element {
     return (
@@ -32,7 +33,7 @@ export function TopbarButtons(props: {
                 </span>
             )}
 
-            {props.setUserBarOpen && (
+            {props.setUserBarOpen && props.pageType === "channels" && (
                 <span
                     className="topbar-button"
                     onClick={() => {
