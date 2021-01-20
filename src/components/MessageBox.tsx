@@ -334,7 +334,7 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
     };
 
     useMemo(async () => {
-        if (type.includes("image")) {
+        if (type && type.includes("image")) {
             if (files[fileID]) {
                 setPreviewSrc(
                     "data:" +
@@ -367,7 +367,7 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
             }
         }
 
-        if (type.includes("audio")) {
+        if (type && type.includes("audio")) {
             if (files[fileID]) {
                 setAudioSrc(
                     "data:" +

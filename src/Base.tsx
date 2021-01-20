@@ -140,7 +140,7 @@ export default function Base(): JSX.Element {
         }
     }, [lastFetched]);
 
-    useMemo(async () => {
+    useMemo(() => {
         remote.getCurrentWindow().on("resize", onResize);
     }, []);
 
