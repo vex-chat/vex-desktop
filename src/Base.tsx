@@ -7,8 +7,7 @@ import semver from "semver";
 import * as uuid from "uuid";
 
 import { Loading, TitleBar } from "./components";
-import { routes } from "./constants";
-import { version as currentVersion } from "./package.json";
+import { currentVersion, routes } from "./constants";
 import { DataStore } from "./utils";
 import {
     App,
