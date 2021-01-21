@@ -30,6 +30,7 @@ import { selectUser } from "../reducers/user";
 import { getAssetPath } from "../utils/getAssetPath";
 import { mentionRegex } from "../utils/regexes";
 
+import { LinkRenderer } from "./renderers/Link";
 import Avatar from "./Avatar";
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
@@ -212,6 +213,9 @@ export function MessageBox(props: {
                                                                 unwrapDisallowed={
                                                                     true
                                                                 }
+                                                                renderers={{
+                                                                    link: LinkRenderer,
+                                                                }}
                                                             >
                                                                 {strMessage}
                                                             </ReactMarkdown>
