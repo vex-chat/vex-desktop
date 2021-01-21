@@ -33,3 +33,6 @@ yarn start
 ```
 
 you may also be interested in taking a look at our [javascript library](https://github.com/vex-chat/libvex-js)
+
+## licensing note
+you may not use the logo assets to represent your own brand. the logo assets in this project are expressed to be the intellectual property of LogicBite LLC and vex.chat
