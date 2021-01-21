@@ -293,33 +293,8 @@ export function ChatInput(props: {
                                 setInputValue(event.target.value);
                             }}
                             rows={1}
-                            onKeyDown={(event) => {
+                            onKeyDown={async (event) => {
                                 adjustInputHeight(event);
-
-                                if (emoji && emoji.length > 0) {
-                                    if (event.key === "Tab") {
-                                        event.preventDefault();
-                                        const selectedEmoji =
-                                            emoji[activeEmoji];
-                                        selectEmoji(selectedEmoji);
-                                    }
-                                    if (event.key === "ArrowDown") {
-                                        event.preventDefault();
-                                        if (activeEmoji + 1 < emoji.length) {
-                                            setActiveEmoji(activeEmoji + 1);
-                                        }
-                                    }
-                                    if (event.key === "ArrowUp") {
-                                        event.preventDefault();
-                                        if (activeEmoji !== 0) {
-                                            setActiveEmoji(activeEmoji - 1);
-                                        }
-                                    }
-                                    return;
-                                }
-                            }}
-                            onKeyUp={async (event) => {
-                                adjustInputHeight();
 
                                 if (event.key === "Enter" && !event.shiftKey) {
                                     const messageText = inputValue;
@@ -361,6 +336,31 @@ export function ChatInput(props: {
                                         }
                                     }
                                 }
+
+                                if (emoji && emoji.length > 0) {
+                                    if (event.key === "Tab") {
+                                        event.preventDefault();
+                                        const selectedEmoji =
+                                            emoji[activeEmoji];
+                                        selectEmoji(selectedEmoji);
+                                    }
+                                    if (event.key === "ArrowDown") {
+                                        event.preventDefault();
+                                        if (activeEmoji + 1 < emoji.length) {
+                                            setActiveEmoji(activeEmoji + 1);
+                                        }
+                                    }
+                                    if (event.key === "ArrowUp") {
+                                        event.preventDefault();
+                                        if (activeEmoji !== 0) {
+                                            setActiveEmoji(activeEmoji - 1);
+                                        }
+                                    }
+                                    return;
+                                }
+                            }}
+                            onKeyUp={async (event) => {
+                                adjustInputHeight(event);
                             }}
                         />
                     </div>

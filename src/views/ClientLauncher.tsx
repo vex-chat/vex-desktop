@@ -86,8 +86,15 @@ export function ClientLauncher(): JSX.Element {
         const globalNotifications = DataStore.get(
             "settings.notifications"
         ) as boolean;
-        const mentionsUs = mentionRegex.test(message.message);
+
+        const client = window.vex;
+        const me = client.me.user();
+
+        const mentionsUs = message.message.includes(me.userID);
         const sounds = DataStore.get("settings.sounds") as boolean;
+
+        console.log("Mentions us is " + mentionsUs);
+        console.log(message.message);
 
         // all notifications are off
         if (!mentionsUs && !globalNotifications) {
@@ -100,9 +107,6 @@ export function ClientLauncher(): JSX.Element {
             }
         }
 
-        const client = window.vex;
-
-        const me = client.me.user();
         if (
             message.direction === "incoming" &&
             message.authorID !== me.userID
