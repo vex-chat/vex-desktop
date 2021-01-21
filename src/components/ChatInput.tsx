@@ -203,7 +203,7 @@ export function ChatInput(props: {
     return (
         <div
             className={`chat-input-wrapper ${props.className || ""} ${
-                props.userBarOpen ? "direct-messaging" : ""
+                !props.userBarOpen ? "direct-messaging" : ""
             }`}
         >
             {emoji && (
