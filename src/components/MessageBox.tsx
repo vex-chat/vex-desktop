@@ -450,7 +450,7 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
                             <img src={previewSrc} />
                             <br />
                             <a onClick={download}>
-                                <p className="has-text-light">Download</p>
+                                <p className="dim">Download</p>
                             </a>
                         </div>
                     </div>
