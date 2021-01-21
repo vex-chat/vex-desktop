@@ -26,6 +26,8 @@ export function ChatInput(props: {
     group?: boolean;
     className?: string;
     disabled?: boolean;
+    outboxMessages: string[];
+    setOutboxMessages: (arr: string[]) => void;
 }): JSX.Element {
     const {
         userID,
@@ -301,6 +303,11 @@ export function ChatInput(props: {
                                     if ((messageText || "").trim() === "") {
                                         return;
                                     }
+
+                                    const outbox = [...props.outboxMessages];
+                                    outbox.push(messageText);
+                                    props.setOutboxMessages(outbox);
+
                                     setInputValue("");
                                     resetInputHeight();
                                     const client = window.vex;

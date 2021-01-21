@@ -197,7 +197,6 @@ textarea:focus {
     background-color: var(--theme_color_0);
     border-bottom: 2px solid var(--theme_color_1);
 }
-
 .image-preview-wrapper {
     margin-top: 1ch;
     max-width: 400px;
@@ -1023,4 +1022,11 @@ $topbar-buttons-size: 20px;
 
 .message-link:hover {
     color: lighten($link, 3%) !important;
+}
+
+.outbox-message-wrapper {
+    margin-top: -10px;
+    margin-left: 64px !important;
+    padding-bottom: 14px !important;
+    opacity: 0.8;
 }

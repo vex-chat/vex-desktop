@@ -53,6 +53,7 @@ export const bestMatch = (query: string, values: string[]): string => {
 
 export function MessageBox(props: {
     messages: ISerializedMessage[];
+    outboxMessages?: string[];
 }): JSX.Element {
     const familiars = useSelector(selectFamiliars);
     // don't match no characters of any length
@@ -93,7 +94,7 @@ export function MessageBox(props: {
                     </small>
                     &nbsp;&nbsp;
                     <br />
-                    {props.messages.map((message) => {
+                    {props.messages.map((message, index) => {
                         const isCode = codeRegex.test(message.message);
                         const isFile = fileRegex.test(message.message);
 

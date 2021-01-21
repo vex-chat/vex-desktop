@@ -1,3 +1,4 @@
+import type { IMessage } from "@vex-chat/libvex";
 import type { IServerParams } from "~Types";
 
 import {
@@ -26,6 +27,8 @@ export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
     const [lastFetch, setLastFetch] = useState(Date.now());
     const [scrollLock, setScrollLock] = useState(true);
 
+    const [outboxMessages, setOutboxMessages] = useState([] as string[]);
+
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView();
@@ -43,6 +46,26 @@ export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
             }
         }
     }, [channelID, lastFetch]);
+
+    useEffect(() => {
+        const client = window.vex;
+        const onMessage = (message: IMessage) => {
+            if (outboxMessages.includes(message.message)) {
+                for (const str of outboxMessages) {
+                    if (str === message.message) {
+                        console.log(outboxMessages, message);
+                        const newOutbox = [...outboxMessages];
+                        newOutbox.splice(newOutbox.indexOf(str), 1);
+                        setOutboxMessages(newOutbox);
+                    }
+                }
+            }
+        };
+        client.on("message", onMessage);
+        return () => {
+            client.off("message", onMessage);
+        };
+    });
 
     useEffect(() => {
         if (scrollLock) {
@@ -95,9 +118,20 @@ export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
                         <MessageBox
                             key={chunk[0]?.mailID || uuid.v4()}
                             messages={chunk}
+                            outboxMessages={outboxMessages}
                         />
                     );
                 })}
+                {outboxMessages.map((message, index) => (
+                    <div
+                        key={`outbox-${index}`}
+                        className="outbox-message-wrapper"
+                    >
+                        <p className="outbox-message-text">
+                            <p>{message}</p>
+                        </p>
+                    </div>
+                ))}
                 <div ref={messagesEndRef} />
             </div>
 
@@ -105,6 +139,8 @@ export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
                 <ChatInput
                     targetID={channelID}
                     userBarOpen={props.userBarOpen}
+                    outboxMessages={outboxMessages}
+                    setOutboxMessages={setOutboxMessages}
                     group
                 />
             )}
