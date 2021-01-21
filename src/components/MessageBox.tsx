@@ -12,18 +12,18 @@ import { remote, shell } from "electron";
 import log from "electron-log";
 import fs from "fs";
 import levenshtein from "js-levenshtein";
+import Linkify from "linkify-it";
 import path from "path";
 import { Fragment, useMemo, useState } from "react";
 import AudioPlayer from "react-h5-audio-player";
-import Linkify from "react-linkify";
+import ReactMarkdown from "react-markdown";
 import { useDispatch, useSelector } from "react-redux";
 import reactStringReplace from "react-string-replace";
 import nacl from "tweetnacl";
 import * as uuid from "uuid";
 
 import Loading from "../components/Loading";
-import { allowedHighlighterTypes } from "../constants/allowedHighlighterTypes";
-import { mimeIcons } from "../constants/mimeIcons";
+import { allowedHighlighterTypes, mimeIcons } from "../constants";
 import { selectFamiliars } from "../reducers/familiars";
 import { getFiles, set as setFile } from "../reducers/files";
 import { selectUser } from "../reducers/user";
@@ -33,6 +33,8 @@ import { mentionRegex } from "../utils/regexes";
 import Avatar from "./Avatar";
 import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
+
+const linkify = new Linkify();
 
 export const bestMatch = (query: string, values: string[]): string => {
     let bestMatch = "";
@@ -54,7 +56,6 @@ export function MessageBox(props: {
     messages: ISerializedMessage[];
 }): JSX.Element {
     const familiars = useSelector(selectFamiliars);
-    const user = useSelector(selectUser);
     // don't match no characters of any length
     const codeRegex = /(```[^]+```)/;
     const fileRegex = /{{[^ \n]+}}/;
@@ -150,128 +151,104 @@ export function MessageBox(props: {
 
                         return (
                             <Fragment key={message.nonce}>
-                                <Linkify
-                                    componentDecorator={(
-                                        decoratedHref,
-                                        decoratedText
-                                    ) => (
-                                        <a
-                                            className="message-link"
-                                            key={message.nonce}
-                                            onClick={() => {
-                                                shell.openExternal(
-                                                    decoratedHref
-                                                );
-                                            }}
-                                        >
-                                            {decoratedText}
-                                        </a>
-                                    )}
-                                >
-                                    <p className="message-text">
-                                        {!message.decrypted && (
-                                            <code>Decryption Failed</code>
-                                        )}
-                                        {message.failed ? (
-                                            <span className="has-text-danger">
-                                                {message.message}
-                                            </span>
-                                        ) : (
-                                            <span
-                                                className={`${
-                                                    message.message.charAt(
-                                                        0
-                                                    ) === ">"
-                                                        ? "has-text-success has-text-weight-bold"
-                                                        : ""
-                                                }`}
-                                            >
-                                                {message.decrypted &&
-                                                    reactStringReplace(
-                                                        reactStringReplace(
-                                                            message.message.trim(),
-                                                            mentionRegex,
-                                                            (match) => (
-                                                                <code
-                                                                    key={
-                                                                        message.nonce
-                                                                    }
-                                                                    className={`is-small mention-wrapper has-text-weight-bold`}
-                                                                >
-                                                                    <span
-                                                                        className={`mention-wrapper-overlay ${
-                                                                            familiars[
-                                                                                match.replace(
-                                                                                    /[@<>]/g,
-                                                                                    ""
-                                                                                )
-                                                                            ]
-                                                                                ?.userID ==
-                                                                                user.userID &&
-                                                                            Date.now() -
-                                                                                new Date(
-                                                                                    message.timestamp
-                                                                                ).getTime() <
-                                                                                5000
-                                                                                ? "my-mention"
-                                                                                : ""
-                                                                        }`}
-                                                                    />
-                                                                    <span
-                                                                        className={`mention-text has-text-link`}
-                                                                    >
-                                                                        {"@"}
-                                                                        {familiars[
-                                                                            match.replace(
-                                                                                /[@<>]/g,
-                                                                                ""
-                                                                            )
-                                                                        ]
-                                                                            ?.username ||
-                                                                            "Unknown"}
-                                                                    </span>
-                                                                </code>
-                                                            )
-                                                        ),
-                                                        emojiRegex,
-                                                        (match) => {
-                                                            const parts = match
-                                                                .split(":")
-                                                                .pop();
-                                                            if (!parts) {
-                                                                return (
-                                                                    <strong />
+                                {!message.decrypted && (
+                                    <code>Decryption Failed</code>
+                                )}
+                                {message.failed ? (
+                                    <span className="has-text-danger">
+                                        {message.message}
+                                    </span>
+                                ) : (
+                                    <span
+                                        className={`${
+                                            message.message.charAt(0) === ">"
+                                                ? "has-text-success has-text-weight-bold"
+                                                : ""
+                                        }`}
+                                    >
+                                        {message.decrypted &&
+                                            reactStringReplace(
+                                                reactStringReplace(
+                                                    message.message,
+                                                    mentionRegex,
+                                                    (match) => (
+                                                        <Mention
+                                                            match={match}
+                                                            message={message}
+                                                        />
+                                                    )
+                                                ),
+                                                emojiRegex,
+                                                (match) => (
+                                                    <MessageEmoji
+                                                        match={match}
+                                                    />
+                                                )
+                                            ).map((node) => {
+                                                if (typeof node === "string") {
+                                                    if (linkify.test(node)) {
+                                                        const matches = linkify.match(
+                                                            node
+                                                        );
+                                                        let strMessage = "";
+                                                        if (matches) {
+                                                            for (const match of matches) {
+                                                                strMessage += node.replace(
+                                                                    match.text,
+                                                                    `[${match.text}](${match.url})`
                                                                 );
                                                             }
-                                                            const emojiID = parts.slice(
-                                                                0,
-                                                                parts.length - 2
-                                                            );
-
-                                                            return (
-                                                                <img
-                                                                    className="emoji"
-                                                                    src={
-                                                                        "https://api.vex.chat/emoji/" +
-                                                                        emojiID
-                                                                    }
-                                                                />
-                                                            );
                                                         }
-                                                    )}
-                                            </span>
-                                        )}
-                                        &nbsp;&nbsp;
-                                        {message.failed && (
-                                            <span className="help has-text-danger">
-                                                <FontAwesomeIcon
-                                                    icon={faExclamationTriangle}
-                                                />{" "}
-                                                Failed: {message.failMessage}{" "}
-                                            </span>
-                                        )}
-                                    </p>
-                                </Linkify>
+                                                        return (
+                                                            <ReactMarkdown
+                                                                disallowedTypes={[
+                                                                    "blockquote",
+                                                                    "code",
+                                                                    "inlineCode",
+                                                                    "list",
+                                                                    "listItem",
+                                                                    "image",
+                                                                ]}
+                                                                unwrapDisallowed={
+                                                                    true
+                                                                }
+                                                            >
+                                                                {strMessage}
+                                                            </ReactMarkdown>
+                                                        );
+                                                    }
+
+                                                    return (
+                                                        <ReactMarkdown
+                                                            disallowedTypes={[
+                                                                "blockquote",
+                                                                "code",
+                                                                "inlineCode",
+                                                                "list",
+                                                                "listItem",
+                                                                "image",
+                                                            ]}
+                                                            unwrapDisallowed={
+                                                                true
+                                                            }
+                                                            className="message-text"
+                                                        >
+                                                            {node}
+                                                        </ReactMarkdown>
+                                                    );
+                                                }
+                                                return node;
+                                            })}
+                                    </span>
+                                )}
+                                {message.failed && (
+                                    <span className="help has-text-danger">
+                                        <FontAwesomeIcon
+                                            icon={faExclamationTriangle}
+                                        />{" "}
+                                        Failed: {message.failMessage}{" "}
+                                    </span>
+                                )}
                             </Fragment>
                         );
                     })}
@@ -526,5 +503,48 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
                 )}
             </span>
         </div>
+    );
+}
+
+export function Mention(props: {
+    message: ISerializedMessage;
+    match: string;
+}): JSX.Element {
+    const familiars = useSelector(selectFamiliars);
+    const user = useSelector(selectUser);
+
+    return (
+        <code
+            key={props.message.nonce}
+            className={`is-small mention-wrapper has-text-weight-bold`}
+        >
+            <span
+                className={`mention-wrapper-overlay ${
+                    familiars[props.match.replace(/[@<>]/g, "")]?.userID ==
+                        user.userID &&
+                    Date.now() - new Date(props.message.timestamp).getTime() <
+                        5000
+                        ? "my-mention"
+                        : ""
+                }`}
+            />
+            <span className={`mention-text has-text-link`}>
+                {"@"}
+                {familiars[props.match.replace(/[@<>]/g, "")]?.username ||
+                    "Unknown"}
+            </span>
+        </code>
+    );
+}
+
+export function MessageEmoji(props: { match: string }): JSX.Element {
+    const parts = props.match.split(":").pop();
+    if (!parts) {
+        return <strong />;
+    }
+    const emojiID = parts.slice(0, parts.length - 2);
+
+    return (
+        <img className="emoji" src={"https://api.vex.chat/emoji/" + emojiID} />
     );
 }
