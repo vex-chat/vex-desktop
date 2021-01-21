@@ -134,7 +134,7 @@ export default function Base(): JSX.Element {
         );
         if (
             semver.gt(res.data.tag_name, currentVersion) &&
-            res.data.assets.length === 9
+            res.data.assets.length === 11
         ) {
             setUpdateAvailable(true);
         }
