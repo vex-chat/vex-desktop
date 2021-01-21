@@ -25,7 +25,6 @@ import Loading from "../components/Loading";
 import { allowedHighlighterTypes, mimeIcons } from "../constants";
 import { selectFamiliars } from "../reducers/familiars";
 import { getFiles, set as setFile } from "../reducers/files";
-import { selectUser } from "../reducers/user";
 import { mentionRegex } from "../utils";
 import { getAssetPath } from "../utils/getAssetPath";
 
