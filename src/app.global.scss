@@ -946,6 +946,13 @@ $topbar-buttons-size: 20px;
     z-index: 5;
 }
 
+.emoji {
+    object-fit: contain;
+    width: 1.375em;
+    height: 1.375em;
+    vertical-align: bottom;
+}
+
 .topbar-buttons.server {
     font-size: $topbar-buttons-size;
     position: absolute;

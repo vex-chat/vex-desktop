@@ -57,7 +57,8 @@ export function MessageBox(props: {
     const user = useSelector(selectUser);
     // don't match no characters of any length
     const codeRegex = /(```[^]+```)/;
-    const fileRegex = /{{[^]+}}/;
+    const fileRegex = /{{[^ \n]+}}/;
+    const emojiRegex = /(<<[^ \n]+>>)/;
     const sender = familiars[props.messages[0]?.authorID] || null;
 
     if (!sender) {
@@ -187,49 +188,76 @@ export function MessageBox(props: {
                                             >
                                                 {message.decrypted &&
                                                     reactStringReplace(
-                                                        message.message.trim(),
-                                                        mentionRegex,
-                                                        (match) => (
-                                                            <code
-                                                                key={
-                                                                    message.nonce
-                                                                }
-                                                                className={`is-small mention-wrapper has-text-weight-bold`}
-                                                            >
-                                                                <span
-                                                                    className={`mention-wrapper-overlay ${
-                                                                        familiars[
+                                                        reactStringReplace(
+                                                            message.message.trim(),
+                                                            mentionRegex,
+                                                            (match) => (
+                                                                <code
+                                                                    key={
+                                                                        message.nonce
+                                                                    }
+                                                                    className={`is-small mention-wrapper has-text-weight-bold`}
+                                                                >
+                                                                    <span
+                                                                        className={`mention-wrapper-overlay ${
+                                                                            familiars[
+                                                                                match.replace(
+                                                                                    /[@<>]/g,
+                                                                                    ""
+                                                                                )
+                                                                            ]
+                                                                                ?.userID ==
+                                                                                user.userID &&
+                                                                            Date.now() -
+                                                                                new Date(
+                                                                                    message.timestamp
+                                                                                ).getTime() <
+                                                                                5000
+                                                                                ? "my-mention"
+                                                                                : ""
+                                                                        }`}
+                                                                    />
+                                                                    <span
+                                                                        className={`mention-text has-text-link`}
+                                                                    >
+                                                                        {"@"}
+                                                                        {familiars[
                                                                             match.replace(
                                                                                 /[@<>]/g,
                                                                                 ""
                                                                             )
                                                                         ]
-                                                                            ?.userID ==
-                                                                            user.userID &&
-                                                                        Date.now() -
-                                                                            new Date(
-                                                                                message.timestamp
-                                                                            ).getTime() <
-                                                                            5000
-                                                                            ? "my-mention"
-                                                                            : ""
-                                                                    }`}
+                                                                            ?.username ||
+                                                                            "Unknown"}
+                                                                    </span>
+                                                                </code>
+                                                            )
+                                                        ),
+                                                        emojiRegex,
+                                                        (match) => {
+                                                            const parts = match
+                                                                .split(":")
+                                                                .pop();
+                                                            if (!parts) {
+                                                                return (
+                                                                    <strong />
+                                                                );
+                                                            }
+                                                            const emojiID = parts.slice(
+                                                                0,
+                                                                parts.length - 2
+                                                            );
+
+                                                            return (
+                                                                <img
+                                                                    className="emoji"
+                                                                    src={
+                                                                        "https://api.vex.chat/emoji/" +
+                                                                        emojiID
+                                                                    }
                                                                 />
-                                                                <span
-                                                                    className={`mention-text has-text-link`}
-                                                                >
-                                                                    {"@"}
-                                                                    {familiars[
-                                                                        match.replace(
-                                                                            /[@<>]/g,
-                                                                            ""
-                                                                        )
-                                                                    ]
-                                                                        ?.username ||
-                                                                        "Unknown"}
-                                                                </span>
-                                                            </code>
-                                                        )
+                                                            );
+                                                        }
                                                     )}
                                             </span>
                                         )}
@@ -287,6 +315,11 @@ const allowedImageTypes = [
     "image/png",
     "image/webp",
 ];
+
+export function Emoji(props: { emojiStr: string }): JSX.Element {
+    console.log(props);
+    return <span>{props.emojiStr}</span>;
+}
 
 export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
     const [downloading, setDownloading] = useState(false);
