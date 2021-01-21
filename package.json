@@ -86,7 +86,7 @@
             "perMachine": true
         },
         "linux": {
-            "target": ["AppImage", "pacman", "deb"],
+            "target": ["AppImage", "pacman", "deb", "tar.gz"],
             "category": "Communication"
         },
         "directories": {
