@@ -1,4 +1,3 @@
-import type { IMessage } from "@vex-chat/libvex";
 import type { IServerParams } from "~Types";
 import type {
     IGroupSerializedMessage,
@@ -23,7 +22,11 @@ import { chunkMessages } from "../utils/chunkMessages";
 import { ChatInput } from "./ChatInput";
 import { MessageBox } from "./MessageBox";
 
-export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
+export function ServerPane(props: {
+    userBarOpen: boolean;
+    outboxMessages: string[];
+    setOutboxMessages: (arr: string[]) => void;
+}): JSX.Element {
     const { channelID } = useParams<IServerParams>();
     const threadMessages = useSelector(selectGroup(channelID));
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -31,10 +34,6 @@ export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
 
     const [lastFetch, setLastFetch] = useState(Date.now());
     const [scrollLock, setScrollLock] = useState(true);
-
-    const [outboxMessages, setOutboxMessages] = useState([] as string[]);
-
-    console.log(outboxMessages);
 
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
@@ -53,26 +52,6 @@ export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
             }
         }
     }, [channelID, lastFetch]);
-
-    useEffect(() => {
-        const client = window.vex;
-        const onMessage = (message: IMessage) => {
-            if (outboxMessages.includes(message.message)) {
-                for (const str of outboxMessages) {
-                    if (str === message.message) {
-                        console.log(outboxMessages, message);
-                        const newOutbox = [...outboxMessages];
-                        newOutbox.splice(newOutbox.indexOf(str), 1);
-                        setOutboxMessages(newOutbox);
-                    }
-                }
-            }
-        };
-        client.on("message", onMessage);
-        return () => {
-            client.off("message", onMessage);
-        };
-    });
 
     useEffect(() => {
         if (scrollLock) {
@@ -121,13 +100,13 @@ export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
                 )}
 
                 {chunkMessages(
-                    { ...threadMessages, ...msgify(outboxMessages) } || {}
+                    { ...threadMessages, ...msgify(props.outboxMessages) } || {}
                 ).map((chunk) => {
                     return (
                         <MessageBox
                             key={chunk[0]?.mailID || uuid.v4()}
                             messages={chunk}
-                            outboxMessages={outboxMessages}
+                            outboxMessages={props.outboxMessages}
                         />
                     );
                 })}
@@ -138,8 +117,8 @@ export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
                 <ChatInput
                     targetID={channelID}
                     userBarOpen={props.userBarOpen}
-                    outboxMessages={outboxMessages}
-                    setOutboxMessages={setOutboxMessages}
+                    outboxMessages={props.outboxMessages}
+                    setOutboxMessages={props.setOutboxMessages}
                     group
                 />
             )}
@@ -158,7 +137,9 @@ export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
     );
 }
 
-const msgify = (outbox: string[]) => {
+export const msgify = (
+    outbox: string[]
+): Record<string, ISerializedMessage> => {
     const outboxRecord: Record<string, IGroupSerializedMessage> = {};
     const client = window.vex;
     for (const message of outbox) {

@@ -42,11 +42,15 @@ import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
 import { IconUsername } from "./IconUsername";
 import { MessageBox } from "./MessageBox";
+import { msgify } from "./ServerPane";
 import Settings from "./Settings";
 
 export const DM_HISTORY_NAME = "DIRECT-MESSAGING";
 
-export default function MessagingPane(): JSX.Element {
+export default function MessagingPane(props: {
+    outboxMessages: string[];
+    setOutboxMessages: (arr: string[]) => void;
+}): JSX.Element {
     // state
 
     const dispatch = useDispatch();
@@ -477,7 +481,10 @@ export default function MessagingPane(): JSX.Element {
                                         )}
 
                                         {chunkMessages(
-                                            threadMessages || {}
+                                            {
+                                                ...threadMessages,
+                                                ...msgify(props.outboxMessages),
+                                            } || {}
                                         ).map((chunk) => {
                                             return (
                                                 <MessageBox
@@ -509,6 +516,8 @@ export default function MessagingPane(): JSX.Element {
                                     targetID={familiar.userID}
                                     userBarOpen={false}
                                     disabled={!directMessagesEnabled}
+                                    outboxMessages={props.outboxMessages}
+                                    setOutboxMessages={props.setOutboxMessages}
                                 />
                             </Fragment>
                         );

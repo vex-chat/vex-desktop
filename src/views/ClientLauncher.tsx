@@ -46,7 +46,7 @@ import { addPermission, setPermissions } from "../reducers/permissions";
 import { setServers } from "../reducers/servers";
 import { addSession, setSessions } from "../reducers/sessions";
 import { setUser } from "../reducers/user";
-import { DataStore, mentionRegex } from "../utils";
+import { DataStore } from "../utils";
 
 declare global {
     interface Window {
@@ -92,9 +92,6 @@ export function ClientLauncher(): JSX.Element {
 
         const mentionsUs = message.message.includes(me.userID);
         const sounds = DataStore.get("settings.sounds") as boolean;
-
-        console.log("Mentions us is " + mentionsUs);
-        console.log(message.message);
 
         // all notifications are off
         if (!mentionsUs && !globalNotifications) {

@@ -24,7 +24,11 @@ import { selectOnlineList } from "../reducers/onlineLists";
 import { selectServers } from "../reducers/servers";
 import { DataStore } from "../utils";
 
-export function Server(props: { updateAvailable: boolean }): JSX.Element {
+export function Server(props: {
+    updateAvailable: boolean;
+    outboxMessages: string[];
+    setOutboxMessages: (arr: string[]) => void;
+}): JSX.Element {
     const params = useParams<{
         serverID: string;
         channelID: string;
@@ -121,7 +125,13 @@ export function Server(props: { updateAvailable: boolean }): JSX.Element {
                         path={
                             routes.SERVERS + "/:serverID/channels/:channelID?"
                         }
-                        render={() => <ServerPane userBarOpen={userBarOpen} />}
+                        render={() => (
+                            <ServerPane
+                                outboxMessages={props.outboxMessages}
+                                setOutboxMessages={props.setOutboxMessages}
+                                userBarOpen={userBarOpen}
+                            />
+                        )}
                     />
                     <Route
                         exact

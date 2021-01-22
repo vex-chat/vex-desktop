@@ -99,7 +99,7 @@ export function MessageBox(props: {
                     </small>
                     &nbsp;&nbsp;
                     <br />
-                    {props.messages.map((message, index) => {
+                    {props.messages.map((message) => {
                         const isCode = codeRegex.test(message.message);
                         const isFile = fileRegex.test(message.message);
 
@@ -168,36 +168,31 @@ export function MessageBox(props: {
                             }
                         }
 
-                        if (messageText.match(emojiRegex)) {
-                            const matches = emojiRegex.exec(messageText);
-                            if (matches) {
-                                for (const match of matches) {
-                                    const { emojiName, emojiID } = emojiDetails(
-                                        match
+                        const eMatches = emojiRegex.exec(messageText);
+                        if (eMatches) {
+                            for (const match of eMatches) {
+                                const { emojiName, emojiID } = emojiDetails(
+                                    match
+                                );
+                                if (emojiName && emojiID) {
+                                    messageText = messageText.replace(
+                                        match,
+                                        `![${emojiName}](https://api.vex.chat/emoji/${emojiID})`
                                     );
-                                    if (emojiName && emojiID) {
-                                        messageText = messageText.replace(
-                                            match,
-                                            `![${emojiName}](https://api.vex.chat/emoji/${emojiID})`
-                                        );
-                                    }
                                 }
                             }
                         }
 
-                        if (messageText.match(mentionRegex)) {
-                            const matches = mentionRegex.exec(messageText);
-                            if (matches) {
-                                for (const match of matches) {
-                                    messageText = messageText.replace(
-                                        match,
-                                        `**@${
-                                            familiars[
-                                                match.replace(/[@<>]/g, "")
-                                            ]?.username
-                                        }**`
-                                    );
-                                }
+                        const matches = mentionRegex.exec(messageText);
+                        if (matches) {
+                            for (const match of matches) {
+                                messageText = messageText.replace(
+                                    match,
+                                    `**@${
+                                        familiars[match.replace(/[@<>]/g, "")]
+                                            ?.username
+                                    }**`
+                                );
                             }
                         }
 

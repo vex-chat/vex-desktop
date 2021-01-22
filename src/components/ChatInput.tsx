@@ -366,7 +366,7 @@ export function ChatInput(props: {
                                     return;
                                 }
                             }}
-                            onKeyUp={async (event) => {
+                            onKeyUp={(event) => {
                                 adjustInputHeight(event);
                             }}
                         />

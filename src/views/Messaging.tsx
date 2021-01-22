@@ -13,6 +13,8 @@ import { selectApp } from "../reducers/app";
 
 export default function Messaging(props: {
     updateAvailable: boolean;
+    outboxMessages: string[];
+    setOutboxMessages: (arr: string[]) => void;
 }): JSX.Element {
     const app = useSelector(selectApp);
 
@@ -30,7 +32,10 @@ export default function Messaging(props: {
             />
             <ServerBar />
             <MessagingBar />
-            <MessagingPane />
+            <MessagingPane
+                outboxMessages={props.outboxMessages}
+                setOutboxMessages={props.setOutboxMessages}
+            />
             <UserMenu />
         </Fragment>
     );

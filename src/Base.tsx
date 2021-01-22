@@ -1,3 +1,5 @@
+import type { IMessage } from "@vex-chat/libvex";
+
 import axios from "axios";
 import { ipcRenderer, remote, shell } from "electron";
 import log from "electron-log";
@@ -48,6 +50,30 @@ export default function Base(): JSX.Element {
     const [modalContents, setModalContents] = useState(
         null as JSX.Element | null
     );
+    const [outboxMessages, setOutboxMessages] = useState([] as string[]);
+
+    useEffect(() => {
+        const client = window.vex;
+        if (!client) {
+            return;
+        }
+        const onMessage = (message: IMessage) => {
+            if (outboxMessages.includes(message.message)) {
+                for (const str of outboxMessages) {
+                    if (str === message.message) {
+                        console.log(outboxMessages, message);
+                        const newOutbox = [...outboxMessages];
+                        newOutbox.splice(newOutbox.indexOf(str), 1);
+                        setOutboxMessages(newOutbox);
+                    }
+                }
+            }
+        };
+        client.on("message", onMessage);
+        return () => {
+            client.off("message", onMessage);
+        };
+    });
 
     let resizingTimeout = setTimeout(() => {
         ("");
@@ -209,7 +235,11 @@ export default function Base(): JSX.Element {
                 <Route
                     path={routes.MESSAGING + "/:userID?/:page?/:sessionID?"}
                     render={() => (
-                        <Messaging updateAvailable={updateAvailable} />
+                        <Messaging
+                            outboxMessages={outboxMessages}
+                            setOutboxMessages={setOutboxMessages}
+                            updateAvailable={updateAvailable}
+                        />
                     )}
                 />
                 <Route
@@ -217,7 +247,13 @@ export default function Base(): JSX.Element {
                         routes.SERVERS +
                         "/:serverID?/:pageType/:channelID?/:channelPage?"
                     }
-                    render={() => <Server updateAvailable={updateAvailable} />}
+                    render={() => (
+                        <Server
+                            outboxMessages={outboxMessages}
+                            setOutboxMessages={setOutboxMessages}
+                            updateAvailable={updateAvailable}
+                        />
+                    )}
                 />
                 <Route path={routes.REGISTER} render={() => <Register />} />
                 <Route path={routes.LAUNCH} render={() => <ClientLauncher />} />
