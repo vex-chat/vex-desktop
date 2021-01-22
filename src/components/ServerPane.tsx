@@ -41,7 +41,8 @@ export function ServerPane(props: {
         }
     };
 
-    useMemo(async () => {
+    const getOnlineList = async () => {
+        console.log("GETTING ONLINE LIST");
         const client = window.vex;
         if (channelID) {
             try {
@@ -51,7 +52,15 @@ export function ServerPane(props: {
                 console.log(err);
             }
         }
-    }, [channelID, lastFetch]);
+    };
+
+    useMemo(() => {
+        getOnlineList();
+    }, [channelID]);
+
+    useMemo(() => {
+        getOnlineList();
+    }, [lastFetch]);
 
     useEffect(() => {
         if (scrollLock) {
@@ -60,7 +69,7 @@ export function ServerPane(props: {
 
         const interval = setInterval(() => {
             setLastFetch(Date.now());
-        }, 1000 * 60);
+        }, 1000 * 30);
         return () => {
             clearInterval(interval);
         };
