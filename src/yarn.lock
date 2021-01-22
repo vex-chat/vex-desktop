@@ -158,10 +158,10 @@
     ts-jest "^26.4.4"
     tweetnacl "^1.0.3"
 
-"@vex-chat/libvex@^0.18.13":
-  version "0.18.16"
-  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.18.16.tgz#b84e8819372e2ccf395718a148bdfe8554cf91b6"
-  integrity sha512-HtVLTacFT5M4DWJFZxf85l0ShZmboXe9sQu5JI5uIA1T05eg27EeC+hJ5wsHB4n98YWf85iZSMr5D3mdmebyAQ==
+"@vex-chat/libvex@^0.18.18":
+  version "0.18.18"
+  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.18.18.tgz#fbedfd55f36fc0df86c3c0fd51befdf293f26ad4"
+  integrity sha512-CRvLD3W4C6eZdwH9Lmtg09DGygG+3bgGZDJIp9ZgA7XVIZPpReQTBgWKQlueRpzncg4XFqndAfO2u+lljt5Cgg==
   dependencies:
     "@extrahash/sleep" "^1.0.0"
     "@types/create-hmac" "^1.1.0"
@@ -176,6 +176,7 @@
     knex "^0.21.15"
     lodash "^4.17.20"
     msgpack-lite "^0.1.26"
+    parse-duration "^0.4.4"
     sqlite3 "^5.0.0"
     tweetnacl "^1.0.3"
     uuid "^8.3.1"
@@ -1799,6 +1800,11 @@ osenv@0, osenv@^0.1.4:
   dependencies:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
+
+parse-duration@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/parse-duration/-/parse-duration-0.4.4.tgz#11c0f51a689e97d06c57bd772f7fda7dc013243c"
+  integrity sha512-KbAJuYGUhZkB9gotDiKLnZ7Z3VTacK3fgwmDdB6ZVDtJbMBT6MfLga0WJaYpPDu0mzqT0NgHtHDt5PY4l0nidg==
 
 parse-filepath@^1.0.1:
   version "1.0.2"

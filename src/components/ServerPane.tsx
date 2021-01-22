@@ -56,6 +56,7 @@ export function ServerPane(props: {
 
     useMemo(() => {
         getOnlineList();
+        props.setOutboxMessages([]);
     }, [channelID]);
 
     useMemo(() => {
@@ -109,7 +110,10 @@ export function ServerPane(props: {
                 )}
 
                 {chunkMessages(
-                    { ...threadMessages, ...msgify(props.outboxMessages) } || {}
+                    {
+                        ...(threadMessages || {}),
+                        ...msgify(props.outboxMessages),
+                    } || {}
                 ).map((chunk) => {
                     return (
                         <MessageBox

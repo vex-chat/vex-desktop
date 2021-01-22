@@ -11,6 +11,7 @@ import {
     Avatar,
     ChannelBar,
     ChannelSettings,
+    FamiliarMenu,
     ServerBar,
     ServerPane,
     ServerSettings,
@@ -157,7 +158,15 @@ export function Server(props: {
                                 <article className="media">
                                     <figure className="media-left">
                                         <div className="image">
-                                            <Avatar user={user} size={32} />
+                                            <FamiliarMenu
+                                                familiar={user}
+                                                trigger={
+                                                    <Avatar
+                                                        user={user}
+                                                        size={32}
+                                                    />
+                                                }
+                                            />
                                         </div>
                                     </figure>
                                     <div className="media-content">
@@ -180,8 +189,16 @@ export function Server(props: {
                             >
                                 <article className="media">
                                     <figure className="media-left">
-                                        <div className="image">
-                                            <Avatar user={user} size={32} />
+                                        <div className="image rightbar-trigger">
+                                            <FamiliarMenu
+                                                familiar={user}
+                                                trigger={
+                                                    <Avatar
+                                                        user={user}
+                                                        size={32}
+                                                    />
+                                                }
+                                            />
                                         </div>
                                     </figure>
                                     <div className="media-content">

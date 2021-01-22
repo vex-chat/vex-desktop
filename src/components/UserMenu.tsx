@@ -16,6 +16,7 @@ import { IconUsername } from "./IconUsername";
 
 export function UserMenu(): JSX.Element {
     const user = useSelector(selectUser);
+
     const [className, setClassName] = useState("");
 
     const outsideClick = () => {

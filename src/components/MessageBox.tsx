@@ -62,8 +62,6 @@ export function MessageBox(props: {
     const emojiRegex = /(<<[^ \n]+>>)/;
     const sender = familiars[props.messages[0]?.authorID] || null;
 
-    console.log(props.messages[0]);
-
     if (!sender) {
         return <p key={uuid.v4()} />;
     }

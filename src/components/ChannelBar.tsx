@@ -5,6 +5,7 @@ import {
     faCog,
     faHashtag,
     faPlus,
+    faSignOutAlt,
     faTrash,
     faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
@@ -17,6 +18,7 @@ import { Link } from "react-router-dom";
 import { routes } from "../constants/routes";
 import { deleteChannel, selectChannels } from "../reducers/channels";
 import { selectPermission } from "../reducers/permissions";
+import { delServer } from "../reducers/servers";
 
 type ChannelBarProps = {
     serverID: string;
@@ -150,6 +152,23 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                     </span>
                                     &nbsp; Server Settings
                                 </Link>
+                                <a
+                                    className="dropdown-item has-text-danger"
+                                    onClick={async () => {
+                                        const client = window.vex;
+                                        await client.servers.leave(serverID);
+                                        dispatch(delServer(serverID));
+                                        history.push(routes.MESSAGING);
+                                    }}
+                                >
+                                    <span className="icon">
+                                        <FontAwesomeIcon
+                                            icon={faSignOutAlt}
+                                            className="has-text-danger"
+                                        />
+                                    </span>
+                                    &nbsp; Leave Server
+                                </a>
                             </div>
                         </div>
                     </div>
