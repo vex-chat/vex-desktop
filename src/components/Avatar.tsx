@@ -1,10 +1,10 @@
 import type { IUser } from "@vex-chat/libvex";
 import type { RootState } from "~Types";
 
+import { vexAvatarFromUUID } from "@vex-chat/avatar-generator";
+
 import { Component } from "react";
 import { connect } from "react-redux";
-
-import { strToIcon } from "../utils/strToIcon";
 
 type Props = {
     user: IUser;
@@ -22,7 +22,7 @@ class Avatar extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            src: strToIcon(this.props.user.username), // "https://api.vex.chat/avatar/" + props.user.userID,
+            src: vexAvatarFromUUID(this.props.user.userID), // "https://api.vex.chat/avatar/" + props.user.userID,
             loaded: false,
         };
     }
@@ -35,7 +35,7 @@ class Avatar extends Component<Props, State> {
 
     onError(): void {
         this.setState({
-            src: strToIcon(this.props.user.username),
+            src: vexAvatarFromUUID(this.props.user.userID),
         });
     }
 
@@ -49,7 +49,11 @@ class Avatar extends Component<Props, State> {
                     className={`image is-${size.toString()}x${size.toString()} is-rounded ${
                         this.props.className || ""
                     } ${this.state.loaded ? "" : "hidden"}`}
-                    src={src + "?hash=" + this.props.hash.toString()}
+                    src={
+                        src.includes("svg")
+                            ? src
+                            : src + "?hash=" + this.props.hash.toString()
+                    }
                     onError={this.onError.bind(this)}
                     onLoad={() => {
                         this.setState({ loaded: true });

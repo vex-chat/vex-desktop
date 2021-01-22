@@ -203,6 +203,10 @@ textarea:focus {
     height: auto;
 }
 
+.image-preview-wrapper img {
+    max-height: 400px;
+}
+
 .search-wrapper {
     border-bottom: 2px solid var(--theme_color_1);
     background-color: var(--theme_color_2);
