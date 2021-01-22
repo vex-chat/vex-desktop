@@ -1,11 +1,16 @@
 import type { IMessage } from "@vex-chat/libvex";
 import type { IServerParams } from "~Types";
+import type {
+    IGroupSerializedMessage,
+    ISerializedMessage,
+} from "../reducers/messages";
 
 import {
     faArrowAltCircleDown,
     faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import crypto from "crypto";
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -28,6 +33,8 @@ export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
     const [scrollLock, setScrollLock] = useState(true);
 
     const [outboxMessages, setOutboxMessages] = useState([] as string[]);
+
+    console.log(outboxMessages);
 
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
@@ -113,7 +120,9 @@ export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
                     </div>
                 )}
 
-                {chunkMessages(threadMessages || {}).map((chunk) => {
+                {chunkMessages(
+                    { ...threadMessages, ...msgify(outboxMessages) } || {}
+                ).map((chunk) => {
                     return (
                         <MessageBox
                             key={chunk[0]?.mailID || uuid.v4()}
@@ -122,16 +131,6 @@ export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
                         />
                     );
                 })}
-                {outboxMessages.map((message, index) => (
-                    <div
-                        key={`outbox-${index}`}
-                        className="outbox-message-wrapper"
-                    >
-                        <p className="outbox-message-text">
-                            <p>{message}</p>
-                        </p>
-                    </div>
-                ))}
                 <div ref={messagesEndRef} />
             </div>
 
@@ -158,3 +157,29 @@ export function ServerPane(props: { userBarOpen: boolean }): JSX.Element {
         </Fragment>
     );
 }
+
+const msgify = (outbox: string[]) => {
+    const outboxRecord: Record<string, IGroupSerializedMessage> = {};
+    const client = window.vex;
+    for (const message of outbox) {
+        const msg: ISerializedMessage = {
+            nonce: crypto.randomBytes(24).toString("hex"),
+            mailID: uuid.v4(),
+            sender: client.me.device().deviceID,
+            recipient: "",
+            decrypted: true,
+            timestamp: new Date(Date.now()).toString(),
+            group: uuid.v4(),
+            message,
+            direction: "outgoing",
+            failed: false,
+            authorID: client.me.user().userID,
+            readerID: "",
+            forward: false,
+            failMessage: "",
+            outbox: true,
+        };
+        outboxRecord[msg.mailID] = msg;
+    }
+    return outboxRecord;
+};

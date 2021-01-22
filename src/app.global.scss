@@ -1024,9 +1024,6 @@ $topbar-buttons-size: 20px;
     color: lighten($link, 3%) !important;
 }
 
-.outbox-message-wrapper {
-    margin-top: -10px;
-    margin-left: 64px !important;
-    padding-bottom: 14px !important;
-    opacity: 0.8;
+.outbox-message {
+    opacity: 0.75;
 }

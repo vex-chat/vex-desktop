@@ -20,6 +20,7 @@ export interface IBaseSerializedMessage {
     authorID: string;
     readerID: string;
     forward: boolean;
+    outbox?: boolean;
 }
 
 export interface IGroupSerializedMessage extends IBaseSerializedMessage {

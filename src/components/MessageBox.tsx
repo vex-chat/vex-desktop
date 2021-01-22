@@ -71,7 +71,12 @@ export function MessageBox(props: {
     }
 
     return (
-        <article className="chat-message media" key={props.messages[0].nonce}>
+        <article
+            className={`chat-message media ${
+                props.messages[0].outbox ? "outbox-message" : ""
+            }`}
+            key={props.messages[0].nonce}
+        >
             <figure className="media-left">
                 <FamiliarMenu
                     trigger={
@@ -214,7 +219,13 @@ export function MessageBox(props: {
                                         }`}
                                     >
                                         {message.decrypted && (
-                                            <p className="message-text">
+                                            <p
+                                                className={`message-text ${
+                                                    message.outbox
+                                                        ? "outbox-message"
+                                                        : ""
+                                                }`}
+                                            >
                                                 <ReactMarkdown
                                                     disallowedTypes={[
                                                         "blockquote",
