@@ -542,7 +542,7 @@ export function DeviceList(): JSX.Element {
 
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [selectedDevice, setSelectedDevice] = useState("");
-    const [errText, setErrText] = useState("There was an error!");
+    const [errText, setErrText] = useState("");
 
     return (
         <div className="pane-screen-wrapper">
