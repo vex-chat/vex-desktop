@@ -569,7 +569,8 @@ export function DeviceList(): JSX.Element {
                     <p>
                         Are you sure you wish to remove this device from your
                         account? It will stop receiving messages until you log
-                        in on it again.
+                        in on it again, and you may lose your message history on
+                        that device.
                     </p>
                 </div>
             </Modal>
