@@ -183,10 +183,7 @@ export function Server(props: {
                                 !withinTimeLimit(user.lastSeen, 1000 * 60 * 5)
                         )
                         .map((user) => (
-                            <div
-                                className={`online-user offline`}
-                                key={user.userID}
-                            >
+                            <div className={`online-user`} key={user.userID}>
                                 <article className="media">
                                     <figure className="media-left">
                                         <div className="image rightbar-trigger">

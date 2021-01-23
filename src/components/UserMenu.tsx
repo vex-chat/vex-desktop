@@ -1,5 +1,6 @@
 import {
     faCog,
+    faMobileAlt,
     faSignOutAlt,
     faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
@@ -74,7 +75,9 @@ export function UserMenu(): JSX.Element {
                                             setClassName("");
                                         }}
                                     >
-                                        <FontAwesomeIcon icon={faCog} />
+                                        <span className="icon">
+                                            <FontAwesomeIcon icon={faCog} />
+                                        </span>
                                         &nbsp; Preferences
                                     </Link>
                                     <Link
@@ -89,14 +92,39 @@ export function UserMenu(): JSX.Element {
                                             setClassName("");
                                         }}
                                     >
-                                        <FontAwesomeIcon icon={faUserAlt} />
+                                        <span className="icon">
+                                            <FontAwesomeIcon icon={faUserAlt} />
+                                        </span>
                                         &nbsp; My Info
+                                    </Link>
+                                    <Link
+                                        to={
+                                            routes.MESSAGING +
+                                            "/" +
+                                            user.userID +
+                                            "/devices"
+                                        }
+                                        className="dropdown-item"
+                                        onClick={() => {
+                                            setClassName("");
+                                        }}
+                                    >
+                                        <span className="icon">
+                                            <FontAwesomeIcon
+                                                icon={faMobileAlt}
+                                            />
+                                        </span>
+                                        &nbsp; My Devices
                                     </Link>
                                     <Link
                                         to={routes.LOGOUT}
                                         className="dropdown-item has-text-danger"
                                     >
-                                        <FontAwesomeIcon icon={faSignOutAlt} />
+                                        <span className="icon has-text-danger">
+                                            <FontAwesomeIcon
+                                                icon={faSignOutAlt}
+                                            />
+                                        </span>
                                         &nbsp; Logout
                                     </Link>
                                 </div>
