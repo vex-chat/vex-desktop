@@ -209,6 +209,7 @@ export function MessageBox(props: {
 
                         const matches = mentionRegex.exec(messageText);
                         if (matches) {
+                            console.log(matches);
                             for (const match of matches) {
                                 messageText = messageText.replace(
                                     match,
