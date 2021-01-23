@@ -1,6 +1,11 @@
 import type { IUser } from "@vex-chat/libvex";
 
 import {
+    faApple,
+    faLinux,
+    faWindows,
+} from "@fortawesome/free-brands-svg-icons";
+import {
     faArrowAltCircleDown,
     faAt,
     faCheckCircle,
@@ -8,6 +13,7 @@ import {
     faExclamationCircle,
     faExclamationTriangle,
     faLock,
+    faMobile,
     faSkull,
     faStar,
     faTimes,
@@ -29,7 +35,7 @@ import * as uuid from "uuid";
 
 import { routes } from "../constants/routes";
 import { useQuery } from "../hooks/useQuery";
-import { selectDevices } from "../reducers/devices";
+import { del as delDevice, selectDevices } from "../reducers/devices";
 import { selectFamiliars } from "../reducers/familiars";
 import { push as pushHistoryStack } from "../reducers/historyStacks";
 import { selectMessages } from "../reducers/messages";
@@ -42,6 +48,7 @@ import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
 import { IconUsername } from "./IconUsername";
 import { MessageBox } from "./MessageBox";
+import { Modal } from "./Modal";
 import { msgify } from "./ServerPane";
 import Settings from "./Settings";
 
@@ -203,7 +210,7 @@ export default function MessagingPane(props: {
                                             key={sessionID}
                                             className="panel-block"
                                         >
-                                            <table className="table is-fullwidth is-striped">
+                                            <table className="table is-fullwidth">
                                                 <tbody>
                                                     <tr>
                                                         <th>
@@ -531,24 +538,129 @@ export default function MessagingPane(props: {
 export function DeviceList(): JSX.Element {
     const params: { userID: string } = useParams();
     const devices = useSelector(selectDevices(params.userID));
+    const dispatch = useDispatch();
+
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [selectedDevice, setSelectedDevice] = useState("");
+    const [errText, setErrText] = useState("There was an error!");
 
     return (
         <div className="pane-screen-wrapper">
+            <Modal
+                showCancel
+                active={confirmDelete}
+                close={() => {
+                    setSelectedDevice("");
+                    setConfirmDelete(false);
+                }}
+                onAccept={async () => {
+                    const client = window.vex;
+                    try {
+                        await client.devices.delete(selectedDevice);
+                    } catch (err) {
+                        setErrText(err.toString());
+                        return;
+                    }
+                    dispatch(delDevice(devices[selectedDevice]));
+                }}
+            >
+                <div>
+                    <h1 className="title">Warning!</h1>
+                    <p>
+                        Are you sure you wish to remove this device from your
+                        account? It will stop receiving messages until you log
+                        in on it again.
+                    </p>
+                </div>
+            </Modal>
             <div className="message">
                 <div className="message-header">Devices</div>
                 <div className="message-body">
-                    {Object.keys(devices).map((key) => (
-                        <div key={devices[key].deviceID} className="help">
-                            {devices[key].name}
-                            &nbsp; &nbsp; last logged in{" "}
-                            {format(
-                                new Date(devices[key].lastLogin),
-                                "kk:mm MM/dd/yyyy"
-                            )}
+                    {errText !== "" && (
+                        <div className="notification is-danger">
+                            {errText}{" "}
+                            <button
+                                className="delete"
+                                onClick={() => {
+                                    setErrText("");
+                                }}
+                            ></button>
                         </div>
-                    ))}
+                    )}
+                    <table className="table is-fullwidth">
+                        <thead className="">
+                            <tr>
+                                <td />
+                                <td>Device</td>
+                                <td>Last Login</td>
+                                <td />
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {Object.keys(devices)
+                                .sort((a, b) => {
+                                    const keyA = new Date(
+                                        devices[a].lastLogin
+                                    ).getTime();
+                                    const keyB = new Date(
+                                        devices[b].lastLogin
+                                    ).getTime();
+                                    if (keyA > keyB) return -1;
+                                    if (keyA < keyB) return 1;
+                                    return 0;
+                                })
+                                .map((key) => (
+                                    <tr
+                                        key={devices[key].deviceID}
+                                        className=""
+                                    >
+                                        <td>
+                                            <span className="icon">
+                                                {getIcon(devices[key].name)}
+                                            </span>
+                                        </td>
+                                        <td>{devices[key].name}</td>
+                                        <td>
+                                            last logged in{" "}
+                                            {format(
+                                                new Date(
+                                                    devices[key].lastLogin
+                                                ),
+                                                "kk:mm MM/dd/yyyy"
+                                            )}
+                                        </td>
+                                        <td>
+                                            <button
+                                                className="button is-danger is-small"
+                                                onClick={() => {
+                                                    setSelectedDevice(
+                                                        devices[key].deviceID
+                                                    );
+                                                    setConfirmDelete(true);
+                                                }}
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     );
 }
+
+const getIcon = (name: string) => {
+    switch (name) {
+        case "win32":
+            return <FontAwesomeIcon icon={faWindows} />;
+        case "linux":
+            return <FontAwesomeIcon icon={faLinux} />;
+        case "darwin":
+            return <FontAwesomeIcon icon={faApple} />;
+        default:
+            return <FontAwesomeIcon icon={faMobile} />;
+    }
+};
