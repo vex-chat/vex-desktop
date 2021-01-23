@@ -95,7 +95,6 @@ export default function Base(): JSX.Element {
 
         const unauthedRoutes = ["/", "/register", "/login"];
         if (unauthedRoutes.includes(history.location.pathname)) {
-            console.warn("Clicked invite link, but not logged in.");
             setModalContents(
                 <p>You need to log in before you can accept an invite.</p>
             );

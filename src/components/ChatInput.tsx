@@ -66,7 +66,6 @@ export function ChatInput(props: {
 
     const selectEmoji = (emoji: EmojiData, matchOverride?: string) => {
         if (!matches) {
-            console.warn("No matches.");
             return;
         }
         const match = matchOverride || matches[0];

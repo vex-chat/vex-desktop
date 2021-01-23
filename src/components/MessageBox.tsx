@@ -48,7 +48,7 @@ linkify
 
             if (self.re.magnet.test(tail)) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                return tail.match(self.re.magnet)![0].length;
+                return self.re.magnet.exec(tail)![0].length;
             }
 
             return 0;
@@ -184,7 +184,6 @@ export function MessageBox(props: {
                             const matches = linkify.match(messageText);
                             if (matches) {
                                 for (const match of matches) {
-                                    console.log(match);
                                     messageText = messageText.replace(
                                         match.text,
                                         `[${match.text}](${match.url})`

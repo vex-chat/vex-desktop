@@ -20,6 +20,8 @@ import { deleteChannel, selectChannels } from "../reducers/channels";
 import { selectPermission } from "../reducers/permissions";
 import { delServer } from "../reducers/servers";
 
+import { Modal } from "./Modal";
+
 type ChannelBarProps = {
     serverID: string;
     name: string;
@@ -41,13 +43,38 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
 
     const channelIDs = Object.keys(serverChannels);
 
+    const [confirmLeave, setConfirmLeave] = useState(false);
+
     const outsideClick = () => {
         setMenuOpen(false);
         window.removeEventListener("click", outsideClick);
     };
 
+    const leaveServer = async () => {
+        const client = window.vex;
+        await client.servers.leave(serverID);
+        dispatch(delServer(serverID));
+        history.push(routes.MESSAGING);
+    };
+
     return (
         <div className="sidebar">
+            <Modal
+                acceptText={"Leave Server"}
+                showCancel
+                onAccept={leaveServer}
+                active={confirmLeave}
+                close={() => {
+                    setConfirmLeave(false);
+                }}
+            >
+                <div>
+                    <p>
+                        Are you sure you want to leave? You won&apos;t be able
+                        to get back in without an invite link.
+                    </p>
+                </div>
+            </Modal>
             <div className="server-titlebar">
                 <h1 className="title is-size-4 server-title-text">
                     {name}
@@ -154,11 +181,8 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                 </Link>
                                 <a
                                     className="dropdown-item has-text-danger"
-                                    onClick={async () => {
-                                        const client = window.vex;
-                                        await client.servers.leave(serverID);
-                                        dispatch(delServer(serverID));
-                                        history.push(routes.MESSAGING);
+                                    onClick={() => {
+                                        setConfirmLeave(true);
                                     }}
                                 >
                                     <span className="icon">
