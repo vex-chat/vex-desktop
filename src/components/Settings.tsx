@@ -4,10 +4,12 @@ import { Fragment, useEffect, useState } from "react";
 import { TwitterPicker } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
 
+import { Modal } from "../components/Modal";
 import { set as setAvatarHash } from "../reducers/avatarHash";
+import { reset as resetGroupMessages } from "../reducers/groupMessages";
+import { reset as resetMessages } from "../reducers/messages";
 import { selectUser } from "../reducers/user";
-import store from "../utils/DataStore";
-import { setThemeColor } from "../utils/setThemeColor";
+import { DataStore, setThemeColor } from "../utils";
 
 import { IconUsername } from "./IconUsername";
 import Loading from "./Loading";
@@ -44,25 +46,60 @@ export default function Settings(): JSX.Element {
     );
 
     const [notification, setNotifications] = useState(
-        store.get("settings.notifications") as boolean
+        DataStore.get("settings.notifications") as boolean
     );
 
     const [directMessages, setDirectMessages] = useState(
-        store.get("settings.directMessages") as boolean
+        DataStore.get("settings.directMessages") as boolean
     );
 
     const [sounds, setSounds] = useState(
-        store.get("settings.sounds") as boolean
+        DataStore.get("settings.sounds") as boolean
     );
 
+    const [confirmPurge, setConfirmPurge] = useState(false);
+    const [purgeComplete, setPurgeComplete] = useState(false);
+
     const [mentionNotifications, setMentionNotifications] = useState(
-        store.get("settings.notify.mentions") as boolean
+        DataStore.get("settings.notify.mentions") as boolean
     );
 
     const [errText, setErrText] = useState("");
 
+    const purgeHistory = async () => {
+        const client = window.vex;
+        await client.messages.purge();
+        dispatch(resetMessages());
+        dispatch(resetGroupMessages());
+        setPurgeComplete(true);
+    };
+
     return (
         <div className="pane-screen-wrapper">
+            <Modal
+                active={confirmPurge}
+                close={() => {
+                    setConfirmPurge(false);
+                }}
+                showCancel
+                onAccept={purgeHistory}
+            >
+                <div>
+                    <h1 className="title">Danger!</h1>
+                    <p>
+                        This will <strong>permanently</strong> delete all
+                        message history. Are you sure you wish to proceed?
+                    </p>
+                </div>
+            </Modal>
+            <Modal
+                active={purgeComplete}
+                close={() => {
+                    setPurgeComplete(false);
+                }}
+            >
+                <p>Message purge complete.</p>
+            </Modal>
             <div className="message">
                 <p className="message-header">User Settings</p>
                 <div className="message-body has-text-left">
@@ -168,7 +205,7 @@ export default function Settings(): JSX.Element {
                             <label className="checkbox settings-box">
                                 <input
                                     onChange={() => {
-                                        store.set(
+                                        DataStore.set(
                                             "settings.directMessages",
                                             !directMessages
                                         );
@@ -185,7 +222,10 @@ export default function Settings(): JSX.Element {
                             <label className="checkbox settings-box">
                                 <input
                                     onChange={() => {
-                                        store.set("settings.sounds", !sounds);
+                                        DataStore.set(
+                                            "settings.sounds",
+                                            !sounds
+                                        );
                                         setSounds(!sounds);
                                     }}
                                     type="checkbox"
@@ -223,7 +263,7 @@ export default function Settings(): JSX.Element {
                                 onChange={(newBaseColor) => {
                                     setBaseColor(newBaseColor.hex);
                                     setThemeColor(newBaseColor.hex);
-                                    store.set(
+                                    DataStore.set(
                                         "settings.themeColor",
                                         newBaseColor.hex
                                     );
@@ -243,14 +283,14 @@ export default function Settings(): JSX.Element {
                                 <input
                                     onChange={() => {
                                         if (!notification) {
-                                            store.set(
+                                            DataStore.set(
                                                 "settings.notify.mentions",
                                                 true
                                             );
                                             setMentionNotifications(true);
                                         }
 
-                                        store.set(
+                                        DataStore.set(
                                             "settings.notifications",
                                             !notification
                                         );
@@ -267,7 +307,7 @@ export default function Settings(): JSX.Element {
                                 <input
                                     disabled={notification}
                                     onChange={() => {
-                                        store.set(
+                                        DataStore.set(
                                             "settings.notify.mentions",
                                             !mentionNotifications
                                         );
@@ -280,6 +320,23 @@ export default function Settings(): JSX.Element {
                                 />
                                 &nbsp; Mentions
                             </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div className="message">
+                <p className="message-header">History Settings</p>
+                <div className="message-body">
+                    <ul>
+                        <li>
+                            <button
+                                className="button is-small is-danger"
+                                onClick={() => {
+                                    setConfirmPurge(true);
+                                }}
+                            >
+                                Purge History
+                            </button>
                         </li>
                     </ul>
                 </div>

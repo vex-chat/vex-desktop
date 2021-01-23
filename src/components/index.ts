@@ -12,6 +12,7 @@ import Loading from "./Loading";
 import { MessageBox } from "./MessageBox";
 import MessagingBar from "./MessagingBar";
 import MessagingPane from "./MessagingPane";
+import { Modal } from "./Modal";
 import { AddChannel } from "./ServerAddChannel";
 import { AddUser } from "./ServerAddUser";
 import { ServerBar } from "./ServerBar";
@@ -43,6 +44,7 @@ export {
     MessageBox,
     MessagingBar,
     MessagingPane,
+    Modal,
     ServerBar,
     ServerIcon,
     ServerIconButton,
