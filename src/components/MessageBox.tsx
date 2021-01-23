@@ -258,6 +258,7 @@ export function MessageBox(props: {
                                                         link: LinkRenderer,
                                                         image: ImageRenderer,
                                                     }}
+                                                    transformLinkUri={null}
                                                 >
                                                     {messageText}
                                                 </ReactMarkdown>
