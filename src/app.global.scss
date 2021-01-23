@@ -597,8 +597,9 @@ button {
 .title-bar {
     position: absolute;
     height: 22px;
-    width: calc(100% - 60px);
-    left: 0;
+    width: calc(100% - 61px);
+    left: 5px;
+    right: 60px;
     top: 0px;
 }
 
