@@ -259,5 +259,5 @@
             "pre-commit": "yarn syncVersions; git add ./src/package.json package.json; lint-staged"
         }
     },
-    "version": "0.11.3"
+    "version": "0.11.4"
 }
