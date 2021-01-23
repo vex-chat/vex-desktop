@@ -602,8 +602,8 @@ button {
 .title-bar {
     position: absolute;
     height: 22px;
-    width: calc(100% - 60px);
-    right: 60px;
+    width: 100%;
+    left: 0px;
 }
 
 .settings-panel {
@@ -764,11 +764,6 @@ button {
 .button-help {
     margin-bottom: 4px;
 }
-
-// .online-user.offline {
-//     opacity: 0.45;
-//     filter: alpha(opacity=45);
-// }
 
 .dim {
     opacity: 0.45;
