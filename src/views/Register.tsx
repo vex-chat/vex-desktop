@@ -70,7 +70,6 @@ export default function Register(): JSX.Element {
             try {
                 const confirm = Client.loadKeyFile(keyPath, "");
                 if (confirm !== PK) {
-                    console.log(confirm, PK);
                     throw new Error(
                         "Key file that was written to disk is corrupt."
                     );

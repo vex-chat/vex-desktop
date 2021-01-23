@@ -20,7 +20,6 @@ export default function Settings(): JSX.Element {
         // this is to hide the unwanted # before color input tag
         // there might be a better solution
         const colorPicker = document.getElementsByClassName("twitter-picker");
-        console.log(colorPicker);
         if (colorPicker.length == 0) {
             return;
         }
@@ -61,8 +60,6 @@ export default function Settings(): JSX.Element {
     );
 
     const [errText, setErrText] = useState("");
-
-    console.log(store.store);
 
     return (
         <div className="pane-screen-wrapper">

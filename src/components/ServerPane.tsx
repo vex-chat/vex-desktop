@@ -42,7 +42,6 @@ export function ServerPane(props: {
     };
 
     const getOnlineList = async () => {
-        console.log("GETTING ONLINE LIST");
         const client = window.vex;
         if (channelID) {
             try {

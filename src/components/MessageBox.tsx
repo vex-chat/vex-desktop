@@ -35,6 +35,30 @@ import { ImageRenderer, LinkRenderer } from "./renderers";
 
 const linkify = new Linkify();
 
+linkify
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    .tlds(require("tlds"))
+    .tlds(".onion", true)
+    .add("magnet:", {
+        validate: (text, pos, self) => {
+            const tail = text.slice(pos);
+            if (!self.re.magnet) {
+                self.re.magnet = new RegExp("^(\\?xt=.{64,})");
+            }
+
+            if (self.re.magnet.test(tail)) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                return tail.match(self.re.magnet)![0].length;
+            }
+
+            return 0;
+        },
+        normalize: function (match) {
+            match.url = match.text;
+        },
+    })
+    .set({ fuzzyIP: true });
+
 export const bestMatch = (query: string, values: string[]): string => {
     let bestMatch = "";
     let lowestScore = 999999;
@@ -160,6 +184,7 @@ export function MessageBox(props: {
                             const matches = linkify.match(messageText);
                             if (matches) {
                                 for (const match of matches) {
+                                    console.log(match);
                                     messageText = messageText.replace(
                                         match.text,
                                         `[${match.text}](${match.url})`
@@ -412,7 +437,6 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
                     <div
                         className="modal-background"
                         onClick={() => {
-                            console.log("Clicked background.");
                             setFullSizePreview(false);
                         }}
                     ></div>
@@ -429,7 +453,6 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
                         className="modal-close is-large"
                         aria-label="close"
                         onClick={() => {
-                            console.log("Clicked close.");
                             setFullSizePreview(false);
                         }}
                     ></button>

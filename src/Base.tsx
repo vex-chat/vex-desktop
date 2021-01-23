@@ -61,7 +61,6 @@ export default function Base(): JSX.Element {
             if (outboxMessages.includes(message.message)) {
                 for (const str of outboxMessages) {
                     if (str === message.message) {
-                        console.log(outboxMessages, message);
                         const newOutbox = [...outboxMessages];
                         newOutbox.splice(newOutbox.indexOf(str), 1);
                         setOutboxMessages(newOutbox);

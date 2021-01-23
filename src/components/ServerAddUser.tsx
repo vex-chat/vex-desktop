@@ -13,14 +13,12 @@ import { selectFamiliars } from "../reducers/familiars";
 
 export function AddUser(): JSX.Element {
     const params: { serverID: string } = useParams();
-    console.log(params);
     const [links, setLinks] = useState([] as XTypes.SQL.IInvite[]);
     const familiars = useSelector(selectFamiliars);
 
     const createLink = async () => {
         const client = window.vex;
         const link = await client.invites.create(params.serverID, "1h");
-        console.log(link);
         if (link) {
             const newLinks = [...links, link];
             setLinks(newLinks);
@@ -53,7 +51,6 @@ export function AddUser(): JSX.Element {
                                 <td
                                     className="pointer"
                                     onClick={() => {
-                                        console.log(link);
                                         clipboard.writeText(
                                             `https://vex.chat/invite/${link.inviteID}`
                                         );

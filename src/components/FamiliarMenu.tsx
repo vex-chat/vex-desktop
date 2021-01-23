@@ -20,7 +20,6 @@ export function FamiliarMenu(props: {
 }): JSX.Element {
     const [active, setActive] = useState(false);
     const params: { channelID?: string; serverID?: string } = useParams();
-    console.log(params);
     const user = useSelector(selectUser);
     const outsideClick = () => {
         setActive(false);
