@@ -59,6 +59,10 @@ $font_override: monospace;
     border-radius: 250983px;
 }
 
+.title-bar-text {
+    margin-top: -5px;
+}
+
 .twitter-picker {
     background-color: var(--theme_base_color) !important;
 }
@@ -66,6 +70,7 @@ $font_override: monospace;
 .title-bar-grabber {
     position: absolute;
     width: calc(100% - 60px);
+    margin: 5px;
     height: auto;
     line-height: 1.75;
     -ms-overflow-style: scrollbar;
@@ -597,10 +602,8 @@ button {
 .title-bar {
     position: absolute;
     height: 22px;
-    width: calc(100% - 61px);
-    left: 5px;
+    width: calc(100% - 60px);
     right: 60px;
-    top: 5px;
 }
 
 .settings-panel {
