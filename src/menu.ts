@@ -38,14 +38,25 @@ export default class MenuBuilder {
                 ? this.buildDarwinTemplate()
                 : this.buildDefaultTemplate();
 
-        const menu = Menu.buildFromTemplate(
-            trayMenu ? [showApp, quitApp, ...template] : template
-        );
-        if (set) {
-            Menu.setApplicationMenu(menu);
-        }
+        if (process.platform !== "darwin") {
+            const menu = Menu.buildFromTemplate(
+                trayMenu ? [showApp, quitApp, ...template] : template
+            );
+            if (set) {
+                Menu.setApplicationMenu(menu);
+            }
 
-        return menu;
+            return menu;
+        } else {
+            const menu = Menu.buildFromTemplate(
+                trayMenu ? [showApp, quitApp] : template
+            );
+            if (set) {
+                Menu.setApplicationMenu(menu);
+            }
+
+            return menu;
+        }
     }
 
     sendLogout(): void {

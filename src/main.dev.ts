@@ -137,6 +137,11 @@ const createWindow = async () => {
         }
     });
 
+    mainWindow.on("close", (event) => {
+        event.preventDefault();
+        mainWindow?.hide();
+    });
+
     mainWindow.on("closed", () => {
         mainWindow = null;
     });
