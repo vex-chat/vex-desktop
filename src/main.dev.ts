@@ -78,6 +78,7 @@ const createWindow = async () => {
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,
+            partition: "persist:main",
         },
     });
 

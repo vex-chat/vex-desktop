@@ -26,6 +26,8 @@ export function Logout(): JSX.Element {
 
     const logout = async () => {
         const client = window.vex;
+        await client.logout();
+
         await client.close();
 
         if (query.get("clear") !== "off") {
@@ -54,7 +56,7 @@ export function Logout(): JSX.Element {
             await lockFX.play();
         }
 
-        history.push(query.get("forward") || routes.HOME);
+        history.push(query.get("forward") || routes.HOME + "?logout=true");
     };
 
     void useMemo(() => logout(), []);

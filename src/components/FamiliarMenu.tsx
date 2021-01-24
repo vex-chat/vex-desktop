@@ -2,18 +2,16 @@ import type { IUser } from "@vex-chat/libvex";
 
 import {
     faBan,
-    faCog,
     faMobileAlt,
-    faShoePrints,
     faUserAlt,
-    faUserEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useParams } from "react-router-dom";
 
 import { routes } from "../constants/routes";
+import { set as setOnlineList } from "../reducers/onlineLists";
 import { selectUser } from "../reducers/user";
 
 export function FamiliarMenu(props: {
@@ -22,6 +20,7 @@ export function FamiliarMenu(props: {
     up?: boolean;
 }): JSX.Element {
     const history = useHistory();
+    const dispatch = useDispatch();
     const [active, setActive] = useState(false);
     const params: { channelID?: string; serverID?: string } = useParams();
     const user = useSelector(selectUser);
@@ -91,9 +90,34 @@ export function FamiliarMenu(props: {
                         <Link
                             to={history.location.pathname}
                             className="dropdown-item has-text-danger"
-                            onClick={(event) => {
+                            onClick={async (event) => {
+                                if (!params.serverID) {
+                                    return;
+                                }
+
                                 event.preventDefault();
                                 setActive(false);
+
+                                const client = window.vex;
+                                try {
+                                    await client.moderation.kick(
+                                        props.familiar.userID,
+                                        params.serverID
+                                    );
+                                    if (params.channelID) {
+                                        const userList = await client.channels.userList(
+                                            params.channelID
+                                        );
+                                        dispatch(
+                                            setOnlineList({
+                                                channelID: params.channelID,
+                                                userList,
+                                            })
+                                        );
+                                    }
+                                } catch (err) {
+                                    console.warn(err);
+                                }
                             }}
                         >
                             <span className="icon">

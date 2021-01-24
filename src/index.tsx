@@ -1,4 +1,6 @@
+import { remote } from "electron";
 import fs from "fs";
+import jwt from "jsonwebtoken";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
 import { HashRouter as Router } from "react-router-dom";
@@ -18,6 +20,60 @@ for (const folder of folders) {
 }
 
 const store = configuredStore();
+
+// set our cookies
+(async () => {
+    const cookies = remote.getCurrentWebContents().session.cookies;
+    const cookieList = await cookies.get({
+        domain: "api.vex.chat",
+        name: "auth",
+    });
+    console.log("Cookie list from session", cookieList);
+
+    cookies.on(
+        "changed",
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        async (
+            _event: unknown,
+            cookie: Electron.Cookie,
+            _cause: unknown,
+            removed: boolean
+        ) => {
+            if (!cookie.path || !cookie.domain) {
+                return;
+            }
+
+            const url = `${
+                !cookie.httpOnly && cookie.secure ? "https" : "http"
+            }://${cookie.domain}${cookie.path}`;
+
+            if (cookie.session && !removed) {
+                try {
+                    const decoded = jwt.decode(cookie.value);
+                    if (!decoded) {
+                        throw new Error("Couldn't decode JWT.");
+                    }
+                    const { exp } = decoded as { exp: number };
+
+                    console.log("url", url);
+                    await cookies.set({
+                        url: url,
+                        name: cookie.name,
+                        value: cookie.value,
+                        domain: cookie.domain,
+                        path: cookie.path,
+                        secure: cookie.secure,
+                        httpOnly: cookie.httpOnly,
+                        expirationDate: exp,
+                    });
+                    console.log("Updated cookies.");
+                } catch (err) {
+                    console.error("Error updating cookies", err);
+                }
+            }
+        }
+    );
+})();
 
 document.addEventListener("DOMContentLoaded", () => {
     render(

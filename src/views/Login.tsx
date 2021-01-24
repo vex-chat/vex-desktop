@@ -6,18 +6,24 @@ import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import isDev from "electron-is-dev";
 import fs from "fs";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
-import { VerticalAligner } from "../components";
+import { Loading, VerticalAligner } from "../components";
 import { dbFolder, errorFX, keyFolder, routes, unlockFX } from "../constants";
+import { useQuery } from "../hooks";
 import { DataStore, gaurdian } from "../utils";
 
 export const Login: FunctionComponent = memo(() => {
     const history = useHistory();
+    const query = useQuery();
+
+    const loggedOut = query.get("logout") === "true";
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+    const [checkedCookie, setCheckedCookie] = useState(loggedOut);
 
     const [loading, setLoading] = useState(false);
     const [errText, setErrText] = useState("");
@@ -62,12 +68,61 @@ export const Login: FunctionComponent = memo(() => {
             setLoading(false);
             return;
         }
+
         if (!fs.existsSync(keyPath)) {
             Client.saveKeyFile(keyPath, "", gaurdian.getKey());
         }
+
         window.vex = client;
         history.push(routes.LAUNCH);
     };
+
+    useEffect(() => {
+        (async () => {
+            if (loggedOut) {
+                setCheckedCookie(true);
+                return;
+            }
+
+            if (!checkedCookie) {
+                console.log("Checking for cookie.");
+                const tempClient = await Client.create(undefined, {
+                    dbFolder,
+                    logLevel: isDev ? "info" : "warn",
+                });
+                try {
+                    const { user } = await tempClient.whoami();
+
+                    setLoading(true);
+                    const keyPath =
+                        keyFolder + "/" + user.username.toLowerCase();
+                    if (fs.existsSync(keyPath)) {
+                        gaurdian.load(keyPath);
+                    } else {
+                        throw new Error("Found cookie, but no keyfile.");
+                    }
+
+                    const client = await Client.create(gaurdian.getKey(), {
+                        dbFolder,
+                        logLevel: isDev ? "info" : "warn",
+                    });
+
+                    window.vex = client;
+                    history.push(routes.LAUNCH);
+                } catch (err) {
+                    console.warn(err);
+                    if (err.response) {
+                        console.warn(err.response?.status);
+                    }
+                }
+                setCheckedCookie(true);
+            }
+        })();
+    });
+
+    if (!checkedCookie) {
+        return <Loading animation="cylon" size={256} />;
+    }
 
     return (
         <VerticalAligner>

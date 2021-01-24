@@ -7,9 +7,7 @@ import { useState } from "react";
 export const emptyUser: IUser = {
     userID: "",
     username: "",
-    lastSeen: new Date(Date.now()),
-    passwordHash: "",
-    passwordSalt: "",
+    lastSeen: new Date(Date.now()).toString(),
 };
 
 export function UserSearchBar(props: {

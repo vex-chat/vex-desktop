@@ -244,6 +244,7 @@ export function ClientLauncher(): JSX.Element {
         const client = window.vex;
         dispatch(setApp("initialLoad", true));
         const me = client.me.user();
+
         dispatch(setUser(me));
 
         history.push(routes.MESSAGING + "/" + me.userID);
