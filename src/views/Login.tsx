@@ -77,47 +77,52 @@ export const Login: FunctionComponent = memo(() => {
         history.push(routes.LAUNCH);
     };
 
-    useEffect(() => {
-        (async () => {
-            if (loggedOut) {
-                setCheckedCookie(true);
-                return;
-            }
+    const checkCookieAndLogin = async () => {
+        if (loggedOut) {
+            setCheckedCookie(true);
+            return;
+        }
 
-            if (!checkedCookie) {
-                console.log("Checking for cookie.");
-                const tempClient = await Client.create(undefined, {
+        if (!checkedCookie) {
+            console.log("Checking for cookie.");
+            const tempClient = await Client.create(undefined, {
+                dbFolder,
+                logLevel: isDev ? "info" : "warn",
+            });
+            try {
+                const { user } = await tempClient.whoami();
+
+                setLoading(true);
+                const keyPath = keyFolder + "/" + user.username.toLowerCase();
+                if (fs.existsSync(keyPath)) {
+                    gaurdian.load(keyPath);
+                } else {
+                    throw new Error("Found cookie, but no keyfile.");
+                }
+
+                const client = await Client.create(gaurdian.getKey(), {
                     dbFolder,
                     logLevel: isDev ? "info" : "warn",
                 });
-                try {
-                    const { user } = await tempClient.whoami();
 
-                    setLoading(true);
-                    const keyPath =
-                        keyFolder + "/" + user.username.toLowerCase();
-                    if (fs.existsSync(keyPath)) {
-                        gaurdian.load(keyPath);
-                    } else {
-                        throw new Error("Found cookie, but no keyfile.");
-                    }
-
-                    const client = await Client.create(gaurdian.getKey(), {
-                        dbFolder,
-                        logLevel: isDev ? "info" : "warn",
-                    });
-
-                    window.vex = client;
-                    history.push(routes.LAUNCH);
-                } catch (err) {
-                    console.warn(err);
-                    if (err.response) {
-                        console.warn(err.response?.status);
+                window.vex = client;
+                history.push(routes.LAUNCH);
+            } catch (err) {
+                console.warn(err);
+                if (err.response) {
+                    console.warn(err.response?.status);
+                    if (err.response.status === 502) {
+                        setTimeout(checkCookieAndLogin, 5000);
+                        return;
                     }
                 }
-                setCheckedCookie(true);
             }
-        })();
+            setCheckedCookie(true);
+        }
+    };
+
+    useEffect(() => {
+        checkCookieAndLogin();
     });
 
     if (!checkedCookie) {

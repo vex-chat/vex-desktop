@@ -223,7 +223,7 @@ export function ClientLauncher(): JSX.Element {
         client.off("message", notification);
         ipcRenderer.off("relaunch", relaunch);
 
-        history.push(routes.LOGOUT + "?clear=off?forward=" + routes.LOGIN);
+        history.push(routes.LOGIN);
     };
 
     const sessionHandler = async (session: ISession, user: IUser) => {
