@@ -175,7 +175,7 @@ app.on("ready", async () => {
         await sleep(100);
     }
     const menuBuilder = new MenuBuilder(mainWindow);
-    const menu = menuBuilder.buildMenu(false);
+    const menu = menuBuilder.buildMenu(true, false);
     tray.setContextMenu(menu);
     log.info("Created context menu.");
     autoUpdater.checkForUpdatesAndNotify();

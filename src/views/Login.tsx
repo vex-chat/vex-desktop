@@ -6,7 +6,7 @@ import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import isDev from "electron-is-dev";
 import fs from "fs";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router";
 
 import { Loading, VerticalAligner } from "../components";
@@ -27,6 +27,8 @@ export const Login: FunctionComponent = memo(() => {
 
     const [loading, setLoading] = useState(false);
     const [errText, setErrText] = useState("");
+
+    const [checkCookieErrText, setCheckCookieErrText] = useState("");
 
     const loginUser = async () => {
         if (DataStore.get("settings.sounds") as boolean) {
@@ -92,7 +94,9 @@ export const Login: FunctionComponent = memo(() => {
             try {
                 const { user } = await tempClient.whoami();
 
+                setCheckCookieErrText("");
                 setLoading(true);
+
                 const keyPath = keyFolder + "/" + user.username.toLowerCase();
                 if (fs.existsSync(keyPath)) {
                     gaurdian.load(keyPath);
@@ -112,6 +116,10 @@ export const Login: FunctionComponent = memo(() => {
                 if (err.response) {
                     console.warn(err.response?.status);
                     if (err.response.status === 502) {
+                        setCheckCookieErrText(
+                            "Having some trouble connecting to the server..."
+                        );
+                        console.log(checkCookieErrText);
                         setTimeout(checkCookieAndLogin, 5000);
                         return;
                     }
@@ -121,12 +129,18 @@ export const Login: FunctionComponent = memo(() => {
         }
     };
 
-    useEffect(() => {
+    useMemo(() => {
         checkCookieAndLogin();
-    });
+    }, [history.location.pathname]);
 
     if (!checkedCookie) {
-        return <Loading animation="cylon" size={256} />;
+        return (
+            <Loading
+                animation="cylon"
+                size={256}
+                errText={checkCookieErrText}
+            />
+        );
     }
 
     return (

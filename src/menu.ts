@@ -13,15 +13,34 @@ export default class MenuBuilder {
         this.mainWindow = mainWindow;
     }
 
-    buildMenu(set = true): Menu {
+    buildMenu(trayMenu = false, set = true): Menu {
         this.setupDevelopmentEnvironment();
+
+        const showApp = {
+            label: "Show App",
+            click: () => {
+                if (this.mainWindow) {
+                    this.mainWindow.show();
+                    this.mainWindow.focus();
+                }
+            },
+        };
+
+        const quitApp = {
+            label: "Quit",
+            click: () => {
+                app.exit();
+            },
+        };
 
         const template =
             process.platform === "darwin"
                 ? this.buildDarwinTemplate()
                 : this.buildDefaultTemplate();
 
-        const menu = Menu.buildFromTemplate(template);
+        const menu = Menu.buildFromTemplate(
+            trayMenu ? [showApp, quitApp, ...template] : template
+        );
         if (set) {
             Menu.setApplicationMenu(menu);
         }
@@ -173,11 +192,7 @@ export default class MenuBuilder {
             ],
         };
 
-        const subMenuView =
-            process.env.NODE_ENV === "development" ||
-            process.env.DEBUG_PROD === "true"
-                ? subMenuViewDev
-                : subMenuViewDev;
+        const subMenuView = subMenuViewDev;
 
         return [
             subMenuAbout,

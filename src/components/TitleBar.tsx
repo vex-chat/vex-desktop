@@ -11,7 +11,7 @@ import { currentVersion } from "../constants";
 export function TitleBar(): JSX.Element {
     function closeWindow() {
         const window = remote.getCurrentWindow();
-        window.close();
+        window.hide();
     }
 
     function maximizeWindow() {

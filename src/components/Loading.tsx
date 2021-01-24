@@ -44,6 +44,7 @@ export default function Loading(props: {
         | "spokes";
     color?: string;
     className?: string;
+    errText?: string;
 }): JSX.Element {
     const [progress, setProgress] = useState(initialState);
 
@@ -95,6 +96,9 @@ export default function Loading(props: {
                             <div className="help"></div>
                         </Fragment>
                     )}
+                    <p className="has-text-danger has-text-centered">
+                        {props.errText}
+                    </p>
                 </div>
             </div>
             <div className="Aligner-item Aligner-item--bottom has-text-centered"></div>
