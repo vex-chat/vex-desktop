@@ -6,7 +6,7 @@ import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import isDev from "electron-is-dev";
 import fs from "fs";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { useHistory } from "react-router";
 
 import { Loading, VerticalAligner } from "../components";

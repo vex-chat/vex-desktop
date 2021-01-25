@@ -18,6 +18,8 @@ import MenuBuilder from "./menu";
 const singleLock = app.requestSingleInstanceLock();
 let mainWindow: BrowserWindow | null = null;
 
+let forceQuit = process.platform !== "darwin";
+
 if (!singleLock) {
     app.quit();
 } else {
@@ -138,8 +140,10 @@ const createWindow = async () => {
     });
 
     mainWindow.on("close", (event) => {
-        event.preventDefault();
-        mainWindow?.hide();
+        if (!forceQuit) {
+            event.preventDefault();
+            mainWindow?.hide();
+        }
     });
 
     mainWindow.on("closed", () => {
@@ -175,15 +179,24 @@ app.whenReady().then(createWindow).catch(console.log);
 let tray;
 app.on("ready", async () => {
     log.info("App is ready.");
-    tray = new Tray(getAssetPath("icon.iconset/icon_16x16@2x.png"));
     while (!mainWindow) {
         await sleep(100);
     }
-    const menuBuilder = new MenuBuilder(mainWindow);
-    const menu = menuBuilder.buildMenu(true, false);
-    tray.setContextMenu(menu);
-    log.info("Created context menu.");
+
+    if (process.platform !== "darwin") {
+        tray = new Tray(getAssetPath("icon.iconset/icon_16x16@2x.png"));
+        const menuBuilder = new MenuBuilder(mainWindow);
+        const menu = menuBuilder.buildMenu(true, false);
+        tray.setContextMenu(menu);
+    }
+
     autoUpdater.checkForUpdatesAndNotify();
+});
+
+app.on("before-quit", () => {
+    if (process.platform === "darwin") {
+        forceQuit = true;
+    }
 });
 
 app.on("open-url", async (_event, url) => {
@@ -200,4 +213,6 @@ app.on("activate", () => {
     if (mainWindow === null) {
         void createWindow();
     }
+    mainWindow?.show();
+    mainWindow?.focus();
 });
