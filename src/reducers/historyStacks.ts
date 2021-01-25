@@ -2,7 +2,9 @@ import type { RootState } from "~Types";
 
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: Record<string, string[]> = {};
+const initialState: Record<string, string[]> = {
+    "SERVER-HISTORY": [],
+};
 
 const serverHistorySlice = createSlice({
     name: "historyStacks",
@@ -24,6 +26,8 @@ const serverHistorySlice = createSlice({
             if (state[serverID].length > 10) {
                 state[serverID].pop();
             }
+
+            state["SERVER-HISTORY"].unshift(serverID);
             return state;
         },
     },
@@ -45,6 +49,14 @@ export const getHistoryHead: (
 }) => {
     if (historyStacks[serverID] && historyStacks[serverID][0]) {
         return historyStacks[serverID][0];
+    }
+    return null;
+};
+
+export const selectLastVisitedServer = (state: RootState): string | null => {
+    const lastServer = state.historyStacks["SERVER-HISTORY"][0];
+    if (lastServer) {
+        return state.historyStacks[lastServer][0];
     }
     return null;
 };

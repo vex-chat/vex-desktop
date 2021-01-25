@@ -18,7 +18,7 @@ import { ipcRenderer, remote } from "electron";
 import log from "electron-log";
 import fs from "fs";
 import { useMemo } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import { Loading } from "../components";
@@ -37,6 +37,7 @@ import {
     add as groupAdd,
     addMany as groupAddMany,
 } from "../reducers/groupMessages";
+import { selectLastVisitedServer } from "../reducers/historyStacks";
 import {
     add as dmAdd,
     addMany as dmAddMany,
@@ -81,6 +82,11 @@ const serverRecords: Record<string, IServer> = {};
 export function ClientLauncher(): JSX.Element {
     const dispatch = useDispatch();
     const history = useHistory();
+    const lastVisited = useSelector(selectLastVisitedServer);
+
+    if (lastVisited) {
+        console.log("THE LAST VISITED WAS", lastVisited);
+    }
 
     const notification = async (message: IMessage) => {
         const globalNotifications = DataStore.get(
@@ -247,7 +253,7 @@ export function ClientLauncher(): JSX.Element {
 
         dispatch(setUser(me));
 
-        history.push(routes.MESSAGING + "/" + me.userID);
+        history.push(lastVisited || routes.MESSAGING + "/" + me.userID);
 
         const sessions = await client.sessions.retrieve();
         dispatch(setSessions(objifySessions(sessions)));
@@ -363,7 +369,7 @@ export function ClientLauncher(): JSX.Element {
         }
     };
 
-    const launch = () => {
+    const launch = async () => {
         const client = window.vex;
         ipcRenderer.on("relaunch", relaunch);
         client.on("connected", connectedHandler);
@@ -371,11 +377,13 @@ export function ClientLauncher(): JSX.Element {
         client.on("session", sessionHandler);
         client.on("message", messageHandler);
         client.on("permission", permissionHandler);
-        client.connect();
+        try {
+            await client.connect();
+        } catch (err) {
+            setTimeout(relaunch, 5000);
+        }
     };
 
-    /* giving useMemo an empty set of dependencies
-    so that this only happens once */
     useMemo(launch, [window.vex, launch]);
 
     return <Loading size={256} animation={"cylon"} />;
