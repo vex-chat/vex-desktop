@@ -1,10 +1,12 @@
 import type { IFile, IFileProgress } from "@vex-chat/libvex";
 import type { BaseEmoji, EmojiData } from "emoji-mart";
 
+import axios from "axios";
+import { capitalCase } from "change-case";
 import log from "electron-log";
-import { emojiIndex, NimbleEmojiIndex } from "emoji-mart";
-import emojiData from "emoji-mart/data/twitter.json";
+import { emojiIndex } from "emoji-mart";
 import FileType from "file-type";
+import levenshtein from "js-levenshtein";
 import React, { useMemo, useRef, useState } from "react";
 import Dropzone from "react-dropzone";
 import { useDispatch } from "react-redux";
@@ -18,10 +20,14 @@ import { formatBytes } from "../utils/formatBytes";
 
 import Loading from "./Loading";
 
-const index = new NimbleEmojiIndex(emojiData as any);
-
 const openEmojiRegex = /:\w+$/;
 const closedEmojiRegex = /:\w+:/g;
+
+interface IEmoji {
+    emojiID: string;
+    owner: string;
+    name: string;
+}
 
 export function ChatInput(props: {
     targetID: string;
@@ -54,8 +60,6 @@ export function ChatInput(props: {
     const [emoji, setEmoji] = useState([] as EmojiData[] | undefined);
     const [activeEmoji, setActiveEmoji] = useState(-1);
 
-    console.log(index.search("dog"));
-
     const adjustInputHeight = (
         event?: React.KeyboardEvent<HTMLTextAreaElement>
     ) => {
@@ -73,12 +77,15 @@ export function ChatInput(props: {
         if (!matches) {
             return;
         }
+        console.log(emoji);
         const match = matchOverride || matches[0];
         setInputValue(
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             inputValue.replace(
                 match,
-                `${(emoji as BaseEmoji).native} ` || ":X "
+                `${(emoji as BaseEmoji).native} ` ||
+                    `${(emoji as any).imageUrl} ` ||
+                    ":X "
             )
         );
         setEmoji(undefined);
@@ -166,20 +173,88 @@ export function ChatInput(props: {
         inputRef.current?.focus();
     }, [userID, serverID, channelID, inputRef]);
 
-    useMemo(() => {
+    useMemo(async () => {
         const matches = openEmojiRegex.exec(inputValue);
         if (matches) {
             setMatches(matches);
-            const emoji = emojiIndex
+            const emojiSearch = matches[0].replace(":", "");
+
+            const nativeEmojis = emojiIndex
                 .search(matches[0].replace(":", ""))
-                ?.slice(0, 10);
-            if (emoji && emoji.length > 0) {
-                setEmoji(emoji);
+                ?.map((emoji) => {
+                    const ld = levenshtein(emojiSearch, emoji.id || emoji.name);
+                    const length = Math.max(
+                        emojiSearch.length,
+                        emoji.name.length
+                    );
+                    let similarity = 1 - ld / length;
+                    if ((emoji.id || emoji.name).includes(emojiSearch)) {
+                        similarity = 1;
+                    }
+
+                    (emoji as any).similarity = similarity;
+                    return emoji;
+                });
+
+            const res = await axios.get(
+                "https://api.vex.chat/user/eb739211-edf9-4d3f-9b9d-0a9a1d7406cd/emoji"
+            );
+            const customEmojiData: IEmoji[] = res.data;
+
+            const customEmojis: EmojiData[] = customEmojiData.map(
+                (emojiData) => {
+                    const ld = levenshtein(emojiSearch, emojiData.name);
+                    const length = Math.max(
+                        emojiSearch.length,
+                        emojiData.name.length
+                    );
+                    let similarity = 1 - ld / length;
+                    if (emojiData.name.includes(emojiSearch)) {
+                        similarity = 1;
+                    }
+
+                    return {
+                        id: emojiData.name,
+                        name: capitalCase(emojiData.name),
+                        colons: `:${emojiData.name}:`,
+                        text: "",
+                        short_names: [emojiData.name],
+                        emoticons: [],
+                        native: null,
+                        custom: true,
+                        imageUrl: `https://api.vex.chat/emoji/${emojiData.emojiID}`,
+                        emojiID: emojiData.emojiID,
+                        similarity,
+                    };
+                }
+            );
+
+            const emojiResults = [...(nativeEmojis || []), ...customEmojis]
+                .sort((a, b) => {
+                    if ((a as any).similarity > (b as any).similarity) {
+                        return -1;
+                    }
+                    if ((a as any).name < (b as any).name) {
+                        return 1;
+                    }
+                    return 0;
+                })
+                .filter((emoji) => {
+                    return (
+                        (emoji.id || emoji.name).includes(emojiSearch) ||
+                        (emoji as any).similarity > 0.35
+                    );
+                })
+                .slice(0, 20);
+
+            if (emojiResults && emojiResults.length > 0) {
+                setEmoji([]);
+                setEmoji(emojiResults);
                 if (activeEmoji == -1) {
                     setActiveEmoji(activeEmoji + 1);
                 }
-                if (activeEmoji > emoji.length - 1) {
-                    setActiveEmoji(emoji.length - 1);
+                if (activeEmoji > emojiResults.length - 1) {
+                    setActiveEmoji(emojiResults.length - 1);
                 }
             } else {
                 setEmoji(undefined);
@@ -224,10 +299,17 @@ export function ChatInput(props: {
                                 className={`emoji-list-entry ${
                                     activeEmoji == index ? "is-active" : ""
                                 }`}
-                                key={emoji.colons}
+                                key={(emoji as any).emojiID || emoji.id}
                             >
                                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                {(emoji as any).native || ":X"}&nbsp;&nbsp;
+                                {(emoji as any).native || (
+                                        <img
+                                            src={(emoji as any).imageUrl}
+                                            className="emoji"
+                                        />
+                                    ) ||
+                                    ":X"}
+                                &nbsp;&nbsp;
                                 {emoji.colons}
                             </div>
                         ))}
