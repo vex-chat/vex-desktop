@@ -1,5 +1,6 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import type { IFile, IFileProgress } from "@vex-chat/libvex";
 import type { EmojiData } from "emoji-mart";
 
@@ -81,12 +82,12 @@ export function ChatInput(props: {
         }
         console.log(emoji);
         // emoji.id is actually the name
-        const replaceValue =
+        const replaceValue: string =
             (emoji as any).native ||
             `<<${emoji.id}:${(emoji as any).emojiID}>>` ||
             ":X";
         const match = matchOverride || matches[0];
-        setInputValue(inputValue.replace(match, replaceValue + " "));
+        setInputValue(inputValue.replace(match, `${replaceValue} `));
         setEmoji(undefined);
         setActiveEmoji(-1);
     };

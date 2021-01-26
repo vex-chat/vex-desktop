@@ -959,6 +959,11 @@ $topbar-buttons-size: 20px;
     vertical-align: bottom;
 }
 
+p > .emoji:only-child {
+    width: 3rem;
+    height: 3rem;
+}
+
 .topbar-buttons.server {
     font-size: $topbar-buttons-size;
     position: absolute;

@@ -14,7 +14,9 @@ export default class MenuBuilder {
     }
 
     buildMenu(trayMenu = false, set = true): Menu {
-        this.setupDevelopmentEnvironment();
+        if (set) {
+            this.setupDevelopmentEnvironment();
+        }
 
         const showApp = {
             label: "Show App",
