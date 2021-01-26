@@ -1,5 +1,7 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IFile, IFileProgress } from "@vex-chat/libvex";
-import type { BaseEmoji, EmojiData } from "emoji-mart";
+import type { EmojiData } from "emoji-mart";
 
 import axios from "axios";
 import { capitalCase } from "change-case";
@@ -78,16 +80,13 @@ export function ChatInput(props: {
             return;
         }
         console.log(emoji);
+        // emoji.id is actually the name
+        const replaceValue =
+            (emoji as any).native ||
+            `<<${emoji.id}:${(emoji as any).emojiID}>>` ||
+            ":X";
         const match = matchOverride || matches[0];
-        setInputValue(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            inputValue.replace(
-                match,
-                `${(emoji as BaseEmoji).native} ` ||
-                    `${(emoji as any).imageUrl} ` ||
-                    ":X "
-            )
-        );
+        setInputValue(inputValue.replace(match, replaceValue + " "));
         setEmoji(undefined);
         setActiveEmoji(-1);
     };
@@ -169,6 +168,73 @@ export function ChatInput(props: {
         reader.readAsArrayBuffer(fileDetails);
     };
 
+    const getEmojiResults = async (emojiSearch: string) => {
+        const nativeEmojis = emojiIndex
+            .search(emojiSearch.replace(":", ""))
+            ?.map((emoji) => {
+                const ld = levenshtein(
+                    emojiSearch.toLowerCase(),
+                    (emoji.id || emoji.name).toLowerCase()
+                );
+                const length = Math.max(emojiSearch.length, emoji.name.length);
+                let similarity = 1 - ld / length;
+                if ((emoji.id || emoji.name).includes(emojiSearch)) {
+                    similarity = 1;
+                }
+
+                (emoji as any).similarity = similarity;
+                return emoji;
+            });
+
+        const res = await axios.get(
+            "https://api.vex.chat/user/eb739211-edf9-4d3f-9b9d-0a9a1d7406cd/emoji"
+        );
+        const customEmojiData: IEmoji[] = res.data;
+
+        const customEmojis: EmojiData[] = customEmojiData.map((emojiData) => {
+            const ld = levenshtein(
+                emojiSearch.toLowerCase(),
+                emojiData.name.toLowerCase()
+            );
+            const length = Math.max(emojiSearch.length, emojiData.name.length);
+            let similarity = 1 - ld / length;
+            if (emojiData.name.includes(emojiSearch)) {
+                similarity = 1;
+            }
+
+            return {
+                id: emojiData.name,
+                name: capitalCase(emojiData.name),
+                colons: `:${emojiData.name}:`,
+                text: "",
+                short_names: [emojiData.name],
+                emoticons: [],
+                custom: true,
+                imageUrl: `https://api.vex.chat/emoji/${emojiData.emojiID}`,
+                emojiID: emojiData.emojiID,
+                similarity,
+            };
+        });
+
+        return [...(nativeEmojis || []), ...customEmojis]
+            .sort((a, b) => {
+                if ((a as any).similarity > (b as any).similarity) {
+                    return -1;
+                }
+                if ((a as any).name < (b as any).name) {
+                    return 1;
+                }
+                return 0;
+            })
+            .filter((emoji) => {
+                return (
+                    (emoji.id || emoji.name).includes(emojiSearch) ||
+                    (emoji as any).similarity > 0.35
+                );
+            })
+            .slice(0, 20);
+    };
+
     useMemo(() => {
         inputRef.current?.focus();
     }, [userID, serverID, channelID, inputRef]);
@@ -179,73 +245,7 @@ export function ChatInput(props: {
             setMatches(matches);
             const emojiSearch = matches[0].replace(":", "");
 
-            const nativeEmojis = emojiIndex
-                .search(matches[0].replace(":", ""))
-                ?.map((emoji) => {
-                    const ld = levenshtein(emojiSearch, emoji.id || emoji.name);
-                    const length = Math.max(
-                        emojiSearch.length,
-                        emoji.name.length
-                    );
-                    let similarity = 1 - ld / length;
-                    if ((emoji.id || emoji.name).includes(emojiSearch)) {
-                        similarity = 1;
-                    }
-
-                    (emoji as any).similarity = similarity;
-                    return emoji;
-                });
-
-            const res = await axios.get(
-                "https://api.vex.chat/user/eb739211-edf9-4d3f-9b9d-0a9a1d7406cd/emoji"
-            );
-            const customEmojiData: IEmoji[] = res.data;
-
-            const customEmojis: EmojiData[] = customEmojiData.map(
-                (emojiData) => {
-                    const ld = levenshtein(emojiSearch, emojiData.name);
-                    const length = Math.max(
-                        emojiSearch.length,
-                        emojiData.name.length
-                    );
-                    let similarity = 1 - ld / length;
-                    if (emojiData.name.includes(emojiSearch)) {
-                        similarity = 1;
-                    }
-
-                    return {
-                        id: emojiData.name,
-                        name: capitalCase(emojiData.name),
-                        colons: `:${emojiData.name}:`,
-                        text: "",
-                        short_names: [emojiData.name],
-                        emoticons: [],
-                        native: null,
-                        custom: true,
-                        imageUrl: `https://api.vex.chat/emoji/${emojiData.emojiID}`,
-                        emojiID: emojiData.emojiID,
-                        similarity,
-                    };
-                }
-            );
-
-            const emojiResults = [...(nativeEmojis || []), ...customEmojis]
-                .sort((a, b) => {
-                    if ((a as any).similarity > (b as any).similarity) {
-                        return -1;
-                    }
-                    if ((a as any).name < (b as any).name) {
-                        return 1;
-                    }
-                    return 0;
-                })
-                .filter((emoji) => {
-                    return (
-                        (emoji.id || emoji.name).includes(emojiSearch) ||
-                        (emoji as any).similarity > 0.35
-                    );
-                })
-                .slice(0, 20);
+            const emojiResults = await getEmojiResults(emojiSearch);
 
             if (emojiResults && emojiResults.length > 0) {
                 setEmoji([]);
@@ -268,7 +268,9 @@ export function ChatInput(props: {
         const closedMatches = closedEmojiRegex.exec(inputValue);
         if (closedMatches) {
             for (const match of closedMatches) {
-                const emojiResults = emojiIndex.search(match.replace(/:/g, ""));
+                const emojiResults = await getEmojiResults(
+                    match.replace(/:/g, "")
+                );
                 if (
                     emojiResults &&
                     emojiResults.length > 0 &&
@@ -301,7 +303,6 @@ export function ChatInput(props: {
                                 }`}
                                 key={(emoji as any).emojiID || emoji.id}
                             >
-                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                 {(emoji as any).native || (
                                         <img
                                             src={(emoji as any).imageUrl}
@@ -357,7 +358,6 @@ export function ChatInput(props: {
                         <input {...getInputProps()} />
                         <textarea
                             disabled={props.disabled}
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             ref={inputRef as any}
                             autoFocus={true}
                             onPaste={(event) => {
