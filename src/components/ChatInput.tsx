@@ -2,7 +2,8 @@ import type { IFile, IFileProgress } from "@vex-chat/libvex";
 import type { BaseEmoji, EmojiData } from "emoji-mart";
 
 import log from "electron-log";
-import { emojiIndex } from "emoji-mart";
+import { emojiIndex, NimbleEmojiIndex } from "emoji-mart";
+import emojiData from "emoji-mart/data/twitter.json";
 import FileType from "file-type";
 import React, { useMemo, useRef, useState } from "react";
 import Dropzone from "react-dropzone";
@@ -16,6 +17,8 @@ import store from "../utils/DataStore";
 import { formatBytes } from "../utils/formatBytes";
 
 import Loading from "./Loading";
+
+const index = new NimbleEmojiIndex(emojiData as any);
 
 const openEmojiRegex = /:\w+$/;
 const closedEmojiRegex = /:\w+:/g;
@@ -50,6 +53,8 @@ export function ChatInput(props: {
     const [matches, setMatches] = useState(null as RegExpExecArray | null);
     const [emoji, setEmoji] = useState([] as EmojiData[] | undefined);
     const [activeEmoji, setActiveEmoji] = useState(-1);
+
+    console.log(index.search("dog"));
 
     const adjustInputHeight = (
         event?: React.KeyboardEvent<HTMLTextAreaElement>
