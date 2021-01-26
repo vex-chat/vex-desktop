@@ -210,6 +210,7 @@ export function MessageBox(props: {
                         const matches = mentionRegex.exec(messageText);
                         if (matches) {
                             for (const match of matches) {
+                                console.log(match);
                                 messageText = messageText.replace(
                                     match,
                                     `**@${
