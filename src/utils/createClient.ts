@@ -13,7 +13,7 @@ export const createClient = async (
     const host = "api.vex.chat";
 
     const options: IClientOptions = {
-        dbFolder,
+        dbFolder: temp ? undefined : dbFolder,
         inMemoryDb: temp,
         host,
         logLevel: isDev ? "info" : "warn",
