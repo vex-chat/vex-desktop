@@ -198,10 +198,11 @@ export function MessageBox(props: {
                                 const { emojiName, emojiID } = emojiDetails(
                                     match
                                 );
+                                const client = window.vex;
                                 if (emojiName && emojiID) {
                                     messageText = messageText.replace(
                                         match,
-                                        `![${emojiName}](https://api.vex.chat/emoji/${emojiID})`
+                                        `![${emojiName}](${client.getHost()}/emoji/${emojiID})`
                                     );
                                 }
                             }
@@ -561,9 +562,9 @@ export function MessageEmoji(props: { match: string }): JSX.Element {
         return <strong />;
     }
     const emojiID = parts.slice(0, parts.length - 2);
-
+    const client = window.vex;
     return (
-        <img className="emoji" src={"https://api.vex.chat/emoji/" + emojiID} />
+        <img className="emoji" src={client.getHost() + "/emoji/" + emojiID} />
     );
 }
 

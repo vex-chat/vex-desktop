@@ -187,8 +187,10 @@ export function ChatInput(props: {
                 return emoji;
             });
 
+        const client = window.vex;
         const res = await axios.get(
-            "https://api.vex.chat/user/eb739211-edf9-4d3f-9b9d-0a9a1d7406cd/emoji"
+            client.getHost() +
+                "/user/eb739211-edf9-4d3f-9b9d-0a9a1d7406cd/emoji"
         );
         const customEmojiData: IEmoji[] = res.data;
 
@@ -203,6 +205,8 @@ export function ChatInput(props: {
                 similarity = 1;
             }
 
+            const client = window.vex;
+
             return {
                 id: emojiData.name,
                 name: capitalCase(emojiData.name),
@@ -211,7 +215,7 @@ export function ChatInput(props: {
                 short_names: [emojiData.name],
                 emoticons: [],
                 custom: true,
-                imageUrl: `https://api.vex.chat/emoji/${emojiData.emojiID}`,
+                imageUrl: client.getHost() + `/emoji/${emojiData.emojiID}`,
                 emojiID: emojiData.emojiID,
                 similarity,
             };

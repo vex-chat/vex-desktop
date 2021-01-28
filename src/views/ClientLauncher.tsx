@@ -235,10 +235,10 @@ export function ClientLauncher(): JSX.Element {
     const sessionHandler = async (session: ISession, user: IUser) => {
         dispatch(addSession(session));
         dispatch(addFamiliar(user));
-
+        const client = window.vex;
         try {
             const res = await axios.get(
-                "https://api.vex.chat/user/" + user.userID + "/devices"
+                client.getHost() + "/user/" + user.userID + "/devices"
             );
             dispatch(addDevices(res.data));
         } catch (err) {
@@ -264,7 +264,7 @@ export function ClientLauncher(): JSX.Element {
         for (const user of familiars) {
             try {
                 const res = await axios.get(
-                    "https://api.vex.chat/user/" + user.userID + "/devices"
+                    client.getHost() + "/user/" + user.userID + "/devices"
                 );
                 dispatch(addDevices(res.data));
             } catch (err) {

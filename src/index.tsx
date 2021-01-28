@@ -25,7 +25,6 @@ const store = configuredStore();
 (async () => {
     const cookies = remote.getCurrentWebContents().session.cookies;
     const cookieList = await cookies.get({
-        domain: "api.vex.chat",
         name: "auth",
     });
     console.log("Cookie list from session", cookieList);
