@@ -4,15 +4,14 @@ import { Client } from "@vex-chat/libvex";
 
 import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import isDev from "electron-is-dev";
 import fs from "fs";
 import { memo, useMemo, useState } from "react";
 import { useHistory } from "react-router";
 
 import { Loading, VerticalAligner } from "../components";
-import { dbFolder, errorFX, keyFolder, routes, unlockFX } from "../constants";
+import { errorFX, keyFolder, routes, unlockFX } from "../constants";
 import { useQuery } from "../hooks";
-import { DataStore, gaurdian } from "../utils";
+import { createClient, DataStore, gaurdian } from "../utils";
 
 export const Login: FunctionComponent = memo(() => {
     const history = useHistory();
@@ -53,10 +52,8 @@ export const Login: FunctionComponent = memo(() => {
         } else {
             gaurdian.setKey(Client.generateSecretKey());
         }
-        const client = await Client.create(gaurdian.getKey(), {
-            dbFolder,
-            logLevel: isDev ? "info" : "warn",
-        });
+        const client = await createClient(false, gaurdian.getKey());
+
         const err = await client.login(username, password);
         if (err) {
             if (unlockFX.duration > 0 && !unlockFX.paused) {
@@ -87,10 +84,7 @@ export const Login: FunctionComponent = memo(() => {
 
         if (!checkedCookie) {
             console.log("Checking for cookie.");
-            const tempClient = await Client.create(undefined, {
-                dbFolder,
-                logLevel: isDev ? "info" : "warn",
-            });
+            const tempClient = await createClient(true);
             try {
                 const { user } = await tempClient.whoami();
 
@@ -104,10 +98,7 @@ export const Login: FunctionComponent = memo(() => {
                     throw new Error("Found cookie, but no keyfile.");
                 }
 
-                const client = await Client.create(gaurdian.getKey(), {
-                    dbFolder,
-                    logLevel: isDev ? "info" : "warn",
-                });
+                const client = await createClient(false, gaurdian.getKey());
 
                 window.vex = client;
                 history.push(routes.LAUNCH);

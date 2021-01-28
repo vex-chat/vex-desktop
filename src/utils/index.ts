@@ -1,4 +1,5 @@
 import { chunkMessages } from "./chunkMessages";
+import { createClient } from "./createClient";
 import store from "./DataStore";
 import { formatBytes } from "./formatBytes";
 import { getAssetPath } from "./getAssetPath";
@@ -10,6 +11,7 @@ import { strToIcon } from "./strToIcon";
 
 export {
     chunkMessages,
+    createClient,
     store as DataStore,
     formatBytes,
     gaurdian,

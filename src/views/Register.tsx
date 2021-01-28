@@ -2,13 +2,12 @@ import { Client } from "@vex-chat/libvex";
 
 import { faCheck, faTimes, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import isDev from "electron-is-dev";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
 import { VerticalAligner } from "../components";
-import { dbFolder, errorFX, keyFolder, routes, unlockFX } from "../constants";
-import { DataStore, gaurdian } from "../utils";
+import { errorFX, keyFolder, routes, unlockFX } from "../constants";
+import { createClient, DataStore, gaurdian } from "../utils";
 
 export default function Register(): JSX.Element {
     const history = useHistory();
@@ -46,10 +45,7 @@ export default function Register(): JSX.Element {
         setWaiting(true);
 
         const PK = Client.generateSecretKey();
-        const client = await Client.create(PK, {
-            dbFolder,
-            logLevel: isDev ? "info" : "warn",
-        });
+        const client = await createClient(false, PK);
 
         // eslint-disable-next-line prefer-const
         const [user, err] = await client.register(username, password);
@@ -121,12 +117,7 @@ export default function Register(): JSX.Element {
 
                                     setUsername(username);
 
-                                    const tempClient = await Client.create(
-                                        undefined,
-                                        {
-                                            dbFolder,
-                                        }
-                                    );
+                                    const tempClient = await createClient(true);
 
                                     const [
                                         serverResults,
@@ -195,12 +186,7 @@ export default function Register(): JSX.Element {
                                         setValid(false);
                                     }
 
-                                    const tempClient = await Client.create(
-                                        undefined,
-                                        {
-                                            dbFolder,
-                                        }
-                                    );
+                                    const tempClient = await createClient(true);
                                     const [
                                         user,
                                     ] = await tempClient.users.retrieve(

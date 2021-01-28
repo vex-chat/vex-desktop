@@ -47,7 +47,7 @@ import { addPermission, setPermissions } from "../reducers/permissions";
 import { setServers } from "../reducers/servers";
 import { addSession, setSessions } from "../reducers/sessions";
 import { setUser } from "../reducers/user";
-import { DataStore } from "../utils";
+import { createClient, DataStore, gaurdian } from "../utils";
 
 declare global {
     interface Window {
@@ -120,7 +120,7 @@ export function ClientLauncher(): JSX.Element {
                 }
             }
 
-            const tempClient = await Client.create(undefined, { dbFolder });
+            const tempClient = await createClient(true);
 
             if (userRecords[message.authorID] === undefined) {
                 const [user] = await tempClient.users.retrieve(
@@ -380,7 +380,33 @@ export function ClientLauncher(): JSX.Element {
         try {
             await client.connect();
         } catch (err) {
-            setTimeout(relaunch, 5000);
+            switch (err.response.status) {
+                case 470:
+                    // eslint-disable-next-line no-case-declarations
+                    const keyFilePath = gaurdian.getKeyFilePath();
+                    if (keyFilePath) {
+                        fs.rename(
+                            keyFilePath,
+                            `${keyFilePath}-bak`,
+                            async () => {
+                                // generate new SK
+                                const SK = Client.generateSecretKey();
+                                const keyPath =
+                                    keyFolder +
+                                    "/" +
+                                    client.me.user().username.toLowerCase();
+                                Client.saveKeyFile(keyPath, "", SK);
+                                const newClient = await createClient(false, SK);
+                                window.vex = newClient;
+                                setTimeout(relaunch, 5000);
+                            }
+                        );
+                    }
+                    break;
+                default:
+                    setTimeout(relaunch, 5000);
+                    break;
+            }
         }
     };
 

@@ -1,32 +1,7 @@
 import type { IUser } from "@vex-chat/libvex";
 import type { AppThunk, RootState } from "~Types";
-import type { ISerializableUser } from "./user";
 
 import { createSlice } from "@reduxjs/toolkit";
-
-import { deserializeUser, serializeUser } from "./user";
-
-function serializeUserList(list: IUser[]): Record<string, ISerializableUser> {
-    const serialized: Record<string, ISerializableUser> = {};
-
-    for (const user of list) {
-        serialized[user.userID] = serializeUser(user);
-    }
-
-    return serialized;
-}
-
-function deserializeUserList(
-    list: Record<string, ISerializableUser>
-): Record<string, IUser> {
-    const deserialized: Record<string, IUser> = {};
-
-    for (const user in list) {
-        deserialized[user] = deserializeUser(list[user]);
-    }
-
-    return deserialized;
-}
 
 const counterSlice = createSlice({
     name: "familiars",
@@ -35,7 +10,7 @@ const counterSlice = createSlice({
         set: (_state, action) => {
             return action.payload;
         },
-        add: (state: Record<string, ISerializableUser>, action) => {
+        add: (state: Record<string, IUser>, action) => {
             state[action.payload.userID] = action.payload;
             return state;
         },
@@ -48,16 +23,24 @@ const counterSlice = createSlice({
 export const { set, add, reset } = counterSlice.actions;
 
 export const setFamiliars = (users: IUser[]): AppThunk => (dispatch) =>
-    dispatch(set(serializeUserList(users)));
+    dispatch(set(objifyUsers(users)));
 
-export const addFamiliar = (users: IUser): AppThunk => (dispatch) =>
-    dispatch(add(serializeUser(users)));
+export const addFamiliar = (user: IUser): AppThunk => (dispatch) =>
+    dispatch(add(user));
 
 export const resetFamiliars = (): AppThunk => (dispatch) => {
     dispatch(reset());
 };
 
 export const selectFamiliars = (state: RootState): Record<string, IUser> =>
-    deserializeUserList(state.familiars);
+    state.familiars;
 
 export default counterSlice.reducer;
+
+const objifyUsers = (users: IUser[]) => {
+    const records: Record<string, IUser> = {};
+    for (const user of users) {
+        records[user.userID] = user;
+    }
+    return records;
+};

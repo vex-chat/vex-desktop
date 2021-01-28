@@ -7,7 +7,7 @@ import { useState } from "react";
 export const emptyUser: IUser = {
     userID: "",
     username: "",
-    lastSeen: new Date(Date.now()).toString(),
+    lastSeen: Date.now(),
 };
 
 export function UserSearchBar(props: {

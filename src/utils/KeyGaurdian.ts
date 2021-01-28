@@ -4,9 +4,11 @@ class KeyGaurdian {
     private static instance: KeyGaurdian;
 
     private SK: string | null;
+    private keyFilePath: string | null;
 
     private constructor() {
         this.SK = null;
+        this.keyFilePath = null;
     }
 
     public static getInstance(): KeyGaurdian {
@@ -37,10 +39,15 @@ class KeyGaurdian {
     public load(path: string, password = ""): void {
         const SK = Client.loadKeyFile(path, password);
         this.SK = SK;
+        this.keyFilePath = path;
     }
 
     public clear(): void {
         this.SK = null;
+    }
+
+    public getKeyFilePath() {
+        return this.keyFilePath;
     }
 }
 

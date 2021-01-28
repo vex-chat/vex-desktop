@@ -4,7 +4,6 @@
 import type { IFile, IFileProgress } from "@vex-chat/libvex";
 import type { EmojiData } from "emoji-mart";
 
-import axios from "axios";
 import { capitalCase } from "change-case";
 import log from "electron-log";
 import { emojiIndex } from "emoji-mart";
@@ -25,12 +24,6 @@ import Loading from "./Loading";
 
 const openEmojiRegex = /:\w+$/;
 const closedEmojiRegex = /:\w+:/g;
-
-interface IEmoji {
-    emojiID: string;
-    owner: string;
-    name: string;
-}
 
 export function ChatInput(props: {
     targetID: string;
@@ -179,7 +172,11 @@ export function ChatInput(props: {
                 );
                 const length = Math.max(emojiSearch.length, emoji.name.length);
                 let similarity = 1 - ld / length;
-                if ((emoji.id || emoji.name).includes(emojiSearch)) {
+                if (
+                    (
+                        emoji.id?.toLowerCase() || emoji.name.toLowerCase()
+                    ).includes(emojiSearch.toLowerCase())
+                ) {
                     similarity = 1;
                 }
 
@@ -188,11 +185,10 @@ export function ChatInput(props: {
             });
 
         const client = window.vex;
-        const res = await axios.get(
-            client.getHost() +
-                "/user/eb739211-edf9-4d3f-9b9d-0a9a1d7406cd/emoji"
-        );
-        const customEmojiData: IEmoji[] = res.data;
+
+        const customEmojiData = serverID
+            ? await client.emoji.retrieveList(serverID)
+            : [];
 
         const customEmojis: EmojiData[] = customEmojiData.map((emojiData) => {
             const ld = levenshtein(
@@ -201,7 +197,9 @@ export function ChatInput(props: {
             );
             const length = Math.max(emojiSearch.length, emojiData.name.length);
             let similarity = 1 - ld / length;
-            if (emojiData.name.includes(emojiSearch)) {
+            if (
+                emojiData.name.toLowerCase().includes(emojiSearch.toLowerCase())
+            ) {
                 similarity = 1;
             }
 
