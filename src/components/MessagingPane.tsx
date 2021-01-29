@@ -594,6 +594,7 @@ export function DeviceList(): JSX.Element {
                                 <td />
                                 <td>Device</td>
                                 <td>Last Login</td>
+                                <td>SignKey</td>
                                 <td />
                             </tr>
                         </thead>
@@ -629,6 +630,9 @@ export function DeviceList(): JSX.Element {
                                                 ),
                                                 "kk:mm MM/dd/yyyy"
                                             )}
+                                        </td>
+                                        <td className="is-family-monospace">
+                                            {devices[key].signKey}
                                         </td>
                                         <td>
                                             <button
