@@ -121,6 +121,9 @@ const createWindow = async () => {
     );
     autoUpdater.on("update-downloaded", () => {
         mainWindow?.webContents.send("autoUpdater", { status: "downloaded" });
+        if (process.platform === "darwin") {
+            forceQuit = true;
+        }
         autoUpdater.quitAndInstall(true, true);
     });
 
