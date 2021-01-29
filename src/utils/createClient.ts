@@ -11,6 +11,7 @@ export const createClient = async (
     PK?: string
 ): Promise<Client> => {
     const host = "api.vex.chat";
+    // const host = "localhost:16777";
 
     const options: IClientOptions = {
         dbFolder: temp ? undefined : dbFolder,
