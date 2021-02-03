@@ -1,7 +1,7 @@
 {
     "name": "vex-desktop",
     "productName": "Vex Desktop",
-    "version": "0.12.10",
+    "version": "0.12.11",
     "description": "Desktop application for vex chat.",
     "main": "./main.prod.js",
     "author": {
@@ -15,7 +15,7 @@
     },
     "license": "AGPL-3.0-or-later",
     "dependencies": {
-        "@vex-chat/libvex": "^0.19.7",
+        "@vex-chat/libvex": "^0.20.0",
         "react-loading": "^2.0.3"
     }
 }
