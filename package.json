@@ -237,6 +237,7 @@
         "js-levenshtein": "^1.1.6",
         "jsonwebtoken": "^8.5.1",
         "linkify-it": "^3.0.2",
+        "msgpack-lite": "^0.1.26",
         "react": "^17.0.1",
         "react-color": "^2.19.3",
         "react-dom": "^17.0.1",

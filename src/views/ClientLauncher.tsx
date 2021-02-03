@@ -17,6 +17,7 @@ import axios from "axios";
 import { ipcRenderer, remote } from "electron";
 import log from "electron-log";
 import fs from "fs";
+import msgpack from "msgpack-lite";
 import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
@@ -238,9 +239,10 @@ export function ClientLauncher(): JSX.Element {
         const client = window.vex;
         try {
             const res = await axios.get(
-                client.getHost() + "/user/" + user.userID + "/devices"
+                client.getHost() + "/user/" + user.userID + "/devices",
+                { responseType: "arraybuffer" }
             );
-            dispatch(addDevices(res.data));
+            dispatch(addDevices(msgpack.decode(Buffer.from(res.data))));
         } catch (err) {
             console.warn(err.toString);
         }
@@ -261,16 +263,20 @@ export function ClientLauncher(): JSX.Element {
         const familiars = [...(await client.users.familiars()), me];
         dispatch(setFamiliars(familiars));
 
-        for (const user of familiars) {
-            try {
-                const res = await axios.get(
-                    client.getHost() + "/user/" + user.userID + "/devices"
-                );
-                dispatch(addDevices(res.data));
-            } catch (err) {
-                console.warn("error getting devices", err.toString());
-            }
+        try {
+            const res = await axios.post(
+                client.getHost() + "/deviceList",
+                familiars.map((user) => user.userID),
+                { responseType: "arraybuffer" }
+            );
+            console.log(res.data);
+            const deviceList = msgpack.decode(Buffer.from(res.data));
+            dispatch(addDevices(deviceList));
+        } catch (err) {
+            console.warn("error getting devices", err.toString());
+        }
 
+        for (const user of familiars) {
             if (DataStore.get("settings.directMessages")) {
                 const history = await client.messages.retrieve(user.userID);
                 const szHistory = history.reduce<ISerializedMessage[]>(
