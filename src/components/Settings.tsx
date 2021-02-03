@@ -103,75 +103,96 @@ export default function Settings(): JSX.Element {
             <div className="message">
                 <p className="message-header">User Settings</p>
                 <div className="message-body has-text-left">
-                    <span
-                        onClick={async () => {
-                            const dialogRes = await remote.dialog.showOpenDialog(
-                                remote.getCurrentWindow(),
-                                {
-                                    title: "Select an avatar",
-                                    filters: [
-                                        {
-                                            name: "Images",
-                                            extensions: [
-                                                "jpg",
-                                                "jpeg",
-                                                "png",
-                                                "gif",
-                                                "apng",
-                                                "avif",
-                                                "svg",
-                                            ],
-                                        },
-                                    ],
-                                }
-                            );
-
-                            const { canceled, filePaths } = dialogRes;
-                            if (canceled) {
-                                return;
-                            }
-
-                            setErrText("");
-
-                            const [path] = filePaths;
-                            if (path) {
-                                setUploadingAvatar(true);
-                                fs.readFile(path, async (err, buf) => {
-                                    if (buf.byteLength > 5000000) {
-                                        setUploadingAvatar(false);
-                                        setErrText("File too big (max 5mb)");
-                                        return;
-                                    }
-
-                                    if (err) {
-                                        setUploadingAvatar(false);
-                                        return;
-                                    }
-                                    const client = window.vex;
-                                    try {
-                                        await client.me.setAvatar(buf);
-                                    } catch (err) {
-                                        setErrText(
-                                            err.response?.data?.error ||
-                                                err.toString()
-                                        );
-                                    }
-
-                                    setUploadingAvatar(false);
-                                    dispatch(setAvatarHash());
-                                });
-                            }
-                        }}
-                    >
+                    <span>
                         <span className="columns">
-                            {!uploadingAvatar &&
-                                IconUsername(
-                                    user,
-                                    48,
-                                    undefined,
-                                    "",
-                                    "avatar-trigger pointer"
-                                )}
+                            {!uploadingAvatar && (
+                                <span
+                                    className="pointer"
+                                    onClick={async () => {
+                                        const dialogRes = await remote.dialog.showOpenDialog(
+                                            remote.getCurrentWindow(),
+                                            {
+                                                title: "Select an avatar",
+                                                filters: [
+                                                    {
+                                                        name: "Images",
+                                                        extensions: [
+                                                            "jpg",
+                                                            "jpeg",
+                                                            "png",
+                                                            "gif",
+                                                            "apng",
+                                                            "avif",
+                                                            "svg",
+                                                        ],
+                                                    },
+                                                ],
+                                            }
+                                        );
+
+                                        const {
+                                            canceled,
+                                            filePaths,
+                                        } = dialogRes;
+                                        if (canceled) {
+                                            return;
+                                        }
+
+                                        setErrText("");
+
+                                        const [path] = filePaths;
+                                        if (path) {
+                                            setUploadingAvatar(true);
+                                            fs.readFile(
+                                                path,
+                                                async (err, buf) => {
+                                                    if (
+                                                        buf.byteLength > 5000000
+                                                    ) {
+                                                        setUploadingAvatar(
+                                                            false
+                                                        );
+                                                        setErrText(
+                                                            "File too big (max 5mb)"
+                                                        );
+                                                        return;
+                                                    }
+
+                                                    if (err) {
+                                                        setUploadingAvatar(
+                                                            false
+                                                        );
+                                                        return;
+                                                    }
+                                                    const client = window.vex;
+                                                    try {
+                                                        await client.me.setAvatar(
+                                                            buf
+                                                        );
+                                                    } catch (err) {
+                                                        setErrText(
+                                                            err.response?.data
+                                                                ?.error ||
+                                                                err.toString()
+                                                        );
+                                                    }
+
+                                                    setUploadingAvatar(false);
+                                                    dispatch(setAvatarHash());
+                                                }
+                                            );
+                                        }
+                                    }}
+                                >
+                                    {IconUsername(
+                                        user,
+                                        48,
+                                        undefined,
+                                        "",
+                                        "avatar-trigger pointer"
+                                    )}
+                                </span>
+                            )}
                             {uploadingAvatar && (
                                 <Fragment>
                                     <span className="column is-narrow">
