@@ -40,6 +40,7 @@ import { selectFamiliars } from "../reducers/familiars";
 import { push as pushHistoryStack } from "../reducers/historyStacks";
 import { selectMessages } from "../reducers/messages";
 import { markSession, selectSessions } from "../reducers/sessions";
+import { selectUser } from "../reducers/user";
 import { chunkMessages } from "../utils/chunkMessages";
 import store from "../utils/DataStore";
 
@@ -544,6 +545,8 @@ export function DeviceList(): JSX.Element {
     const [selectedDevice, setSelectedDevice] = useState("");
     const [errText, setErrText] = useState("");
 
+    const user = useSelector(selectUser);
+
     return (
         <div className="pane-screen-wrapper">
             <Modal
@@ -635,17 +638,21 @@ export function DeviceList(): JSX.Element {
                                             {devices[key].signKey}
                                         </td>
                                         <td>
-                                            <button
-                                                className="button is-danger is-small"
-                                                onClick={() => {
-                                                    setSelectedDevice(
-                                                        devices[key].deviceID
-                                                    );
-                                                    setConfirmDelete(true);
-                                                }}
-                                            >
-                                                Delete
-                                            </button>
+                                            {devices[key].owner ===
+                                                user.userID && (
+                                                <button
+                                                    className="button is-danger is-small"
+                                                    onClick={() => {
+                                                        setSelectedDevice(
+                                                            devices[key]
+                                                                .deviceID
+                                                        );
+                                                        setConfirmDelete(true);
+                                                    }}
+                                                >
+                                                    Delete
+                                                </button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}
