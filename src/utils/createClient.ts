@@ -18,6 +18,7 @@ export const createClient = async (
         inMemoryDb: temp,
         host,
         logLevel: isDev ? "info" : "warn",
+        dbLogLevel: "info",
         unsafeHttp: host.includes("localhost"),
     };
     return Client.create(PK, options);

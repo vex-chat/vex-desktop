@@ -25,7 +25,7 @@ const store = configuredStore();
 (async () => {
     const cookies = remote.getCurrentWebContents().session.cookies;
     const cookieList = await cookies.get({
-        name: "auth",
+        path: "/",
     });
     console.log("Cookie list from session", cookieList);
 
@@ -38,6 +38,7 @@ const store = configuredStore();
             _cause: unknown,
             removed: boolean
         ) => {
+            console.log(cookie);
             if (!cookie.path || !cookie.domain) {
                 return;
             }
@@ -53,7 +54,6 @@ const store = configuredStore();
                         throw new Error("Couldn't decode JWT.");
                     }
                     const { exp } = decoded as { exp: number };
-
                     console.log("url", url);
                     await cookies.set({
                         url: url,
@@ -66,6 +66,10 @@ const store = configuredStore();
                         expirationDate: exp,
                     });
                     console.log("Updated cookies.");
+                    const cookieList = await cookies.get({
+                        path: "/",
+                    });
+                    console.log("New cookie list from session", cookieList);
                 } catch (err) {
                     console.error("Error updating cookies", err);
                 }
