@@ -24,13 +24,19 @@ if (!singleLock) {
     app.quit();
 } else {
     app.on("second-instance", (_event, argv) => {
+        log.info("Reached second-instance.");
         // Someone tried to run a second instance, we should focus our window.
         if (mainWindow) {
+            console.log("Main window exists.");
             if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.show();
             mainWindow.focus();
+        } else {
+            console.log("Main window does not exist.");
         }
 
         for (const arg of argv) {
+            console.log(arg);
             if (arg.includes("vex://")) {
                 mainWindow?.webContents.send("open-url", { url: arg });
             }
