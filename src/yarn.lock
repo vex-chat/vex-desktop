@@ -99,10 +99,10 @@
     sha.js "^2.4.11"
     tweetnacl "^1.0.3"
 
-"@vex-chat/libvex@^0.20.7":
-  version "0.20.7"
-  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.20.7.tgz#80c318b93b98cddce89fe5e0d1f64edb38ef5e4a"
-  integrity sha512-k7FJkIhq4m7F23h3Naxu452HeJbjKtEmpWhnQi3luesQs8xQZZ70kCuZbBAGaZrmkMHUrGo2TYvBEVjFJwnwFg==
+"@vex-chat/libvex@^0.20.8":
+  version "0.20.8"
+  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.20.8.tgz#bd3e384657bc037dc2bb74ef876651d4cc864e23"
+  integrity sha512-oSnaQB9EMa3HfNLkpyd5nkf+/r22BrZMCayFg25dpcGWvl3/IfIQVwGdHWecjWNrVCfGNCD/myjHYqtWG16tZA==
   dependencies:
     "@extrahash/sleep" "^1.0.0"
     "@vex-chat/crypto" "^0.7.19"
