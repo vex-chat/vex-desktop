@@ -1,10 +1,10 @@
-import {
-    faTimes,
-    faWindowMaximize,
-    faWindowMinimize,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import { remote } from "electron";
+import { Fragment } from "react";
+
+import closeWindowIcon from "../../assets/windowIcons/light-compact/button_close.svg";
+import maximizeWindowIcon from "../../assets/windowIcons/light-compact/button_maximize.svg";
+import minimizeWindowIcon from "../../assets/windowIcons/light-compact/button_minimize.svg";
 
 export function TitleBar(): JSX.Element {
     function closeWindow() {
@@ -22,35 +22,39 @@ export function TitleBar(): JSX.Element {
         }
     }
 
+    function minimizeWindow() {
+        remote.getCurrentWindow().minimize();
+    }
+
     return (
-        <div className="title-bar" onDoubleClick={maximizeWindow}>
-            <div className="title-bar-grabber has-text-centered is-size-7">
-                <p className="title-bar-text">&nbsp;&nbsp;</p>
-            </div>
-            {process.platform !== "darwin" && (
-                <div className="window-buttons">
-                    <span
-                        onClick={() => {
-                            remote.getCurrentWindow().minimize();
-                        }}
-                        className="pointer icon is-small minimize-button "
+        <header id="titlebar">
+            <div id="drag-region">
+                <div className="no-drag" id="window-controls">
+                    <div
+                        className="window-button pointer"
+                        id="min-button"
+                        onClick={minimizeWindow}
                     >
-                        <FontAwesomeIcon icon={faWindowMinimize} />
-                    </span>
-                    <span
+                        <img src={minimizeWindowIcon} />
+                    </div>
+
+                    <div
+                        className="window-button pointer"
+                        id="max-button"
                         onClick={maximizeWindow}
-                        className="icon maximize-button is-small pointer"
                     >
-                        <FontAwesomeIcon icon={faWindowMaximize} />
-                    </span>
-                    <span
+                        <img src={maximizeWindowIcon} />
+                    </div>
+
+                    <div
+                        className="window-button pointer"
+                        id="close-button"
                         onClick={closeWindow}
-                        className="icon close-button has-text-danger is-small pointer"
                     >
-                        <FontAwesomeIcon icon={faTimes} />
-                    </span>
+                        <img src={closeWindowIcon} />
+                    </div>
                 </div>
-            )}
-        </div>
+            </div>
+        </header>
     );
 }

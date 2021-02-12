@@ -54,15 +54,6 @@ $theme_shadow: inset 0 0 10px;
     display: none !important;
 }
 
-.title-bar-grabber {
-    position: absolute;
-    width: calc(100% - 60px);
-    height: 45px;
-    margin: 5px;
-    -ms-overflow-style: scrollbar;
-    -webkit-app-region: drag;
-}
-
 .tabs {
     border-bottom-color: var(--theme_color_0) !important;
 }
@@ -781,8 +772,8 @@ button {
 
 .full-size {
     width: 100vw;
-    height: calc(100vh - 22px);
-    top: 22px;
+    height: 100vh;
+    top: 0px !important;
 }
 
 .Aligner {
@@ -951,7 +942,9 @@ p > .emoji:only-child {
 }
 
 .topbar-button {
+    -webkit-app-region: no-drag;
     margin-left: 1rem;
+    z-index: 12;
 }
 
 .topbar-button:hover {
@@ -1020,4 +1013,65 @@ p > .emoji:only-child {
 
 textarea {
     border: none !important;
+}
+
+#titlebar {
+    padding: 4px;
+    display: block;
+    position: fixed;
+    height: 45px;
+    width: calc(100% - 2px); /*Compensate for body 1px border*/
+    z-index: 10;
+}
+
+#titlebar #drag-region {
+    display: grid;
+    grid-template-columns: auto;
+    width: 100%;
+    height: 100%;
+    -webkit-app-region: drag;
+}
+
+body {
+    border: 1px solid #48545c !important;
+    overflow-y: hidden;
+}
+
+#titlebar {
+    color: #fff;
+}
+
+#window-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 46px);
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+}
+
+#window-controls .window-button {
+    grid-row: 1 / span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+#min-button {
+    grid-column: 1;
+}
+
+#max-button,
+#restore-button {
+    grid-column: 2;
+}
+
+#close-button {
+    grid-column: 3;
+}
+
+.no-drag {
+    -webkit-app-region: no-drag;
 }
