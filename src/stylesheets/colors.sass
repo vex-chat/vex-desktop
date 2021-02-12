@@ -1,0 +1,162 @@
+////////////////////////////////////////////////////////////////
+//
+//  Vex's color palette with 11 main colors
+//
+////////////////////////////////////////////////////////////////
+
+// White
+$vex-white-light: #FFFFFF
+$vex-white: #F2F1F0
+
+// Grey
+$vex-grey-light: #D9D8D7
+$vex-grey: #A9A9A8
+$vex-grey-dark: #7A7978
+
+// Black
+$vex-black-lightest: #4D4F51
+$vex-black-light: #393C3D
+$vex-black: #25282A
+$vex-black-dark: #191C1D
+$vex-black-darkest: #000000
+
+// Green
+$vex-green-lightest: #E2EFD2
+$vex-green-light: #ADD37A
+$vex-green: #78BE21
+$vex-green-dark: #3E602D
+$vex-green-darkest: #233118
+
+// Aqua
+$vex-aqua-lightest: #CDE9E5
+$vex-aqua-light: #6CC6B7
+$vex-aqua: #00AB8E
+$vex-aqua-dark: #005647
+$vex-aqua-darkest: #052F28
+
+// Blue
+$vex-blue-lightest: #CBE1F3
+$vex-blue-light: #69A8DB
+$vex-blue: #0072CE
+$vex-blue-dark: #0B4D80
+$vex-blue-darkest: #052740
+
+// Purple
+$vex-purple-lightest: #DED4E4
+$vex-purple-light: #9A80B4
+$vex-purple: #582C83
+$vex-purple-dark: #422462
+$vex-purple-darkest: #1F0F34
+
+// Pink
+$vex-pink-lightest: #F7D9E3
+$vex-pink-light: #EC8FAF
+$vex-pink: #E0457B
+$vex-pink-dark: #931F47
+$vex-pink-darkest: #481325
+
+// Red
+$vex-red-lightest: #F3CED4
+$vex-red-light: #DD6F81
+$vex-red: #C8102E
+$vex-red-dark: #7A1125
+$vex-red-darkest: #41111C
+
+// Orange
+$vex-orange-lightest: #FDE0D2
+$vex-orange-light: #F7A17A
+$vex-orange: #FF6720
+$vex-orange-dark: #B03E25
+$vex-orange-darkest: #57220E
+
+// Yellow
+$vex-yellow-lightest: #FFEBD1
+$vex-yellow-light: #FDC477
+$vex-yellow: #FF9E1B
+$vex-yellow-dark: #B06928
+$vex-yellow-darkest: #583712
+
+
+// overrides
+// Brand colors
+$green: $vex-green
+$turquoise: $vex-aqua
+$cyan: $vex-blue
+$blue: $vex-blue
+$purple: $vex-purple
+$pink: $vex-pink
+$red: $vex-red
+$orange: $vex-orange
+$yellow: $vex-yellow
+$black: $vex-black-darkest
+$black-bis: $vex-black-dark
+$black-ter: $vex-black
+$grey-darker: $vex-black-light
+$grey-dark: $vex-black-lightest
+$grey: $vex-grey-dark
+$grey-light: $vex-grey
+$grey-lighter: $vex-grey-light
+$grey-lightest: $vex-grey-light
+$white-bis: $vex-white
+$white-ter: $vex-white
+$white: $vex-white-light
+
+// Override bulma variables
+$primary: $vex-purple
+$link: $blue
+$info: $turquoise
+$success: $green
+$warning: $yellow
+$danger: $red
+$dark: $grey-darker
+$text: $grey-dark
+
+
+// Typography
+
+$family-sans-serif: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !default
+$family-monospace: monospace !default
+$render-mode: optimizeLegibility !default
+
+$size-1: 3rem !default
+$size-2: 2.5rem !default
+$size-3: 2rem !default
+$size-4: 1.5rem !default
+$size-5: 1.25rem !default
+$size-6: 1rem !default
+$size-7: 0.75rem !default
+
+$weight-light: 300 !default
+$weight-normal: 400 !default
+$weight-medium: 500 !default
+$weight-semibold: 600 !default
+$weight-bold: 700 !default
+
+// Spacing
+$block-spacing: 1.5rem !default
+
+// Responsiveness
+// The container horizontal gap, which acts as the offset for breakpoints
+$gap: 32px !default
+// 960, 1152, and 1344 have been chosen because they are divisible by both 12 and 16
+$tablet: 769px !default
+// 960px container + 4rem
+$desktop: 960px + (2 * $gap) !default
+// 1152px container + 4rem
+$widescreen: 1152px + (2 * $gap) !default
+$widescreen-enabled: true !default
+// 1344px container + 4rem
+$fullhd: 1344px + (2 * $gap) !default
+$fullhd-enabled: true !default
+
+// Miscellaneous
+$easing: ease-out !default
+$radius-small: 2px !default
+$radius: 4px !default
+$radius-large: 6px !default
+$radius-rounded: 290486px !default
+$speed: 86ms !default
+
+// Flags
+$variable-columns: true !default
+$rtl: false !default

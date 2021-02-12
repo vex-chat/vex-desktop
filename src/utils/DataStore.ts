@@ -59,7 +59,7 @@ class DataStore extends Store {
             this.instance.get("settings.windowDimensions") as string
         );
         remote.getCurrentWindow().setSize(width, height);
-        setThemeColor(this.instance.get("settings.themeColor") as string);
+        setThemeColor("white");
 
         console.log("loaded settings", this.instance.store);
 

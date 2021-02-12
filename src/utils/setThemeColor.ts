@@ -1,8 +1,36 @@
 import Color from "color";
 
+import { colors } from "../constants/colors";
+
 const DESIRED_CONTRAST = 11;
 
-export const setThemeColor = (colorStr: string): void => {
+export const setThemeColor = (colorStr: "white" | "black"): void => {
+    console.log(colors[colorStr]);
+
+    document.documentElement.style.setProperty(
+        "--theme_base_color",
+        colors[colorStr].standard
+    );
+
+    document.documentElement.style.setProperty(
+        "--theme_color_0",
+        colors[colorStr].light
+    );
+    document.documentElement.style.setProperty(
+        "--theme_color_1",
+        colors[colorStr].standard
+    );
+    document.documentElement.style.setProperty(
+        "--theme_color_2",
+        colors[colorStr].dark
+    );
+    document.documentElement.style.setProperty(
+        "--text_color_0",
+        getTextColor(colors[colorStr].dark)
+    );
+};
+
+export const _setThemeColor = (colorStr: string): void => {
     const backgroundColor = Color(colorStr);
 
     document.documentElement.style.setProperty(
@@ -23,14 +51,6 @@ export const setThemeColor = (colorStr: string): void => {
             "--theme_color_2",
             backgroundColor.lighten(0.6).hex()
         );
-
-        textColor = Color("#fff");
-        while (textColor.contrast(backgroundColor) > DESIRED_CONTRAST) {
-            if (textColor.darken(0.01).hex() === textColor.hex()) {
-                break;
-            }
-            textColor = textColor.darken(0.01);
-        }
     } else {
         document.documentElement.style.setProperty(
             "--theme_color_0",
@@ -44,17 +64,29 @@ export const setThemeColor = (colorStr: string): void => {
             "--theme_color_2",
             backgroundColor.darken(0.09).hex()
         );
+    }
+};
 
-        textColor = Color("#0A0A0A");
+const getTextColor = (bgColor: string): string => {
+    const backgroundColor = Color(bgColor);
+
+    if (backgroundColor.isDark()) {
+        let textColor = Color("#fff");
+        while (textColor.contrast(backgroundColor) > DESIRED_CONTRAST) {
+            if (textColor.darken(0.01).hex() === textColor.hex()) {
+                break;
+            }
+            textColor = textColor.darken(0.01);
+        }
+        return textColor.hex();
+    } else {
+        let textColor = Color("#0A0A0A");
         while (textColor.contrast(backgroundColor) > DESIRED_CONTRAST) {
             if (textColor.lighten(0.1).hex() === textColor.hex()) {
                 break;
             }
             textColor = textColor.lighten(0.1);
         }
+        return textColor.hex();
     }
-    document.documentElement.style.setProperty(
-        "--text_color_0",
-        textColor.hex()
-    );
 };

@@ -79,10 +79,10 @@ export default function Base(): JSX.Element {
     }, 500);
 
     const doneResizing = () => {
-        DataStore.set(
-            "settings.windowDimensions",
-            JSON.stringify(remote.getCurrentWindow().getSize())
-        );
+        // DataStore.set(
+        //     "settings.windowDimensions",
+        //     JSON.stringify(remote.getCurrentWindow().getSize())
+        // );
     };
 
     const onResize = () => {

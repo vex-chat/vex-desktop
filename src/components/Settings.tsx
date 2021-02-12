@@ -5,6 +5,7 @@ import { TwitterPicker } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Modal } from "../components/Modal";
+import { colors } from "../constants/colors";
 import { set as setAvatarHash } from "../reducers/avatarHash";
 import { reset as resetGroupMessages } from "../reducers/groupMessages";
 import { reset as resetMessages } from "../reducers/messages";
@@ -274,20 +275,27 @@ export default function Settings(): JSX.Element {
                             <TwitterPicker
                                 triangle={"hide"}
                                 colors={[
-                                    "#0f0f0f",
-                                    "#ffffff",
-                                    "#400C0C",
-                                    "#280e34",
-                                    "#1C1D26",
+                                    colors.black.lightest,
+                                    colors.white.lightest,
                                 ]}
                                 color={baseColor}
                                 onChange={(newBaseColor) => {
-                                    setBaseColor(newBaseColor.hex);
-                                    setThemeColor(newBaseColor.hex);
-                                    DataStore.set(
-                                        "settings.themeColor",
-                                        newBaseColor.hex
+                                    console.log(
+                                        newBaseColor,
+                                        colors.black.lightest
                                     );
+
+                                    switch (newBaseColor.hex.toUpperCase()) {
+                                        case colors.black.lightest:
+                                            setThemeColor("black");
+                                            break;
+                                        case colors.white.lightest:
+                                            setThemeColor("white");
+                                            break;
+                                        default:
+                                            setThemeColor("black");
+                                            break;
+                                    }
                                 }}
                             />
                         </li>
