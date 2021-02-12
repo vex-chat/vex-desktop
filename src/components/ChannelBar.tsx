@@ -85,7 +85,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                     >
                         <div className="dropdown-trigger">
                             <span
-                                className="icon"
+                                className="icon topbar-button"
                                 onClick={(event) => {
                                     event.stopPropagation();
                                     if (!menuOpen) {
@@ -114,7 +114,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                 setMenuOpen(false);
                             }}
                         >
-                            <div className="dropdown-content">
+                            <div className="dropdown-content has-text-weight-normal">
                                 {isPermitted && (
                                     <Link
                                         to={`${routes.SERVERS}/${serverID}/invite-links`}

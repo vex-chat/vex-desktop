@@ -35,7 +35,7 @@ export function AddUser(): JSX.Element {
     return (
         <div className="pane-screen-wrapper">
             {links.length > 0 && (
-                <table className="table is-striped is-narrow is-fullwidth">
+                <table className="table is-narrow is-fullwidth">
                     <thead>
                         <tr>
                             <td />
