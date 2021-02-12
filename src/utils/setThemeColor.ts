@@ -9,24 +9,24 @@ export const setThemeColor = (colorStr: "white" | "black"): void => {
 
     document.documentElement.style.setProperty(
         "--theme_base_color",
-        colors[colorStr].standard
+        colors[colorStr].theme_color_0
     );
 
     document.documentElement.style.setProperty(
         "--theme_color_0",
-        colors[colorStr].light
+        colors[colorStr].theme_color_0
     );
     document.documentElement.style.setProperty(
         "--theme_color_1",
-        colors[colorStr].standard
+        colors[colorStr].theme_color_1
     );
     document.documentElement.style.setProperty(
         "--theme_color_2",
-        colors[colorStr].dark
+        colors[colorStr].theme_color_2
     );
     document.documentElement.style.setProperty(
         "--text_color_0",
-        getTextColor(colors[colorStr].dark)
+        getTextColor(colors[colorStr].theme_color_0)
     );
 };
 
@@ -37,7 +37,6 @@ export const _setThemeColor = (colorStr: string): void => {
         "--theme_base_color",
         backgroundColor.hex()
     );
-    let textColor;
     if (backgroundColor.isDark()) {
         document.documentElement.style.setProperty(
             "--theme_color_0",

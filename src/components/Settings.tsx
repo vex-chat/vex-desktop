@@ -40,11 +40,9 @@ export default function Settings(): JSX.Element {
 
     const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
-    const [baseColor, setBaseColor] = useState(
-        getComputedStyle(document.documentElement)
-            .getPropertyValue("--theme_base_color")
-            .trim()
-    );
+    const baseColor = getComputedStyle(document.documentElement)
+        .getPropertyValue("--theme_base_color")
+        .trim();
 
     const [notification, setNotifications] = useState(
         DataStore.get("settings.notifications") as boolean
@@ -275,21 +273,16 @@ export default function Settings(): JSX.Element {
                             <TwitterPicker
                                 triangle={"hide"}
                                 colors={[
-                                    colors.black.lightest,
-                                    colors.white.lightest,
+                                    colors.black.theme_color_2,
+                                    colors.white.theme_color_0,
                                 ]}
                                 color={baseColor}
                                 onChange={(newBaseColor) => {
-                                    console.log(
-                                        newBaseColor,
-                                        colors.black.lightest
-                                    );
-
                                     switch (newBaseColor.hex.toUpperCase()) {
-                                        case colors.black.lightest:
+                                        case colors.black.theme_color_2:
                                             setThemeColor("black");
                                             break;
-                                        case colors.white.lightest:
+                                        case colors.white.theme_color_0:
                                             setThemeColor("white");
                                             break;
                                         default:

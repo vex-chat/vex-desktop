@@ -80,7 +80,7 @@ $theme_shadow: inset 0 0 10px;
 }
 
 ::-webkit-scrollbar {
-    background-color: var(--theme_color_1);
+    background-color: var(--theme_color_0);
 }
 
 strong {
@@ -97,7 +97,7 @@ p {
 
 ::-webkit-scrollbar-thumb:window-inactive,
 ::-webkit-scrollbar-thumb {
-    background: var(--theme_color_0);
+    background: var(--theme_color_1);
 }
 
 .identity-panel {
@@ -145,7 +145,7 @@ a:hover {
 }
 
 a.dropdown-item:hover {
-    background-color: var(--theme_color_2);
+    background-color: var(--theme_color_1);
     color: var(--text_color_0);
 }
 
@@ -162,17 +162,11 @@ div.sidebar > aside > ul > li > a:hover {
 }
 
 textarea {
-    border-color: var(--theme_color_1) !important;
     background-color: var(--theme_color_0) !important;
     color: var(--text_color_0) !important;
-    box-shadow: $theme_shadow var(--theme_color_0) !important;
     min-height: 60px;
     overflow-y: auto;
     word-wrap: break-word;
-}
-
-textarea:focus {
-    box-shadow: $theme_shadow var(--theme_color_2) !important;
 }
 
 .message-header {
@@ -204,8 +198,8 @@ textarea:focus {
 }
 
 .search-wrapper {
-    border-bottom: 2px solid var(--theme_color_1);
-    background-color: var(--theme_color_2);
+    border-bottom: 2px solid var(--theme_color_0);
+    background-color: var(--theme_color_1);
 }
 
 .rhap_container {
@@ -242,19 +236,23 @@ textarea:focus {
 }
 
 .familiar-button.is-active {
-    background-color: var(--theme_color_1);
+    background-color: var(--theme_color_0);
 }
 
 .familiar-button:hover {
-    background-color: var(--theme_color_1);
+    background-color: var(--theme_color_0);
 }
 
 .channel-bar-link a {
     color: var(--text_color_0) !important;
 }
 
+.channel-bar-link:hover {
+    background-color: var(--theme_color_0) !important;
+}
+
 .channel-bar-link .is-active {
-    background-color: var(--theme_color_1) !important;
+    background-color: var(--theme_color_0) !important;
 }
 
 .outgoing-message {
@@ -326,6 +324,7 @@ progress {
 .dropdown-content {
     opacity: 1 !important;
     z-index: 7;
+    background-color: var(--theme_color_2) !important;
 }
 
 .file-label {
@@ -418,6 +417,10 @@ a {
     color: var(--text_color_0);
 }
 
+a:hover {
+    background-color: transparent !important;
+}
+
 .menu-list a.is-active {
     color: var(--text_color_0);
 }
@@ -435,7 +438,7 @@ a {
 }
 
 .sidebar {
-    background-color: var(--theme_color_2);
+    background-color: var(--theme_color_1);
 }
 
 .modal-content-button-wrapper {
@@ -444,8 +447,8 @@ a {
 }
 
 .server-button {
-    background-color: var(--theme_color_2);
-    border: 2px solid var(--theme_color_2) !important;
+    background-color: var(--theme_color_1);
+    border: 2px solid var(--theme_color_1) !important;
     color: var(--text_color_0);
 }
 
@@ -606,8 +609,12 @@ button {
 }
 
 .user-menu-wrapper {
-    border-top: 2px solid var(--theme_color_1);
-    background-color: var(--theme_color_2);
+    border-top: 2px solid var(--theme_color_0);
+    background-color: var(--theme_color_1);
+}
+
+.dropdown-item:hover {
+    background-color: var(--theme_color_1) !important;
 }
 
 .identity-link:hover {
@@ -615,20 +622,11 @@ button {
     cursor: pointer;
 }
 
-.title-bar {
-    background-image: linear-gradient(
-        to left,
-        var(--theme_color_0),
-        var(--theme_color_1)
-    );
-    border-bottom: 2px solid var(--theme_color_2);
-}
-
 .serverbar {
     background-image: linear-gradient(
         to top,
-        var(--theme_color_0),
-        var(--theme_color_1)
+        var(--theme_color_2),
+        var(--theme_color_2)
     );
 }
 
@@ -637,13 +635,12 @@ button {
 }
 
 .right-bar {
-    background-color: var(--theme_color_2);
-    border-left: 2px solid var(--theme_color_1);
+    background-color: var(--theme_color_1);
 }
 
 .server-titlebar {
-    border-bottom: 2px solid var(--theme_color_1);
-    background-color: var(--theme_color_2);
+    border-bottom: 2px solid var(--theme_color_0);
+    background-color: var(--theme_color_1);
 }
 
 .tag:not(body) {
@@ -835,7 +832,6 @@ button {
     z-index: 1;
     min-height: 58px;
     overflow: remove;
-    border-top: 2px solid var(--theme_color_2);
 }
 
 .chat-input-wrapper.direct-messaging {
