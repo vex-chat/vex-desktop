@@ -15,7 +15,7 @@ import {
     ServerBar,
     ServerPane,
     ServerSettings,
-    TopbarButtons,
+    TitleBar,
     UserMenu,
 } from "../components";
 import { routes } from "../constants";
@@ -72,11 +72,11 @@ export function Server(props: {
 
     return (
         <div>
-            <TopbarButtons
-                setUserBarOpen={setUserBarOpen}
-                userBarOpen={userBarOpen}
-                pageType={pageType}
+            <TitleBar
                 updateAvailable={props.updateAvailable}
+                userBarOpen={userBarOpen}
+                setUserBarOpen={setUserBarOpen}
+                showButtons={true}
             />
             <ServerBar />
             <ChannelBar name={server.name} serverID={serverID} />
@@ -191,6 +191,7 @@ export function Server(props: {
                                                 familiar={user}
                                                 trigger={
                                                     <Avatar
+                                                        className="dim"
                                                         user={user}
                                                         size={32}
                                                     />
@@ -198,7 +199,7 @@ export function Server(props: {
                                             />
                                         </div>
                                     </figure>
-                                    <div className="media-content">
+                                    <div className="media-content dim">
                                         {user.username}
                                     </div>
                                 </article>

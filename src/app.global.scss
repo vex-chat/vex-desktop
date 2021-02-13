@@ -83,7 +83,7 @@ p {
 
 ::-webkit-scrollbar-thumb:window-inactive,
 ::-webkit-scrollbar-thumb {
-    background: var(--theme_color_1);
+    background: var(--theme_color_2);
 }
 
 .identity-panel {
@@ -257,10 +257,6 @@ textarea {
     color: var(--text_color_0);
 }
 
-.title-bar {
-    height: 55px;
-}
-
 .input-wrapper {
     margin-bottom: 12px;
 }
@@ -271,6 +267,14 @@ textarea {
 
 .icon-username-fa {
     margin-top: 7px;
+}
+
+.server-dropdown {
+    position: absolute;
+    display: block;
+    top: 0px;
+    left: 22px;
+    right: 15px;
 }
 
 .server-button-icon {
@@ -321,7 +325,7 @@ progress {
 
 .dropdown-content {
     opacity: 1 !important;
-    z-index: 7;
+    z-index: 15 !important;
     background-color: var(--theme_color_2) !important;
 }
 
@@ -519,6 +523,7 @@ div {
     left: 72px;
     height: 62px;
     padding: 10px 20px;
+    z-index: 17;
 }
 
 .horizontal-scroll {
@@ -625,12 +630,23 @@ button {
     background-color: var(--theme_color_0);
 }
 
+.right-topbar {
+    background-color: var(--theme_color_0);
+    width: 100%;
+    height: 55px;
+}
+
 .right-bar {
     background-color: var(--theme_color_1);
 }
 
 .server-titlebar {
-    border-bottom: 2px solid var(--theme_color_0);
+    position: absolute;
+    overflow-y: auto;
+    width: 265px;
+    height: 55px;
+    left: 0px;
+    top: 0px;
     background-color: var(--theme_color_1);
 }
 
@@ -654,7 +670,9 @@ button {
 }
 
 .serverbar {
-    padding-top: 24px;
+    .darwin {
+        padding-top: 24px;
+    }
     position: absolute;
     overflow-y: auto;
     width: 72px;
@@ -685,19 +703,15 @@ button {
     padding: 14px 16px 14px 16px;
 }
 
-.server-titlebar {
-    width: 100%;
-    height: 55px;
-}
-
 .sidebar {
     position: absolute;
     overflow-y: auto;
     width: 265px;
     height: calc(100% - 55px);
     left: 72px;
-    top: 0px;
-    bottom: 55px;
+    top: 53px;
+    z-index: 13;
+    border-top: 2px solid var(--theme_color_0);
 }
 
 .verify-mnemonic {
@@ -722,8 +736,8 @@ button {
     width: 225px;
     right: 0px;
     bottom: 0px;
-    top: 0px;
-    height: calc(100%);
+    top: 53px;
+    height: calc(100% - 53px);
 }
 
 .right-bar > p {
@@ -826,11 +840,12 @@ button {
     width: calc(100% - 265px);
 }
 .search-wrapper {
-    position: sticky;
+    position: absolute;
     top: 0;
     padding: 10px 20px;
-    width: 100%;
+    width: 265px;
     height: 55px;
+    left: 0px;
     margin: 0px;
     z-index: 1;
 }
@@ -917,7 +932,7 @@ $topbar-buttons-size: 20px;
     font-size: $topbar-buttons-size;
     position: absolute;
     top: 15px;
-    right: 22px;
+    right: 120px;
     z-index: 5;
 }
 
@@ -931,14 +946,6 @@ $topbar-buttons-size: 20px;
 p > .emoji:only-child {
     width: 3rem;
     height: 3rem;
-}
-
-.topbar-buttons.server {
-    font-size: $topbar-buttons-size;
-    position: absolute;
-    top: 15px;
-    right: 250px;
-    z-index: 5;
 }
 
 .topbar-button {
@@ -1020,20 +1027,19 @@ textarea {
     display: block;
     position: fixed;
     height: 45px;
-    width: calc(100% - 2px); /*Compensate for body 1px border*/
+    width: calc(100% - 72px);
+    left: 72px;
     z-index: 10;
 }
 
 #titlebar #drag-region {
-    display: grid;
-    grid-template-columns: auto;
-    width: 100%;
+    top: 0px;
+    left: 72px;
     height: 100%;
     -webkit-app-region: drag;
 }
 
 body {
-    border: 1px solid #48545c !important;
     overflow-y: hidden;
 }
 
@@ -1042,11 +1048,13 @@ body {
 }
 
 #window-controls {
+    padding: 7.5px 0px;
     display: grid;
-    grid-template-columns: repeat(3, 46px);
+    grid-template-columns: repeat(3, 30px);
     position: absolute;
     top: 0;
     right: 0;
+    margin-right: 5px;
     height: 100%;
 }
 
@@ -1057,6 +1065,22 @@ body {
     align-items: center;
     width: 100%;
     height: 100%;
+}
+
+.window-button:hover {
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    -moz-border-radius: 30px; /* or 50% */
+    border-radius: 30px; /* or 50% */
+    background-color: var(--theme_color_1);
+    text-align: center;
+    font-size: 2em;
+}
+
+#close-button.window-button:hover {
+    background-color: $vex-red;
+    color: $vex-white;
 }
 
 #min-button {

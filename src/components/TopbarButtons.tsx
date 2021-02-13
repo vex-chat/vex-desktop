@@ -5,25 +5,23 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { remote } from "electron";
+import { useHistory } from "react-router-dom";
 
 import { DataStore } from "../utils";
 
 export function TopbarButtons(props: {
     updateAvailable: boolean;
-    userBarOpen: boolean;
-    setUserBarOpen: ((state: boolean) => void) | null;
-    pageType: string;
+    userBarOpen?: boolean;
+    setUserBarOpen?: ((state: boolean) => void) | null;
     className?: string;
 }): JSX.Element {
+    const history = useHistory();
+
     return (
-        <div
-            className={`topbar-buttons ${props.className || ""} ${
-                props.userBarOpen ? "server" : ""
-            }`}
-        >
+        <div className={`topbar-buttons ${props.className || ""}`}>
             {props.updateAvailable && (
                 <span
-                    className="icon topbar-button has-text-link"
+                    className="icon topbar-button has-text-link no-drag"
                     onClick={() => {
                         remote.app.relaunch();
                         remote.app.exit();
@@ -32,16 +30,15 @@ export function TopbarButtons(props: {
                     <FontAwesomeIcon icon={faUpload} />
                 </span>
             )}
-
-            {props.setUserBarOpen && props.pageType === "channels" && (
+            {history.location.pathname.includes("server") && (
                 <span
-                    className="icon topbar-button"
+                    className="icon topbar-button no-drag"
                     onClick={() => {
                         if (props.setUserBarOpen) {
-                            props.setUserBarOpen(!props.userBarOpen);
+                            props.setUserBarOpen(!props.userBarOpen || false);
                             DataStore.set(
                                 "settings.userBarOpen",
-                                !props.userBarOpen
+                                !props.userBarOpen || false
                             );
                         }
                     }}

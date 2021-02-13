@@ -626,7 +626,6 @@ export function DeviceList(): JSX.Element {
                                         </td>
                                         <td>{devices[key].name}</td>
                                         <td>
-                                            last logged in{" "}
                                             {format(
                                                 new Date(
                                                     devices[key].lastLogin
@@ -634,7 +633,7 @@ export function DeviceList(): JSX.Element {
                                                 "kk:mm MM/dd/yyyy"
                                             )}
                                         </td>
-                                        <td className="is-family-monospace">
+                                        <td className="is-family-monospace help">
                                             {devices[key].signKey}
                                         </td>
                                         <td>

@@ -5,6 +5,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState: Record<string, boolean | string | number> = {
     initialLoad: true,
     failCount: 0,
+    serverMenuOpen: false,
 };
 
 const appSlice = createSlice({

@@ -1,12 +1,31 @@
-import { faTimes, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
+import type { IUser } from "@vex-chat/libvex";
+
 import { remote } from "electron";
-import { Fragment } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Route, Switch, useHistory } from "react-router-dom";
 
 import closeWindowIcon from "../../assets/windowIcons/light-compact/button_close.svg";
 import maximizeWindowIcon from "../../assets/windowIcons/light-compact/button_maximize.svg";
 import minimizeWindowIcon from "../../assets/windowIcons/light-compact/button_minimize.svg";
+import { routes } from "../constants";
+import { selectApp } from "../reducers/app";
+import { addFamiliar } from "../reducers/familiars";
+import { stubSession } from "../reducers/sessions";
 
-export function TitleBar(): JSX.Element {
+import { ServerTitlebar } from "./ChannelBar";
+import { TopbarButtons } from "./TopbarButtons";
+import { UserSearchBar } from "./UserSearchBar";
+
+export function TitleBar(props: {
+    updateAvailable: boolean;
+    userBarOpen: boolean;
+    setUserBarOpen: (status: boolean) => void;
+    showButtons: boolean;
+}): JSX.Element {
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const app = useSelector(selectApp);
+
     function closeWindow() {
         const window = remote.getCurrentWindow();
         window.hide();
@@ -26,9 +45,55 @@ export function TitleBar(): JSX.Element {
         remote.getCurrentWindow().minimize();
     }
 
+    const newConversation = (user: IUser) => {
+        dispatch(addFamiliar(user));
+        dispatch(stubSession(user.userID));
+
+        history.push(routes.MESSAGING + "/" + user.userID);
+    };
+
     return (
         <header id="titlebar">
             <div id="drag-region">
+                {!app.initialLoad && (
+                    <Switch>
+                        <Route
+                            path={
+                                routes.SERVERS +
+                                "/:serverID?/:pageType/:channelID?/:channelPage?"
+                            }
+                            render={({ match }) => (
+                                <ServerTitlebar
+                                    serverID={match.params.serverID}
+                                    name={"test"}
+                                />
+                            )}
+                        />
+                        <Route
+                            path={routes.MESSAGING}
+                            render={() => (
+                                <div className="field search-wrapper">
+                                    <div className="field">
+                                        <UserSearchBar
+                                            onSelectUser={(user: IUser) => {
+                                                newConversation(user);
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        />
+                    </Switch>
+                )}
+
+                {props.showButtons && (
+                    <TopbarButtons
+                        setUserBarOpen={props.setUserBarOpen}
+                        userBarOpen={props.userBarOpen}
+                        updateAvailable={props.updateAvailable}
+                    />
+                )}
+
                 <div className="no-drag" id="window-controls">
                     <div
                         className="window-button pointer"

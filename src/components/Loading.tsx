@@ -4,6 +4,8 @@ import ReactLoading from "react-loading";
 
 import { formatBytes } from "../utils/formatBytes";
 
+import { TitleBar } from "./TitleBar";
+
 type UpdateDownloadProgress = {
     bytesPerSecond: number;
     percent: number;
@@ -69,39 +71,49 @@ export default function Loading(props: {
     });
 
     return (
-        <div className={`Aligner ${props.className || "full-size"} `}>
-            <div className="Aligner-item Aligner-item--top"></div>
-            <div className="Aligner-item">
-                <div className="has-text-centered">
-                    <ReactLoading
-                        type={props.animation}
-                        color={props.color || `hsl(0, 0%, 71%)`}
-                        height={props.size}
-                        width={props.size}
-                    />
-                    {progress.transferred > 0 && (
-                        <Fragment>
-                            <div className="help">
-                                Fetching update at{" "}
-                                {formatBytes(progress.bytesPerSecond)}/second.
-                                Please wait.
-                            </div>
-                            <div className="help">
-                                <progress
-                                    className=""
-                                    value={progress.percent.toFixed(0)}
-                                    max="100"
-                                ></progress>
-                            </div>
-                            <div className="help"></div>
-                        </Fragment>
-                    )}
-                    <p className="has-text-danger has-text-centered">
-                        {props.errText}
-                    </p>
+        <Fragment>
+            <TitleBar
+                updateAvailable={false}
+                userBarOpen={false}
+                showButtons={false}
+                setUserBarOpen={() => {
+                    /* derp */
+                }}
+            />
+            <div className={`Aligner ${props.className || "full-size"} `}>
+                <div className="Aligner-item Aligner-item--top"></div>
+                <div className="Aligner-item">
+                    <div className="has-text-centered">
+                        <ReactLoading
+                            type={props.animation}
+                            color={props.color || `hsl(0, 0%, 71%)`}
+                            height={props.size}
+                            width={props.size}
+                        />
+                        {progress.transferred > 0 && (
+                            <Fragment>
+                                <div className="help">
+                                    Fetching update at{" "}
+                                    {formatBytes(progress.bytesPerSecond)}
+                                    /second. Please wait.
+                                </div>
+                                <div className="help">
+                                    <progress
+                                        className=""
+                                        value={progress.percent.toFixed(0)}
+                                        max="100"
+                                    ></progress>
+                                </div>
+                                <div className="help"></div>
+                            </Fragment>
+                        )}
+                        <p className="has-text-danger has-text-centered">
+                            {props.errText}
+                        </p>
+                    </div>
                 </div>
+                <div className="Aligner-item Aligner-item--bottom has-text-centered"></div>
             </div>
-            <div className="Aligner-item Aligner-item--bottom has-text-centered"></div>
-        </div>
+        </Fragment>
     );
 }

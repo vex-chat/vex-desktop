@@ -10,12 +10,13 @@ import {
     faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
 import { routes } from "../constants/routes";
+import { selectApp, setApp } from "../reducers/app";
 import { deleteChannel, selectChannels } from "../reducers/channels";
 import { selectPermission } from "../reducers/permissions";
 import { delServer } from "../reducers/servers";
@@ -29,176 +30,28 @@ type ChannelBarProps = {
 
 export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
     serverID,
-    name,
 }) => {
     const [manageChannels, setManageChannels] = useState(false);
     const [markedChannels, setMarkedChannels] = useState([] as string[]);
-    const [menuOpen, setMenuOpen] = useState(false);
     const { pathname } = useLocation();
     const serverChannels = useSelector(selectChannels(serverID));
     const dispatch = useDispatch();
     const history = useHistory();
-    const permission = useSelector(selectPermission(serverID));
-    const isPermitted = permission?.powerLevel > 50 || false;
+    const app = useSelector(selectApp);
 
     const channelIDs = Object.keys(serverChannels);
 
-    const [confirmLeave, setConfirmLeave] = useState(false);
-
-    const outsideClick = () => {
-        setMenuOpen(false);
-        window.removeEventListener("click", outsideClick);
-    };
-
-    const leaveServer = async () => {
-        const client = window.vex;
-        await client.servers.leave(serverID);
-        dispatch(delServer(serverID));
-        history.push(routes.MESSAGING);
-    };
-
     return (
         <div className="sidebar">
-            <Modal
-                acceptText={"Leave Server"}
-                showCancel
-                onAccept={leaveServer}
-                active={confirmLeave}
-                close={() => {
-                    setConfirmLeave(false);
-                }}
-            >
-                <div>
-                    <p>
-                        Are you sure you want to leave? You won&apos;t be able
-                        to get back in without an invite link.
-                    </p>
-                </div>
-            </Modal>
-            <div className="server-titlebar">
-                <h1 className="title is-size-4 server-title-text">
-                    {name}
-                    <div
-                        className={`dropdown is-right is-pulled-right pointer ${
-                            menuOpen ? "is-active" : ""
-                        }`}
-                    >
-                        <div className="dropdown-trigger">
-                            <span
-                                className="icon topbar-button"
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    if (!menuOpen) {
-                                        setMenuOpen(true);
-                                        window.addEventListener(
-                                            "click",
-                                            outsideClick
-                                        );
-                                    } else {
-                                        setMenuOpen(false);
-                                        window.removeEventListener(
-                                            "click",
-                                            outsideClick
-                                        );
-                                    }
-                                }}
-                            >
-                                <FontAwesomeIcon icon={faCarrot} />
-                            </span>
-                        </div>
-                        <div
-                            className="dropdown-menu"
-                            id="dropdown-menu"
-                            role="menu"
-                            onClick={() => {
-                                setMenuOpen(false);
-                            }}
-                        >
-                            <div className="dropdown-content has-text-weight-normal">
-                                {isPermitted && (
-                                    <Link
-                                        to={`${routes.SERVERS}/${serverID}/invite-links`}
-                                        className="dropdown-item"
-                                    >
-                                        <span className="icon">
-                                            <FontAwesomeIcon
-                                                icon={faUserPlus}
-                                            />
-                                        </span>
-                                        &nbsp; Invite People
-                                    </Link>
-                                )}
-                                {isPermitted && (
-                                    <Link
-                                        to={`${routes.SERVERS}/${serverID}/add-channel`}
-                                        className="dropdown-item"
-                                    >
-                                        <span className="icon">
-                                            <FontAwesomeIcon icon={faPlus} />
-                                        </span>
-                                        &nbsp; Add Channel
-                                    </Link>
-                                )}
-                                {isPermitted && (
-                                    <a
-                                        className="dropdown-item"
-                                        onClick={() => {
-                                            setManageChannels(!manageChannels);
-                                            if (!manageChannels) {
-                                                setMarkedChannels([]);
-                                            }
-                                        }}
-                                    >
-                                        <span className="icon">
-                                            <FontAwesomeIcon
-                                                className={`${
-                                                    manageChannels
-                                                        ? "has-text-danger"
-                                                        : ""
-                                                }`}
-                                                icon={faTrash}
-                                            />
-                                        </span>
-                                        &nbsp;{" "}
-                                        {manageChannels
-                                            ? "Cancel Delete"
-                                            : "Delete Channel"}
-                                    </a>
-                                )}
-                                <Link
-                                    to={
-                                        routes.SERVERS +
-                                        "/" +
-                                        serverID +
-                                        "/settings"
-                                    }
-                                    className="dropdown-item"
-                                >
-                                    <span className="icon">
-                                        <FontAwesomeIcon icon={faCog} />
-                                    </span>
-                                    &nbsp; Server Settings
-                                </Link>
-                                <a
-                                    className="dropdown-item has-text-danger"
-                                    onClick={() => {
-                                        setConfirmLeave(true);
-                                    }}
-                                >
-                                    <span className="icon">
-                                        <FontAwesomeIcon
-                                            icon={faSignOutAlt}
-                                            className="has-text-danger"
-                                        />
-                                    </span>
-                                    &nbsp; Leave Server
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </h1>
-            </div>
-
+            {app.serverMenuOpen && (
+                <ServerMenu
+                    serverID={serverID}
+                    setMenuOpen={(status: boolean) =>
+                        dispatch(setApp("serverMenuOpen", status))
+                    }
+                    menuOpen={app.menuOpen as boolean}
+                />
+            )}
             <aside className="menu">
                 <ul className="menu-list">
                     {channelIDs.map((channelID) => {
@@ -280,3 +133,154 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
         </div>
     );
 };
+
+export function ServerTitlebar(props: {
+    serverID: string;
+    name: string;
+}): JSX.Element {
+    const history = useHistory();
+    const dispatch = useDispatch();
+    const app = useSelector(selectApp);
+
+    const outsideClick = () => {
+        dispatch(setApp("serverMenuOpen", false));
+        window.removeEventListener("click", outsideClick);
+    };
+
+    const leaveServer = async () => {
+        const client = window.vex;
+        await client.servers.leave(props.serverID);
+        dispatch(delServer(props.serverID));
+        history.push(routes.MESSAGING);
+    };
+
+    return (
+        <Fragment>
+            <Modal
+                acceptText={"Leave Server"}
+                showCancel
+                onAccept={leaveServer}
+                active={false}
+                close={() => {
+                    // setConfirmLeave(false);
+                }}
+            >
+                <div>
+                    <p>
+                        Are you sure you want to leave? You won&apos;t be able
+                        to get back in without an invite link.
+                    </p>
+                </div>
+            </Modal>
+
+            <div className="server-titlebar">
+                <h1 className="title is-size-4 server-title-text">
+                    {props.name}
+                    <div
+                        className={`dropdown is-right is-pulled-right pointer ${
+                            app.serverMenuOpen ? "is-active" : ""
+                        }`}
+                    >
+                        <div className="dropdown-trigger">
+                            <span
+                                className="icon topbar-button"
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    if (!app.serverMenuOpen) {
+                                        dispatch(
+                                            setApp("serverMenuOpen", true)
+                                        );
+                                        window.addEventListener(
+                                            "click",
+                                            outsideClick
+                                        );
+                                    } else {
+                                        dispatch(
+                                            setApp("serverMenuOpen", false)
+                                        );
+                                        window.removeEventListener(
+                                            "click",
+                                            outsideClick
+                                        );
+                                    }
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faCarrot} />
+                            </span>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </Fragment>
+    );
+}
+
+export function ServerMenu(props: {
+    serverID: string;
+    menuOpen: boolean;
+    setMenuOpen: (status: boolean) => void;
+}): JSX.Element {
+    console.log(props.menuOpen);
+
+    const permission = useSelector(selectPermission(props.serverID));
+    const isPermitted = permission?.powerLevel > 50 || false;
+
+    return (
+        <div
+            className="dropdown-menu server-dropdown"
+            id="dropdown-menu"
+            role="menu"
+            onClick={() => {
+                props.setMenuOpen(false);
+            }}
+        >
+            <div className="dropdown-content has-text-weight-normal">
+                {isPermitted && (
+                    <Link
+                        to={`${routes.SERVERS}/${props.serverID}/invite-links`}
+                        className="dropdown-item"
+                    >
+                        <span className="icon">
+                            <FontAwesomeIcon icon={faUserPlus} />
+                        </span>
+                        &nbsp; Invite People
+                    </Link>
+                )}
+                {isPermitted && (
+                    <Link
+                        to={`${routes.SERVERS}/${props.serverID}/add-channel`}
+                        className="dropdown-item"
+                    >
+                        <span className="icon">
+                            <FontAwesomeIcon icon={faPlus} />
+                        </span>
+                        &nbsp; Add Channel
+                    </Link>
+                )}
+                <Link
+                    to={routes.SERVERS + "/" + props.serverID + "/settings"}
+                    className="dropdown-item"
+                >
+                    <span className="icon">
+                        <FontAwesomeIcon icon={faCog} />
+                    </span>
+                    &nbsp; Server Settings
+                </Link>
+                <a
+                    className="dropdown-item has-text-danger"
+                    onClick={() => {
+                        // setConfirmLeave(true);
+                    }}
+                >
+                    <span className="icon">
+                        <FontAwesomeIcon
+                            icon={faSignOutAlt}
+                            className="has-text-danger"
+                        />
+                    </span>
+                    &nbsp; Leave Server
+                </a>
+            </div>
+        </div>
+    );
+}

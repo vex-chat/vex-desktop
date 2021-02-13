@@ -18,7 +18,7 @@ export function UserSearchBar(props: {
     const [inputValue, setInputValue] = useState("");
 
     return (
-        <div className="control has-icons-left">
+        <div className="control has-icons-left no-drag">
             <input
                 className={`input has-icons-right is-grey is-small is-rounded search-bar${
                     foundUser.userID !== "" ? " is-success" : ""

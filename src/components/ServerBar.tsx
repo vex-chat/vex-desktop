@@ -19,7 +19,7 @@ export function ServerBar(): JSX.Element {
     const dmHistoryHead = useSelector(getHistoryHead(DM_HISTORY_NAME));
 
     return (
-        <div className="serverbar">
+        <div className={`serverbar ${process.platform}`}>
             <ServerIconButton
                 linkTo={dmHistoryHead || routes.MESSAGING + "/" + user.userID}
                 icon={faEnvelopeOpenText}

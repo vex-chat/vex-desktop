@@ -6,7 +6,7 @@ import {
     MessagingBar,
     MessagingPane,
     ServerBar,
-    TopbarButtons,
+    TitleBar,
     UserMenu,
 } from "../components";
 import { selectApp } from "../reducers/app";
@@ -24,11 +24,13 @@ export default function Messaging(props: {
 
     return (
         <Fragment>
-            <TopbarButtons
+            <TitleBar
+                showButtons={true}
                 updateAvailable={props.updateAvailable}
                 userBarOpen={false}
-                setUserBarOpen={null}
-                pageType={"direct-messaging"}
+                setUserBarOpen={() => {
+                    console.log("no");
+                }}
             />
             <ServerBar />
             <MessagingBar />

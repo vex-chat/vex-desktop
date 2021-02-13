@@ -5,10 +5,10 @@ import { Client } from "@vex-chat/libvex";
 import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import fs from "fs";
-import { memo, useMemo, useState } from "react";
+import { Fragment, memo, useMemo, useState } from "react";
 import { useHistory } from "react-router";
 
-import { Loading, VerticalAligner } from "../components";
+import { Loading, TitleBar, VerticalAligner } from "../components";
 import { errorFX, keyFolder, routes, unlockFX } from "../constants";
 import { useQuery } from "../hooks";
 import { createClient, DataStore, gaurdian } from "../utils";
@@ -135,83 +135,93 @@ export const Login: FunctionComponent = memo(() => {
     }
 
     return (
-        <VerticalAligner>
-            <div className="login-register-box-wrapper">
-                <div className="box login-box">
-                    {errText !== "" && (
-                        <div className="notification is-danger">
-                            {" "}
-                            <button
-                                className="delete"
-                                onClick={() => {
-                                    setErrText("");
+        <Fragment>
+            <TitleBar
+                updateAvailable={false}
+                userBarOpen={false}
+                setUserBarOpen={() => {
+                    /* lol */
+                }}
+                showButtons={false}
+            />
+            <VerticalAligner>
+                <div className="login-register-box-wrapper">
+                    <div className="box login-box">
+                        {errText !== "" && (
+                            <div className="notification is-danger">
+                                {" "}
+                                <button
+                                    className="delete"
+                                    onClick={() => {
+                                        setErrText("");
+                                    }}
+                                />{" "}
+                                {errText}
+                            </div>
+                        )}
+                        <label className="label is-small">Username:</label>
+                        <div className="control input-wrapper has-icons-left has-icons-right">
+                            <input
+                                className="input"
+                                type="username"
+                                placeholder={Client.randomUsername()}
+                                value={username}
+                                onChange={(event) => {
+                                    setUsername(event.target.value);
                                 }}
-                            />{" "}
-                            {errText}
+                                onKeyDown={(event) => {
+                                    if (event.key === "Enter") {
+                                        void loginUser();
+                                    }
+                                }}
+                            />
+                            <span className="icon is-left">
+                                <FontAwesomeIcon icon={faUser} />
+                            </span>
                         </div>
-                    )}
-                    <label className="label is-small">Username:</label>
-                    <div className="control input-wrapper has-icons-left has-icons-right">
-                        <input
-                            className="input"
-                            type="username"
-                            placeholder={Client.randomUsername()}
-                            value={username}
-                            onChange={(event) => {
-                                setUsername(event.target.value);
-                            }}
-                            onKeyDown={(event) => {
-                                if (event.key === "Enter") {
+                        <label className="label is-small">Password:</label>
+                        <div className="control input-wrapper has-icons-left has-icons-right">
+                            <input
+                                className="input"
+                                type="password"
+                                placeholder="hunter2"
+                                value={password}
+                                onChange={(event) => {
+                                    setPassword(event.target.value);
+                                }}
+                                onKeyDown={(event) => {
+                                    if (event.key === "Enter") {
+                                        void loginUser();
+                                    }
+                                }}
+                            />
+                            <span className="icon is-left">
+                                <FontAwesomeIcon icon={faLock} />
+                            </span>
+                        </div>
+                        <div className="buttons is-right">
+                            <button
+                                className="button is-plain"
+                                onClick={() => {
+                                    history.push(routes.REGISTER);
+                                }}
+                            >
+                                Register
+                            </button>
+                            <button
+                                className={`button is-success ${
+                                    loading ? "is-loading" : ""
+                                }`}
+                                onClick={() => {
                                     void loginUser();
-                                }
-                            }}
-                        />
-                        <span className="icon is-left">
-                            <FontAwesomeIcon icon={faUser} />
-                        </span>
-                    </div>
-                    <label className="label is-small">Password:</label>
-                    <div className="control input-wrapper has-icons-left has-icons-right">
-                        <input
-                            className="input"
-                            type="password"
-                            placeholder="hunter2"
-                            value={password}
-                            onChange={(event) => {
-                                setPassword(event.target.value);
-                            }}
-                            onKeyDown={(event) => {
-                                if (event.key === "Enter") {
-                                    void loginUser();
-                                }
-                            }}
-                        />
-                        <span className="icon is-left">
-                            <FontAwesomeIcon icon={faLock} />
-                        </span>
-                    </div>
-                    <div className="buttons is-right">
-                        <button
-                            className="button is-plain"
-                            onClick={() => {
-                                history.push(routes.REGISTER);
-                            }}
-                        >
-                            Register
-                        </button>
-                        <button
-                            className={`button is-success ${
-                                loading ? "is-loading" : ""
-                            }`}
-                            onClick={() => {
-                                void loginUser();
-                            }}
-                        >
-                            Login
-                        </button>
+                                }}
+                            >
+                                Login
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </VerticalAligner>
+            </VerticalAligner>
+        </Fragment>
     );
 });

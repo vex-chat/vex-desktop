@@ -8,7 +8,7 @@ import { Route, Switch, useHistory } from "react-router-dom";
 import semver from "semver";
 import * as uuid from "uuid";
 
-import { Loading, Modal, TitleBar } from "./components";
+import { Loading, Modal } from "./components";
 import { currentVersion, routes } from "./constants";
 import { DataStore } from "./utils";
 import {
@@ -216,7 +216,6 @@ export default function Base(): JSX.Element {
 
     return (
         <App>
-            <TitleBar />
             {modalContents !== null && (
                 <Modal
                     close={() => {
