@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory } from "react-router-dom";
 
 import closeWindowIcon from "../../assets/windowIcons/light-compact/button_close.svg";
+import closeWindowIconWhite from "../../assets/windowIcons/light-compact/button_close_white.svg";
 import maximizeWindowIcon from "../../assets/windowIcons/light-compact/button_maximize.svg";
 import minimizeWindowIcon from "../../assets/windowIcons/light-compact/button_minimize.svg";
 import { routes } from "../constants";
@@ -116,7 +117,15 @@ export function TitleBar(props: {
                         id="close-button"
                         onClick={closeWindow}
                     >
-                        <img src={closeWindowIcon} />
+                        <img
+                            onMouseOut={(e) => {
+                                e.currentTarget.src = closeWindowIcon;
+                            }}
+                            onMouseOver={(e) => {
+                                e.currentTarget.src = closeWindowIconWhite;
+                            }}
+                            src={closeWindowIcon}
+                        />
                     </div>
                 </div>
             </div>
