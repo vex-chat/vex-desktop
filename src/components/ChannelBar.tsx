@@ -155,6 +155,9 @@ export function ServerTitlebar(props: {
                         <div className="dropdown-trigger">
                             <span
                                 className="icon topbar-button"
+                                onDoubleClick={(event) => {
+                                    event.stopPropagation();
+                                }}
                                 onClick={(event) => {
                                     event.stopPropagation();
                                     if (!app.serverMenuOpen) {

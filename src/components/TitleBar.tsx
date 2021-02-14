@@ -60,7 +60,7 @@ export function TitleBar(props: {
         app.themeColors.theme_color_0 === colors.black.theme_color_0;
 
     return (
-        <header id="titlebar">
+        <header id="titlebar" onDoubleClick={maximizeWindow}>
             <div id="drag-region">
                 {!app.initialLoad && (
                     <Switch>
@@ -101,49 +101,55 @@ export function TitleBar(props: {
                     />
                 )}
 
-                <div className="no-drag" id="window-controls">
-                    <div
-                        className="window-button pointer"
-                        id="min-button"
-                        onClick={minimizeWindow}
-                    >
-                        <img
-                            src={
-                                darkMode ? minimizeIconWhite : minimizeIconBlack
-                            }
-                        />
-                    </div>
+                {process.platform !== "darwin" && (
+                    <div className="no-drag" id="window-controls">
+                        <div
+                            className="window-button pointer"
+                            id="min-button"
+                            onClick={minimizeWindow}
+                        >
+                            <img
+                                src={
+                                    darkMode
+                                        ? minimizeIconWhite
+                                        : minimizeIconBlack
+                                }
+                            />
+                        </div>
 
-                    <div
-                        className="window-button pointer"
-                        id="max-button"
-                        onClick={maximizeWindow}
-                    >
-                        <img
-                            src={
-                                darkMode ? maximizeIconWhite : maximizeIconBlack
-                            }
-                        />
-                    </div>
+                        <div
+                            className="window-button pointer"
+                            id="max-button"
+                            onClick={maximizeWindow}
+                        >
+                            <img
+                                src={
+                                    darkMode
+                                        ? maximizeIconWhite
+                                        : maximizeIconBlack
+                                }
+                            />
+                        </div>
 
-                    <div
-                        className="window-button pointer"
-                        id="close-button"
-                        onClick={closeWindow}
-                    >
-                        <img
-                            onMouseOut={(e) => {
-                                e.currentTarget.src = darkMode
-                                    ? closeIconWhite
-                                    : closeIconBlack;
-                            }}
-                            onMouseOver={(e) => {
-                                e.currentTarget.src = closeIconWhite;
-                            }}
-                            src={darkMode ? closeIconWhite : closeIconBlack}
-                        />
+                        <div
+                            className="window-button pointer"
+                            id="close-button"
+                            onClick={closeWindow}
+                        >
+                            <img
+                                onMouseOut={(e) => {
+                                    e.currentTarget.src = darkMode
+                                        ? closeIconWhite
+                                        : closeIconBlack;
+                                }}
+                                onMouseOver={(e) => {
+                                    e.currentTarget.src = closeIconWhite;
+                                }}
+                                src={darkMode ? closeIconWhite : closeIconBlack}
+                            />
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </header>
     );

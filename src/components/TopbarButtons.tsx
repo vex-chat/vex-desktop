@@ -33,6 +33,9 @@ export function TopbarButtons(props: {
             {history.location.pathname.includes("server") && (
                 <span
                     className="icon topbar-button no-drag"
+                    onDoubleClick={(event) => {
+                        event.stopPropagation();
+                    }}
                     onClick={() => {
                         if (props.setUserBarOpen) {
                             props.setUserBarOpen(!props.userBarOpen || false);

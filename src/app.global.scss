@@ -642,7 +642,6 @@ button {
 
 .server-titlebar {
     position: absolute;
-    overflow-y: auto;
     width: 265px;
     height: 55px;
     left: 0px;
@@ -670,15 +669,16 @@ button {
 }
 
 .serverbar {
-    .darwin {
-        padding-top: 24px;
-    }
     position: absolute;
     overflow-y: auto;
     width: 72px;
     height: calc(100%);
     top: 0;
     left: 0;
+}
+
+.serverbar.darwin {
+    padding-top: 18px;
 }
 
 .server-icon-wrapper {
