@@ -1,16 +1,18 @@
+import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { remote } from "electron";
 import fs from "fs";
 import { Fragment, useEffect, useState } from "react";
-import { TwitterPicker } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Modal } from "../components/Modal";
 import { colors } from "../constants/colors";
+import { selectApp, setApp } from "../reducers/app";
 import { set as setAvatarHash } from "../reducers/avatarHash";
 import { reset as resetGroupMessages } from "../reducers/groupMessages";
 import { reset as resetMessages } from "../reducers/messages";
 import { selectUser } from "../reducers/user";
-import { DataStore, setThemeColor } from "../utils";
+import { DataStore, getThemeColors, setThemeColor } from "../utils";
 
 import { IconUsername } from "./IconUsername";
 import Loading from "./Loading";
@@ -18,6 +20,8 @@ import Loading from "./Loading";
 export default function Settings(): JSX.Element {
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
+
+    const app = useSelector(selectApp);
 
     useEffect(() => {
         // this is to hide the unwanted # before color input tag
@@ -40,10 +44,6 @@ export default function Settings(): JSX.Element {
 
     const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
-    const baseColor = getComputedStyle(document.documentElement)
-        .getPropertyValue("--theme_base_color")
-        .trim();
-
     const [notification, setNotifications] = useState(
         DataStore.get("settings.notifications") as boolean
     );
@@ -62,6 +62,8 @@ export default function Settings(): JSX.Element {
     const [mentionNotifications, setMentionNotifications] = useState(
         DataStore.get("settings.notify.mentions") as boolean
     );
+
+    console.log(app.themeColors);
 
     const [errText, setErrText] = useState("");
 
@@ -262,36 +264,53 @@ export default function Settings(): JSX.Element {
                 <p className="message-header">Theme Settings</p>
                 <div className="message-body">
                     <ul>
-                        <li>
-                            <label className="label is-small">
-                                Theme color:
-                            </label>
-                            {/* <div className="tag" style={{
-                                backgroundColor: baseColor,
-                                color: textColor
-                            }}>{baseColor}</div> */}
-                            <TwitterPicker
-                                triangle={"hide"}
-                                colors={[
-                                    colors.black.theme_color_2,
-                                    colors.white.theme_color_0,
-                                ]}
-                                color={baseColor}
-                                onChange={(newBaseColor) => {
-                                    switch (newBaseColor.hex.toUpperCase()) {
-                                        case colors.black.theme_color_2:
-                                            setThemeColor("black");
-                                            break;
-                                        case colors.white.theme_color_0:
-                                            setThemeColor("white");
-                                            break;
-                                        default:
-                                            setThemeColor("black");
-                                            break;
-                                    }
-                                }}
-                            />
-                        </li>
+                        {app.themeColors.theme_color_0 ===
+                            colors.white.theme_color_0 && (
+                            <li>
+                                <button
+                                    className="button is-dark"
+                                    onClick={() => {
+                                        setThemeColor("black");
+                                        dispatch(
+                                            setApp(
+                                                "themeColors",
+                                                getThemeColors()
+                                            )
+                                        );
+                                        DataStore.set(
+                                            "settings.themeColor",
+                                            "black"
+                                        );
+                                    }}
+                                >
+                                    <FontAwesomeIcon icon={faMoon} />
+                                </button>
+                            </li>
+                        )}
+
+                        {app.themeColors.theme_color_0 ===
+                            colors.black.theme_color_0 && (
+                            <li>
+                                <button
+                                    className="button is-link has-text-warning"
+                                    onClick={() => {
+                                        setThemeColor("white");
+                                        dispatch(
+                                            setApp(
+                                                "themeColors",
+                                                getThemeColors()
+                                            )
+                                        );
+                                        DataStore.set(
+                                            "settings.themeColor",
+                                            "white"
+                                        );
+                                    }}
+                                >
+                                    <FontAwesomeIcon icon={faSun} />
+                                </button>{" "}
+                            </li>
+                        )}
                     </ul>
                 </div>
             </div>

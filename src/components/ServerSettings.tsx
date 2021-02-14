@@ -11,6 +11,7 @@ import { selectPermission } from "../reducers/permissions";
 import { delServer, selectServers } from "../reducers/servers";
 
 import { Highlighter } from "./Highlighter";
+import { Modal } from "./Modal";
 
 export function ServerSettings(): JSX.Element {
     const servers = useSelector(selectServers);
@@ -20,6 +21,14 @@ export function ServerSettings(): JSX.Element {
     const history = useHistory();
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
     const dispatch = useDispatch();
+    const [confirmLeave, setConfirmLeave] = useState(false);
+
+    const leaveServer = async () => {
+        const client = window.vex;
+        await client.servers.leave(params.serverID);
+        dispatch(delServer(params.serverID));
+        history.push(routes.MESSAGING);
+    };
 
     const server = servers[params.serverID];
     if (!server) {
@@ -31,26 +40,51 @@ export function ServerSettings(): JSX.Element {
             <label className="label is-small">Details:</label>
             {Highlighter(JSON.stringify(server, null, 4), "json")}
             <br />
-            {isPermitted && (
-                <Fragment>
-                    <h2 className="subtitle">
-                        <FontAwesomeIcon
-                            className="has-text-danger"
-                            icon={faExclamationTriangle}
-                        />{" "}
-                        Danger Zone
-                    </h2>
-                    <button
-                        className="button is-danger"
-                        onClick={() => {
-                            setConfirmDeleteOpen(true);
-                        }}
-                    >
-                        Delete Server
-                    </button>
-                </Fragment>
-            )}
-
+            <h2 className="subtitle">
+                <FontAwesomeIcon
+                    className="has-text-danger"
+                    icon={faExclamationTriangle}
+                />{" "}
+                Danger Zone
+            </h2>
+            <div className="buttons">
+                <button
+                    className="button is-small"
+                    onClick={() => {
+                        setConfirmLeave(true);
+                    }}
+                >
+                    Leave Server
+                </button>
+                {isPermitted && (
+                    <Fragment>
+                        <button
+                            className="button is-danger is-small"
+                            onClick={() => {
+                                setConfirmDeleteOpen(true);
+                            }}
+                        >
+                            Delete Server
+                        </button>
+                    </Fragment>
+                )}
+            </div>
+            <Modal
+                acceptText={"Leave Server"}
+                showCancel
+                onAccept={leaveServer}
+                active={confirmLeave}
+                close={() => {
+                    setConfirmLeave(false);
+                }}
+            >
+                <div>
+                    <p>
+                        Are you sure you want to leave? You won&apos;t be able
+                        to get back in without an invite link.
+                    </p>
+                </div>
+            </Modal>
             <div className={`modal ${confirmDeleteOpen ? "is-active" : ""}`}>
                 <div
                     className="modal-background"

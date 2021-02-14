@@ -5,7 +5,6 @@ import {
     faCog,
     faHashtag,
     faPlus,
-    faSignOutAlt,
     faTrash,
     faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
@@ -19,9 +18,6 @@ import { routes } from "../constants/routes";
 import { selectApp, setApp } from "../reducers/app";
 import { deleteChannel, selectChannels } from "../reducers/channels";
 import { selectPermission } from "../reducers/permissions";
-import { delServer } from "../reducers/servers";
-
-import { Modal } from "./Modal";
 
 type ChannelBarProps = {
     serverID: string;
@@ -138,7 +134,6 @@ export function ServerTitlebar(props: {
     serverID: string;
     name: string;
 }): JSX.Element {
-    const history = useHistory();
     const dispatch = useDispatch();
     const app = useSelector(selectApp);
 
@@ -147,32 +142,8 @@ export function ServerTitlebar(props: {
         window.removeEventListener("click", outsideClick);
     };
 
-    const leaveServer = async () => {
-        const client = window.vex;
-        await client.servers.leave(props.serverID);
-        dispatch(delServer(props.serverID));
-        history.push(routes.MESSAGING);
-    };
-
     return (
         <Fragment>
-            <Modal
-                acceptText={"Leave Server"}
-                showCancel
-                onAccept={leaveServer}
-                active={false}
-                close={() => {
-                    // setConfirmLeave(false);
-                }}
-            >
-                <div>
-                    <p>
-                        Are you sure you want to leave? You won&apos;t be able
-                        to get back in without an invite link.
-                    </p>
-                </div>
-            </Modal>
-
             <div className="server-titlebar">
                 <h1 className="title is-size-4 server-title-text">
                     {props.name}
@@ -266,20 +237,6 @@ export function ServerMenu(props: {
                     </span>
                     &nbsp; Server Settings
                 </Link>
-                <a
-                    className="dropdown-item has-text-danger"
-                    onClick={() => {
-                        // setConfirmLeave(true);
-                    }}
-                >
-                    <span className="icon">
-                        <FontAwesomeIcon
-                            icon={faSignOutAlt}
-                            className="has-text-danger"
-                        />
-                    </span>
-                    &nbsp; Leave Server
-                </a>
             </div>
         </div>
     );

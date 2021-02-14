@@ -633,7 +633,7 @@ export function DeviceList(): JSX.Element {
                                                 "kk:mm MM/dd/yyyy"
                                             )}
                                         </td>
-                                        <td className="is-family-monospace help">
+                                        <td className="is-family-monospace">
                                             {devices[key].signKey}
                                         </td>
                                         <td>

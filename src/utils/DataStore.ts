@@ -25,7 +25,14 @@ class DataStore extends Store {
         }
 
         if (this.instance.get("settings.themeColor") == undefined) {
-            this.instance.set("settings.themeColor", "#0F0F0F");
+            this.instance.set("settings.themeColor", "white");
+        }
+
+        if (
+            this.instance.get("settings.themeColor") !== "white" &&
+            this.instance.get("settings.themeColor") !== "black"
+        ) {
+            this.instance.set("settings.themeColor", "white");
         }
 
         if (this.instance.get("settings.forceMonospace") == undefined) {
@@ -59,7 +66,9 @@ class DataStore extends Store {
             this.instance.get("settings.windowDimensions") as string
         );
         remote.getCurrentWindow().setSize(width, height);
-        setThemeColor("white");
+        setThemeColor(
+            this.instance.get("settings.themeColor") as "white" | "black"
+        );
 
         console.log("loaded settings", this.instance.store);
 

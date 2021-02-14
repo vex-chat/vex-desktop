@@ -5,8 +5,8 @@ export const colors = {
         theme_color_2: "#F2F1F0",
     },
     black: {
-        theme_color_0: "#25282A",
-        theme_color_1: "#191C1D",
-        theme_color_2: "#0B0C0D",
+        theme_color_0: "#0f1011",
+        theme_color_1: "#0b0c0d",
+        theme_color_2: "#070808",
     },
 };

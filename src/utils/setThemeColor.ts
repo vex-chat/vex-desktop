@@ -4,6 +4,30 @@ import { colors } from "../constants/colors";
 
 const DESIRED_CONTRAST = 11;
 
+interface ICssColors {
+    theme_color_0: string;
+    theme_color_1: string;
+    theme_color_2: string;
+    text_color_0: string;
+}
+
+export const getThemeColors = (): ICssColors => {
+    return {
+        theme_color_0: document.documentElement.style.getPropertyValue(
+            "--theme_color_0"
+        ),
+        theme_color_1: document.documentElement.style.getPropertyValue(
+            "--theme_color_1"
+        ),
+        theme_color_2: document.documentElement.style.getPropertyValue(
+            "--theme_color_2"
+        ),
+        text_color_0: document.documentElement.style.getPropertyValue(
+            "--text_color_0"
+        ),
+    };
+};
+
 export const setThemeColor = (colorStr: "white" | "black"): void => {
     console.log(colors[colorStr]);
 

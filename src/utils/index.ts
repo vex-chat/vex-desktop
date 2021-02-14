@@ -6,7 +6,7 @@ import { getAssetPath } from "./getAssetPath";
 import { getUserTag } from "./getUserTag";
 import gaurdian from "./KeyGaurdian";
 import { mentionRegex } from "./regexes";
-import { setThemeColor } from "./setThemeColor";
+import { getThemeColors, setThemeColor } from "./setThemeColor";
 import { strToIcon } from "./strToIcon";
 
 export {
@@ -16,6 +16,7 @@ export {
     formatBytes,
     gaurdian,
     getAssetPath,
+    getThemeColors,
     getUserTag,
     mentionRegex,
     setThemeColor,

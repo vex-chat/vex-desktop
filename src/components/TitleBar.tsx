@@ -4,11 +4,14 @@ import { remote } from "electron";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory } from "react-router-dom";
 
-import closeWindowIcon from "../../assets/windowIcons/light-compact/button_close.svg";
-import closeWindowIconWhite from "../../assets/windowIcons/light-compact/button_close_white.svg";
-import maximizeWindowIcon from "../../assets/windowIcons/light-compact/button_maximize.svg";
-import minimizeWindowIcon from "../../assets/windowIcons/light-compact/button_minimize.svg";
+import closeIconBlack from "../../assets/windowIcons/close-black.svg";
+import closeIconWhite from "../../assets/windowIcons/close-white.svg";
+import maximizeIconBlack from "../../assets/windowIcons/maximize-black.svg";
+import maximizeIconWhite from "../../assets/windowIcons/maximize-white.svg";
+import minimizeIconBlack from "../../assets/windowIcons/minimize-black.svg";
+import minimizeIconWhite from "../../assets/windowIcons/minimize-white.svg";
 import { routes } from "../constants";
+import { colors } from "../constants/colors";
 import { selectApp } from "../reducers/app";
 import { addFamiliar } from "../reducers/familiars";
 import { stubSession } from "../reducers/sessions";
@@ -52,6 +55,9 @@ export function TitleBar(props: {
 
         history.push(routes.MESSAGING + "/" + user.userID);
     };
+
+    const darkMode =
+        app.themeColors.theme_color_0 === colors.black.theme_color_0;
 
     return (
         <header id="titlebar">
@@ -101,7 +107,11 @@ export function TitleBar(props: {
                         id="min-button"
                         onClick={minimizeWindow}
                     >
-                        <img src={minimizeWindowIcon} />
+                        <img
+                            src={
+                                darkMode ? minimizeIconWhite : minimizeIconBlack
+                            }
+                        />
                     </div>
 
                     <div
@@ -109,7 +119,11 @@ export function TitleBar(props: {
                         id="max-button"
                         onClick={maximizeWindow}
                     >
-                        <img src={maximizeWindowIcon} />
+                        <img
+                            src={
+                                darkMode ? maximizeIconWhite : maximizeIconBlack
+                            }
+                        />
                     </div>
 
                     <div
@@ -119,12 +133,14 @@ export function TitleBar(props: {
                     >
                         <img
                             onMouseOut={(e) => {
-                                e.currentTarget.src = closeWindowIcon;
+                                e.currentTarget.src = darkMode
+                                    ? closeIconWhite
+                                    : closeIconBlack;
                             }}
                             onMouseOver={(e) => {
-                                e.currentTarget.src = closeWindowIconWhite;
+                                e.currentTarget.src = closeIconWhite;
                             }}
-                            src={closeWindowIcon}
+                            src={darkMode ? closeIconWhite : closeIconBlack}
                         />
                     </div>
                 </div>
