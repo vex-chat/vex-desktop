@@ -1,7 +1,6 @@
 import type { IUser } from "@vex-chat/libvex";
 
-import { faCheck, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Check as CheckIcon, Search as SearchIcon } from "react-feather";
 import { useState } from "react";
 
 export const emptyUser: IUser = {
@@ -71,9 +70,7 @@ export function UserSearchBar(props: {
                 }}
             />
             <span className="icon is-left">
-                <FontAwesomeIcon
-                    icon={foundUser === emptyUser ? faSearch : faCheck}
-                />
+                {foundUser ? <SearchIcon /> : <CheckIcon />}
             </span>
         </div>
     );

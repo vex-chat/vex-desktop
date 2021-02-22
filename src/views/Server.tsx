@@ -1,10 +1,8 @@
-import { faHashtag, faServer } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { capitalCase } from "change-case";
 import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router";
-
+import { Hash as HashIcon, Server as ServerIcon } from "react-feather";
 import {
     AddChannel,
     AddUser,
@@ -91,7 +89,7 @@ export function Server(props: {
                 <div className="pane-topbar">
                     {serverChannels[channelID] && (
                         <h2 className="subtitle">
-                            <FontAwesomeIcon icon={faHashtag} />
+                            <HashIcon size={14} />
                             &nbsp;&nbsp;
                             {serverChannels[channelID].name}{" "}
                             {capitalCase(channelPage || "")}
@@ -99,7 +97,7 @@ export function Server(props: {
                     )}
                     {!serverChannels[channelID] && server !== undefined && (
                         <h2 className="subtitle">
-                            <FontAwesomeIcon icon={faServer} />
+                            <ServerIcon size={14} />
                             &nbsp;&nbsp;
                             {server.name} {capitalCase(pageType || "")}
                         </h2>

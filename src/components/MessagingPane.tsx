@@ -1,25 +1,18 @@
 import type { IUser } from "@vex-chat/libvex";
 
 import {
-    faApple,
-    faLinux,
-    faWindows,
-} from "@fortawesome/free-brands-svg-icons";
-import {
-    faArrowAltCircleDown,
-    faAt,
-    faCheckCircle,
-    faEnvelopeOpenText,
-    faExclamationCircle,
-    faExclamationTriangle,
-    faLock,
-    faMobile,
-    faSkull,
-    faStar,
-    faTimes,
-    faUnlock,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+    ArrowDownCircle as ArrowDownCircleIcon,
+    AtSign as AtSignIcon,
+    CheckCircle as CheckCircleIcon,
+    Mail as MailIcon,
+    AlertTriangle as AlertTriangleIcon,
+    AlertCircle as AlertCircleIcon,
+    Lock as LockIcon,
+    Star as StarIcon,
+    X as XIcon,
+    Unlock as UnlockIcon,
+} from "react-feather";
+
 import { format } from "date-fns";
 import {
     createRef,
@@ -45,9 +38,7 @@ import { chunkMessages } from "../utils/chunkMessages";
 import store from "../utils/DataStore";
 
 import { ChatInput } from "./ChatInput";
-import { FamiliarMenu } from "./FamiliarMenu";
 import { Highlighter } from "./Highlighter";
-import { IconUsername } from "./IconUsername";
 import { MessageBox } from "./MessageBox";
 import { Modal } from "./Modal";
 import { msgify } from "./ServerPane";
@@ -122,7 +113,7 @@ export default function MessagingPane(props: {
             <div className="pane direct-messaging">
                 <div className="pane-topbar">
                     <h1 className="subtitle">
-                        <FontAwesomeIcon icon={faEnvelopeOpenText} />
+                        <MailIcon size={14} />
                         &nbsp;&nbsp; Direct Messages
                     </h1>
                 </div>
@@ -135,10 +126,10 @@ export default function MessagingPane(props: {
                 <div className="columns">
                     <div className="column is-narrow">
                         <div className="pane-topbar-content">
-                            <FamiliarMenu
-                                familiar={familiar}
-                                trigger={IconUsername(familiar, 32, faAt)}
-                            />
+                            <span className="icon">
+                                <AtSignIcon size={14} />
+                            </span>{" "}
+                            {familiar.username}
                         </div>
                     </div>
                 </div>
@@ -193,10 +184,7 @@ export default function MessagingPane(props: {
                                     <div className="panel-block">
                                         <span className="icon">
                                             {" "}
-                                            <FontAwesomeIcon
-                                                icon={faExclamationCircle}
-                                                className="has-text-warning"
-                                            />{" "}
+                                            <AlertCircleIcon />{" "}
                                         </span>
                                         <span className="help">
                                             This user has unverified sessions.
@@ -215,13 +203,11 @@ export default function MessagingPane(props: {
                                                 <tbody>
                                                     <tr>
                                                         <th>
-                                                            <FontAwesomeIcon
-                                                                icon={
-                                                                    session.verified
-                                                                        ? faLock
-                                                                        : faUnlock
-                                                                }
-                                                            />
+                                                            {session.verified ? (
+                                                                <LockIcon />
+                                                            ) : (
+                                                                <UnlockIcon />
+                                                            )}
                                                         </th>
                                                         <th>
                                                             {" "}
@@ -268,12 +254,7 @@ export default function MessagingPane(props: {
                                                             {session.verified && (
                                                                 <div>
                                                                     <span className="icon">
-                                                                        <FontAwesomeIcon
-                                                                            icon={
-                                                                                faCheckCircle
-                                                                            }
-                                                                            className="has-text-success"
-                                                                        ></FontAwesomeIcon>
+                                                                        <CheckCircleIcon />
                                                                     </span>
                                                                 </div>
                                                             )}
@@ -337,10 +318,7 @@ export default function MessagingPane(props: {
                                     <div className="panel-block">
                                         <p>
                                             <span className="icon">
-                                                <FontAwesomeIcon
-                                                    icon={faExclamationTriangle}
-                                                    className="has-text-danger"
-                                                />
+                                                <AlertTriangleIcon />
                                             </span>
                                             &nbsp;
                                             {familiar.username} is using an
@@ -350,10 +328,7 @@ export default function MessagingPane(props: {
                                     <div className="panel-block">
                                         <p>
                                             <span className="icon">
-                                                <FontAwesomeIcon
-                                                    icon={faCheckCircle}
-                                                    className="has-text-success"
-                                                />
+                                                <CheckCircleIcon />
                                             </span>
                                             &nbsp; Verify with the other user
                                             that the words match.
@@ -362,10 +337,7 @@ export default function MessagingPane(props: {
                                     <div className="panel-block">
                                         <p>
                                             <span className="icon">
-                                                <FontAwesomeIcon
-                                                    icon={faTimes}
-                                                    className="has-text-danger"
-                                                />
+                                                <XIcon />
                                             </span>
                                             &nbsp; DON&apos;T use vex to
                                             communicate the words.
@@ -374,9 +346,7 @@ export default function MessagingPane(props: {
                                     <div className="panel-block">
                                         <p>
                                             <span className="icon">
-                                                <FontAwesomeIcon
-                                                    icon={faSkull}
-                                                />
+                                                <AlertTriangleIcon />
                                             </span>
                                             &nbsp; If they don&apos;t match, you
                                             could be getting pwned. &nbsp;
@@ -475,15 +445,11 @@ export default function MessagingPane(props: {
                                                 className={"history-disclaimer"}
                                             >
                                                 <p className="help">
-                                                    <FontAwesomeIcon
-                                                        icon={faStar}
-                                                    />{" "}
-                                                    For your security, message
+                                                    <StarIcon size={14} /> For
+                                                    your security, message
                                                     history is not transferred
                                                     to new devices.
-                                                    <FontAwesomeIcon
-                                                        icon={faStar}
-                                                    />{" "}
+                                                    <StarIcon size={14} />{" "}
                                                 </p>
                                             </div>
                                         )}
@@ -510,8 +476,7 @@ export default function MessagingPane(props: {
 
                                 {!scrollLock && (
                                     <div className="conversation-fab">
-                                        <FontAwesomeIcon
-                                            icon={faArrowAltCircleDown}
+                                        <ArrowDownCircleIcon
                                             onClick={() => {
                                                 scrollToBottom();
                                                 setScrollLock(true);
@@ -594,7 +559,6 @@ export function DeviceList(): JSX.Element {
                     <table className="table is-fullwidth">
                         <thead className="">
                             <tr>
-                                <td />
                                 <td>Device</td>
                                 <td>Last Login</td>
                                 <td>SignKey</td>
@@ -619,11 +583,6 @@ export function DeviceList(): JSX.Element {
                                         key={devices[key].deviceID}
                                         className=""
                                     >
-                                        <td>
-                                            <span className="icon">
-                                                {getIcon(devices[key].name)}
-                                            </span>
-                                        </td>
                                         <td>{devices[key].name}</td>
                                         <td>
                                             {format(
@@ -662,16 +621,3 @@ export function DeviceList(): JSX.Element {
         </div>
     );
 }
-
-const getIcon = (name: string) => {
-    switch (name) {
-        case "win32":
-            return <FontAwesomeIcon icon={faWindows} />;
-        case "linux":
-            return <FontAwesomeIcon icon={faLinux} />;
-        case "darwin":
-            return <FontAwesomeIcon icon={faApple} />;
-        default:
-            return <FontAwesomeIcon icon={faMobile} />;
-    }
-};

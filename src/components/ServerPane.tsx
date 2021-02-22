@@ -5,10 +5,9 @@ import type {
 } from "../reducers/messages";
 
 import {
-    faArrowAltCircleDown,
-    faStar,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+    ArrowDownCircle as ArrowDownCircleIcon,
+    Star as StarIcon,
+} from "react-feather";
 import crypto from "crypto";
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -101,9 +100,9 @@ export function ServerPane(props: {
                 {channelID !== undefined && (
                     <div className={"history-disclaimer"}>
                         <p className="help">
-                            <FontAwesomeIcon icon={faStar} /> For your security,
-                            message history is not transferred to new devices.
-                            <FontAwesomeIcon icon={faStar} />{" "}
+                            <StarIcon size={14} /> For your security, message
+                            history is not transferred to new devices.
+                            <StarIcon size={14} />{" "}
                         </p>
                     </div>
                 )}
@@ -136,8 +135,7 @@ export function ServerPane(props: {
             )}
             {!scrollLock && (
                 <div className="conversation-fab">
-                    <FontAwesomeIcon
-                        icon={faArrowAltCircleDown}
+                    <ArrowDownCircleIcon
                         onClick={() => {
                             scrollToBottom();
                             setScrollLock(true);

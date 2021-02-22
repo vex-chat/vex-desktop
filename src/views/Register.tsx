@@ -1,7 +1,10 @@
 import { Client } from "@vex-chat/libvex";
 
-import { faCheck, faTimes, faUserAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    Check as CheckIcon,
+    X as XIcon,
+    User as UserIcon,
+} from "react-feather";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
@@ -200,7 +203,7 @@ export default function Register(): JSX.Element {
                                 placeholder={Client.randomUsername()}
                             />
                             <span className="icon is-small is-left">
-                                <FontAwesomeIcon icon={faUserAlt} />
+                                <UserIcon />
                             </span>
                             <span
                                 className={`icon is-small is-right${
@@ -211,9 +214,7 @@ export default function Register(): JSX.Element {
                                         : ""
                                 }`}
                             >
-                                <FontAwesomeIcon
-                                    icon={taken ? faTimes : faCheck}
-                                />
+                                {taken ? <XIcon /> : <CheckIcon />}
                             </span>
                         </div>
                     </div>

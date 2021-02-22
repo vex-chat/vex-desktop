@@ -1,7 +1,6 @@
 import type { Client, IServer } from "@vex-chat/libvex";
 
-import { faServer } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Server as ServerIcon } from "react-feather";
 import { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
@@ -110,7 +109,7 @@ export function CreateServer(): JSX.Element {
                                 }}
                             />
                             <span className="icon is-small is-left">
-                                <FontAwesomeIcon icon={faServer} />
+                                <ServerIcon size={14} />
                             </span>
                             <span className="icon is-small is-right"></span>
                         </div>

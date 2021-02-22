@@ -1,7 +1,6 @@
 import type { IServerParams } from "~Types";
 
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { AlertTriangle as AlertTriangleIcon } from "react-feather";
 import { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
@@ -41,11 +40,7 @@ export function ServerSettings(): JSX.Element {
             {Highlighter(JSON.stringify(server, null, 4), "json")}
             <br />
             <h2 className="subtitle">
-                <FontAwesomeIcon
-                    className="has-text-danger"
-                    icon={faExclamationTriangle}
-                />{" "}
-                Danger Zone
+                <AlertTriangleIcon /> Danger Zone
             </h2>
             <div className="buttons">
                 <button

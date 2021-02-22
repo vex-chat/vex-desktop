@@ -1,15 +1,14 @@
 import type { FunctionComponent } from "react";
 
-import {
-    faCarrot,
-    faCog,
-    faHashtag,
-    faPlus,
-    faTrash,
-    faUserPlus,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, useState } from "react";
+import {
+    ArrowDown as ArrowDownIcon,
+    Hash as HashTagIcon,
+    Plus as PlusIcon,
+    Settings as SettingsIcon,
+    Trash as TrashIcon,
+    UserPlus as UserPlusIcon,
+} from "react-feather";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router";
 import { Link } from "react-router-dom";
@@ -62,7 +61,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                     to={`${routes.SERVERS}/${serverID}/channels/${channelID}`}
                                     className={chLinkStyle}
                                 >
-                                    <FontAwesomeIcon icon={faHashtag} />
+                                    <HashTagIcon size={14} />
                                     &nbsp;&nbsp;{channel.name}
                                     {manageChannels && (
                                         <span
@@ -103,7 +102,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                                 }
                                             }}
                                         >
-                                            <FontAwesomeIcon icon={faTrash} />
+                                            <TrashIcon size={14} />
                                         </span>
                                     )}
                                     <span
@@ -115,10 +114,7 @@ export const ChannelBar: FunctionComponent<ChannelBarProps> = ({
                                             );
                                         }}
                                     >
-                                        <FontAwesomeIcon
-                                            icon={faCog}
-                                            className="has-text-grey"
-                                        />
+                                        <SettingsIcon size={14} />
                                     </span>
                                 </Link>
                             </li>
@@ -179,7 +175,7 @@ export function ServerTitlebar(props: {
                                     }
                                 }}
                             >
-                                <FontAwesomeIcon icon={faCarrot} />
+                                <ArrowDownIcon />
                             </span>
                         </div>
                     </div>
@@ -215,7 +211,7 @@ export function ServerMenu(props: {
                         className="dropdown-item"
                     >
                         <span className="icon">
-                            <FontAwesomeIcon icon={faUserPlus} />
+                            <UserPlusIcon size={14} />
                         </span>
                         &nbsp; Invite People
                     </Link>
@@ -226,7 +222,7 @@ export function ServerMenu(props: {
                         className="dropdown-item"
                     >
                         <span className="icon">
-                            <FontAwesomeIcon icon={faPlus} />
+                            <PlusIcon size={16} />
                         </span>
                         &nbsp; Add Channel
                     </Link>
@@ -236,7 +232,7 @@ export function ServerMenu(props: {
                     className="dropdown-item"
                 >
                     <span className="icon">
-                        <FontAwesomeIcon icon={faCog} />
+                        <SettingsIcon size={14} />
                     </span>
                     &nbsp; Server Settings
                 </Link>

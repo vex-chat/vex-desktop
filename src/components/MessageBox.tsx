@@ -3,10 +3,9 @@ import type { ISerializedMessage } from "../reducers/messages";
 import { XUtils } from "@vex-chat/crypto";
 
 import {
-    faDownload,
-    faExclamationTriangle,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+    Download as DownloadIcon,
+    AlertTriangle as AlertTriangleIcon,
+} from "react-feather";
 import { format } from "date-fns";
 import { remote, shell } from "electron";
 import log from "electron-log";
@@ -269,10 +268,8 @@ export function MessageBox(props: {
                                 )}
                                 {message.failed && (
                                     <span className="help has-text-danger">
-                                        <FontAwesomeIcon
-                                            icon={faExclamationTriangle}
-                                        />{" "}
-                                        Failed: {message.failMessage}{" "}
+                                        <AlertTriangleIcon /> Failed:{" "}
+                                        {message.failMessage}{" "}
                                     </span>
                                 )}
                             </Fragment>
@@ -509,7 +506,7 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
                             />
                         ) : (
                             <div className="icon is-size-3 download-icon">
-                                <FontAwesomeIcon icon={faDownload} />
+                                <DownloadIcon />
                             </div>
                         )}
                     </div>

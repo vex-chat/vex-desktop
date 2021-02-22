@@ -1,8 +1,10 @@
 import type { XTypes } from "@vex-chat/types";
 
-import { faCopy } from "@fortawesome/free-regular-svg-icons";
-import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    Copy as CopyIcon,
+    ExternalLink,
+    ExternalLink as ExternalLinkIcon,
+} from "react-feather";
 import { format } from "date-fns";
 import { clipboard, shell } from "electron";
 import { useMemo, useState } from "react";
@@ -56,7 +58,7 @@ export function AddUser(): JSX.Element {
                                         );
                                     }}
                                 >
-                                    <FontAwesomeIcon icon={faCopy} />
+                                    <CopyIcon />
                                 </td>
                                 <td>
                                     <p className="help is-family-monospace">
@@ -78,7 +80,7 @@ export function AddUser(): JSX.Element {
                                         );
                                     }}
                                 >
-                                    <FontAwesomeIcon icon={faExternalLinkAlt} />
+                                    <ExternalLinkIcon />
                                 </td>
                             </tr>
                         ))}

@@ -1008,46 +1008,6 @@
     tweetnacl-util "^0.15.1"
     typedoc-plugin-no-inherit "^1.1.10"
 
-"@fortawesome/fontawesome-common-types@^0.2.32", "@fortawesome/fontawesome-common-types@^0.2.34":
-  version "0.2.34"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.34.tgz#0a8c348bb23b7b760030f5b1d912e582be4ec915"
-  integrity sha512-XcIn3iYbTEzGIxD0/dY5+4f019jIcEIWBiHc3KrmK/ROahwxmZ/s+tdj97p/5K0klz4zZUiMfUlYP0ajhSJjmA==
-
-"@fortawesome/fontawesome-svg-core@^1.2.32":
-  version "1.2.32"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.32.tgz#da092bfc7266aa274be8604de610d7115f9ba6cf"
-  integrity sha512-XjqyeLCsR/c/usUpdWcOdVtWFVjPbDFBTQkn2fQRrWhhUoxriQohO2RWDxLyUM8XpD+Zzg5xwJ8gqTYGDLeGaQ==
-  dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.32"
-
-"@fortawesome/free-brands-svg-icons@^5.15.2":
-  version "5.15.2"
-  resolved "https://registry.yarnpkg.com/@fortawesome/free-brands-svg-icons/-/free-brands-svg-icons-5.15.2.tgz#d74e2540b5552b915d6bef719f17e361b70a8d65"
-  integrity sha512-YPlVjE1cEO+OJ9I9ay3TQ3I88+XkxMTYwnnddqAboxLhPNGncsHV0DjWOVLCyuAY66yPfyndWwVn4v7vuqsO1g==
-  dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.34"
-
-"@fortawesome/free-regular-svg-icons@^5.15.1":
-  version "5.15.1"
-  resolved "https://registry.yarnpkg.com/@fortawesome/free-regular-svg-icons/-/free-regular-svg-icons-5.15.1.tgz#a8897d0ce325352dbba0e943101323e0175ee2b2"
-  integrity sha512-eD9NWFy89e7SVVtrLedJUxIpCBGhd4x7s7dhesokjyo1Tw62daqN5UcuAGu1NrepLLq1IeAYUVfWwnOjZ/j3HA==
-  dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.32"
-
-"@fortawesome/free-solid-svg-icons@^5.15.1":
-  version "5.15.1"
-  resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-5.15.1.tgz#e1432676ddd43108b41197fee9f86d910ad458ef"
-  integrity sha512-EFMuKtzRMNbvjab/SvJBaOOpaqJfdSap/Nl6hst7CgrJxwfORR1drdTV6q1Ib/JVzq4xObdTDcT6sqTaXMqfdg==
-  dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.32"
-
-"@fortawesome/react-fontawesome@^0.1.14":
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/@fortawesome/react-fontawesome/-/react-fontawesome-0.1.14.tgz#bf28875c3935b69ce2dc620e1060b217a47f64ca"
-  integrity sha512-4wqNb0gRLVaBm/h+lGe8UfPPivcbuJ6ecI4hIgW0LjI7kzpYB9FkN0L9apbVzg+lsBdcTf0AlBtODjcSX5mmKA==
-  dependencies:
-    prop-types "^15.7.2"
-
 "@iconify/icons-mdi@^1.0.46":
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/@iconify/icons-mdi/-/icons-mdi-1.1.4.tgz#fdaa2f4257a024e7d69b29dc3110fe7ce11b7ed2"
@@ -3581,9 +3541,9 @@ core-js-pure@^3.0.0:
   integrity sha512-Se+LaxqXlVXGvmexKGPvnUIYC1jwXu1H6Pkyb3uBM5d8/NELMYCHs/4/roD7721NxrTLyv7e5nXd5/QLBO+10g==
 
 core-js@^3.6.5:
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.8.1.tgz#f51523668ac8a294d1285c3b9db44025fda66d47"
-  integrity sha512-9Id2xHY1W7m8hCl8NkhQn5CufmF/WuR30BTRewvCXc1aZd3kMECwNZ69ndLbekKfakw9Rf2Xyc+QR6E7Gg+obg==
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.9.0.tgz#790b1bb11553a2272b36e2625c7179db345492f8"
+  integrity sha512-PyFBJaLq93FlyYdsndE5VaueA9K5cNB7CGzeCj191YYLhkQM0gdZR2SKihM70oF0wdqKSKClv/tEBOpoRmdOVQ==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -9304,6 +9264,13 @@ react-dropzone@^11.2.4:
   dependencies:
     attr-accept "^2.2.1"
     file-selector "^0.2.2"
+    prop-types "^15.7.2"
+
+react-feather@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/react-feather/-/react-feather-2.0.9.tgz#6e42072130d2fa9a09d4476b0e61b0ed17814480"
+  integrity sha512-yMfCGRkZdXwIs23Zw/zIWCJO3m3tlaUvtHiXlW+3FH7cIT6fiK1iJ7RJWugXq7Fso8ZaQyUm92/GOOHXvkiVUw==
+  dependencies:
     prop-types "^15.7.2"
 
 react-h5-audio-player@^3.5.0:

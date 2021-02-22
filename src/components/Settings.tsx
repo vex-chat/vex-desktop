@@ -1,5 +1,4 @@
-import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Moon, Moon as MoonIcon, Sun as SunIcon } from "react-feather";
 import { remote } from "electron";
 import fs from "fs";
 import { Fragment, useEffect, useState } from "react";
@@ -188,7 +187,6 @@ export default function Settings(): JSX.Element {
                                     {IconUsername(
                                         user,
                                         48,
-                                        undefined,
                                         "",
                                         "avatar-trigger pointer"
                                     )}
@@ -283,7 +281,7 @@ export default function Settings(): JSX.Element {
                                         );
                                     }}
                                 >
-                                    <FontAwesomeIcon icon={faMoon} />
+                                    <MoonIcon />
                                 </button>
                             </li>
                         )}
@@ -307,7 +305,7 @@ export default function Settings(): JSX.Element {
                                         );
                                     }}
                                 >
-                                    <FontAwesomeIcon icon={faSun} />
+                                    <SunIcon />
                                 </button>{" "}
                             </li>
                         )}

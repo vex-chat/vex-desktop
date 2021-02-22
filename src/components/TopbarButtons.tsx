@@ -1,9 +1,9 @@
 import {
-    faUpload,
-    faUsers,
-    faUsersSlash,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+    Upload as UploadIcon,
+    Users as UsersIcon,
+    UserMinus as UserMinusIcon,
+    UserMinus,
+} from "react-feather";
 import { remote } from "electron";
 import { useHistory } from "react-router-dom";
 
@@ -27,7 +27,7 @@ export function TopbarButtons(props: {
                         remote.app.exit();
                     }}
                 >
-                    <FontAwesomeIcon icon={faUpload} />
+                    <UploadIcon />
                 </span>
             )}
             {history.location.pathname.includes("server") && (
@@ -46,9 +46,7 @@ export function TopbarButtons(props: {
                         }
                     }}
                 >
-                    <FontAwesomeIcon
-                        icon={props.userBarOpen ? faUsersSlash : faUsers}
-                    />
+                    {props.userBarOpen ? <UserMinusIcon /> : <UsersIcon />}
                 </span>
             )}
         </div>

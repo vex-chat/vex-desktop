@@ -1,11 +1,10 @@
 import type { IUser } from "@vex-chat/libvex";
 
 import {
-    faBan,
-    faMobileAlt,
-    faUserAlt,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+    Slash as SlashIcon,
+    Smartphone as SmartphoneIcon,
+    User as UserIcon,
+} from "react-feather";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useParams } from "react-router-dom";
@@ -65,7 +64,7 @@ export function FamiliarMenu(props: {
                         }}
                     >
                         <span className="icon">
-                            <FontAwesomeIcon icon={faUserAlt} />
+                            <UserIcon size={14} />
                         </span>
                         &nbsp; User Info
                     </Link>
@@ -82,7 +81,7 @@ export function FamiliarMenu(props: {
                         }}
                     >
                         <span className="icon">
-                            <FontAwesomeIcon icon={faMobileAlt} />
+                            <SmartphoneIcon size={14} />
                         </span>
                         &nbsp; User Devices
                     </Link>
@@ -121,10 +120,7 @@ export function FamiliarMenu(props: {
                             }}
                         >
                             <span className="icon">
-                                <FontAwesomeIcon
-                                    icon={faBan}
-                                    className="has-text-danger"
-                                />
+                                <SlashIcon />
                             </span>
                             &nbsp; Kick User
                         </Link>

@@ -2,8 +2,7 @@ import type { FunctionComponent } from "react";
 
 import { Client } from "@vex-chat/libvex";
 
-import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Lock as LockIcon, User as UserIcon } from "react-feather";
 import fs from "fs";
 import { Fragment, memo, useMemo, useState } from "react";
 import { useHistory } from "react-router";
@@ -176,7 +175,7 @@ export const Login: FunctionComponent = memo(() => {
                                 }}
                             />
                             <span className="icon is-left">
-                                <FontAwesomeIcon icon={faUser} />
+                                <UserIcon />
                             </span>
                         </div>
                         <label className="label is-small">Password:</label>
@@ -196,7 +195,7 @@ export const Login: FunctionComponent = memo(() => {
                                 }}
                             />
                             <span className="icon is-left">
-                                <FontAwesomeIcon icon={faLock} />
+                                <LockIcon />
                             </span>
                         </div>
                         <div className="buttons is-right">

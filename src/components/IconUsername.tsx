@@ -1,14 +1,11 @@
-import type { IconDefinition } from "@fortawesome/free-regular-svg-icons";
 import type { IUser } from "@vex-chat/libvex";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Avatar from "../components/Avatar";
 
 export function IconUsername(
     user: IUser,
     iconSize = 48 | 32,
-    icon?: IconDefinition,
+    icon?: JSX.Element,
     subtitle = "",
     avatarClassName = ""
 ): JSX.Element {
@@ -18,7 +15,7 @@ export function IconUsername(
         <span className="media">
             <span className="media-left">
                 {icon !== undefined ? (
-                    <FontAwesomeIcon className="icon-username-fa" icon={icon} />
+                    icon
                 ) : (
                     <Avatar user={user} className={avatarClassName} />
                 )}

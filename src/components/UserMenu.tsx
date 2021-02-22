@@ -1,10 +1,9 @@
 import {
-    faCog,
-    faMobileAlt,
-    faSignOutAlt,
-    faUserAlt,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+    Settings as SettingsIcon,
+    Smartphone as SmartphoneIcon,
+    LogOut as LogOutIcon,
+    User as UserIcon,
+} from "react-feather";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -73,7 +72,7 @@ export function UserMenu(): JSX.Element {
                                     }}
                                 >
                                     <span className="icon">
-                                        <FontAwesomeIcon icon={faCog} />
+                                        <SettingsIcon size={14} />
                                     </span>
                                     &nbsp; Preferences
                                 </Link>
@@ -90,7 +89,7 @@ export function UserMenu(): JSX.Element {
                                     }}
                                 >
                                     <span className="icon">
-                                        <FontAwesomeIcon icon={faUserAlt} />
+                                        <UserIcon size={14} />
                                     </span>
                                     &nbsp; My Info
                                 </Link>
@@ -107,7 +106,7 @@ export function UserMenu(): JSX.Element {
                                     }}
                                 >
                                     <span className="icon">
-                                        <FontAwesomeIcon icon={faMobileAlt} />
+                                        <SmartphoneIcon size={14} />
                                     </span>
                                     &nbsp; My Devices
                                 </Link>
@@ -116,7 +115,7 @@ export function UserMenu(): JSX.Element {
                                     className="dropdown-item has-text-danger"
                                 >
                                     <span className="icon has-text-danger">
-                                        <FontAwesomeIcon icon={faSignOutAlt} />
+                                        <LogOutIcon size={14} />
                                     </span>
                                     &nbsp; Logout
                                 </Link>
