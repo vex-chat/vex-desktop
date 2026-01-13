@@ -49,11 +49,9 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-        working-directory: apps/vex-desktop
 
       - name: Build
         run: yarn package-${{ matrix.builder_args }} --publish never
-        working-directory: apps/vex-desktop
 
       - name: Show release contents (Windows)
         if: runner.os == 'Windows'
@@ -61,7 +59,6 @@ jobs:
         run: |
           echo "Contents of release directory:"
           Get-ChildItem -Path release -Recurse | Select-Object FullName
-        working-directory: apps/vex-desktop
 
       - name: Show release contents (Unix)
         if: runner.os != 'Windows'
@@ -69,7 +66,6 @@ jobs:
         run: |
           echo "Contents of release directory:"
           ls -lhR release/
-        working-directory: apps/vex-desktop
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v6
@@ -77,11 +73,11 @@ jobs:
           name: vex-desktop-${{ runner.os }}
           if-no-files-found: error
           path: |
-            apps/vex-desktop/release/*.exe
-            apps/vex-desktop/release/*.AppImage
-            apps/vex-desktop/release/*.deb
-            apps/vex-desktop/release/*.tar.gz
-            apps/vex-desktop/release/*.dmg
+            release/*.exe
+            release/*.AppImage
+            release/*.deb
+            release/*.tar.gz
+            release/*.dmg
 
   release:
     name: Create GitHub Release
