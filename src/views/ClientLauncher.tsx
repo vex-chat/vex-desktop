@@ -14,9 +14,6 @@ import type {
 import { Client } from "@vex-chat/libvex";
 
 import axios from "axios";
-import { ipcRenderer, remote } from "electron";
-import log from "electron-log";
-import fs from "fs";
 import msgpack from "msgpack-lite";
 import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,10 +21,10 @@ import { useHistory } from "react-router";
 
 import { Loading } from "../components";
 import {
-    dbFolder,
-    keyFolder,
+    getDbFolder,
+    getKeyFolder,
+    getProgFolder,
     notifyFX,
-    progFolder,
     routes,
 } from "../constants";
 import { setApp } from "../reducers/app";
@@ -56,13 +53,19 @@ declare global {
     }
 }
 
-// this maybe needs a better place to go
-const folders = [progFolder, dbFolder, keyFolder];
-for (const folder of folders) {
-    if (!fs.existsSync(folder)) {
-        fs.mkdirSync(folder);
+// Initialize folders asynchronously
+(async () => {
+    const folders = [
+        await getProgFolder(),
+        await getDbFolder(),
+        await getKeyFolder(),
+    ];
+    for (const folder of folders) {
+        if (!(await window.electron.fs.exists(folder))) {
+            await window.electron.fs.mkdir(folder, { recursive: true });
+        }
     }
-}
+})();
 
 function objifySessions(sessions: ISession[]): Record<string, ISession[]> {
     const sessionsObj: Record<string, ISession[]> = {};
@@ -169,7 +172,7 @@ export function ClientLauncher(): JSX.Element {
                     body: message.message,
                 });
                 msgNotification.onclick = () => {
-                    remote.getCurrentWindow().show();
+                    void window.electron.window.show();
                     history.push(routes.MESSAGING + "/" + message.authorID);
                 };
             } else {
@@ -187,7 +190,7 @@ export function ClientLauncher(): JSX.Element {
                     { body: message.message }
                 );
                 msgNotification.onclick = () => {
-                    remote.getCurrentWindow().show();
+                    void window.electron.window.show();
                     history.push(
                         routes.SERVERS +
                             "/" +
@@ -228,7 +231,7 @@ export function ClientLauncher(): JSX.Element {
         client.off("message", messageHandler);
         client.off("permission", permissionHandler);
         client.off("message", notification);
-        ipcRenderer.off("relaunch", relaunch);
+        window.electron.off("relaunch", relaunch);
 
         history.push(routes.LOGIN);
     };
@@ -285,7 +288,7 @@ export function ClientLauncher(): JSX.Element {
                         if (!szMsg.group) {
                             acc.push(szMsg);
                         } else {
-                            log.warn("Group messages found in dm history.");
+                            console.warn("Group messages found in dm history.");
                         }
                         return acc;
                     },
@@ -322,7 +325,7 @@ export function ClientLauncher(): JSX.Element {
                     if (szMsg.group) {
                         acc.push(szMsg);
                     } else {
-                        log.warn("Non group messages found in group history.");
+                        console.warn("Non group messages found in group history.");
                     }
 
                     return acc;
@@ -366,7 +369,7 @@ export function ClientLauncher(): JSX.Element {
                 })();
                 break;
             default:
-                log.info(
+                console.info(
                     "Unsupported permission type " +
                         permission.resourceType +
                         " for permissionHandler()."
@@ -377,7 +380,7 @@ export function ClientLauncher(): JSX.Element {
 
     const launch = async () => {
         const client = window.vex;
-        ipcRenderer.on("relaunch", relaunch);
+        window.electron.on("relaunch", relaunch);
         client.on("connected", connectedHandler);
         client.on("disconnect", relaunch);
         client.on("session", sessionHandler);
@@ -391,22 +394,24 @@ export function ClientLauncher(): JSX.Element {
                     // eslint-disable-next-line no-case-declarations
                     const keyFilePath = gaurdian.getKeyFilePath();
                     if (keyFilePath) {
-                        fs.rename(
-                            keyFilePath,
-                            `${keyFilePath}-bak`,
-                            async () => {
-                                // generate new SK
-                                const SK = Client.generateSecretKey();
-                                const keyPath =
-                                    keyFolder +
-                                    "/" +
-                                    client.me.user().username.toLowerCase();
-                                Client.saveKeyFile(keyPath, "", SK);
-                                const newClient = await createClient(false, SK);
-                                window.vex = newClient;
-                                setTimeout(relaunch, 5000);
-                            }
-                        );
+                        try {
+                            await window.electron.fs.rename(
+                                keyFilePath,
+                                `${keyFilePath}-bak`
+                            );
+                            // generate new SK
+                            const SK = Client.generateSecretKey();
+                            const keyPath =
+                                (await getKeyFolder()) +
+                                "/" +
+                                client.me.user().username.toLowerCase();
+                            Client.saveKeyFile(keyPath, "", SK);
+                            const newClient = await createClient(false, SK);
+                            window.vex = newClient;
+                            setTimeout(relaunch, 5000);
+                        } catch (renameErr) {
+                            console.error("Failed to rename key file:", renameErr);
+                        }
                     }
                     break;
                 default:

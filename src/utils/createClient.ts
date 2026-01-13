@@ -2,19 +2,20 @@ import type { IClientOptions } from "@vex-chat/libvex";
 
 import { Client } from "@vex-chat/libvex";
 
-import isDev from "electron-is-dev";
-
-import { dbFolder } from "../constants";
+import { getDbFolder } from "../constants";
 
 export const createClient = async (
     temp: boolean,
     PK?: string
 ): Promise<Client> => {
-    const host = "api.vex.chat";
-    // const host = "localhost:16777";
+    // defined in webpack config
+    const host = process.env.VEX_API_HOST || "";
+
+    // isDev = !isPackaged
+    const isDev = !(await window.electron.app.isPackaged());
 
     const options: IClientOptions = {
-        dbFolder: temp ? undefined : dbFolder,
+        dbFolder: temp ? undefined : await getDbFolder(),
         inMemoryDb: temp,
         host,
         logLevel: isDev ? "info" : "warn",

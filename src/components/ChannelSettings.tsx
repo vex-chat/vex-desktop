@@ -21,7 +21,7 @@ export function ChannelSettings(): JSX.Element {
         <div className="pane-screen-wrapper">
             <Modal
                 active={confirmDelete}
-                close={() => setConfirmDelete(false)}
+                close={() => { setConfirmDelete(false); }}
                 showCancel
                 onAccept={async () => {
                     const client = window.vex;
@@ -46,7 +46,7 @@ export function ChannelSettings(): JSX.Element {
             <br />
             <button
                 className="button is-danger is-small"
-                onClick={() => setConfirmDelete(true)}
+                onClick={() => { setConfirmDelete(true); }}
             >
                 Delete Channel
             </button>

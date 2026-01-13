@@ -1,6 +1,6 @@
 import { chunkMessages } from "./chunkMessages";
 import { createClient } from "./createClient";
-import store from "./DataStore";
+import store, { DataStore as DataStoreClass } from "./DataStore";
 import { formatBytes } from "./formatBytes";
 import { getAssetPath } from "./getAssetPath";
 import { getUserTag } from "./getUserTag";
@@ -13,6 +13,7 @@ export {
     chunkMessages,
     createClient,
     store as DataStore,
+    DataStoreClass,
     formatBytes,
     gaurdian,
     getAssetPath,

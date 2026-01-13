@@ -1,4 +1,3 @@
-import { shell } from "electron";
 import React, { Component } from "react";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -24,7 +23,7 @@ export class LinkRenderer extends Component<Props, State> {
                 className="has-text-link"
                 rel="noopener noreferrer"
                 onClick={() => {
-                    shell.openExternal(this.props.href);
+                    void window.electron.shell.openExternal(this.props.href);
                 }}
                 target={this.props.target}
             >

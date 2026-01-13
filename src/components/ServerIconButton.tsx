@@ -1,4 +1,3 @@
-import { Server as ServerIcon } from "react-feather";
 import { Link } from "react-router-dom";
 
 export function ServerIconButton(props: {

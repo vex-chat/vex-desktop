@@ -34,6 +34,7 @@ const appSlice = createSlice({
 
 export const { set, reset, fail } = appSlice.actions;
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const setApp = (key: string, value: any): AppThunk => (dispatch) => {
     const payload = { key, value };
     dispatch(set(payload));

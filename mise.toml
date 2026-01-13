@@ -1,0 +1,4 @@
+[tools]
+node = "20"
+"npm:yarn" = "latest"
+python = "3.9.19"

@@ -1,6 +1,19 @@
-import os from "os";
+// Async getters for folder paths using contextBridge API
+export const getHomeDir = async (): Promise<string> => {
+    return await window.electron.app.getPath("home");
+};
 
-const homedir = os.homedir();
-export const progFolder = `${homedir}/.vex-desktop`;
-export const dbFolder = `${progFolder}/databases`;
-export const keyFolder = `${progFolder}/keys`;
+export const getProgFolder = async (): Promise<string> => {
+    const home = await getHomeDir();
+    return `${home}/.vex-desktop`;
+};
+
+export const getDbFolder = async (): Promise<string> => {
+    const prog = await getProgFolder();
+    return `${prog}/databases`;
+};
+
+export const getKeyFolder = async (): Promise<string> => {
+    const prog = await getProgFolder();
+    return `${prog}/keys`;
+};

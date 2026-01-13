@@ -3,12 +3,11 @@ import type { FunctionComponent } from "react";
 import { Client } from "@vex-chat/libvex";
 
 import { Lock as LockIcon, User as UserIcon } from "react-feather";
-import fs from "fs";
 import { Fragment, memo, useMemo, useState } from "react";
 import { useHistory } from "react-router";
 
 import { Loading, TitleBar, VerticalAligner } from "../components";
-import { errorFX, keyFolder, routes, unlockFX } from "../constants";
+import { errorFX, getKeyFolder, routes, unlockFX } from "../constants";
 import { useQuery } from "../hooks";
 import { createClient, DataStore, gaurdian } from "../utils";
 
@@ -45,8 +44,8 @@ export const Login: FunctionComponent = memo(() => {
             return;
         }
         setLoading(true);
-        const keyPath = keyFolder + "/" + username.toLowerCase();
-        if (fs.existsSync(keyPath)) {
+        const keyPath = (await getKeyFolder()) + "/" + username.toLowerCase();
+        if (await window.electron.fs.exists(keyPath)) {
             gaurdian.load(keyPath);
         } else {
             gaurdian.setKey(Client.generateSecretKey());
@@ -67,7 +66,7 @@ export const Login: FunctionComponent = memo(() => {
             return;
         }
 
-        if (!fs.existsSync(keyPath)) {
+        if (!(await window.electron.fs.exists(keyPath))) {
             Client.saveKeyFile(keyPath, "", gaurdian.getKey());
         }
 
@@ -90,8 +89,8 @@ export const Login: FunctionComponent = memo(() => {
                 setCheckCookieErrText("");
                 setLoading(true);
 
-                const keyPath = keyFolder + "/" + user.username.toLowerCase();
-                if (fs.existsSync(keyPath)) {
+                const keyPath = (await getKeyFolder()) + "/" + user.username.toLowerCase();
+                if (await window.electron.fs.exists(keyPath)) {
                     gaurdian.load(keyPath);
                 } else {
                     throw new Error("Found cookie, but no keyfile.");

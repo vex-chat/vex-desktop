@@ -13,6 +13,7 @@ import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import path from "path";
 
+import { registerIpcHandlers } from "./ipc-handlers";
 import MenuBuilder from "./menu";
 
 const singleLock = app.requestSingleInstanceLock();
@@ -85,8 +86,10 @@ const createWindow = async () => {
         icon: getAssetPath("icon.png"),
         webPreferences: {
             nodeIntegration: true,
-            enableRemoteModule: true,
+            contextIsolation: false,
+            sandbox: false,
             partition: "persist:main",
+            preload: path.join(__dirname, "preload.js"),
         },
     });
 
@@ -159,10 +162,10 @@ const createWindow = async () => {
         mainWindow = null;
     });
 
-    // Open urls in the user's browser
-    mainWindow.webContents.on("new-window", (event, url) => {
-        event.preventDefault();
+    // Open urls in the user's browser (using setWindowOpenHandler instead of deprecated new-window event)
+    mainWindow.webContents.setWindowOpenHandler(({ url }) => {
         void shell.openExternal(url);
+        return { action: "deny" };
     });
 
     const menuBuilder = new MenuBuilder(mainWindow);
@@ -188,6 +191,10 @@ app.whenReady().then(createWindow).catch(console.log);
 let tray;
 app.on("ready", async () => {
     log.info("App is ready.");
+
+    // Register IPC handlers for preload script communication
+    registerIpcHandlers();
+
     while (!mainWindow) {
         await sleep(100);
     }
