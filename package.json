@@ -21,7 +21,7 @@
         "package-win": "yarn build && electron-builder build --win --x64",
         "postinstall": "electron-builder install-app-deps && cross-env NODE_ENV=development webpack --config ./.erb/webpack/renderer.dll.js && yarn-deduplicate yarn.lock",
         "start": "node ./.erb/scripts/CheckPortInUse.js && cross-env yarn start:renderer",
-        "start:main": "webpack --config ./.erb/webpack/dev.main.js && cross-env NODE_ENV=development electron ./src/main.dev.js",
+        "start:main": "yarn build:preload && webpack --config ./.erb/webpack/dev.main.js && cross-env NODE_ENV=development electron ./src/main.dev.js",
         "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/webpack/renderer.js",
         "start:packaged": "./release/mac/vex desktop.app/Contents/MacOS/vex desktop",
         "test": "npx jest",
