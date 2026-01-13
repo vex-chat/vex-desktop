@@ -7,12 +7,8 @@ import {
     AlertTriangle as AlertTriangleIcon,
 } from "react-feather";
 import { format } from "date-fns";
-import { remote, shell } from "electron";
-import log from "electron-log";
-import fs from "fs";
 import levenshtein from "js-levenshtein";
 import Linkify from "linkify-it";
-import path from "path";
 import { Fragment, useMemo, useState } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import ReactMarkdown from "react-markdown";
@@ -328,7 +324,7 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
 
     const download = async () => {
         if (downloading) {
-            log.warn("Already downloading file.");
+            console.warn("Already downloading file.");
             return;
         }
         setDownloading(true);
@@ -338,25 +334,22 @@ export function FileBox(props: { message: ISerializedMessage }): JSX.Element {
             const file = await client.files.retrieve(fileID, key);
             setDownloading(false);
 
-            const dialogRes = await remote.dialog.showSaveDialog(
-                remote.getCurrentWindow(),
-                {
-                    title: "Save Decrypted File",
-                    buttonLabel: "Save",
-                    defaultPath: remote.app.getPath("downloads") + "/" + name,
-                }
-            );
+            const downloadsPath = await window.electron.app.getPath("downloads");
+            const dialogRes = await window.electron.dialog.showSaveDialog({
+                title: "Save Decrypted File",
+                buttonLabel: "Save",
+                defaultPath: downloadsPath + "/" + name,
+            });
             const { canceled, filePath } = dialogRes;
             if (canceled || !file || !filePath) {
                 return;
             }
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            fs.writeFile(filePath, file.data, () => {
-                log.debug(`File downloaded to ${filePath}`);
-                shell.openPath(path.resolve(filePath));
-            });
+            await window.electron.fs.writeFile(filePath, file.data);
+            console.debug(`File downloaded to ${filePath}`);
+            const resolvedPath = await window.electron.path.resolve(filePath);
+            await window.electron.shell.openPath(resolvedPath);
         } catch (err) {
-            log.warn(err.toString());
+            console.warn(String(err));
             setDownloading(false);
         }
     };

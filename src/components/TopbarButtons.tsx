@@ -2,9 +2,7 @@ import {
     Upload as UploadIcon,
     Users as UsersIcon,
     UserMinus as UserMinusIcon,
-    UserMinus,
 } from "react-feather";
-import { remote } from "electron";
 import { useHistory } from "react-router-dom";
 
 import { DataStore } from "../utils";
@@ -23,8 +21,7 @@ export function TopbarButtons(props: {
                 <span
                     className="icon topbar-button has-text-link no-drag"
                     onClick={() => {
-                        remote.app.relaunch();
-                        remote.app.exit();
+                        void window.electron.app.relaunch();
                     }}
                 >
                     <UploadIcon />

@@ -1,6 +1,4 @@
-import { Moon, Moon as MoonIcon, Sun as SunIcon } from "react-feather";
-import { remote } from "electron";
-import fs from "fs";
+import { Moon as MoonIcon, Sun as SunIcon } from "react-feather";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -109,8 +107,7 @@ export default function Settings(): JSX.Element {
                                 <span
                                     className="pointer"
                                     onClick={async () => {
-                                        const dialogRes = await remote.dialog.showOpenDialog(
-                                            remote.getCurrentWindow(),
+                                        const dialogRes = await window.electron.dialog.showOpenDialog(
                                             {
                                                 title: "Select an avatar",
                                                 filters: [
@@ -140,53 +137,39 @@ export default function Settings(): JSX.Element {
 
                                         setErrText("");
 
-                                        const [path] = filePaths;
-                                        if (path) {
+                                        const [filePath] = filePaths;
+                                        if (filePath) {
                                             setUploadingAvatar(true);
-                                            fs.readFile(
-                                                path,
-                                                async (err, buf) => {
-                                                    if (
-                                                        buf.byteLength > 5000000
-                                                    ) {
-                                                        setUploadingAvatar(
-                                                            false
-                                                        );
-                                                        setErrText(
-                                                            "File too big (max 5mb)"
-                                                        );
-                                                        return;
-                                                    }
-
-                                                    if (err) {
-                                                        setUploadingAvatar(
-                                                            false
-                                                        );
-                                                        return;
-                                                    }
-                                                    const client = window.vex;
-                                                    try {
-                                                        await client.me.setAvatar(
-                                                            buf
-                                                        );
-                                                    } catch (err) {
-                                                        setErrText(
-                                                            err.response?.data
-                                                                ?.error ||
-                                                                err.toString()
-                                                        );
-                                                    }
-
+                                            try {
+                                                const buf = await window.electron.fs.readFile(filePath) as Buffer;
+                                                if (buf.byteLength > 5000000) {
                                                     setUploadingAvatar(false);
-                                                    dispatch(setAvatarHash());
+                                                    setErrText("File too big (max 5mb)");
+                                                    return;
                                                 }
-                                            );
+
+                                                const client = window.vex;
+                                                try {
+                                                    await client.me.setAvatar(buf);
+                                                } catch (err) {
+                                                    const error = err as { response?: { data?: { error?: string } } };
+                                                    setErrText(
+                                                        error.response?.data?.error || String(err)
+                                                    );
+                                                }
+
+                                                setUploadingAvatar(false);
+                                                dispatch(setAvatarHash());
+                                            } catch (err) {
+                                                setUploadingAvatar(false);
+                                            }
                                         }
                                     }}
                                 >
                                     {IconUsername(
                                         user,
                                         48,
+                                        // @ts-expect-error legacy code
                                         "",
                                         "avatar-trigger pointer"
                                     )}

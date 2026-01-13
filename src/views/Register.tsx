@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
 import { VerticalAligner } from "../components";
-import { errorFX, keyFolder, routes, unlockFX } from "../constants";
+import { errorFX, getKeyFolder, routes, unlockFX } from "../constants";
 import { createClient, DataStore, gaurdian } from "../utils";
 
 export default function Register(): JSX.Element {
@@ -63,7 +63,7 @@ export default function Register(): JSX.Element {
         }
 
         if (user !== null) {
-            const keyPath = keyFolder + "/" + user.username.toLowerCase();
+            const keyPath = (await getKeyFolder()) + "/" + user.username.toLowerCase();
             Client.saveKeyFile(keyPath, "", PK);
 
             try {

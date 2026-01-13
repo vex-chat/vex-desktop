@@ -1,8 +1,6 @@
 import type { IMessage } from "@vex-chat/libvex";
 
 import axios from "axios";
-import { ipcRenderer, remote, shell } from "electron";
-import log from "electron-log";
 import { useEffect, useMemo, useState } from "react";
 import { Route, Switch, useHistory } from "react-router-dom";
 import semver from "semver";
@@ -113,10 +111,10 @@ export default function Base(): JSX.Element {
         const callback = (_event: any, data: { url: string }) => {
             openInvite(data.url);
         };
-        ipcRenderer.on("open-url", callback);
+        window.electron.on("open-url", callback);
 
         return () => {
-            ipcRenderer.off("open-url", callback);
+            window.electron.off("open-url", callback);
         };
     });
 
@@ -135,7 +133,7 @@ export default function Base(): JSX.Element {
                         <a
                             className="has-text-link"
                             onClick={() => {
-                                shell.openExternal(
+                                void window.electron.shell.openExternal(
                                     "https://vex.chat/privacy-policy"
                                 );
                             }}
@@ -164,8 +162,12 @@ export default function Base(): JSX.Element {
         }
     }, [lastFetched]);
 
-    useMemo(() => {
-        remote.getCurrentWindow().on("resize", onResize);
+    useEffect(() => {
+        // Listen to window resize events via the DOM window
+        window.addEventListener("resize", onResize);
+        return () => {
+            window.removeEventListener("resize", onResize);
+        };
     }, []);
 
     const onUpdateStatus = (_event: Event, data: updateStatus) => {
@@ -176,14 +178,14 @@ export default function Base(): JSX.Element {
             case "current":
                 break;
             case "error":
-                log.error(data);
+                console.error(data);
                 break;
             case "available":
-                log.info("Update available.");
+                console.info("Update available.");
                 history.push(routes.UPDATING);
                 break;
             case "downloaded":
-                log.info("Update has been downloaded.");
+                console.info("Update has been downloaded.");
                 break;
             case "progress":
                 if (!history.location.pathname.includes(routes.UPDATING)) {
@@ -191,17 +193,16 @@ export default function Base(): JSX.Element {
                 }
                 break;
             default:
-                log.info(`updater: Don't know how to ${status as string}`);
+                console.info(`updater: Don't know how to ${status as string}`);
                 break;
         }
     };
 
     useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ipcRenderer.on("autoUpdater", onUpdateStatus);
+        window.electron.on("autoUpdater", onUpdateStatus);
 
         return () => {
-            ipcRenderer.off("autoUpdater", onUpdateStatus);
+            window.electron.off("autoUpdater", onUpdateStatus);
         };
     });
 

@@ -1,4 +1,3 @@
-import { ipcRenderer } from "electron";
 import { Fragment, useEffect, useState } from "react";
 import ReactLoading from "react-loading";
 
@@ -64,9 +63,9 @@ export default function Loading(props: {
     };
 
     useEffect(() => {
-        ipcRenderer.on("autoUpdater", onDownloadProgress);
+        window.electron.on("autoUpdater", onDownloadProgress);
         return () => {
-            ipcRenderer.off("autoUpdater", onDownloadProgress);
+            window.electron.off("autoUpdater", onDownloadProgress);
         };
     });
 

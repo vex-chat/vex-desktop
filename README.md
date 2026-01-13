@@ -21,7 +21,7 @@ Make sure you have the dependencies:
 
 -   nodejs
 -   yarn
--   python2
+-   python3 (version 3.9+ recommended)
 
 Steps:
 

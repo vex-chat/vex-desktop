@@ -5,22 +5,23 @@
     "description": "Encrypted group chat that collects as little data as possible.",
     "private": true,
     "scripts": {
-        "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
+        "build": "concurrently \"yarn build:main\" \"yarn build:preload\" \"yarn build:renderer\"",
         "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/webpack/prod.main.js",
+        "build:preload": "cross-env NODE_ENV=production webpack --config ./.erb/webpack/prod.preload.js",
         "build:renderer": "cross-env NODE_ENV=production webpack --config ./.erb/webpack/prod.renderer.js",
-        "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir src",
+        "rebuild": "npx @electron/rebuild --parallel --types prod,dev,optional --module-dir src",
         "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
         "lint:ci": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx --rule \"prettier/prettier: 2\"",
         "package": "yarn build && electron-builder build --publish never",
         "package-fast": "yarn build && electron-builder build --dir --publish never",
         "package-all": "rm -rf ./release; yarn build && electron-builder build -mwl --publish never; shasum -a 256 release/*.{exe,dmg,deb,AppImage} >> ./release/sha256.txt",
         "package-ci": "yarn postinstall && yarn build && electron-builder build -mwl --publish always",
-        "package-mac": "yarn build && electron-builder build --mac",
+        "package-mac": "export npm_config_python=$(mise which python) && yarn build && electron-builder build --mac",
         "package-linux": "yarn build && electron-builder build --linux",
         "package-win": "yarn build && electron-builder build --win --x64",
-        "postinstall": "node ./.erb/scripts/CheckNativeDep.js && electron-builder install-app-deps && yarn cross-env NODE_ENV=development webpack --config ./.erb/webpack/renderer.dll.js && yarn-deduplicate yarn.lock",
+        "postinstall": "electron-builder install-app-deps && cross-env NODE_ENV=development webpack --config ./.erb/webpack/renderer.dll.js && yarn-deduplicate yarn.lock",
         "start": "node ./.erb/scripts/CheckPortInUse.js && cross-env yarn start:renderer",
-        "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
+        "start:main": "webpack --config ./.erb/webpack/dev.main.js && cross-env NODE_ENV=development electron ./src/main.dev.js",
         "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/webpack/renderer.js",
         "start:packaged": "./release/mac/vex desktop.app/Contents/MacOS/vex desktop",
         "test": "npx jest",
@@ -36,8 +37,12 @@
         "{*.json,.{babelrc,eslintrc,prettierrc}}": [
             "prettier --ignore-path .eslintignore --parser json --write"
         ],
-        "*.{css,scss}": ["prettier --ignore-path .eslintignore --write"],
-        "*.{html,md,yml}": ["prettier --ignore-path .eslintignore --write"]
+        "*.{css,scss}": [
+            "prettier --ignore-path .eslintignore --write"
+        ],
+        "*.{html,md,yml}": [
+            "prettier --ignore-path .eslintignore --write"
+        ]
     },
     "build": {
         "productName": "vex desktop",
@@ -48,6 +53,7 @@
             "index.html",
             "main.prod.js",
             "main.prod.js.map",
+            "preload.js",
             "package.json"
         ],
         "afterSign": ".erb/scripts/Notarize.js",
@@ -55,7 +61,9 @@
             {
                 "name": "vex",
                 "role": "Viewer",
-                "schemes": ["vex"]
+                "schemes": [
+                    "vex"
+                ]
             }
         ],
         "mac": {
@@ -80,13 +88,19 @@
             ]
         },
         "win": {
-            "target": ["nsis"]
+            "target": [
+                "nsis"
+            ]
         },
         "nsis": {
             "perMachine": true
         },
         "linux": {
-            "target": ["AppImage", "pacman", "deb", "tar.gz"],
+            "target": [
+                "AppImage",
+                "deb",
+                "tar.gz"
+            ],
             "category": "Communication"
         },
         "directories": {
@@ -94,7 +108,9 @@
             "buildResources": "assets",
             "output": "release"
         },
-        "extraResources": ["./assets/*/**"],
+        "extraResources": [
+            "./assets/*/**"
+        ],
         "publish": {
             "provider": "github",
             "releaseType": "release"
@@ -102,7 +118,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/vex-chat/vex-desktop.git"
+        "url": "git+https://github.com/dethereum/vex-chat.git"
     },
     "author": {
         "name": "LogicBite LLC",
@@ -110,7 +126,7 @@
         "url": "https://logicbite.org"
     },
     "bugs": {
-        "url": "https://github.com/vex-chat/vex-desktop/issues"
+        "url": "https://github.com/dethereum/vex-chat.git/issues"
     },
     "keywords": [
         "vex",
@@ -120,16 +136,27 @@
         "group",
         "messenger"
     ],
-    "homepage": "https://github.com/vex-chat/vex-desktop#readme",
+    "homepage": "https://github.com/dethereum/vex-chat.git#readme",
     "jest": {
         "testURL": "http://localhost/",
         "moduleNameMapper": {
             "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
             "\\.(css|less|sass|scss)$": "identity-obj-proxy"
         },
-        "moduleFileExtensions": ["js", "jsx", "ts", "tsx", "json"],
-        "moduleDirectories": ["node_modules", "src/node_modules"],
-        "setupFiles": ["./.erb/scripts/CheckBuildsExist.js"]
+        "moduleFileExtensions": [
+            "js",
+            "jsx",
+            "ts",
+            "tsx",
+            "json"
+        ],
+        "moduleDirectories": [
+            "node_modules",
+            "src/node_modules"
+        ],
+        "setupFiles": [
+            "./.erb/scripts/CheckBuildsExist.js"
+        ]
     },
     "devDependencies": {
         "@babel/core": "^7.12.9",
@@ -137,6 +164,7 @@
         "@babel/preset-react": "^7.12.7",
         "@babel/preset-typescript": "^7.12.7",
         "@babel/register": "^7.12.10",
+        "@electron/rebuild": "^3.6.0",
         "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
         "@teamsupercell/typings-for-css-modules-loader": "^2.4.0",
         "@testing-library/jest-dom": "^5.11.6",
@@ -168,13 +196,13 @@
         "concurrently": "^5.3.0",
         "core-js": "^3.6.5",
         "cross-env": "^7.0.2",
-        "css-loader": "^5.0.1",
+        "css-loader": "^6.8.1",
         "css-minimizer-webpack-plugin": "^1.1.5",
         "detect-port": "^1.3.0",
-        "electron": "^11.0.1",
-        "electron-builder": "^22.5.1",
+        "electron": "^28.2.0",
+        "electron-builder": "^25.1.8",
+        "electron-builder-squirrel-windows": "25.1.8",
         "electron-notarize": "^1.0.0",
-        "electron-rebuild": "^2.3.2",
         "eslint": "^7.5.0",
         "eslint-config-prettier": "^6.11.0",
         "eslint-import-resolver-typescript": "^2.3.0",
@@ -192,6 +220,7 @@
         "jest": "^26.1.0",
         "lint-staged": "^10.2.11",
         "mini-css-extract-plugin": "^1.3.1",
+        "node-abi": "3.x",
         "prettier": "^2.2.1",
         "react-refresh": "^0.9.0",
         "react-test-renderer": "^17.0.1",
@@ -202,7 +231,7 @@
         "type-fest": "^0.20.2",
         "typescript": "4.1",
         "url-loader": "^4.1.0",
-        "webpack": "^5.17.0",
+        "webpack": "^5.88.0",
         "webpack-bundle-analyzer": "^4.1.0",
         "webpack-cli": "^4.2.0",
         "webpack-dev-server": "^3.11.0",
@@ -223,7 +252,7 @@
         "electron-is-dev": "^1.2.0",
         "electron-log": "^4.2.4",
         "electron-store": "^6.0.1",
-        "electron-updater": "^4.3.4",
+        "electron-updater": "^6.3.0",
         "emoji-mart": "^3.0.0",
         "file-type": "^16.1.0",
         "highlight.js": "^10.5.0",
@@ -238,6 +267,7 @@
         "react-dropzone": "^11.2.4",
         "react-feather": "^2.0.9",
         "react-h5-audio-player": "^3.5.0",
+        "react-loading": "^2.0.3",
         "react-markdown": "^5.0.3",
         "react-redux": "^7.2.2",
         "react-router-dom": "^5.2.0",
@@ -258,5 +288,5 @@
             "pre-commit": "yarn syncVersions; git add ./src/package.json package.json; lint-staged"
         }
     },
-    "version": "0.13.7"
+    "version": "0.14.13"
 }

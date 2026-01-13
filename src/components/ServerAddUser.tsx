@@ -2,11 +2,9 @@ import type { XTypes } from "@vex-chat/types";
 
 import {
     Copy as CopyIcon,
-    ExternalLink,
     ExternalLink as ExternalLinkIcon,
 } from "react-feather";
 import { format } from "date-fns";
-import { clipboard, shell } from "electron";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -53,7 +51,7 @@ export function AddUser(): JSX.Element {
                                 <td
                                     className="pointer"
                                     onClick={() => {
-                                        clipboard.writeText(
+                                        void window.electron.clipboard.writeText(
                                             `https://vex.chat/invite/${link.inviteID}`
                                         );
                                     }}
@@ -75,7 +73,7 @@ export function AddUser(): JSX.Element {
                                 <td
                                     className="pointer"
                                     onClick={() => {
-                                        shell.openExternal(
+                                        void window.electron.shell.openExternal(
                                             `https://vex.chat/invite/${link.inviteID}`
                                         );
                                     }}

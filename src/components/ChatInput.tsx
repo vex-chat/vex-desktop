@@ -5,7 +5,6 @@ import type { IFile, IFileProgress } from "@vex-chat/libvex";
 import type { EmojiData } from "emoji-mart";
 
 import { capitalCase } from "change-case";
-import log from "electron-log";
 import { emojiIndex } from "emoji-mart";
 import FileType from "file-type";
 import levenshtein from "js-levenshtein";
@@ -149,7 +148,7 @@ export function ChatInput(props: {
                     client.off("fileProgress", onProgress);
                     setUploading(false);
                 } catch (err) {
-                    log.warn(err);
+                    console.warn(err);
                     setErrText(err.toString());
                     client.off("fileProgress", onProgress);
                     setTimeout(() => {
@@ -413,7 +412,7 @@ export function ChatInput(props: {
                                             );
                                         }
                                     } catch (err) {
-                                        log.error(err);
+                                        console.error(err);
                                         if (err.message) {
                                             if (props.group) {
                                                 dispatch(
@@ -428,7 +427,7 @@ export function ChatInput(props: {
                                                 );
                                             }
                                         } else {
-                                            log.warn(err);
+                                            console.warn(err);
                                         }
                                     }
                                 }

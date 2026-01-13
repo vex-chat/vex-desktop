@@ -1,6 +1,5 @@
 import type { IUser } from "@vex-chat/libvex";
 
-import { remote } from "electron";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory } from "react-router-dom";
 
@@ -31,22 +30,20 @@ export function TitleBar(props: {
     const app = useSelector(selectApp);
 
     function closeWindow() {
-        const window = remote.getCurrentWindow();
-        window.hide();
+        void window.electron.window.hide();
     }
 
-    function maximizeWindow() {
-        const window = remote.getCurrentWindow();
-
-        if (window.isMaximized()) {
-            window.unmaximize();
+    async function maximizeWindow() {
+        const isMaximized = await window.electron.window.isMaximized();
+        if (isMaximized) {
+            await window.electron.window.unmaximize();
         } else {
-            window.maximize();
+            await window.electron.window.maximize();
         }
     }
 
     function minimizeWindow() {
-        remote.getCurrentWindow().minimize();
+        void window.electron.window.minimize();
     }
 
     const newConversation = (user: IUser) => {

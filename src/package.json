@@ -1,7 +1,7 @@
 {
     "name": "vex-desktop",
     "productName": "Vex Desktop",
-    "version": "0.13.7",
+    "version": "0.14.11",
     "description": "Desktop application for vex chat.",
     "main": "./main.prod.js",
     "author": {
@@ -9,13 +9,12 @@
         "email": "hello@logicbite.org",
         "url": "https://logicbite.org/"
     },
-    "scripts": {
-        "electron-rebuild": "node -r ../.erb/scripts/BabelRegister.js ../.erb/scripts/ElectronRebuild.js",
-        "postinstall": "yarn electron-rebuild"
-    },
+    "scripts": {},
     "license": "AGPL-3.0-or-later",
     "dependencies": {
+        "@extrahash/sleep": "^1.0.0",
         "@vex-chat/libvex": "^0.20.8",
-        "react-loading": "^2.0.3"
+        "electron-log": "^4.2.4",
+        "electron-updater": "^6.3.0"
     }
 }
