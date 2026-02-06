@@ -176,7 +176,7 @@ const renderer = {
         new EnvironmentPlugin({
             NODE_ENV: "production",
             DEBUG_PROD: false,
-            VEX_API_HOST: "vex.wtf/api",
+            VEX_API_HOST: "api.vex.wtf",
         }),
         new MiniCssExtractPlugin({
             filename: "style.css",
