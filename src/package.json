@@ -1,7 +1,7 @@
 {
     "name": "vex-desktop",
     "productName": "Vex Desktop",
-    "version": "0.14.2",
+    "version": "0.14.11",
     "description": "Desktop application for vex chat.",
     "main": "./main.prod.js",
     "author": {
@@ -13,7 +13,7 @@
     "license": "AGPL-3.0-or-later",
     "dependencies": {
         "@extrahash/sleep": "^1.0.0",
-        "@vex-chat/libvex": "^0.20.8",
+        "@vex-chat/libvex": "file:../.yalc/@vex-chat/libvex",
         "electron-log": "^4.2.4",
         "electron-updater": "^6.3.0"
     }

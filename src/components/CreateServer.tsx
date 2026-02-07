@@ -1,7 +1,7 @@
 import type { Client, IServer } from "@vex-chat/libvex";
 
 import { Server as ServerIcon } from "react-feather";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import * as uuid from "uuid";
@@ -26,8 +26,10 @@ export function CreateServer(): JSX.Element {
 
     const [errText, setErrText] = useState("");
 
-    const joinServer = async () => {
-        const inviteID = inviteVal ? inviteVal.split("/").pop() : null;
+    const joinServer = async (manualInput?: string) => {
+        const target = manualInput || inviteVal;
+        const inviteID = target ? target.split("/").pop() : null;
+
         if (inviteID && uuid.validate(inviteID)) {
             const client = window.vex;
             try {
@@ -62,15 +64,20 @@ export function CreateServer(): JSX.Element {
             } catch (err) {
                 console.warn(err.toString());
                 setErrText(err.toString());
-                history.replace(`${routes.CREATE}/server`);
+                if (urlInvite) {
+                    history.replace(`${routes.CREATE}/server`);
+                }
             }
         }
     };
 
-    useMemo(() => {
-        setInviteVal(urlInvite as string);
-        joinServer();
-    }, [urlInvite, inviteVal]);
+    useEffect(() => {
+        if (urlInvite) {
+            setInviteVal(urlInvite);
+            void joinServer(urlInvite);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [urlInvite]);
 
     if (urlInvite) {
         return <Loading size={256} animation={"cylon"} />;
@@ -167,7 +174,15 @@ export function CreateServer(): JSX.Element {
                             }
                             value={inviteVal}
                             onChange={(event) => {
-                                setInviteVal(event.target.value);
+                                const val = event.target.value;
+                                setInviteVal(val);
+                                const potentialUUID = val.split("/").pop();
+                                if (
+                                    potentialUUID &&
+                                    uuid.validate(potentialUUID)
+                                ) {
+                                    void joinServer(val);
+                                }
                             }}
                         />
 
@@ -177,7 +192,7 @@ export function CreateServer(): JSX.Element {
                             <div className="buttons register-form-buttons is-right">
                                 <button
                                     className="button is-success is-small"
-                                    onClick={joinServer}
+                                    onClick={() => joinServer()}
                                 >
                                     Join
                                 </button>

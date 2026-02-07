@@ -14,8 +14,7 @@ import type {
 import { Client } from "@vex-chat/libvex";
 
 import axios from "axios";
-import msgpack from "msgpack-lite";
-import { useMemo } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -45,7 +44,7 @@ import { addPermission, setPermissions } from "../reducers/permissions";
 import { setServers } from "../reducers/servers";
 import { addSession, setSessions } from "../reducers/sessions";
 import { setUser } from "../reducers/user";
-import { createClient, DataStore, gaurdian } from "../utils";
+import { createClient, DataStore, gaurdian, packer } from "../utils";
 
 declare global {
     interface Window {
@@ -87,6 +86,8 @@ export function ClientLauncher(): JSX.Element {
     const dispatch = useDispatch();
     const history = useHistory();
     const lastVisited = useSelector(selectLastVisitedServer);
+    // Guard to prevent double-firing in StrictMode
+    const hasRun = useRef(false);
 
     if (lastVisited) {
         console.log("THE LAST VISITED WAS", lastVisited);
@@ -222,17 +223,22 @@ export function ClientLauncher(): JSX.Element {
     };
 
     const relaunch = async () => {
-        const client = window.vex;
-        await client.close();
+        if (!window.vex) return;
 
+        const client = window.vex;
+
+        // Cleanup listeners
         client.off("connected", connectedHandler);
         client.off("disconnect", relaunch);
         client.off("session", sessionHandler);
         client.off("message", messageHandler);
         client.off("permission", permissionHandler);
         client.off("message", notification);
+
+        // Use window.electron instead of ipcRenderer
         window.electron.off("relaunch", relaunch);
 
+        await client.close();
         history.push(routes.LOGIN);
     };
 
@@ -240,14 +246,23 @@ export function ClientLauncher(): JSX.Element {
         dispatch(addSession(session));
         dispatch(addFamiliar(user));
         const client = window.vex;
+
+        const token = (client as any).token;
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
         try {
             const res = await axios.get(
                 client.getHost() + "/user/" + user.userID + "/devices",
-                { responseType: "arraybuffer" }
+                {
+                    responseType: "arraybuffer",
+                    withCredentials: true,
+                    headers
+                }
             );
-            dispatch(addDevices(msgpack.decode(Buffer.from(res.data))));
+            // Use packer (msgpackr) instead of msgpack-lite
+            dispatch(addDevices(packer.unpack(Buffer.from(res.data))));
         } catch (err) {
-            console.warn(err.toString);
+            console.warn(String(err));
         }
     };
 
@@ -266,17 +281,25 @@ export function ClientLauncher(): JSX.Element {
         const familiars = [...(await client.users.familiars()), me];
         dispatch(setFamiliars(familiars));
 
+        const token = (client as any).token;
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
         try {
             const res = await axios.post(
                 client.getHost() + "/deviceList",
                 familiars.map((user) => user.userID),
-                { responseType: "arraybuffer" }
+                {
+                    responseType: "arraybuffer",
+                    withCredentials: true,
+                    headers
+                }
             );
-            console.log(res.data);
-            const deviceList = msgpack.decode(Buffer.from(res.data));
+
+            // Use packer (msgpackr) instead of msgpack-lite
+            const deviceList = packer.unpack(Buffer.from(res.data));
             dispatch(addDevices(deviceList));
         } catch (err) {
-            console.warn("error getting devices", err.toString());
+            console.warn("error getting devices", String(err));
         }
 
         for (const user of familiars) {
@@ -325,7 +348,9 @@ export function ClientLauncher(): JSX.Element {
                     if (szMsg.group) {
                         acc.push(szMsg);
                     } else {
-                        console.warn("Non group messages found in group history.");
+                        console.warn(
+                            "Non group messages found in group history."
+                        );
                     }
 
                     return acc;
@@ -380,48 +405,83 @@ export function ClientLauncher(): JSX.Element {
 
     const launch = async () => {
         const client = window.vex;
+
+        if (!client) {
+            console.error("No client found on window.vex, redirecting to login");
+            history.push(routes.LOGIN);
+            return;
+        }
+
         window.electron.on("relaunch", relaunch);
         client.on("connected", connectedHandler);
         client.on("disconnect", relaunch);
         client.on("session", sessionHandler);
         client.on("message", messageHandler);
         client.on("permission", permissionHandler);
+
         try {
+            console.log("About to call client.connect()...");
             await client.connect();
-        } catch (err) {
-            switch (err.response.status) {
-                case 470:
-                    // eslint-disable-next-line no-case-declarations
-                    const keyFilePath = gaurdian.getKeyFilePath();
-                    if (keyFilePath) {
-                        try {
-                            await window.electron.fs.rename(
-                                keyFilePath,
-                                `${keyFilePath}-bak`
-                            );
-                            // generate new SK
-                            const SK = Client.generateSecretKey();
-                            const keyPath =
-                                (await getKeyFolder()) +
-                                "/" +
-                                client.me.user().username.toLowerCase();
-                            Client.saveKeyFile(keyPath, "", SK);
-                            const newClient = await createClient(false, SK);
-                            window.vex = newClient;
-                            setTimeout(relaunch, 5000);
-                        } catch (renameErr) {
-                            console.error("Failed to rename key file:", renameErr);
-                        }
+            console.log("client.connect() succeeded!");
+        } catch (err: any) {
+            console.error("CONNECT FAILED:", err);
+
+            // Safe status check
+            const status = err.response ? err.response.status : undefined;
+
+            if (status === 470) {
+                // eslint-disable-next-line no-case-declarations
+                const keyFilePath = gaurdian.getKeyFilePath();
+                if (keyFilePath) {
+                    try {
+                        await window.electron.fs.rename(
+                            keyFilePath,
+                            `${keyFilePath}-bak`
+                        );
+                        // generate new SK
+                        const SK = Client.generateSecretKey();
+                        const keyPath =
+                            (await getKeyFolder()) +
+                            "/" +
+                            client.me.user().username.toLowerCase();
+                        Client.saveKeyFile(keyPath, "", SK);
+                        const newClient = await createClient(false, SK);
+                        window.vex = newClient;
+                        setTimeout(relaunch, 5000);
+                    } catch (renameErr) {
+                        console.error("Failed to rename key file:", renameErr);
                     }
-                    break;
-                default:
-                    setTimeout(relaunch, 5000);
-                    break;
+                }
+            } else if (status === 401) {
+                console.error("Authentication failed (401), redirecting to login");
+                history.push(routes.LOGIN);
+            } else {
+                console.warn("Unknown error during connect, retrying in 5s");
+                setTimeout(relaunch, 5000);
             }
         }
     };
 
-    useMemo(launch, [window.vex, launch]);
+    useEffect(() => {
+        if (!hasRun.current) {
+            hasRun.current = true;
+            launch();
+        }
+
+        // Cleanup listener on unmount
+        return () => {
+            // const client = window.vex;
+            // if (client) {
+            //     client.off("connected", connectedHandler);
+            //     client.off("disconnect", relaunch);
+            //     client.off("session", sessionHandler);
+            //     client.off("message", messageHandler);
+            //     client.off("permission", permissionHandler);
+            //     client.off("message", notification);
+            // }
+            // window.electron.off("relaunch", relaunch);
+        };
+    }, []);
 
     return <Loading size={256} animation={"cylon"} />;
 }

@@ -1,6 +1,5 @@
 import type { ISerializedMessage } from "../reducers/messages";
 
-import { XUtils } from "@vex-chat/crypto";
 
 import {
     Download as DownloadIcon,
@@ -13,8 +12,6 @@ import { Fragment, useMemo, useState } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import ReactMarkdown from "react-markdown";
 import { useDispatch, useSelector } from "react-redux";
-import nacl from "tweetnacl";
-import * as uuid from "uuid";
 
 import Loading from "../components/Loading";
 import { allowedHighlighterTypes, mimeIcons } from "../constants";
@@ -79,14 +76,14 @@ export function MessageBox(props: {
     const codeRegex = /(```[^]+```)/;
     const fileRegex = /{{[^ \n]+}}/;
     const emojiRegex = /(<<[^ \n]+>>)/;
+    if (!props.messages || props.messages.length === 0) {
+        return <span key="empty-message-list" />;
+    }
+
     const sender = familiars[props.messages[0]?.authorID] || null;
 
     if (!sender) {
-        return <p key={uuid.v4()} />;
-    }
-
-    if (props.messages.length == 0) {
-        return <span key={XUtils.encodeHex(nacl.randomBytes(16))} />;
+        return <p key={`unknown-${props.messages[0].nonce}`} />;
     }
 
     return (
