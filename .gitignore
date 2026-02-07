@@ -58,3 +58,7 @@ vex
 src/main.dev.js
 src/main.dev.js.map
 src/preload.js
+
+# yalc
+.yalc
+yalc.lock

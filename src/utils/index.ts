@@ -8,6 +8,7 @@ import gaurdian from "./KeyGaurdian";
 import { mentionRegex } from "./regexes";
 import { getThemeColors, setThemeColor } from "./setThemeColor";
 import { strToIcon } from "./strToIcon";
+import { packer } from "./packer";
 
 export {
     chunkMessages,
@@ -22,4 +23,5 @@ export {
     mentionRegex,
     setThemeColor,
     strToIcon,
+    packer
 };

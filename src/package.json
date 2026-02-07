@@ -13,7 +13,7 @@
     "license": "AGPL-3.0-or-later",
     "dependencies": {
         "@extrahash/sleep": "^1.0.0",
-        "@vex-chat/libvex": "^0.20.8",
+        "@vex-chat/libvex": "file:../.yalc/@vex-chat/libvex",
         "electron-log": "^4.2.4",
         "electron-updater": "^6.3.0"
     }
