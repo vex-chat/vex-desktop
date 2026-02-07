@@ -37,8 +37,12 @@
         "{*.json,.{babelrc,eslintrc,prettierrc}}": [
             "prettier --ignore-path .eslintignore --parser json --write"
         ],
-        "*.{css,scss}": ["prettier --ignore-path .eslintignore --write"],
-        "*.{html,md,yml}": ["prettier --ignore-path .eslintignore --write"]
+        "*.{css,scss}": [
+            "prettier --ignore-path .eslintignore --write"
+        ],
+        "*.{html,md,yml}": [
+            "prettier --ignore-path .eslintignore --write"
+        ]
     },
     "build": {
         "productName": "vex desktop",
@@ -57,7 +61,9 @@
             {
                 "name": "vex",
                 "role": "Viewer",
-                "schemes": ["vex"]
+                "schemes": [
+                    "vex"
+                ]
             }
         ],
         "mac": {
@@ -82,13 +88,19 @@
             ]
         },
         "win": {
-            "target": ["nsis"]
+            "target": [
+                "nsis"
+            ]
         },
         "nsis": {
             "perMachine": true
         },
         "linux": {
-            "target": ["AppImage", "deb", "tar.gz"],
+            "target": [
+                "AppImage",
+                "deb",
+                "tar.gz"
+            ],
             "category": "Communication"
         },
         "directories": {
@@ -96,7 +108,9 @@
             "buildResources": "assets",
             "output": "release"
         },
-        "extraResources": ["./assets/*/**"],
+        "extraResources": [
+            "./assets/*/**"
+        ],
         "publish": {
             "provider": "github",
             "releaseType": "release"
@@ -129,9 +143,20 @@
             "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
             "\\.(css|less|sass|scss)$": "identity-obj-proxy"
         },
-        "moduleFileExtensions": ["js", "jsx", "ts", "tsx", "json"],
-        "moduleDirectories": ["node_modules", "src/node_modules"],
-        "setupFiles": ["./.erb/scripts/CheckBuildsExist.js"]
+        "moduleFileExtensions": [
+            "js",
+            "jsx",
+            "ts",
+            "tsx",
+            "json"
+        ],
+        "moduleDirectories": [
+            "node_modules",
+            "src/node_modules"
+        ],
+        "setupFiles": [
+            "./.erb/scripts/CheckBuildsExist.js"
+        ]
     },
     "devDependencies": {
         "@babel/core": "^7.12.9",
