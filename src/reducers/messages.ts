@@ -1,7 +1,6 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { IMessage } from "@vex-chat/libvex";
 import type { AppThunk, RootState } from "~Types";
-
 import { createSlice } from "@reduxjs/toolkit";
 
 type AddManyPayload = { messages: ISerializedMessage[]; userID: string };
@@ -36,12 +35,12 @@ export type ISerializedMessage =
     | INonGroupSerializedMessage;
 
 export function serializeMessage(message: IMessage): ISerializedMessage {
-    const serialized: ISerializedMessage = {
+    return {
         mailID: message.mailID,
         decrypted: message.decrypted,
         message: message.message,
         nonce: message.nonce,
-        timestamp: message.timestamp.toString(),
+        timestamp: new Date(message.timestamp).toISOString(),
         sender: message.sender,
         recipient: message.recipient,
         direction: message.direction,
@@ -52,7 +51,6 @@ export function serializeMessage(message: IMessage): ISerializedMessage {
         readerID: message.readerID,
         forward: message.forward,
     };
-    return serialized;
 }
 
 const messageSlice = createSlice({
@@ -64,7 +62,7 @@ const messageSlice = createSlice({
         },
         add: (
             state: Record<string, Record<string, ISerializedMessage>>,
-            action
+            action: PayloadAction<ISerializedMessage>
         ) => {
             const thread =
                 action.payload.direction === "incoming"
@@ -76,9 +74,10 @@ const messageSlice = createSlice({
                 state[thread] = {};
             }
 
-            if (!state[thread][message.mailID]) {
-                state[thread][message.mailID] = message;
-            }
+            state[thread][message.mailID] = {
+                ...(state[thread][message.mailID] || {}),
+                ...message
+            };
 
             return state;
         },
@@ -91,44 +90,31 @@ const messageSlice = createSlice({
             }
 
             messages.forEach((msg) => {
-                if (!state[userID][msg.mailID]) {
-                    state[userID][msg.mailID] = msg;
-                }
+                state[userID][msg.mailID] = msg;
             });
 
             return state;
         },
         fail: (
             state: Record<string, Record<string, ISerializedMessage>>,
-            action
+            action: PayloadAction<{ message: ISerializedMessage; errorString: string }>
         ) => {
-            const {
-                message,
-                errorString,
-            }: {
-                message: ISerializedMessage;
-                errorString: string;
-            } = action.payload;
+            const { message, errorString } = action.payload;
 
             const thread =
-                action.payload.direction === "incoming"
-                    ? action.payload.authorID
-                    : action.payload.readerID;
+                action.payload.message.direction === "incoming"
+                    ? action.payload.message.authorID
+                    : action.payload.message.readerID;
 
             if (
                 state[thread] === undefined ||
                 state[thread][message.mailID] === undefined
             ) {
-                // it doesn't exist, we are done
                 return state;
             }
 
-            const failedMessage = state[thread][message.mailID];
-
-            // mark it failed
-            failedMessage.failed = true;
-            failedMessage.failMessage = errorString;
-            state[thread][message.mailID] = failedMessage;
+            state[thread][message.mailID].failed = true;
+            state[thread][message.mailID].failMessage = errorString;
 
             return state;
         },

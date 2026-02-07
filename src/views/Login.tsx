@@ -3,7 +3,7 @@ import type { FunctionComponent } from "react";
 import { Client } from "@vex-chat/libvex";
 
 import { Lock as LockIcon, User as UserIcon } from "react-feather";
-import { Fragment, memo, useMemo, useState } from "react";
+import { Fragment, memo, useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router";
 
 import { Loading, TitleBar, VerticalAligner } from "../components";
@@ -16,6 +16,8 @@ export const Login: FunctionComponent = memo(() => {
     const query = useQuery();
 
     const loggedOut = query.get("logout") === "true";
+    const hasRun = useRef(false);
+    const isMounted = useRef(true);
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -44,15 +46,19 @@ export const Login: FunctionComponent = memo(() => {
             return;
         }
         setLoading(true);
+
         const keyPath = (await getKeyFolder()) + "/" + username.toLowerCase();
+
         if (await window.electron.fs.exists(keyPath)) {
-            gaurdian.load(keyPath);
+            await gaurdian.load(keyPath);
         } else {
             gaurdian.setKey(Client.generateSecretKey());
         }
+
         const client = await createClient(false, gaurdian.getKey());
 
         const err = await client.login(username, password);
+
         if (err) {
             if (unlockFX.duration > 0 && !unlockFX.paused) {
                 unlockFX.pause();
@@ -75,52 +81,88 @@ export const Login: FunctionComponent = memo(() => {
     };
 
     const checkCookieAndLogin = async () => {
-        if (loggedOut) {
-            setCheckedCookie(true);
+        if (hasRun.current || checkedCookie || loggedOut) {
             return;
         }
+        hasRun.current = true;
 
-        if (!checkedCookie) {
-            console.log("Checking for cookie.");
-            const tempClient = await createClient(true);
-            try {
-                const { user } = await tempClient.whoami();
 
-                setCheckCookieErrText("");
-                setLoading(true);
+        try {
+            const keyFolder = await getKeyFolder();
+            const allFiles = await window.electron.fs.readdir(keyFolder);
 
-                const keyPath = (await getKeyFolder()) + "/" + user.username.toLowerCase();
-                if (await window.electron.fs.exists(keyPath)) {
-                    gaurdian.load(keyPath);
-                } else {
-                    throw new Error("Found cookie, but no keyfile.");
-                }
+            const keyFiles = allFiles.filter(
+                f => !f.endsWith('.token') &&
+                    !f.endsWith('.sqlite') &&
+                    !f.endsWith('.device.token')
+            );
 
-                const client = await createClient(false, gaurdian.getKey());
+            for (const keyFile of keyFiles) {
+                if (!isMounted.current) return;
 
-                window.vex = client;
-                history.push(routes.LAUNCH);
-            } catch (err) {
-                console.warn(err);
-                if (err.response) {
-                    console.warn(err.response?.status);
-                    if (err.response.status === 502) {
-                        setCheckCookieErrText(
-                            "Having some trouble connecting to the server..."
-                        );
-                        console.log(checkCookieErrText);
-                        setTimeout(checkCookieAndLogin, 5000);
+                const keyPath = keyFolder + "/" + keyFile;
+
+                try {
+                    await gaurdian.load(keyPath);
+                    const client = await createClient(false, gaurdian.getKey());
+
+
+                    try {
+                        const { user, token } = await client.whoami();
+
+                        if (!token) {
+                            await client.close();
+                            continue;
+                        }
+
+                        if (!isMounted.current) {
+                            await client.close();
+                            return;
+                        }
+
+
+                        window.vex = client;
+                        setCheckedCookie(true);
+                        history.push(routes.LAUNCH);
                         return;
+
+                    } catch (whoamiErr) {
+                        client.clearToken();
+                        await client.close();
+                        continue;
                     }
+
+                } catch (err) {
+                    console.log("Error loading key:", err);
+                    continue;
                 }
             }
+
+            console.log("No valid sessions found");
+
+        } catch (err) {
+            console.log("Error checking for saved sessions:", err);
+            if (isMounted.current) {
+                setCheckCookieErrText(String(err));
+            }
+        }
+
+        if (isMounted.current) {
             setCheckedCookie(true);
         }
     };
 
-    useMemo(() => {
-        checkCookieAndLogin();
-    }, [history.location.pathname]);
+    useEffect(() => {
+        isMounted.current = true;
+
+        if (!checkedCookie && !loggedOut && !hasRun.current) {
+            checkCookieAndLogin();
+        }
+
+        return () => {
+            isMounted.current = false;
+        };
+    }, [checkedCookie, loggedOut]);
 
     if (!checkedCookie) {
         return (
@@ -137,9 +179,7 @@ export const Login: FunctionComponent = memo(() => {
             <TitleBar
                 updateAvailable={false}
                 userBarOpen={false}
-                setUserBarOpen={() => {
-                    /* lol */
-                }}
+                setUserBarOpen={() => {}}
                 showButtons={false}
             />
             <VerticalAligner>
