@@ -47,6 +47,10 @@ jobs:
                   $pythonPath = mise which python
                   echo "npm_config_python=$pythonPath" >> $env:GITHUB_ENV
 
+            - name: Install bsdtar (for pacman target)
+              if: runner.os == 'Linux'
+              run: sudo apt-get update && sudo apt-get install -y libarchive-tools
+
             - name: Install dependencies
               run: yarn install --frozen-lockfile
 
