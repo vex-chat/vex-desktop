@@ -163,6 +163,7 @@ module.exports = {
         new EnvironmentPlugin({
             NODE_ENV: "development",
             VEX_API_HOST: "localhost:16777",
+            VEX_WEB_HOST: "http://localhost:3000",
         }),
     ],
 };

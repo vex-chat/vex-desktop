@@ -88,8 +88,25 @@
             "perMachine": true
         },
         "linux": {
-            "target": ["AppImage", "deb", "tar.gz"],
+            "target": ["AppImage", "deb", "pacman", "tar.gz"],
             "category": "Communication"
+        },
+        "pacman": {
+            "depends": [
+                "c-ares",
+                "ffmpeg",
+                "gtk3",
+                "libevent",
+                "libvpx",
+                "libxslt",
+                "libxss",
+                "minizip",
+                "nss",
+                "re2",
+                "snappy",
+                "libnotify",
+                "libappindicator-gtk3"
+            ]
         },
         "directories": {
             "app": "src",
@@ -263,5 +280,5 @@
             "pre-commit": "yarn syncVersions; git add ./src/package.json package.json; lint-staged"
         }
     },
-    "version": "0.14.2"
+    "version": "0.14.3"
 }

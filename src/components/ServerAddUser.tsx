@@ -52,7 +52,7 @@ export function AddUser(): JSX.Element {
                                     className="pointer"
                                     onClick={() => {
                                         void window.electron.clipboard.writeText(
-                                            `https://vex.chat/invite/${link.inviteID}`
+                                            `${process.env.VEX_WEB_HOST}/invite/${link.inviteID}`
                                         );
                                     }}
                                 >
@@ -74,7 +74,7 @@ export function AddUser(): JSX.Element {
                                     className="pointer"
                                     onClick={() => {
                                         void window.electron.shell.openExternal(
-                                            `https://vex.chat/invite/${link.inviteID}`
+                                            `${process.env.VEX_WEB_HOST}/invite/${link.inviteID}`
                                         );
                                     }}
                                 >
