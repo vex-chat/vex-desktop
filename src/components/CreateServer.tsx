@@ -1,7 +1,7 @@
 import type { Client, IServer } from "@vex-chat/libvex";
 
 import { Server as ServerIcon } from "react-feather";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import * as uuid from "uuid";
@@ -26,8 +26,9 @@ export function CreateServer(): JSX.Element {
 
     const [errText, setErrText] = useState("");
 
-    const joinServer = async () => {
-        const inviteID = inviteVal ? inviteVal.split("/").pop() : null;
+    const joinServer = async (inviteInput?: string) => {
+        const input = inviteInput ?? inviteVal;
+        const inviteID = input ? input.split("/").pop() : null;
         if (inviteID && uuid.validate(inviteID)) {
             const client = window.vex;
             try {
@@ -67,10 +68,12 @@ export function CreateServer(): JSX.Element {
         }
     };
 
-    useMemo(() => {
-        setInviteVal(urlInvite as string);
-        joinServer();
-    }, [urlInvite, inviteVal]);
+    useEffect(() => {
+        if (urlInvite) {
+            setInviteVal(urlInvite);
+            joinServer(urlInvite);
+        }
+    }, [urlInvite]);
 
     if (urlInvite) {
         return <Loading size={256} animation={"cylon"} />;
@@ -175,7 +178,7 @@ export function CreateServer(): JSX.Element {
                             <div className="buttons register-form-buttons is-right">
                                 <button
                                     className="button is-success is-small"
-                                    onClick={joinServer}
+                                    onClick={() => joinServer()}
                                 >
                                     Join
                                 </button>
