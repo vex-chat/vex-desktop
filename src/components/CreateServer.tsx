@@ -162,9 +162,7 @@ export function CreateServer(): JSX.Element {
                         <input
                             className="input has-icons-left"
                             type="text"
-                            placeholder={
-                                "https://vex.chat/invite/1c01eb5e-e9db-44a7-b137-3b5ee9cad364"
-                            }
+                            placeholder={`${process.env.VEX_WEB_HOST}/invite/1c01eb5e-e9db-44a7-b137-3b5ee9cad364`}
                             value={inviteVal}
                             onChange={(event) => {
                                 setInviteVal(event.target.value);
